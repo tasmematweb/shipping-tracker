@@ -8,7 +8,7 @@
 <body style="font-family: Tahoma; padding: 20px; background: #f9f9f9;">
 
   <h2>تتبع الشحنة الفوري</h2>
-  <input type="text" id="billCode" value="JEG000496480982" placeholder="أدخل رقم البوليصة" style="padding:10px; width:280px; font-size:16px;">
+  <input type="text" id="billCode" value="JEG000498643576" placeholder="أدخل رقم البوليصة" style="padding:10px; width:280px; font-size:16px;">
   <button onclick="trackShipment()" style="padding:10px 20px; background:#007bff; color:#fff; border:none; cursor:pointer; font-size:16px;">تتبع</button>
   <pre id="result" style="background:#fff; padding:15px; margin-top:15px; border:1px solid #ddd; direction:ltr; text-align:left; max-height:400px; overflow-y:auto;"></pre>
 
@@ -22,7 +22,7 @@
         return;
       }
 
-      resultDiv.innerText = "جاري الاتصال وجلب البيانات...";
+      resultDiv.innerText = "جاري الاتصال وجلب تفاصيل الشحنة...";
 
       const apiAccount = "292508153084379141";
       const privateKey = "a0a1047cce70493c9d5d29704f05d0d9";
@@ -31,15 +31,16 @@
       const bizContentObj = { billCodes: [code] };
       const bizContentStr = JSON.stringify(bizContentObj);
 
-      // حساب التوقيع بدقة
+      // حساب التوقيع الصحيح
       const dataToSign = bizContentStr + timestamp + privateKey;
       const hashDigest = CryptoJS.MD5(dataToSign);
       const digest = CryptoJS.enc.Base64.stringify(hashDigest);
 
       const targetUrl = 'https://demoopenapi.jtjms-eg.com/webopenplatformapi/api/logistics/trace?uuid=c7f405da081d436d8ee146b59f885dce';
-      
-      // استخدام وسيط بديل ونظيف لنقل الـ Headers دون تغيير
-      const proxyUrl = 'https://thingproxy.freeboard.io/fetch/' + targetUrl;
+      const proxyUrl = 'https://corsproxy.io/?' + encodeURIComponent(targetUrl);
+
+      const formData = new URLSearchParams();
+      formData.append('bizContent', bizContentStr);
 
       try {
         const res = await fetch(proxyUrl, {
@@ -50,7 +51,7 @@
             'timestamp': timestamp,
             'digest': digest
           },
-          body: 'bizContent=' + encodeURIComponent(bizContentStr)
+          body: formData
         });
 
         const data = await res.json();
