@@ -6,12 +6,7 @@
   <title>تتبع الشحنة - J&T Express</title>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
   <style>
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
-
+    * { box-sizing: border-box; margin: 0; padding: 0; }
     body {
       font-family: 'Tahoma', 'Segoe UI', Arial, sans-serif;
       background: linear-gradient(135deg, #e8f0fe 0%, #d4e4f7 100%);
@@ -21,17 +16,14 @@
       align-items: center;
       padding: 20px;
     }
-
     .container {
       background: #ffffff;
       border-radius: 24px;
-      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.12), 0 8px 24px rgba(0, 0, 0, 0.06);
+      box-shadow: 0 20px 60px rgba(0,0,0,0.12);
       padding: 40px 35px;
-      max-width: 780px;
+      max-width: 820px;
       width: 100%;
-      transition: all 0.3s ease;
     }
-
     .header {
       display: flex;
       align-items: center;
@@ -40,7 +32,6 @@
       border-bottom: 3px solid #f0f4ff;
       padding-bottom: 20px;
     }
-
     .header-icon {
       font-size: 32px;
       background: #0066ff;
@@ -52,21 +43,8 @@
       justify-content: center;
       border-radius: 14px;
     }
-
-    h2 {
-      font-size: 26px;
-      font-weight: 700;
-      color: #1a2b4a;
-      letter-spacing: -0.3px;
-    }
-
-    .subtitle {
-      color: #5e6f8d;
-      font-size: 14px;
-      margin-top: -5px;
-      margin-bottom: 25px;
-    }
-
+    h2 { font-size: 26px; font-weight: 700; color: #1a2b4a; }
+    .subtitle { color: #5e6f8d; font-size: 14px; margin-bottom: 25px; }
     .search-box {
       display: flex;
       flex-direction: row;
@@ -77,28 +55,21 @@
       border: 1px solid #e2eaf6;
       transition: border-color 0.3s, box-shadow 0.3s;
     }
-
     .search-box:focus-within {
       border-color: #0066ff;
-      box-shadow: 0 0 0 4px rgba(0, 102, 255, 0.12);
+      box-shadow: 0 0 0 4px rgba(0,102,255,0.12);
     }
-
     .search-box input {
       flex: 1;
       padding: 16px 22px;
       border: none;
       background: transparent;
       font-size: 16px;
-      font-family: 'Tahoma', Arial, sans-serif;
       outline: none;
       color: #1a2b4a;
       min-width: 0;
     }
-
-    .search-box input::placeholder {
-      color: #a0b3cc;
-    }
-
+    .search-box input::placeholder { color: #a0b3cc; }
     .search-box button {
       padding: 14px 34px;
       background: #0066ff;
@@ -110,17 +81,9 @@
       cursor: pointer;
       transition: background 0.2s, transform 0.1s;
       white-space: nowrap;
-      font-family: 'Tahoma', Arial, sans-serif;
     }
-
-    .search-box button:hover {
-      background: #0052cc;
-    }
-
-    .search-box button:active {
-      transform: scale(0.96);
-    }
-
+    .search-box button:hover { background: #0052cc; }
+    .search-box button:active { transform: scale(0.96); }
     .result-area {
       margin-top: 28px;
       background: #fafcff;
@@ -128,9 +91,7 @@
       border: 1px solid #e9eff8;
       overflow: hidden;
       min-height: 120px;
-      position: relative;
     }
-
     #result {
       padding: 20px 24px;
       margin: 0;
@@ -142,11 +103,10 @@
       text-align: left;
       white-space: pre-wrap;
       word-break: break-word;
-      max-height: 420px;
+      max-height: 450px;
       overflow-y: auto;
       background: #fafcff;
     }
-
     #result .empty-state {
       color: #8a9bb8;
       text-align: center;
@@ -155,13 +115,7 @@
       font-family: 'Tahoma', Arial, sans-serif;
       direction: rtl;
     }
-
-    #result .empty-state span {
-      display: block;
-      font-size: 48px;
-      margin-bottom: 12px;
-    }
-
+    #result .empty-state span { display: block; font-size: 48px; margin-bottom: 12px; }
     #result .loading {
       display: flex;
       align-items: center;
@@ -172,7 +126,6 @@
       font-family: 'Tahoma', Arial, sans-serif;
       direction: rtl;
     }
-
     .spinner {
       width: 22px;
       height: 22px;
@@ -181,23 +134,39 @@
       border-radius: 50%;
       animation: spin 0.7s linear infinite;
     }
-
-    @keyframes spin {
-      to {
-        transform: rotate(360deg);
-      }
-    }
-
-    .status-badge {
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .json-key { color: #0033a0; font-weight: 600; }
+    .json-string { color: #0a7a3c; }
+    .json-number { color: #b45b0e; }
+    .json-boolean { color: #b45b0e; }
+    .json-null { color: #b45b0e; }
+    .success-badge {
       display: inline-block;
-      background: #e6f7e6;
-      color: #0d7c0d;
-      padding: 2px 12px;
+      background: #d4edda;
+      color: #155724;
+      padding: 4px 14px;
       border-radius: 30px;
       font-size: 13px;
       font-weight: 600;
+      margin-bottom: 10px;
     }
-
+    .error-badge {
+      display: inline-block;
+      background: #f8d7da;
+      color: #721c24;
+      padding: 4px 14px;
+      border-radius: 30px;
+      font-size: 13px;
+      font-weight: 600;
+      margin-bottom: 10px;
+    }
+    @media (max-width: 600px) {
+      .container { padding: 24px 18px; }
+      .search-box { flex-direction: column; border-radius: 24px; padding: 6px; gap: 8px; }
+      .search-box input { padding: 14px 18px; text-align: center; }
+      .search-box button { width: 100%; padding: 14px; border-radius: 30px; }
+      h2 { font-size: 20px; }
+    }
     .footer {
       margin-top: 18px;
       font-size: 12px;
@@ -206,70 +175,22 @@
       border-top: 1px solid #eef3fa;
       padding-top: 18px;
     }
-
-    /* تنسيق الـ JSON ليكون مقروءاً */
-    .json-key {
-      color: #0033a0;
-      font-weight: 600;
-    }
-    .json-string {
-      color: #0a7a3c;
-    }
-    .json-number {
-      color: #b45b0e;
-    }
-    .json-boolean {
-      color: #b45b0e;
-    }
-    .json-null {
-      color: #b45b0e;
-    }
-
-    @media (max-width: 600px) {
-      .container {
-        padding: 24px 18px;
-      }
-      .search-box {
-        flex-direction: column;
-        border-radius: 24px;
-        background: #f7faff;
-        padding: 6px;
-        gap: 8px;
-      }
-      .search-box input {
-        padding: 14px 18px;
-        text-align: center;
-      }
-      .search-box button {
-        width: 100%;
-        padding: 14px;
-        border-radius: 30px;
-      }
-      h2 {
-        font-size: 20px;
-      }
-    }
   </style>
 </head>
 <body>
 
 <div class="container">
-  <!-- الهيدر -->
   <div class="header">
     <div class="header-icon">📦</div>
-    <div>
-      <h2>تتبع الشحنة الفوري</h2>
-    </div>
+    <div><h2>تتبع الشحنة الفوري</h2></div>
   </div>
   <p class="subtitle">أدخل رقم البوليصة (Bill Code) واضغط بحث لتتبع شحنتك</p>
 
-  <!-- صندوق البحث -->
   <div class="search-box">
-    <input type="text" id="billCode" value="JEG000498643576" placeholder="مثال: JEG000498643576">
+    <input type="text" id="billCode" value="UEG000000190252" placeholder="مثال: UEG000000190252">
     <button onclick="trackShipment()">🔍 بحث</button>
   </div>
 
-  <!-- منطقة النتائج -->
   <div class="result-area">
     <pre id="result"><div class="empty-state"><span>📋</span>انتظر إدخال رقم الشحنة والضغط على بحث</div></pre>
   </div>
@@ -278,13 +199,9 @@
 </div>
 
 <script>
-  /**
-   * دالة تنسيق JSON مع ألوان (Syntax Highlighting بسيط)
-   */
+  // تنسيق الـ JSON بألوان
   function syntaxHighlight(json) {
-    if (typeof json !== 'string') {
-      json = JSON.stringify(json, null, 2);
-    }
+    if (typeof json !== 'string') json = JSON.stringify(json, null, 2);
     json = json.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
     return json.replace(
       /("(?:[^"\\]|\\.)*")(?=\s*:)|("(?:[^"\\]|\\.)*")|(\b\d+\.?\d*\b)|(\btrue\b|\bfalse\b|\bnull\b)/g,
@@ -298,20 +215,16 @@
     );
   }
 
-  /**
-   * الوظيفة الرئيسية للتتبع
-   */
+  // دالة التتبع الرئيسية
   async function trackShipment() {
     const code = document.getElementById('billCode').value.trim();
     const resultDiv = document.getElementById('result');
 
-    // 1. التحقق من الإدخال
     if (!code) {
       resultDiv.innerHTML = `<div class="empty-state"><span>⚠️</span>الرجاء إدخال رقم البوليصة</div>`;
       return;
     }
 
-    // 2. عرض حالة "جاري التحميل"
     resultDiv.innerHTML = `
       <div class="loading">
         <div class="spinner"></div>
@@ -319,74 +232,128 @@
       </div>
     `;
 
-    // 3. إعداد بيانات التوقيع
+    // ===== بيانات الحساب (من الوثائق) =====
     const apiAccount = "292508153084379141";
     const privateKey = "a0a1047cce70493c9d5d29704f05d0d9";
     const timestamp = Date.now().toString();
 
-    // بناء الـ bizContent بالشكل المطلوب (مصفوفة billCodes)
+    // بناء bizContent بالشكل الصحيح (مصفوفة billCodes)
+    // ملاحظة: في المثال كان 'billCodes': 'UEG000000190252' (بدون مصفوفة)
+    // لكن الوثائق تقول تدعم 30 رقم، لذا الأفضل استخدام مصفوفة
     const bizContentObj = { billCodes: [code] };
+    // للتوافق مع المثال، جرب أيضاً الصيغة: { billCodes: code }
     const bizContentStr = JSON.stringify(bizContentObj);
 
-    // حساب الـ Digest = Base64(MD5(bizContent + timestamp + privateKey))
-    const dataToSign = bizContentStr + timestamp + privateKey;
-    const hashDigest = CryptoJS.MD5(dataToSign);
-    const digest = CryptoJS.enc.Base64.stringify(hashDigest);
+    // ===== حساب التوقيع =====
+    // الطريقة الأولى (الأكثر شيوعاً): bizContent + timestamp + apiAccount + privateKey
+    const dataToSign1 = bizContentStr + timestamp + apiAccount + privateKey;
+    const hash1 = CryptoJS.MD5(dataToSign1);
+    const digest1 = CryptoJS.enc.Base64.stringify(hash1);
 
-    // 4. إعداد الـ URL (مع الـ uuid الثابت من جلسة العمل)
+    // الطريقة الثانية (كما في بعض الوثائق): privateKey + bizContent + timestamp
+    const dataToSign2 = privateKey + bizContentStr + timestamp;
+    const hash2 = CryptoJS.MD5(dataToSign2);
+    const digest2 = CryptoJS.enc.Base64.stringify(hash2);
+
+    // الطريقة الثالثة: apiAccount + timestamp + bizContent + privateKey
+    const dataToSign3 = apiAccount + timestamp + bizContentStr + privateKey;
+    const hash3 = CryptoJS.MD5(dataToSign3);
+    const digest3 = CryptoJS.enc.Base64.stringify(hash3);
+
+    // سنحاول الطرق الثلاث بالتتابع حتى تنجح إحداها
+    const digests = [digest1, digest2, digest3];
+    const methods = [
+      'bizContent + timestamp + apiAccount + privateKey',
+      'privateKey + bizContent + timestamp',
+      'apiAccount + timestamp + bizContent + privateKey'
+    ];
+
     const targetUrl = 'https://demoopenapi.jtjms-eg.com/webopenplatformapi/api/logistics/trace?uuid=c7f405da081d436d8ee146b59f885dce';
     const proxyUrl = 'https://corsproxy.io/?' + encodeURIComponent(targetUrl);
 
-    try {
-      // 5. إرسال الطلب
-      const res = await fetch(proxyUrl, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/x-www-form-urlencoded',
-          'apiAccount': apiAccount,
-          'timestamp': timestamp,
-          'digest': digest
-        },
-        body: 'bizContent=' + encodeURIComponent(bizContentStr)
-      });
+    let finalResult = null;
+    let successMethod = '';
 
-      // 6. معالجة الاستجابة
-      const rawText = await res.text();
-      let data;
+    // تجربة كل طريقة توقيع
+    for (let i = 0; i < digests.length; i++) {
       try {
-        data = JSON.parse(rawText);
-      } catch {
-        data = { error: 'استجابة غير صالحة (ليست JSON)', raw: rawText };
+        const res = await fetch(proxyUrl, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+            'apiAccount': apiAccount,
+            'timestamp': timestamp,
+            'digest': digests[i]
+          },
+          body: 'bizContent=' + encodeURIComponent(bizContentStr)
+        });
+
+        const rawText = await res.text();
+        let data;
+        try { data = JSON.parse(rawText); } catch { data = { raw: rawText }; }
+
+        // إذا نجح الطلب (code = 1 أو 0 أو success)
+        if (data.code === '1' || data.code === '0' || data.success === true || data.code === '10000') {
+          finalResult = data;
+          successMethod = methods[i];
+          break;
+        }
+
+        // إذا كان الخطأ ليس توقيعاً، نعرض النتيجة فوراً
+        if (data.code !== '145003030') {
+          finalResult = data;
+          successMethod = methods[i] + ' (لم ينجح لكنه أعاد رداً)';
+          break;
+        }
+
+        // إذا كان الخطأ هو توقيع فقط، نستمر في تجربة الطرق الأخرى
+        if (i === digests.length - 1) {
+          finalResult = data;
+          successMethod = 'جميع الطرق فشلت';
+        }
+      } catch (e) {
+        if (i === digests.length - 1) {
+          resultDiv.innerHTML = `
+            <div style="color:#c0392b; padding:16px; font-family:Tahoma; direction:rtl;">
+              <strong>❌ حدث خطأ في الاتصال:</strong> ${e.message}
+            </div>
+          `;
+          return;
+        }
+      }
+    }
+
+    // عرض النتيجة
+    if (finalResult) {
+      const pretty = JSON.stringify(finalResult, null, 2);
+      let badge = '';
+      if (finalResult.code === '1' || finalResult.code === '0' || finalResult.success === true) {
+        badge = `<div class="success-badge">✅ تم بنجاح (${successMethod})</div>`;
+      } else if (finalResult.code === '145003030') {
+        badge = `<div class="error-badge">❌ فشل التوقيع - جرب الطرق التالية</div>`;
+      } else {
+        badge = `<div class="error-badge">⚠️ الكود: ${finalResult.code} - ${finalResult.msg || ''}</div>`;
       }
 
-      // 7. عرض النتيجة مع تنسيق جميل
-      if (data.code === '10000' || data.code === '00000' || data.success === true) {
-        // نجاح
-        const pretty = JSON.stringify(data, null, 2);
-        resultDiv.innerHTML = syntaxHighlight(pretty);
-      } else {
-        // فشل أو خطأ من الـ API
-        const pretty = JSON.stringify(data, null, 2);
-        resultDiv.innerHTML = syntaxHighlight(pretty);
-      }
-    } catch (error) {
-      // 8. خطأ في الشبكة أو الـ CORS
-      resultDiv.innerHTML = `
-        <div style="color:#c0392b; padding:16px; font-family:Tahoma; direction:rtl;">
-          <strong>❌ حدث خطأ في الاتصال:</strong> ${error.message}
-          <br><br>
-          <span style="font-size:13px; color:#7f8c8d;">تأكد من اتصال الإنترنت، أو أن الخادم يعمل.</span>
+      // إضافة معلومات التوقيع المستخدمة
+      const debugInfo = `
+        <div style="direction:rtl; margin-top:12px; padding:12px; background:#f0f4ff; border-radius:10px; font-family:Tahoma; font-size:12px; color:#1a2b4a; direction:ltr; text-align:left;">
+          <strong style="direction:rtl; display:block; margin-bottom:6px;">🔑 معلومات التوقيع:</strong>
+          <div>طريقة التوقيع: ${successMethod}</div>
+          <div>bizContent: ${bizContentStr}</div>
+          <div>timestamp: ${timestamp}</div>
+          <div>apiAccount: ${apiAccount}</div>
+          <div style="word-break:break-all;">privateKey: ${privateKey}</div>
         </div>
       `;
+
+      resultDiv.innerHTML = syntaxHighlight(pretty) + badge + debugInfo;
     }
   }
 
-  // دعم الضغط على زر Enter في حقل الإدخال
-  document.getElementById('billCode').addEventListener('keydown', function (e) {
-    if (e.key === 'Enter') {
-      e.preventDefault();
-      trackShipment();
-    }
+  // دعم زر Enter
+  document.getElementById('billCode').addEventListener('keydown', function(e) {
+    if (e.key === 'Enter') { e.preventDefault(); trackShipment(); }
   });
 </script>
 
