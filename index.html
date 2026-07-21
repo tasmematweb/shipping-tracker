@@ -22,16 +22,19 @@
         return;
       }
 
-      resultDiv.innerText = "جاري الاتصال وجلب تفاصيل الشحنة...";
+      resultDiv.innerText = "جاري حساب التوقيع والاتصال...";
 
       const apiAccount = "292508153084379141";
       const privateKey = "a0a1047cce70493c9d5d29704f05d0d9";
       const timestamp = Date.now().toString();
       
+      // التأكد من عدم وجود مسافات زائدة في الـ JSON
       const bizContentStr = JSON.stringify({ billCodes: [code] });
 
-      // حساب التوقيع الصحيح بناءً على النص الصريح
+      // تجميع النص المراد توقيعه بدقة مطابقة للتوثيق
       const dataToSign = bizContentStr + timestamp + privateKey;
+      
+      // استخراج الـ MD5 بصيغة بايتات ثم تحويلها إلى Base64 بشكل صحيح تماماً
       const hashDigest = CryptoJS.MD5(dataToSign);
       const digest = CryptoJS.enc.Base64.stringify(hashDigest);
 
