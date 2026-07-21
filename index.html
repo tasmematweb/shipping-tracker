@@ -1,4 +1,4 @@
-<input type="text" id="billCode" value="JEG000486004985" placeholder="أدخل رقم البوليصة">
+<input type="text" id="billCode" value="JEG000477418058" placeholder="أدخل رقم البوليصة">
 <button onclick="trackShipment()">تتبع</button>
 <pre id="result"></pre>
 <script>
@@ -6,11 +6,15 @@
     const code = document.getElementById('billCode').value;
     const resultDiv = document.getElementById('result');
     resultDiv.innerText = "جاري البحث...";
+    
+    const formData = new URLSearchParams();
+    formData.append('billCode', code);
+    
     try {
-      const res = await fetch('https://openapi.jtjms-eg.com/webopenplatformapi/api/logistics/trace?uuid=YOUR_UUID', {
+      const res = await fetch('https://openapi.jtjms-eg.com/webopenplatformapi/api/logistics/trace?uuid=c7f405da081d436d8ee146b59f885dce', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ billCode: code })
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: formData
       });
       const data = await res.json();
       resultDiv.innerText = JSON.stringify(data, null, 2);
