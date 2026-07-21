@@ -10,10 +10,7 @@ class JnTTrackingService {
   Future<Map<String, dynamic>?> fetchTrackingDetails(String billCode) async {
     try {
       final String timestamp = DateTime.now().millisecondsSinceEpoch.toString();
-
-      final Map<String, dynamic> bizContentMap = {
-        "billCodes": [billCode]
-      };
+      final Map<String, dynamic> bizContentMap = {"billCodes": [billCode]};
       final String bizContent = jsonEncode(bizContentMap);
 
       final String rawData = bizContent + timestamp + _privateKey;
@@ -22,15 +19,13 @@ class JnTTrackingService {
       final String digest = base64.encode(md5Hash.bytes);
 
       final Map<String, String> headers = {
-        "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
+        "Content-Type": "application/x-www-form-urlencoded",
         "apiAccount": _apiAccount,
         "timestamp": timestamp,
         "digest": digest,
       };
 
-      final Map<String, String> body = {
-        "bizContent": Uri.encodeComponent(bizContent),
-      };
+      final Map<String, String> body = {"bizContent": bizContent};
 
       final response = await http.post(
         Uri.parse(_baseUrl),
@@ -42,42 +37,11 @@ class JnTTrackingService {
         final data = jsonDecode(response.body);
         if (data["code"] == "1" || data["code"] == 1 || data["msg"] == "success") {
           return data;
-        } else {
-          print("API Error Code: ${data["code"]}, Message: ${data["msg"]}");
-          return null;
         }
-      } else {
-        print("HTTP Error: ${response.statusCode}");
-        return null;
       }
+      return null;
     } catch (e) {
-      print("Exception occurred: $e");
       return null;
     }
-  }
-
-  Map<String, String> parseScanDetails(Map<String, dynamic> detailItem) {
-    String scanTypeName = detailItem["scanTypeName"] ?? "";
-    String desc = detailItem["desc"] ?? "";
-    String problemDescription = detailItem["problemDescription"] ?? "";
-    
-    final Map<String, String> commonScanNames = {
-      "Pick up": "تم الاستلام (جمع الشحنة)",
-      "Enter branch Scan": "مسح دخول الفرع",
-      "Sending scan": "مسح الإرسال",
-      "Arrival Scan": "مسح الوصول",
-      "OFD Scan": "جاري توصيل الشحنة (متجه للعميل)",
-      "Sign scan": "تم التوقيع والتسليم بنجاح",
-      "Problem Shipment Scan": "وجد مشكلة في الشحنة (Abnormal)",
-      "Return scan": "مسح الإرجاع",
-    };
-
-    String arabicScanName = commonScanNames[scanTypeName] ?? scanTypeName;
-
-    return {
-      "scanName": arabicScanName,
-      "description": desc,
-      "problemReason": problemDescription,
-    };
   }
 }
