@@ -22,24 +22,25 @@
         return;
       }
 
-      resultDiv.innerText = "جاري حساب التوقيع والاتصال...";
+      resultDiv.innerText = "جاري جلب تفاصيل المسار الزمني...";
 
       const apiAccount = "292508153084379141";
       const privateKey = "a0a1047cce70493c9d5d29704f05d0d9";
       const timestamp = Date.now().toString();
       
-      // التأكد من عدم وجود مسافات زائدة في الـ JSON
-      const bizContentStr = JSON.stringify({ billCodes: [code] });
+      const bizContentObj = { billCodes: [code] };
+      const bizContentStr = JSON.stringify(bizContentObj);
 
-      // تجميع النص المراد توقيعه بدقة مطابقة للتوثيق
+      // حساب التوقيع بدقة متناهية
       const dataToSign = bizContentStr + timestamp + privateKey;
-      
-      // استخراج الـ MD5 بصيغة بايتات ثم تحويلها إلى Base64 بشكل صحيح تماماً
       const hashDigest = CryptoJS.MD5(dataToSign);
       const digest = CryptoJS.enc.Base64.stringify(hashDigest);
 
       const targetUrl = 'https://demoopenapi.jtjms-eg.com/webopenplatformapi/api/logistics/trace?uuid=c7f405da081d436d8ee146b59f885dce';
       const proxyUrl = 'https://corsproxy.io/?' + encodeURIComponent(targetUrl);
+
+      const formData = new URLSearchParams();
+      formData.append('bizContent', bizContentStr);
 
       try {
         const res = await fetch(proxyUrl, {
@@ -50,11 +51,22 @@
             'timestamp': timestamp,
             'digest': digest
           },
-          body: 'bizContent=' + encodeURIComponent(bizContentStr)
+          body: formData
         });
 
         const data = await res.json();
-        resultDiv.innerText = JSON.stringify(data, null, 2);
+        
+        // عرض النتيجة بشكل مرتب أو النص الخام للتأكد من وصول بيانات المسار (details)
+        if (data.code === "1" && data.data && data.data.length > 0) {
+          let output = "حالة الشحنة: ناجح\n\nالمسار الزمني:\n";
+          data.data[0].details.forEach(item => {
+            output += `- [${item.scanTime}] ${item.desc} (${item.scanTypeName})\n`;
+          });
+          resultDiv.innerText = output;
+        } else {
+          resultDiv.innerText = JSON.stringify(data, null, 2);
+        }
+
       } catch (error) {
         resultDiv.innerText = "حدث خطأ في الاتصال: " + error.message;
       }
