@@ -182,6 +182,7 @@
       margin: 2px 0;
       direction: ltr;
       text-align: left;
+      word-break: break-all;
     }
     @media (max-width: 600px) {
       .container { padding: 24px 18px; }
@@ -257,129 +258,134 @@
     const privateKey = "a0a1047cce70493c9d5d29704f05d0d9";
     const timestamp = Date.now().toString();
 
-    // =========================================
-    // الطريقة الصحيحة لبناء bizContent حسب المثال:
-    // {'billCodes': 'UEG000000190252'}  (بدون مصفوفة)
-    // =========================================
+    // صيغة bizContent حسب المثال
     const bizContentStr = `{'billCodes': '${code}'}`;
 
-    // =========================================
-    // تجربة جميع تركيبات التوقيع الممكنة
-    // =========================================
+    // حساب التوقيع (جرب جميع التركيبات)
     const combinations = [
-      {
-        name: 'bizContent + timestamp + apiAccount + privateKey',
-        data: bizContentStr + timestamp + apiAccount + privateKey
-      },
-      {
-        name: 'apiAccount + timestamp + bizContent + privateKey',
-        data: apiAccount + timestamp + bizContentStr + privateKey
-      },
-      {
-        name: 'privateKey + bizContent + timestamp + apiAccount',
-        data: privateKey + bizContentStr + timestamp + apiAccount
-      },
-      {
-        name: 'apiAccount + bizContent + timestamp + privateKey',
-        data: apiAccount + bizContentStr + timestamp + privateKey
-      },
-      {
-        name: 'bizContent + privateKey + timestamp + apiAccount',
-        data: bizContentStr + privateKey + timestamp + apiAccount
-      },
-      {
-        name: 'timestamp + bizContent + apiAccount + privateKey',
-        data: timestamp + bizContentStr + apiAccount + privateKey
-      }
+      { name: 'bizContent + timestamp + apiAccount + privateKey', data: bizContentStr + timestamp + apiAccount + privateKey },
+      { name: 'apiAccount + timestamp + bizContent + privateKey', data: apiAccount + timestamp + bizContentStr + privateKey },
+      { name: 'privateKey + bizContent + timestamp + apiAccount', data: privateKey + bizContentStr + timestamp + apiAccount },
+      { name: 'apiAccount + bizContent + timestamp + privateKey', data: apiAccount + bizContentStr + timestamp + privateKey },
+      { name: 'bizContent + privateKey + timestamp + apiAccount', data: bizContentStr + privateKey + timestamp + apiAccount },
+      { name: 'timestamp + bizContent + apiAccount + privateKey', data: timestamp + bizContentStr + apiAccount + privateKey }
     ];
 
     const targetUrl = 'https://demoopenapi.jtjms-eg.com/webopenplatformapi/api/logistics/trace?uuid=c7f405da081d436d8ee146b59f885dce';
-    const proxyUrl = 'https://corsproxy.io/?' + encodeURIComponent(targetUrl);
+
+    // =========================================
+    // قائمة Proxies للاختبار
+    // =========================================
+    const proxies = [
+      { url: 'https://corsproxy.io/?', name: 'corsproxy.io' },
+      { url: 'https://api.allorigins.win/raw?url=', name: 'allorigins.win' },
+      { url: 'https://cors-anywhere.herokuapp.com/', name: 'cors-anywhere' },
+      { url: 'https://proxy.cors.sh/', name: 'cors.sh' }
+    ];
 
     let finalResult = null;
     let successMethod = '';
+    let usedProxy = '';
 
-    for (let i = 0; i < combinations.length; i++) {
-      try {
-        const hash = CryptoJS.MD5(combinations[i].data);
-        const digest = CryptoJS.enc.Base64.stringify(hash);
+    // تجربة كل Proxy وكل طريقة توقيع
+    for (let p = 0; p < proxies.length; p++) {
+      const proxy = proxies[p];
+      const proxyUrl = proxy.url + encodeURIComponent(targetUrl);
 
-        const res = await fetch(proxyUrl, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/x-www-form-urlencoded',
-            'apiAccount': apiAccount,
-            'timestamp': timestamp,
-            'digest': digest
-          },
-          body: 'bizContent=' + encodeURIComponent(bizContentStr)
-        });
+      for (let i = 0; i < combinations.length; i++) {
+        try {
+          const hash = CryptoJS.MD5(combinations[i].data);
+          const digest = CryptoJS.enc.Base64.stringify(hash);
 
-        const rawText = await res.text();
-        let data;
-        try { data = JSON.parse(rawText); } catch { data = { raw: rawText }; }
+          const res = await fetch(proxyUrl, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/x-www-form-urlencoded',
+              'apiAccount': apiAccount,
+              'timestamp': timestamp,
+              'digest': digest,
+              // بعض Proxies تحتاج هذه الهيدرات
+              'Origin': window.location.origin,
+              'X-Requested-With': 'XMLHttpRequest'
+            },
+            body: 'bizContent=' + encodeURIComponent(bizContentStr)
+          });
 
-        // إذا نجح الطلب
-        if (data.code === '1' || data.code === '0' || data.success === true || data.code === '10000') {
-          finalResult = data;
-          successMethod = combinations[i].name;
-          break;
+          const rawText = await res.text();
+          let data;
+          try { data = JSON.parse(rawText); } catch { data = { raw: rawText }; }
+
+          // إذا نجح الطلب
+          if (data.code === '1' || data.code === '0' || data.success === true || data.code === '10000') {
+            finalResult = data;
+            successMethod = combinations[i].name;
+            usedProxy = proxy.name;
+            break;
+          }
+
+          // إذا كان الخطأ ليس توقيعاً، نعرض النتيجة
+          if (data.code !== '145003030') {
+            finalResult = data;
+            successMethod = combinations[i].name;
+            usedProxy = proxy.name;
+            break;
+          }
+
+          // حفظ النتيجة الأخيرة لعرضها
+          if (!finalResult) {
+            finalResult = data;
+            successMethod = combinations[i].name;
+            usedProxy = proxy.name;
+          }
+        } catch (e) {
+          // تجاهل الأخطاء واستمر في المحاولة
+          console.log(`Proxy ${proxy.name} failed:`, e.message);
         }
+      }
 
-        // إذا كان الخطأ ليس توقيعاً، نعرض النتيجة فوراً
-        if (data.code !== '145003030') {
-          finalResult = data;
-          successMethod = combinations[i].name + ' (رد غير متوقع)';
-          break;
-        }
-
-        if (i === combinations.length - 1) {
-          finalResult = data;
-          successMethod = 'جميع الطرق فشلت';
-        }
-      } catch (e) {
-        if (i === combinations.length - 1) {
-          resultDiv.innerHTML = `
-            <div style="color:#c0392b; padding:16px; font-family:Tahoma; direction:rtl;">
-              <strong>❌ حدث خطأ في الاتصال:</strong> ${e.message}
-            </div>
-          `;
-          return;
-        }
+      // إذا وجدنا نتيجة ناجحة، توقف
+      if (finalResult && (finalResult.code === '1' || finalResult.code === '0' || finalResult.success === true || finalResult.code === '10000')) {
+        break;
       }
     }
 
-    if (finalResult) {
-      const pretty = JSON.stringify(finalResult, null, 2);
-      let badge = '';
-      if (finalResult.code === '1' || finalResult.code === '0' || finalResult.success === true) {
-        badge = `<div class="success-badge">✅ تم بنجاح (${successMethod})</div>`;
-      } else if (finalResult.code === '145003030') {
-        badge = `<div class="error-badge">❌ فشل التوقيع - جميع الطرق جربت ولم تنجح</div>`;
-      } else {
-        badge = `<div class="error-badge">⚠️ الكود: ${finalResult.code} - ${finalResult.msg || ''}</div>`;
-      }
-
-      const debugInfo = `
-        <div class="debug-box">
-          <strong>🔑 معلومات التوقيع:</strong><br>
-          <strong>طريقة التوقيع:</strong> ${successMethod}<br>
-          <strong>bizContent:</strong> <code>${bizContentStr}</code><br>
-          <strong>timestamp:</strong> <code>${timestamp}</code><br>
-          <strong>apiAccount:</strong> <code>${apiAccount}</code><br>
-          <strong>privateKey:</strong> <code>${privateKey}</code><br>
-          <br>
-          <strong style="color:#c0392b;">⚠️ ملاحظة:</strong> إذا استمر الخطأ، الرجاء التواصل مع الدعم الفني لطلب:
-          <ul style="margin:6px 20px; font-size:12px;">
-            <li>مثال عملي لطلب ناجح مع التوقيع من بيئة الاختبار</li>
-            <li>تأكيد صيغة bizContent الصحيحة (هل هي JSON قياسي أم بصيغة Python dict)</li>
-            <li>تأكيد ترتيب العناصر في حساب الـ digest</li>
-          </ul>
+    // إذا لم نجد أي نتيجة
+    if (!finalResult) {
+      resultDiv.innerHTML = `
+        <div style="color:#c0392b; padding:16px; font-family:Tahoma; direction:rtl;">
+          <strong>❌ فشل الاتصال بجميع الـ Proxies</strong><br>
+          <span style="font-size:13px; color:#7f8c8d;">
+            قد يكون الخادم لا يستجيب أو أن الـ API غير متاح حالياً.<br>
+            يرجى المحاولة مرة أخرى لاحقاً، أو استخدام VPN إذا كنت في منطقة محظورة.
+          </span>
         </div>
       `;
-
-      resultDiv.innerHTML = syntaxHighlight(pretty) + badge + debugInfo;
+      return;
     }
+
+    // عرض النتيجة
+    const pretty = JSON.stringify(finalResult, null, 2);
+    let badge = '';
+    if (finalResult.code === '1' || finalResult.code === '0' || finalResult.success === true) {
+      badge = `<div class="success-badge">✅ تم بنجاح (${usedProxy} - ${successMethod})</div>`;
+    } else if (finalResult.code === '145003030') {
+      badge = `<div class="error-badge">❌ فشل التوقيع - جميع الطرق جربت</div>`;
+    } else {
+      badge = `<div class="error-badge">⚠️ الكود: ${finalResult.code} - ${finalResult.msg || ''}</div>`;
+    }
+
+    const debugInfo = `
+      <div class="debug-box">
+        <strong>🔑 معلومات الطلب:</strong><br>
+        <strong>Proxy المستخدم:</strong> ${usedProxy}<br>
+        <strong>طريقة التوقيع:</strong> ${successMethod}<br>
+        <strong>bizContent:</strong> <code>${bizContentStr}</code><br>
+        <strong>timestamp:</strong> <code>${timestamp}</code><br>
+        <strong>apiAccount:</strong> <code>${apiAccount}</code>
+      </div>
+    `;
+
+    resultDiv.innerHTML = syntaxHighlight(pretty) + badge + debugInfo;
   }
 
   document.getElementById('billCode').addEventListener('keydown', function(e) {
