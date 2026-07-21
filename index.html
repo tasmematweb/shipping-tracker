@@ -1,16 +1,21 @@
-<input type="text" id="billCode" placeholder="أدخل رقم البوليصة">
+<input type="text" id="billCode" value="JEG000486004985" placeholder="أدخل رقم البوليصة">
 <button onclick="trackShipment()">تتبع</button>
 <pre id="result"></pre>
 <script>
   async function trackShipment() {
     const code = document.getElementById('billCode').value;
-    const res = await fetch('https://openapi.jtjms-eg.com/webopenplatformapi/api/logistics/trace?uuid=YOUR_UUID', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ billCode: code })
-    });
-    const data = await res.json();
-    document.getElementById('result').innerText = JSON.stringify(data, null, 2);
+    const resultDiv = document.getElementById('result');
+    resultDiv.innerText = "جاري البحث...";
+    try {
+      const res = await fetch('https://openapi.jtjms-eg.com/webopenplatformapi/api/logistics/trace?uuid=YOUR_UUID', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ billCode: code })
+      });
+      const data = await res.json();
+      resultDiv.innerText = JSON.stringify(data, null, 2);
+    } catch (error) {
+      resultDiv.innerText = "حدث خطأ في الاتصال: " + error.message;
+    }
   }
 </script>
-
