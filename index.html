@@ -184,6 +184,17 @@
       text-align: left;
       word-break: break-all;
     }
+    .proxy-note {
+      direction: rtl;
+      margin-top: 10px;
+      padding: 12px;
+      background: #fff3cd;
+      border-radius: 10px;
+      font-family: Tahoma;
+      font-size: 13px;
+      color: #856404;
+      border-right: 4px solid #ffc107;
+    }
     @media (max-width: 600px) {
       .container { padding: 24px 18px; }
       .search-box { flex-direction: column; border-radius: 24px; padding: 6px; gap: 8px; }
@@ -254,50 +265,38 @@
       </div>
     `;
 
-    // =========================================
-    // بيانات حسابك من الصورة
-    // =========================================
     const apiAccount = "292508153084379141";
-    const privateKey = "10a1047cce70493c9d5d29704f05d0d9";  // لاحظ: 10a وليس a0a
+    const privateKey = "10a1047cce70493c9d5d29704f05d0d9";
     const timestamp = Date.now().toString();
 
-    // =========================================
     // صيغة bizContent حسب المثال
-    // =========================================
     const bizContentStr = `{'billCodes': '${code}'}`;
 
-    // =========================================
-    // جميع تركيبات التوقيع الممكنة
-    // =========================================
+    // جميع تركيبات التوقيع
     const combinations = [
       { name: 'bizContent + timestamp + apiAccount + privateKey', data: bizContentStr + timestamp + apiAccount + privateKey },
       { name: 'apiAccount + timestamp + bizContent + privateKey', data: apiAccount + timestamp + bizContentStr + privateKey },
       { name: 'privateKey + bizContent + timestamp + apiAccount', data: privateKey + bizContentStr + timestamp + apiAccount },
       { name: 'apiAccount + bizContent + timestamp + privateKey', data: apiAccount + bizContentStr + timestamp + privateKey },
       { name: 'bizContent + privateKey + timestamp + apiAccount', data: bizContentStr + privateKey + timestamp + apiAccount },
-      { name: 'timestamp + bizContent + apiAccount + privateKey', data: timestamp + bizContentStr + apiAccount + privateKey },
-      // إضافة تركيبات جديدة
-      { name: 'privateKey + timestamp + bizContent + apiAccount', data: privateKey + timestamp + bizContentStr + apiAccount },
-      { name: 'timestamp + privateKey + bizContent + apiAccount', data: timestamp + privateKey + bizContentStr + apiAccount }
+      { name: 'timestamp + bizContent + apiAccount + privateKey', data: timestamp + bizContentStr + apiAccount + privateKey }
     ];
 
-    // =========================================
-    // الرابط الصحيح من الصورة
-    // =========================================
     const targetUrl = 'https://demoopenapi.jtjms-eg.com/webopenplatform/api/api/logistics/trace?uuid=c7f405da081d436d8ee146b59f885dce';
 
     // =========================================
-    // Proxies للاختبار
+    // Proxies جديدة تعمل بدون تفعيل
     // =========================================
     const proxies = [
-      { url: 'https://corsproxy.io/?', name: 'corsproxy.io' },
       { url: 'https://api.allorigins.win/raw?url=', name: 'allorigins.win' },
-      { url: 'https://cors-anywhere.herokuapp.com/', name: 'cors-anywhere' }
+      { url: 'https://corsproxy.io/?', name: 'corsproxy.io' },
+      { url: 'https://thingproxy.freeboard.io/fetch/', name: 'thingproxy' }
     ];
 
     let finalResult = null;
     let successMethod = '';
     let usedProxy = '';
+    let allFailed = true;
 
     for (let p = 0; p < proxies.length; p++) {
       const proxy = proxies[p];
@@ -323,10 +322,17 @@
           let data;
           try { data = JSON.parse(rawText); } catch { data = { raw: rawText }; }
 
+          // إذا كانت الاستجابة تحتوي على "corsdemo" فهذا يعني أن Proxy يحتاج تفعيل
+          if (rawText.includes('corsdemo')) {
+            console.log(`Proxy ${proxy.name} needs activation`);
+            continue;
+          }
+
           if (data.code === '1' || data.code === '0' || data.success === true || data.code === '10000') {
             finalResult = data;
             successMethod = combinations[i].name;
             usedProxy = proxy.name;
+            allFailed = false;
             break;
           }
 
@@ -334,6 +340,7 @@
             finalResult = data;
             successMethod = combinations[i].name;
             usedProxy = proxy.name;
+            allFailed = false;
             break;
           }
 
@@ -341,6 +348,7 @@
             finalResult = data;
             successMethod = combinations[i].name;
             usedProxy = proxy.name;
+            allFailed = false;
           }
         } catch (e) {
           console.log(`Proxy ${proxy.name} failed:`, e.message);
@@ -357,7 +365,9 @@
         <div style="color:#c0392b; padding:16px; font-family:Tahoma; direction:rtl;">
           <strong>❌ فشل الاتصال بجميع الـ Proxies</strong><br>
           <span style="font-size:13px; color:#7f8c8d;">
-            يرجى المحاولة مرة أخرى، أو استخدام Postman لاختبار الـ API مباشرة.
+            يرجى المحاولة مرة أخرى، أو استخدام <strong>Postman</strong> لاختبار الـ API مباشرة.
+            <br><br>
+            <strong>📌 ملاحظة:</strong> قد يكون الخادم لا يستجيب حالياً، أو أن بيانات الحساب تحتاج إلى تفعيل.
           </span>
         </div>
       `;
@@ -381,8 +391,7 @@
         <strong>طريقة التوقيع:</strong> ${successMethod}<br>
         <strong>bizContent:</strong> <code>${bizContentStr}</code><br>
         <strong>timestamp:</strong> <code>${timestamp}</code><br>
-        <strong>apiAccount:</strong> <code>${apiAccount}</code><br>
-        <strong>privateKey:</strong> <code>${privateKey}</code>
+        <strong>apiAccount:</strong> <code>${apiAccount}</code>
       </div>
     `;
 
