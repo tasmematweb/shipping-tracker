@@ -160,6 +160,29 @@
       font-weight: 600;
       margin-bottom: 10px;
     }
+    .debug-box {
+      direction: rtl;
+      margin-top: 12px;
+      padding: 14px;
+      background: #f0f4ff;
+      border-radius: 10px;
+      font-family: Tahoma;
+      font-size: 13px;
+      color: #1a2b4a;
+      text-align: right;
+      border-right: 4px solid #0066ff;
+    }
+    .debug-box code {
+      background: #e8edf5;
+      padding: 2px 8px;
+      border-radius: 4px;
+      font-family: 'Consolas', monospace;
+      font-size: 12px;
+      display: inline-block;
+      margin: 2px 0;
+      direction: ltr;
+      text-align: left;
+    }
     @media (max-width: 600px) {
       .container { padding: 24px 18px; }
       .search-box { flex-direction: column; border-radius: 24px; padding: 6px; gap: 8px; }
@@ -187,7 +210,7 @@
   <p class="subtitle">أدخل رقم البوليصة (Bill Code) واضغط بحث لتتبع شحنتك</p>
 
   <div class="search-box">
-    <input type="text" id="billCode" value="UEG000000190252" placeholder="مثال: UEG000000190252">
+    <input type="text" id="billCode" value="JEG000496480982" placeholder="مثال: UEG000000190252">
     <button onclick="trackShipment()">🔍 بحث</button>
   </div>
 
@@ -199,7 +222,6 @@
 </div>
 
 <script>
-  // تنسيق الـ JSON بألوان
   function syntaxHighlight(json) {
     if (typeof json !== 'string') json = JSON.stringify(json, null, 2);
     json = json.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
@@ -215,7 +237,6 @@
     );
   }
 
-  // دالة التتبع الرئيسية
   async function trackShipment() {
     const code = document.getElementById('billCode').value.trim();
     const resultDiv = document.getElementById('result');
@@ -232,40 +253,44 @@
       </div>
     `;
 
-    // ===== بيانات الحساب (من الوثائق) =====
     const apiAccount = "292508153084379141";
     const privateKey = "a0a1047cce70493c9d5d29704f05d0d9";
     const timestamp = Date.now().toString();
 
-    // بناء bizContent بالشكل الصحيح (مصفوفة billCodes)
-    // ملاحظة: في المثال كان 'billCodes': 'UEG000000190252' (بدون مصفوفة)
-    // لكن الوثائق تقول تدعم 30 رقم، لذا الأفضل استخدام مصفوفة
-    const bizContentObj = { billCodes: [code] };
-    // للتوافق مع المثال، جرب أيضاً الصيغة: { billCodes: code }
-    const bizContentStr = JSON.stringify(bizContentObj);
+    // =========================================
+    // الطريقة الصحيحة لبناء bizContent حسب المثال:
+    // {'billCodes': 'UEG000000190252'}  (بدون مصفوفة)
+    // =========================================
+    const bizContentStr = `{'billCodes': '${code}'}`;
 
-    // ===== حساب التوقيع =====
-    // الطريقة الأولى (الأكثر شيوعاً): bizContent + timestamp + apiAccount + privateKey
-    const dataToSign1 = bizContentStr + timestamp + apiAccount + privateKey;
-    const hash1 = CryptoJS.MD5(dataToSign1);
-    const digest1 = CryptoJS.enc.Base64.stringify(hash1);
-
-    // الطريقة الثانية (كما في بعض الوثائق): privateKey + bizContent + timestamp
-    const dataToSign2 = privateKey + bizContentStr + timestamp;
-    const hash2 = CryptoJS.MD5(dataToSign2);
-    const digest2 = CryptoJS.enc.Base64.stringify(hash2);
-
-    // الطريقة الثالثة: apiAccount + timestamp + bizContent + privateKey
-    const dataToSign3 = apiAccount + timestamp + bizContentStr + privateKey;
-    const hash3 = CryptoJS.MD5(dataToSign3);
-    const digest3 = CryptoJS.enc.Base64.stringify(hash3);
-
-    // سنحاول الطرق الثلاث بالتتابع حتى تنجح إحداها
-    const digests = [digest1, digest2, digest3];
-    const methods = [
-      'bizContent + timestamp + apiAccount + privateKey',
-      'privateKey + bizContent + timestamp',
-      'apiAccount + timestamp + bizContent + privateKey'
+    // =========================================
+    // تجربة جميع تركيبات التوقيع الممكنة
+    // =========================================
+    const combinations = [
+      {
+        name: 'bizContent + timestamp + apiAccount + privateKey',
+        data: bizContentStr + timestamp + apiAccount + privateKey
+      },
+      {
+        name: 'apiAccount + timestamp + bizContent + privateKey',
+        data: apiAccount + timestamp + bizContentStr + privateKey
+      },
+      {
+        name: 'privateKey + bizContent + timestamp + apiAccount',
+        data: privateKey + bizContentStr + timestamp + apiAccount
+      },
+      {
+        name: 'apiAccount + bizContent + timestamp + privateKey',
+        data: apiAccount + bizContentStr + timestamp + privateKey
+      },
+      {
+        name: 'bizContent + privateKey + timestamp + apiAccount',
+        data: bizContentStr + privateKey + timestamp + apiAccount
+      },
+      {
+        name: 'timestamp + bizContent + apiAccount + privateKey',
+        data: timestamp + bizContentStr + apiAccount + privateKey
+      }
     ];
 
     const targetUrl = 'https://demoopenapi.jtjms-eg.com/webopenplatformapi/api/logistics/trace?uuid=c7f405da081d436d8ee146b59f885dce';
@@ -274,16 +299,18 @@
     let finalResult = null;
     let successMethod = '';
 
-    // تجربة كل طريقة توقيع
-    for (let i = 0; i < digests.length; i++) {
+    for (let i = 0; i < combinations.length; i++) {
       try {
+        const hash = CryptoJS.MD5(combinations[i].data);
+        const digest = CryptoJS.enc.Base64.stringify(hash);
+
         const res = await fetch(proxyUrl, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/x-www-form-urlencoded',
             'apiAccount': apiAccount,
             'timestamp': timestamp,
-            'digest': digests[i]
+            'digest': digest
           },
           body: 'bizContent=' + encodeURIComponent(bizContentStr)
         });
@@ -292,27 +319,26 @@
         let data;
         try { data = JSON.parse(rawText); } catch { data = { raw: rawText }; }
 
-        // إذا نجح الطلب (code = 1 أو 0 أو success)
+        // إذا نجح الطلب
         if (data.code === '1' || data.code === '0' || data.success === true || data.code === '10000') {
           finalResult = data;
-          successMethod = methods[i];
+          successMethod = combinations[i].name;
           break;
         }
 
         // إذا كان الخطأ ليس توقيعاً، نعرض النتيجة فوراً
         if (data.code !== '145003030') {
           finalResult = data;
-          successMethod = methods[i] + ' (لم ينجح لكنه أعاد رداً)';
+          successMethod = combinations[i].name + ' (رد غير متوقع)';
           break;
         }
 
-        // إذا كان الخطأ هو توقيع فقط، نستمر في تجربة الطرق الأخرى
-        if (i === digests.length - 1) {
+        if (i === combinations.length - 1) {
           finalResult = data;
           successMethod = 'جميع الطرق فشلت';
         }
       } catch (e) {
-        if (i === digests.length - 1) {
+        if (i === combinations.length - 1) {
           resultDiv.innerHTML = `
             <div style="color:#c0392b; padding:16px; font-family:Tahoma; direction:rtl;">
               <strong>❌ حدث خطأ في الاتصال:</strong> ${e.message}
@@ -323,27 +349,32 @@
       }
     }
 
-    // عرض النتيجة
     if (finalResult) {
       const pretty = JSON.stringify(finalResult, null, 2);
       let badge = '';
       if (finalResult.code === '1' || finalResult.code === '0' || finalResult.success === true) {
         badge = `<div class="success-badge">✅ تم بنجاح (${successMethod})</div>`;
       } else if (finalResult.code === '145003030') {
-        badge = `<div class="error-badge">❌ فشل التوقيع - جرب الطرق التالية</div>`;
+        badge = `<div class="error-badge">❌ فشل التوقيع - جميع الطرق جربت ولم تنجح</div>`;
       } else {
         badge = `<div class="error-badge">⚠️ الكود: ${finalResult.code} - ${finalResult.msg || ''}</div>`;
       }
 
-      // إضافة معلومات التوقيع المستخدمة
       const debugInfo = `
-        <div style="direction:rtl; margin-top:12px; padding:12px; background:#f0f4ff; border-radius:10px; font-family:Tahoma; font-size:12px; color:#1a2b4a; direction:ltr; text-align:left;">
-          <strong style="direction:rtl; display:block; margin-bottom:6px;">🔑 معلومات التوقيع:</strong>
-          <div>طريقة التوقيع: ${successMethod}</div>
-          <div>bizContent: ${bizContentStr}</div>
-          <div>timestamp: ${timestamp}</div>
-          <div>apiAccount: ${apiAccount}</div>
-          <div style="word-break:break-all;">privateKey: ${privateKey}</div>
+        <div class="debug-box">
+          <strong>🔑 معلومات التوقيع:</strong><br>
+          <strong>طريقة التوقيع:</strong> ${successMethod}<br>
+          <strong>bizContent:</strong> <code>${bizContentStr}</code><br>
+          <strong>timestamp:</strong> <code>${timestamp}</code><br>
+          <strong>apiAccount:</strong> <code>${apiAccount}</code><br>
+          <strong>privateKey:</strong> <code>${privateKey}</code><br>
+          <br>
+          <strong style="color:#c0392b;">⚠️ ملاحظة:</strong> إذا استمر الخطأ، الرجاء التواصل مع الدعم الفني لطلب:
+          <ul style="margin:6px 20px; font-size:12px;">
+            <li>مثال عملي لطلب ناجح مع التوقيع من بيئة الاختبار</li>
+            <li>تأكيد صيغة bizContent الصحيحة (هل هي JSON قياسي أم بصيغة Python dict)</li>
+            <li>تأكيد ترتيب العناصر في حساب الـ digest</li>
+          </ul>
         </div>
       `;
 
@@ -351,7 +382,6 @@
     }
   }
 
-  // دعم زر Enter
   document.getElementById('billCode').addEventListener('keydown', function(e) {
     if (e.key === 'Enter') { e.preventDefault(); trackShipment(); }
   });
