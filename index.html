@@ -30,15 +30,15 @@ class JnTTrackingService {
 
       // 4. إعداد الـ Headers
       final Map<String, String> headers = {
-        "Content-Type": "application/x-www-form-urlencoded",
+        "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
         "apiAccount": _apiAccount,
         "timestamp": timestamp,
         "digest": digest,
       };
 
-      // 5. إعداد الـ Body
+      // 5. إعداد الـ Body مع ترميز URL
       final Map<String, String> body = {
-        "bizContent": bizContent,
+        "bizContent": Uri.encodeComponent(bizContent),
       };
 
       // 6. تنفيذ الطلب (POST Request)
@@ -58,6 +58,7 @@ class JnTTrackingService {
         }
       } else {
         print("HTTP Error: ${response.statusCode}");
+        print("Response Body: ${response.body}");
         return null;
       }
     } catch (e) {
