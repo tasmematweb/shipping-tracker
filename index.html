@@ -28,19 +28,15 @@
       const privateKey = "a0a1047cce70493c9d5d29704f05d0d9";
       const timestamp = Date.now().toString();
       
-      const bizContentObj = { billCodes: [code] };
-      const bizContentStr = JSON.stringify(bizContentObj);
+      const bizContentStr = JSON.stringify({ billCodes: [code] });
 
-      // حساب التوقيع الصحيح
+      // حساب التوقيع الصحيح بناءً على النص الصريح
       const dataToSign = bizContentStr + timestamp + privateKey;
       const hashDigest = CryptoJS.MD5(dataToSign);
       const digest = CryptoJS.enc.Base64.stringify(hashDigest);
 
       const targetUrl = 'https://demoopenapi.jtjms-eg.com/webopenplatformapi/api/logistics/trace?uuid=c7f405da081d436d8ee146b59f885dce';
       const proxyUrl = 'https://corsproxy.io/?' + encodeURIComponent(targetUrl);
-
-      const formData = new URLSearchParams();
-      formData.append('bizContent', bizContentStr);
 
       try {
         const res = await fetch(proxyUrl, {
@@ -51,7 +47,7 @@
             'timestamp': timestamp,
             'digest': digest
           },
-          body: formData
+          body: 'bizContent=' + encodeURIComponent(bizContentStr)
         });
 
         const data = await res.json();
