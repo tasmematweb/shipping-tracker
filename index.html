@@ -2,8 +2,7 @@
 <html lang="ar" dir="rtl">
 <head>
   <meta charset="UTF-8">
-  <title>تتبع الشحنة المباشر</title>
-  <!-- استدعاء مكتبة التشفير لحساب الـ Digest في المتصفح -->
+  <title>تتبع الشحنة الفوري</title>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
 </head>
 <body style="font-family: Tahoma; padding: 20px; background: #f9f9f9;">
@@ -23,7 +22,7 @@
         return;
       }
 
-      resultDiv.innerText = "جاري حساب التوقيع والبحث...";
+      resultDiv.innerText = "جاري الاتصال وجلب البيانات...";
 
       const apiAccount = "292508153084379141";
       const privateKey = "a0a1047cce70493c9d5d29704f05d0d9";
@@ -32,16 +31,15 @@
       const bizContentObj = { billCodes: [code] };
       const bizContentStr = JSON.stringify(bizContentObj);
 
-      // حساب التوقيع الصحيح (Data + Timestamp + PrivateKey) ثم MD5 ثم Base64
+      // حساب التوقيع بدقة
       const dataToSign = bizContentStr + timestamp + privateKey;
       const hashDigest = CryptoJS.MD5(dataToSign);
       const digest = CryptoJS.enc.Base64.stringify(hashDigest);
 
       const targetUrl = 'https://demoopenapi.jtjms-eg.com/webopenplatformapi/api/logistics/trace?uuid=c7f405da081d436d8ee146b59f885dce';
-      const proxyUrl = 'https://corsproxy.io/?' + encodeURIComponent(targetUrl);
-
-      const formData = new URLSearchParams();
-      formData.append('bizContent', bizContentStr);
+      
+      // استخدام وسيط بديل ونظيف لنقل الـ Headers دون تغيير
+      const proxyUrl = 'https://thingproxy.freeboard.io/fetch/' + targetUrl;
 
       try {
         const res = await fetch(proxyUrl, {
@@ -52,7 +50,7 @@
             'timestamp': timestamp,
             'digest': digest
           },
-          body: formData
+          body: 'bizContent=' + encodeURIComponent(bizContentStr)
         });
 
         const data = await res.json();
