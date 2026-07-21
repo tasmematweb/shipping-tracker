@@ -11,13 +11,13 @@ class JnTTrackingService {
   final String _baseUrl = "https://open.jtjms-eg.com/web-openapi/api/logistics/trace";
 
   /// دالة جلب تتبع الشحنة مع التعامل مع التوقيع (Digest)
-  Future<Map<String, dynamic>?> fetchTrackingDetails(String billCode) async {
+  Future&lt;Map&lt;String, dynamic&gt;?&gt; fetchTrackingDetails(String billCode) async {
     try {
       // 1. توليد الـ timestamp الحالي
       final String timestamp = DateTime.now().millisecondsSinceEpoch.toString();
 
       // 2. تجهيز الـ bizContent
-      final Map<String, dynamic> bizContentMap = {
+      final Map&lt;String, dynamic&gt; bizContentMap = {
         "billCodes": [billCode]
       };
       final String bizContent = jsonEncode(bizContentMap);
@@ -29,7 +29,7 @@ class JnTTrackingService {
       final String digest = base64.encode(md5Hash.bytes);
 
       // 4. إعداد الـ Headers
-      final Map<String, String> headers = {
+      final Map&lt;String, String&gt; headers = {
         "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
         "apiAccount": _apiAccount,
         "timestamp": timestamp,
@@ -37,7 +37,7 @@ class JnTTrackingService {
       };
 
       // 5. إعداد الـ Body مع ترميز URL
-      final Map<String, String> body = {
+      final Map&lt;String, String&gt; body = {
         "bizContent": Uri.encodeComponent(bizContent),
       };
 
@@ -68,12 +68,12 @@ class JnTTrackingService {
   }
 
   /// دالة مساعدة لترجمة وتحويل رموز الـ Scan Types
-  Map<String, String> parseScanDetails(Map<String, dynamic> detailItem) {
+  Map&lt;String, String&gt; parseScanDetails(Map&lt;String, dynamic&gt; detailItem) {
     String scanTypeName = detailItem["scanTypeName"] ?? "";
     String desc = detailItem["desc"] ?? "";
     String problemDescription = detailItem["problemDescription"] ?? "";
     
-    final Map<String, String> commonScanNames = {
+    final Map&lt;String, String&gt; commonScanNames = {
       "Pick up": "تم الاستلام (جمع الشحنة)",
       "Enter branch Scan": "مسح دخول الفرع",
       "Sending scan": "مسح الإرسال",
