@@ -7,7 +7,7 @@
 <body style="font-family: Tahoma; padding: 20px;">
 
   <h2>تتبع الشحنة</h2>
-  <input type="text" id="billCode" value="JEG000470355620" placeholder="أدخل رقم البوليصة" style="padding:8px; width:250px;">
+  <input type="text" id="billCode" value="JEG000496480982" placeholder="أدخل رقم البوليصة" style="padding:8px; width:250px;">
   <button onclick="trackShipment()" style="padding:8px 15px; background:#007bff; color:#fff; border:none; cursor:pointer;">تتبع</button>
   <pre id="result" style="background:#f4f4f4; padding:15px; margin-top:15px; direction:ltr; text-align:left;"></pre>
 
@@ -15,23 +15,26 @@
     async function trackShipment() {
       const code = document.getElementById('billCode').value.trim();
       const resultDiv = document.getElementById('result');
-      resultDiv.innerText = "جاري الاتصال بسيرفر الاختبار...";
+      resultDiv.innerText = "جاري الاتصال والبحث...";
 
-      // بيانات الاختبار الرسمية من لوحة تحكم J&T
       const apiAccount = "292508153084379141";
       const timestamp = Date.now().toString();
 
       const formData = new URLSearchParams();
       formData.append('bizContent', JSON.stringify({ billCodes: [code] }));
 
+      // استخدام وسيط لتخطي حظر CORS للمتصفح
+      const targetUrl = 'https://demoopenapi.jtjms-eg.com/webopenplatformapi/api/logistics/trace?uuid=c7f405da081d436d8ee146b59f885dce';
+      const proxyUrl = 'https://corsproxy.io/?' + encodeURIComponent(targetUrl);
+
       try {
-        const res = await fetch('https://demoopenapi.jtjms-eg.com/webopenplatformapi/api/logistics/trace?uuid=c7f405da081d436d8ee146b59f885dce', {
+        const res = await fetch(proxyUrl, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/x-www-form-urlencoded',
             'apiAccount': apiAccount,
             'timestamp': timestamp,
-            'digest': 'TEST_DIGEST' 
+            'digest': 'TEST_DIGEST'
           },
           body: formData
         });
@@ -39,7 +42,7 @@
         const data = await res.json();
         resultDiv.innerText = JSON.stringify(data, null, 2);
       } catch (error) {
-        resultDiv.innerText = "خطأ: " + error.message + "\n\n(ملاحظة: هذا الخطأ يظهر بسبب سياسة CORS من المتصفح، وتحتاج لتفعيل إضافة تجاوز CORS أو تشغيله عبر سيرفر خلفي).";
+        resultDiv.innerText = "خطأ: " + error.message;
       }
     }
   </script>
