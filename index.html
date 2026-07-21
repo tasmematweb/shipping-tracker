@@ -3,12 +3,12 @@ import 'package:crypto/crypto.dart';
 import 'package:http/http.dart' as http;
 
 class JnTTrackingService {
-  // بيانات الحساب الخاصة بك (تأكد من مطابقتها لبياناتك الفعلية)
+  // بيانات الحساب الخاصة بك
   final String _apiAccount = "292508153084379141";
   final String _privateKey = "a0a1047cce70493c9d5d29704f05d0d9";
   
   // رابط الـ API للإنتاج (Production Endpoint)
-  final String _baseUrl = "https://open.jtjms-eg.com/web-openapi/api/logistics/trace"; // استبدل بالرابط الرسمي المعتمد لطلب التتبع
+  final String _baseUrl = "https://open.jtjms-eg.com/web-openapi/api/logistics/trace";
 
   /// دالة جلب تتبع الشحنة مع التعامل مع التوقيع (Digest)
   Future<Map<String, dynamic>?> fetchTrackingDetails(String billCode) async {
@@ -16,19 +16,19 @@ class JnTTrackingService {
       // 1. توليد الـ timestamp الحالي
       final String timestamp = DateTime.now().millisecondsSinceEpoch.toString();
 
-      // 2. تجهيز الـ bizContent (يحتوي على رقم البوليصة)
+      // 2. تجهيز الـ bizContent
       final Map<String, dynamic> bizContentMap = {
         "billCodes": [billCode]
       };
       final String bizContent = jsonEncode(bizContentMap);
 
-      // 3. حساب الـ Digest بالطريقة الصحيحة: MD5(bizContent + timestamp + privateKey) ثم Base64
+      // 3. حساب الـ Digest
       final String rawData = bizContent + timestamp + _privateKey;
       final bytes = utf8.encode(rawData);
       final md5Hash = md5.convert(bytes);
       final String digest = base64.encode(md5Hash.bytes);
 
-      // 4. إعداد الـ Headers المطلوبة
+      // 4. إعداد الـ Headers
       final Map<String, String> headers = {
         "Content-Type": "application/x-www-form-urlencoded",
         "apiAccount": _apiAccount,
@@ -36,7 +36,7 @@ class JnTTrackingService {
         "digest": digest,
       };
 
-      // 5. إعداد الـ Body بصيغة x-www-form-urlencoded
+      // 5. إعداد الـ Body
       final Map<String, String> body = {
         "bizContent": bizContent,
       };
@@ -51,7 +51,7 @@ class JnTTrackingService {
       if (response.statusCode == 200) {
         final data = jsonDecode(response.body);
         if (data["code"] == "1" || data["code"] == 1 || data["msg"] == "success") {
-          return data; // يتم إرجاع البيانات بنجاح لمعالجتها في واجهة التطبيق
+          return data;
         } else {
           print("API Error Code: ${data["code"]}, Message: ${data["msg"]}");
           return null;
@@ -66,14 +66,12 @@ class JnTTrackingService {
     }
   }
 
-  /// دالة مساعدة لترجمة وتحويل رموز الـ Scan Types وأسباب المشاكل إلى نصوص واضحة
+  /// دالة مساعدة لترجمة وتحويل رموز الـ Scan Types
   Map<String, String> parseScanDetails(Map<String, dynamic> detailItem) {
-    // استخراج اسم الحركة ووصف المشكلة بناءً على الهيكل المستخرج من الدعم الفني
     String scanTypeName = detailItem["scanTypeName"] ?? "";
     String desc = detailItem["desc"] ?? "";
     String problemDescription = detailItem["problemDescription"] ?? "";
     
-    // خريطة ترجمة الحالات الشائعة
     final Map<String, String> commonScanNames = {
       "Pick up": "تم الاستلام (جمع الشحنة)",
       "Enter branch Scan": "مسح دخول الفرع",
@@ -89,8 +87,8 @@ class JnTTrackingService {
 
     return {
       "scanName": arabicScanName,
-      "description": desc, // يحتوي غالباً على تفاصيل المندوب ورقم التواصل
-      "problemReason": problemDescription, // يحتوي على تفاصيل السبب الفرعي والرئيسي للمشكلة إن وجدت
+      "description": desc,
+      "problemReason": problemDescription,
     };
   }
 }
