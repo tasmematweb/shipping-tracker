@@ -1,77 +1,96 @@
-<!DOCTYPE html>
-<html lang="ar" dir="rtl">
-<head>
-  <meta charset="UTF-8">
-  <title>تتبع الشحنة الفوري</title>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
-</head>
-<body style="font-family: Tahoma; padding: 20px; background: #f9f9f9;">
+import 'dart:convert';
+import 'package:crypto/crypto.dart';
+import 'package:http/http.dart' as http;
 
-  <h2>تتبع الشحنة الفوري</h2>
-  <input type="text" id="billCode" value="JEG000498643576" placeholder="أدخل رقم البوليصة" style="padding:10px; width:280px; font-size:16px;">
-  <button onclick="trackShipment()" style="padding:10px 20px; background:#007bff; color:#fff; border:none; cursor:pointer; font-size:16px;">تتبع</button>
-  <pre id="result" style="background:#fff; padding:15px; margin-top:15px; border:1px solid #ddd; direction:ltr; text-align:left; max-height:400px; overflow-y:auto;"></pre>
+class JnTTrackingService {
+  // بيانات الحساب الخاصة بك (تأكد من مطابقتها لبياناتك الفعلية)
+  final String _apiAccount = "292508153084379141";
+  final String _privateKey = "a0a1047cce70493c9d5d29704f05d0d9";
+  
+  // رابط الـ API للإنتاج (Production Endpoint)
+  final String _baseUrl = "https://open.jtjms-eg.com/web-openapi/api/logistics/trace"; // استبدل بالرابط الرسمي المعتمد لطلب التتبع
 
-  <script>
-    async function trackShipment() {
-      const code = document.getElementById('billCode').value.trim();
-      const resultDiv = document.getElementById('result');
-      
-      if (!code) {
-        resultDiv.innerText = "الرجاء إدخال رقم البوليصة.";
-        return;
-      }
+  /// دالة جلب تتبع الشحنة مع التعامل مع التوقيع (Digest)
+  Future<Map<String, dynamic>?> fetchTrackingDetails(String billCode) async {
+    try {
+      // 1. توليد الـ timestamp الحالي
+      final String timestamp = DateTime.now().millisecondsSinceEpoch.toString();
 
-      resultDiv.innerText = "جاري جلب تفاصيل المسار الزمني...";
+      // 2. تجهيز الـ bizContent (يحتوي على رقم البوليصة)
+      final Map<String, dynamic> bizContentMap = {
+        "billCodes": [billCode]
+      };
+      final String bizContent = jsonEncode(bizContentMap);
 
-      const apiAccount = "292508153084379141";
-      const privateKey = "a0a1047cce70493c9d5d29704f05d0d9";
-      const timestamp = Date.now().toString();
-      
-      const bizContentObj = { billCodes: [code] };
-      const bizContentStr = JSON.stringify(bizContentObj);
+      // 3. حساب الـ Digest بالطريقة الصحيحة: MD5(bizContent + timestamp + privateKey) ثم Base64
+      final String rawData = bizContent + timestamp + _privateKey;
+      final bytes = utf8.encode(rawData);
+      final md5Hash = md5.convert(bytes);
+      final String digest = base64.encode(md5Hash.bytes);
 
-      // حساب التوقيع بدقة متناهية
-      const dataToSign = bizContentStr + timestamp + privateKey;
-      const hashDigest = CryptoJS.MD5(dataToSign);
-      const digest = CryptoJS.enc.Base64.stringify(hashDigest);
+      // 4. إعداد الـ Headers المطلوبة
+      final Map<String, String> headers = {
+        "Content-Type": "application/x-www-form-urlencoded",
+        "apiAccount": _apiAccount,
+        "timestamp": timestamp,
+        "digest": digest,
+      };
 
-      const targetUrl = 'https://demoopenapi.jtjms-eg.com/webopenplatformapi/api/logistics/trace?uuid=c7f405da081d436d8ee146b59f885dce';
-      const proxyUrl = 'https://corsproxy.io/?' + encodeURIComponent(targetUrl);
+      // 5. إعداد الـ Body بصيغة x-www-form-urlencoded
+      final Map<String, String> body = {
+        "bizContent": bizContent,
+      };
 
-      const formData = new URLSearchParams();
-      formData.append('bizContent', bizContentStr);
+      // 6. تنفيذ الطلب (POST Request)
+      final response = await http.post(
+        Uri.parse(_baseUrl),
+        headers: headers,
+        body: body,
+      );
 
-      try {
-        const res = await fetch(proxyUrl, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/x-www-form-urlencoded',
-            'apiAccount': apiAccount,
-            'timestamp': timestamp,
-            'digest': digest
-          },
-          body: formData
-        });
-
-        const data = await res.json();
-        
-        // عرض النتيجة بشكل مرتب أو النص الخام للتأكد من وصول بيانات المسار (details)
-        if (data.code === "1" && data.data && data.data.length > 0) {
-          let output = "حالة الشحنة: ناجح\n\nالمسار الزمني:\n";
-          data.data[0].details.forEach(item => {
-            output += `- [${item.scanTime}] ${item.desc} (${item.scanTypeName})\n`;
-          });
-          resultDiv.innerText = output;
+      if (response.statusCode == 200) {
+        final data = jsonDecode(response.body);
+        if (data["code"] == "1" || data["code"] == 1 || data["msg"] == "success") {
+          return data; // يتم إرجاع البيانات بنجاح لمعالجتها في واجهة التطبيق
         } else {
-          resultDiv.innerText = JSON.stringify(data, null, 2);
+          print("API Error Code: ${data["code"]}, Message: ${data["msg"]}");
+          return null;
         }
-
-      } catch (error) {
-        resultDiv.innerText = "حدث خطأ في الاتصال: " + error.message;
+      } else {
+        print("HTTP Error: ${response.statusCode}");
+        return null;
       }
+    } catch (e) {
+      print("Exception occurred: $e");
+      return null;
     }
-  </script>
+  }
 
-</body>
-</html>
+  /// دالة مساعدة لترجمة وتحويل رموز الـ Scan Types وأسباب المشاكل إلى نصوص واضحة
+  Map<String, String> parseScanDetails(Map<String, dynamic> detailItem) {
+    // استخراج اسم الحركة ووصف المشكلة بناءً على الهيكل المستخرج من الدعم الفني
+    String scanTypeName = detailItem["scanTypeName"] ?? "";
+    String desc = detailItem["desc"] ?? "";
+    String problemDescription = detailItem["problemDescription"] ?? "";
+    
+    // خريطة ترجمة الحالات الشائعة
+    final Map<String, String> commonScanNames = {
+      "Pick up": "تم الاستلام (جمع الشحنة)",
+      "Enter branch Scan": "مسح دخول الفرع",
+      "Sending scan": "مسح الإرسال",
+      "Arrival Scan": "مسح الوصول",
+      "OFD Scan": "جاري توصيل الشحنة (متجه للعميل)",
+      "Sign scan": "تم التوقيع والتسليم بنجاح",
+      "Problem Shipment Scan": "وجد مشكلة في الشحنة (Abnormal)",
+      "Return scan": "مسح الإرجاع",
+    };
+
+    String arabicScanName = commonScanNames[scanTypeName] ?? scanTypeName;
+
+    return {
+      "scanName": arabicScanName,
+      "description": desc, // يحتوي غالباً على تفاصيل المندوب ورقم التواصل
+      "problemReason": problemDescription, // يحتوي على تفاصيل السبب الفرعي والرئيسي للمشكلة إن وجدت
+    };
+  }
+}
