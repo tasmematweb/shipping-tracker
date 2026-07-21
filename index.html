@@ -1,25 +1,65 @@
-<input type="text" id="billCode" value="JEG000477418058" placeholder="أدخل رقم البوليصة">
-<button onclick="trackShipment()">تتبع</button>
-<pre id="result"></pre>
-<script>
-  async function trackShipment() {
-    const code = document.getElementById('billCode').value;
-    const resultDiv = document.getElementById('result');
-    resultDiv.innerText = "جاري البحث...";
-    
-    const formData = new URLSearchParams();
-    formData.append('billCode', code);
-    
-    try {
-      const res = await fetch('https://openapi.jtjms-eg.com/webopenplatformapi/api/logistics/trace?uuid=c7f405da081d436d8ee146b59f885dce', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-        body: formData
-      });
-      const data = await res.json();
-      resultDiv.innerText = JSON.stringify(data, null, 2);
-    } catch (error) {
-      resultDiv.innerText = "حدث خطأ في الاتصال: " + error.message;
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <title>تتبع الشحنات</title>
+  <style>
+    body { font-family: Tahoma, sans-serif; padding: 20px; background: #f9f9f9; }
+    input, button { padding: 10px; font-size: 16px; margin: 5px 0; }
+    input { width: 300px; }
+    button { cursor: pointer; background: #007bff; color: white; border: none; border-radius: 4px; }
+    pre { background: #fff; padding: 15px; border: 1px solid #ddd; border-radius: 4px; max-height: 400px; overflow-y: auto; text-align: left; direction: ltr; }
+  </style>
+</head>
+<body>
+
+  <h2>تتبع الشحنة</h2>
+  <input type="text" id="billCode" value="JEG000477418058" placeholder="أدخل رقم البوليصة">
+  <button onclick="trackShipment()">تتبع</button>
+  <pre id="result">نتيجة البحث ستظهر هنا...</pre>
+
+  <script>
+    async function trackShipment() {
+      const code = document.getElementById('billCode').value.trim();
+      const resultDiv = document.getElementById('result');
+      
+      if (!code) {
+        resultDiv.innerText = "يرجى إدخال رقم بوليصة الشحن.";
+        return;
+      }
+
+      resultDiv.innerText = "جاري البحث واستعلام حالة الشحنة...";
+
+      // بيانات حساب الاختبار الرسمية من التوثيق
+      const apiAccount = "292508153084379141";
+      const timestamp = Date.now().toString();
+      
+      // ملاحظة: حساب الـ Digest الحقيقي يتطلب خوارزمية تشفير (MD5 + Base64) على السيرفر (Backend) 
+      // لتأمين المفتاح الخاص (Private Key)، وللتجربة المباشرة يتم تمرير القيم أو وسيط الخادم.
+      
+      const requestData = {
+        bizContent: JSON.stringify({ billCodes: [code] })
+      };
+
+      try {
+        const res = await fetch('https://demoopenapi.jtjms-eg.com/webopenplatformapi/api/logistics/trace?uuid=c7f405da081d436d8ee146b59f885dce', {
+          method: 'POST',
+          headers: { 
+            'Content-Type': 'application/x-www-form-urlencoded',
+            'apiAccount': apiAccount,
+            'timestamp': timestamp,
+            'digest': 'YOUR_GENERATED_DIGEST' // يتم توليده عبر السيرفر باستخدام المفتاح الخاص
+          },
+          body: new URLSearchParams(requestData)
+        });
+
+        const data = await res.json();
+        resultDiv.innerText = JSON.stringify(data, null, 2);
+      } catch (error) {
+        resultDiv.innerText = "حدث خطأ في الاتصال: " + error.message;
+      }
     }
-  }
-</script>
+  </script>
+
+</body>
+</html>
