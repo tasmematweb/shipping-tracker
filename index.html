@@ -221,7 +221,6 @@
   </div>
   <p class="subtitle">أدخل رقم البوليصة (Bill Code) واضغط بحث لتتبع شحنتك</p>
 
-  <!-- معلومات الحساب الجديد -->
   <div class="account-info">
     <strong>🔑 معلومات الحساب:</strong><br>
     <strong>API Account:</strong> 866958120939696147<br>
@@ -229,7 +228,7 @@
   </div>
 
   <div class="search-box" style="margin-top: 16px;">
-    <input type="text" id="billCode" value="JEG000498304993" placeholder="مثال: JEG000498304993">
+    <input type="text" id="billCode" value="" placeholder="مثال: JEG000498304993">
     <button onclick="trackShipment()">🔍 بحث</button>
   </div>
 
@@ -237,7 +236,7 @@
     <pre id="result"><div class="empty-state"><span>📋</span>انتظر إدخال رقم الشحنة والضغط على بحث</div></pre>
   </div>
 
-  <div class="footer">مدعوم من J&T Express API • بيئة تجريبية (Sandbox)</div>
+  <div class="footer">مدعوم من J&T Express API • بيئة الإنتاج (Production)</div>
 </div>
 
 <script>
@@ -272,34 +271,19 @@
       </div>
     `;
 
-    // =========================================
-    // بيانات الحساب الجديدة (من الصورة)
-    // =========================================
     const apiAccount = "866958120939696147";
     const privateKey = "29535fad70ca4688aaa5b462320eb096";
     const timestamp = Date.now().toString();
 
-    // =========================================
-    // صيغة bizContent (بدون مسافات - كما في المثال)
-    // =========================================
-    const bizContentStr = `{'billCodes': '${code}'}`;
+    const bizContentObj = { billCodes: [code] };
+    const bizContentStr = JSON.stringify(bizContentObj);
 
-    // =========================================
-    // حساب التوقيع بالطريقة الصحيحة:
-    // digest = Base64(MD5(bizContent + timestamp + apiAccount + privateKey))
-    // =========================================
-    const dataToSign = bizContentStr + timestamp + apiAccount + privateKey;
-    const hashDigest = CryptoJS.MD5(dataToSign);
+    const rawData = bizContentStr + timestamp + privateKey;
+    const hashDigest = CryptoJS.MD5(rawData);
     const digest = CryptoJS.enc.Base64.stringify(hashDigest);
 
-    // =========================================
-    // الرابط (بيئة الاختبار)
-    // =========================================
-    const targetUrl = 'https://demoopenapi.jtjms-eg.com/webopenplatform/api/api/logistics/trace?uuid=c7f405da081d436d8ee146b59f885dce';
+    const targetUrl = 'https://open.jtjms-eg.com/web-openapi/api/logistics/trace';
 
-    // =========================================
-    // Proxies
-    // =========================================
     const proxies = [
       { url: 'https://api.allorigins.win/raw?url=', name: 'allorigins.win' },
       { url: 'https://corsproxy.io/?', name: 'corsproxy.io' },
@@ -346,7 +330,7 @@
         <div style="color:#c0392b; padding:16px; font-family:Tahoma; direction:rtl;">
           <strong>❌ فشل الاتصال بجميع الـ Proxies</strong><br>
           <span style="font-size:13px; color:#7f8c8d;">
-            يرجى المحاولة مرة أخرى، أو استخدام <strong>Postman</strong> لاختبار الـ API مباشرة.
+            يرجى المحاولة مرة أخرى لاحقاً.
           </span>
         </div>
       `;
@@ -355,7 +339,7 @@
 
     const pretty = JSON.stringify(finalResult, null, 2);
     let badge = '';
-    if (finalResult.code === '1' || finalResult.code === '0' || finalResult.success === true || finalResult.code === '10000') {
+    if (finalResult.code === '1' || finalResult.code === 1 || finalResult.msg === 'success') {
       badge = `<div class="success-badge">✅ تم بنجاح (${usedProxy})</div>`;
     } else {
       badge = `<div class="error-badge">⚠️ الكود: ${finalResult.code} - ${finalResult.msg || ''}</div>`;
