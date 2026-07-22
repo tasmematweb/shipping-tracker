@@ -32,17 +32,7 @@
       border-bottom: 3px solid #f0f4ff;
       padding-bottom: 20px;
     }
-    .header-icon {
-      font-size: 32px;
-      background: #0066ff;
-      color: white;
-      width: 50px;
-      height: 50px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      border-radius: 14px;
-    }
+    .header-icon { font-size: 32px; background: #0066ff; color: white; width: 50px; height: 50px; display: flex; align-items: center; justify-content: center; border-radius: 14px; }
     h2 { font-size: 26px; font-weight: 700; color: #1a2b4a; }
     .subtitle { color: #5e6f8d; font-size: 14px; margin-bottom: 25px; }
     .search-box {
@@ -55,10 +45,7 @@
       border: 1px solid #e2eaf6;
       transition: border-color 0.3s, box-shadow 0.3s;
     }
-    .search-box:focus-within {
-      border-color: #0066ff;
-      box-shadow: 0 0 0 4px rgba(0,102,255,0.12);
-    }
+    .search-box:focus-within { border-color: #0066ff; box-shadow: 0 0 0 4px rgba(0,102,255,0.12); }
     .search-box input {
       flex: 1;
       padding: 16px 22px;
@@ -107,59 +94,18 @@
       overflow-y: auto;
       background: #fafcff;
     }
-    #result .empty-state {
-      color: #8a9bb8;
-      text-align: center;
-      padding: 40px 20px;
-      font-size: 16px;
-      font-family: 'Tahoma', Arial, sans-serif;
-      direction: rtl;
-    }
+    #result .empty-state { color: #8a9bb8; text-align: center; padding: 40px 20px; font-size: 16px; font-family: 'Tahoma', Arial, sans-serif; direction: rtl; }
     #result .empty-state span { display: block; font-size: 48px; margin-bottom: 12px; }
-    #result .loading {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 12px;
-      padding: 30px 20px;
-      color: #0066ff;
-      font-family: 'Tahoma', Arial, sans-serif;
-      direction: rtl;
-    }
-    .spinner {
-      width: 22px;
-      height: 22px;
-      border: 3px solid #dce5f2;
-      border-top: 3px solid #0066ff;
-      border-radius: 50%;
-      animation: spin 0.7s linear infinite;
-    }
+    #result .loading { display: flex; align-items: center; justify-content: center; gap: 12px; padding: 30px 20px; color: #0066ff; font-family: 'Tahoma', Arial, sans-serif; direction: rtl; }
+    .spinner { width: 22px; height: 22px; border: 3px solid #dce5f2; border-top: 3px solid #0066ff; border-radius: 50%; animation: spin 0.7s linear infinite; }
     @keyframes spin { to { transform: rotate(360deg); } }
     .json-key { color: #0033a0; font-weight: 600; }
     .json-string { color: #0a7a3c; }
     .json-number { color: #b45b0e; }
     .json-boolean { color: #b45b0e; }
     .json-null { color: #b45b0e; }
-    .success-badge {
-      display: inline-block;
-      background: #d4edda;
-      color: #155724;
-      padding: 4px 14px;
-      border-radius: 30px;
-      font-size: 13px;
-      font-weight: 600;
-      margin-bottom: 10px;
-    }
-    .error-badge {
-      display: inline-block;
-      background: #f8d7da;
-      color: #721c24;
-      padding: 4px 14px;
-      border-radius: 30px;
-      font-size: 13px;
-      font-weight: 600;
-      margin-bottom: 10px;
-    }
+    .success-badge { display: inline-block; background: #d4edda; color: #155724; padding: 4px 14px; border-radius: 30px; font-size: 13px; font-weight: 600; margin-bottom: 10px; }
+    .error-badge { display: inline-block; background: #f8d7da; color: #721c24; padding: 4px 14px; border-radius: 30px; font-size: 13px; font-weight: 600; margin-bottom: 10px; }
     .debug-box {
       direction: rtl;
       margin-top: 12px;
@@ -172,18 +118,7 @@
       text-align: right;
       border-right: 4px solid #0066ff;
     }
-    .debug-box code {
-      background: #e8edf5;
-      padding: 2px 8px;
-      border-radius: 4px;
-      font-family: 'Consolas', monospace;
-      font-size: 12px;
-      display: inline-block;
-      margin: 2px 0;
-      direction: ltr;
-      text-align: left;
-      word-break: break-all;
-    }
+    .debug-box code { background: #e8edf5; padding: 2px 8px; border-radius: 4px; font-family: 'Consolas', monospace; font-size: 12px; display: inline-block; margin: 2px 0; direction: ltr; text-align: left; word-break: break-all; }
     .account-info {
       direction: rtl;
       margin-top: 10px;
@@ -195,6 +130,17 @@
       color: #1e5a2a;
       border-right: 4px solid #4caf50;
     }
+    .note-box {
+      direction: rtl;
+      margin-top: 10px;
+      padding: 12px 16px;
+      background: #fff3cd;
+      border-radius: 10px;
+      font-family: Tahoma;
+      font-size: 13px;
+      color: #856404;
+      border-right: 4px solid #ffc107;
+    }
     @media (max-width: 600px) {
       .container { padding: 24px 18px; }
       .search-box { flex-direction: column; border-radius: 24px; padding: 6px; gap: 8px; }
@@ -202,14 +148,7 @@
       .search-box button { width: 100%; padding: 14px; border-radius: 30px; }
       h2 { font-size: 20px; }
     }
-    .footer {
-      margin-top: 18px;
-      font-size: 12px;
-      color: #9aadc9;
-      text-align: center;
-      border-top: 1px solid #eef3fa;
-      padding-top: 18px;
-    }
+    .footer { margin-top: 18px; font-size: 12px; color: #9aadc9; text-align: center; border-top: 1px solid #eef3fa; padding-top: 18px; }
   </style>
 </head>
 <body>
@@ -224,19 +163,26 @@
   <div class="account-info">
     <strong>🔑 معلومات الحساب:</strong><br>
     <strong>API Account:</strong> 866958120939696147<br>
-    <strong>Source Code:</strong> D236 &nbsp;|&nbsp; <strong>Source Name:</strong> Ibrahim mohamed
+    <strong>Source:</strong> D236 - Ibrahim mohamed
   </div>
 
   <div class="search-box" style="margin-top: 16px;">
-    <input type="text" id="billCode" value="" placeholder="مثال: JEG000498304993">
+    <input type="text" id="billCode" value="JEG000498304993" placeholder="مثال: JEG000498304993">
     <button onclick="trackShipment()">🔍 بحث</button>
+  </div>
+
+  <div class="note-box">
+    ⚠️ <strong>ملاحظة:</strong> بما أن الموقع يعمل في المتصفح، قد تظهر مشكلة CORS. الحل النهائي هو إما:
+    <br>1️⃣ استخدام <strong>Postman</strong> لاختبار الـ API مباشرة.
+    <br>2️⃣ أو إنشاء <strong>خادم وسيط (Backend)</strong> باستخدام Node.js/PHP للاتصال بالـ API.
+    <br>3️⃣ أو طلب من دعم J&T <strong>تفعيل CORS</strong> على حسابك.
   </div>
 
   <div class="result-area">
     <pre id="result"><div class="empty-state"><span>📋</span>انتظر إدخال رقم الشحنة والضغط على بحث</div></pre>
   </div>
 
-  <div class="footer">مدعوم من J&T Express API • بيئة الإنتاج (Production)</div>
+  <div class="footer">مدعوم من J&T Express API • بيئة تجريبية (Sandbox)</div>
 </div>
 
 <script>
@@ -271,19 +217,20 @@
       </div>
     `;
 
+    // ===== بيانات الحساب الجديدة =====
     const apiAccount = "866958120939696147";
     const privateKey = "29535fad70ca4688aaa5b462320eb096";
     const timestamp = Date.now().toString();
+    const bizContentStr = `{'billCodes': '${code}'}`;
 
-    const bizContentObj = { billCodes: [code] };
-    const bizContentStr = JSON.stringify(bizContentObj);
-
-    const rawData = bizContentStr + timestamp + privateKey;
-    const hashDigest = CryptoJS.MD5(rawData);
+    // ===== حساب التوقيع =====
+    const dataToSign = bizContentStr + timestamp + apiAccount + privateKey;
+    const hashDigest = CryptoJS.MD5(dataToSign);
     const digest = CryptoJS.enc.Base64.stringify(hashDigest);
 
-    const targetUrl = 'https://open.jtjms-eg.com/web-openapi/api/logistics/trace';
+    const targetUrl = 'https://demoopenapi.jtjms-eg.com/webopenplatform/api/api/logistics/trace?uuid=c7f405da081d436d8ee146b59f885dce';
 
+    // ===== Proxies =====
     const proxies = [
       { url: 'https://api.allorigins.win/raw?url=', name: 'allorigins.win' },
       { url: 'https://corsproxy.io/?', name: 'corsproxy.io' },
@@ -313,9 +260,7 @@
         let data;
         try { data = JSON.parse(rawText); } catch { data = { raw: rawText }; }
 
-        if (rawText.includes('corsdemo')) {
-          continue;
-        }
+        if (rawText.includes('corsdemo')) continue;
 
         finalResult = data;
         usedProxy = proxy.name;
@@ -330,7 +275,11 @@
         <div style="color:#c0392b; padding:16px; font-family:Tahoma; direction:rtl;">
           <strong>❌ فشل الاتصال بجميع الـ Proxies</strong><br>
           <span style="font-size:13px; color:#7f8c8d;">
-            يرجى المحاولة مرة أخرى لاحقاً.
+            <br>
+            <strong>📌 الحلول المقترحة:</strong><br>
+            1️⃣ استخدم <strong>Postman</strong> لاختبار الـ API مباشرة (بدون CORS).<br>
+            2️⃣ أنشئ <strong>خادم وسيط (Backend)</strong> باستخدام Node.js أو PHP.<br>
+            3️⃣ اطلب من دعم J&T <strong>تفعيل CORS</strong> لحسابك.
           </span>
         </div>
       `;
@@ -339,7 +288,7 @@
 
     const pretty = JSON.stringify(finalResult, null, 2);
     let badge = '';
-    if (finalResult.code === '1' || finalResult.code === 1 || finalResult.msg === 'success') {
+    if (finalResult.code === '1' || finalResult.code === '0' || finalResult.success === true || finalResult.code === '10000') {
       badge = `<div class="success-badge">✅ تم بنجاح (${usedProxy})</div>`;
     } else {
       badge = `<div class="error-badge">⚠️ الكود: ${finalResult.code} - ${finalResult.msg || ''}</div>`;
