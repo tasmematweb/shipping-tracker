@@ -1,88 +1,72 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8">
-<title>J&T Tracking</title>
+import 'dart:convert';
+import 'package:crypto/crypto.dart';
+import 'package:http/http.dart' as http;
 
-<!-- CryptoJS -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.2.0/crypto-js.min.js"></script>
-</head>
-<body>
+class JnTTrackingService {
+  // بيانات حسابك
+  static const String _apiAccount = "292508153084379141";
+  static const String _privateKey = "a0a1047cce70493c9d5d29704f05d0d9";
 
-<input id="tracking" placeholder="Tracking Number">
-<button onclick="track()">Track</button>
+  // رابط الـ Sandbox
+  static const String _url =
+      "https://demoopenapi.jtjms-eg.com/webopenplatformapi/api/logistics/trace";
 
-<pre id="result"></pre>
+  // للإنتاج استخدم هذا بدلاً منه
+  // static const String _url =
+  // "https://openapi.jtjms-eg.com/webopenplatformapi/api/logistics/trace";
 
-<script>
+  Future<Map<String, dynamic>?> fetchTrackingDetails(String billCode) async {
+    try {
+      final timestamp =
+          DateTime.now().millisecondsSinceEpoch.toString();
 
-const apiAccount = "866958120939696147";
-const privateKey = "29535fad70ca4688aaa5b462320eb096";
+      // يجب أن يكون String وليس List
+      final bizContent = jsonEncode({
+        "billCodes": billCode
+      });
 
-const url =
-"https://openapi.jtjms-eg.com/webopenplatformapi/api/logistics/trace";
+      // digest = Base64(MD5(bizContent + privateKey))
+      final digest = base64.encode(
+        md5.convert(utf8.encode(bizContent + _privateKey)).bytes,
+      );
 
-function createDigest(bizContent){
+      final response = await http.post(
+        Uri.parse(_url),
+        headers: {
+          "apiAccount": _apiAccount,
+          "timestamp": timestamp,
+          "digest": digest,
+          "Content-Type": "application/x-www-form-urlencoded",
+        },
+        body: {
+          "bizContent": bizContent,
+        },
+      );
 
-    // MD5
-    const md5 = CryptoJS.MD5(
-        bizContent + privateKey
-    );
+      print("Status = ${response.statusCode}");
+      print(response.body);
 
-    // Base64
-    return CryptoJS.enc.Base64.stringify(md5);
-}
+      if (response.statusCode != 200) return null;
 
-async function track(){
-
-    const billCode =
-        document.getElementById("tracking").value.trim();
-
-    const bizContent = JSON.stringify({
-        billCodes: billCode
-    });
-
-    const digest = createDigest(bizContent);
-
-    const timestamp = Date.now();
-
-    const body =
-        new URLSearchParams({
-            bizContent: bizContent
-        });
-
-    try{
-
-        const response = await fetch(url,{
-            method:"POST",
-            headers:{
-                "apiAccount":apiAccount,
-                "timestamp":timestamp,
-                "digest":digest,
-                "Content-Type":
-                "application/x-www-form-urlencoded"
-            },
-            body:body
-        });
-
-        const json =
-            await response.json();
-
-        document.getElementById("result")
-            .textContent =
-            JSON.stringify(json,null,4);
-
-    }catch(e){
-
-        document.getElementById("result")
-            .textContent =
-            e.toString();
-
+      return jsonDecode(response.body);
+    } catch (e) {
+      print(e);
+      return null;
     }
+  }
 
+  Map<String, String> parseScanDetails(
+      Map<String, dynamic> detail) {
+    return {
+      "scanTime": detail["scanTime"] ?? "",
+      "scanType": detail["scanType"] ?? "",
+      "description": detail["desc"] ?? "",
+      "branch": detail["scanNetworkName"] ?? "",
+      "city": detail["scanNetworkCity"] ?? "",
+      "province": detail["scanNetworkProvince"] ?? "",
+      "problem": detail["probleDescription"] ??
+          detail["problemReason"] ??
+          "",
+    };
+  }
 }
-
-</script>
-
-</body>
-</html>
