@@ -184,6 +184,17 @@
       text-align: left;
       word-break: break-all;
     }
+    .account-info {
+      direction: rtl;
+      margin-top: 10px;
+      padding: 12px 16px;
+      background: #e8f5e9;
+      border-radius: 10px;
+      font-family: Tahoma;
+      font-size: 13px;
+      color: #1e5a2a;
+      border-right: 4px solid #4caf50;
+    }
     @media (max-width: 600px) {
       .container { padding: 24px 18px; }
       .search-box { flex-direction: column; border-radius: 24px; padding: 6px; gap: 8px; }
@@ -210,8 +221,15 @@
   </div>
   <p class="subtitle">أدخل رقم البوليصة (Bill Code) واضغط بحث لتتبع شحنتك</p>
 
-  <div class="search-box">
-    <input type="text" id="billCode" value="UEG00000190252" placeholder="مثال: UEG00000190252">
+  <!-- معلومات الحساب الجديد -->
+  <div class="account-info">
+    <strong>🔑 معلومات الحساب:</strong><br>
+    <strong>API Account:</strong> 866958120939696147<br>
+    <strong>Source Code:</strong> D236 &nbsp;|&nbsp; <strong>Source Name:</strong> Ibrahim mohamed
+  </div>
+
+  <div class="search-box" style="margin-top: 16px;">
+    <input type="text" id="billCode" value="JEG000498304993" placeholder="مثال: JEG000498304993">
     <button onclick="trackShipment()">🔍 بحث</button>
   </div>
 
@@ -255,14 +273,14 @@
     `;
 
     // =========================================
-    // البيانات من المثال الناجح
+    // بيانات الحساب الجديدة (من الصورة)
     // =========================================
-    const apiAccount = "292508153084379141";
-    const privateKey = "10a1047cce70493c9d5d29704f05d0d9";
+    const apiAccount = "866958120939696147";
+    const privateKey = "29535fad70ca4688aaa5b462320eb096";
     const timestamp = Date.now().toString();
 
     // =========================================
-    // صيغة bizContent الصحيحة (بدون مسافات)
+    // صيغة bizContent (بدون مسافات - كما في المثال)
     // =========================================
     const bizContentStr = `{'billCodes': '${code}'}`;
 
@@ -275,9 +293,9 @@
     const digest = CryptoJS.enc.Base64.stringify(hashDigest);
 
     // =========================================
-    // الرابط الصحيح من المثال (mock)
+    // الرابط (بيئة الاختبار)
     // =========================================
-    const targetUrl = 'https://openapi.jtims-eg.com/mock/logistics/trace';
+    const targetUrl = 'https://demoopenapi.jtjms-eg.com/webopenplatform/api/api/logistics/trace?uuid=c7f405da081d436d8ee146b59f885dce';
 
     // =========================================
     // Proxies
