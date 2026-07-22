@@ -1,316 +1,87 @@
 <!DOCTYPE html>
-<html lang="ar" dir="rtl">
+<html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>تتبع الشحنة - J&T Express</title>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
-  <style>
-    * { box-sizing: border-box; margin: 0; padding: 0; }
-    body {
-      font-family: 'Tahoma', 'Segoe UI', Arial, sans-serif;
-      background: linear-gradient(135deg, #e8f0fe 0%, #d4e4f7 100%);
-      min-height: 100vh;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      padding: 20px;
-    }
-    .container {
-      background: #ffffff;
-      border-radius: 24px;
-      box-shadow: 0 20px 60px rgba(0,0,0,0.12);
-      padding: 40px 35px;
-      max-width: 820px;
-      width: 100%;
-    }
-    .header {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      margin-bottom: 30px;
-      border-bottom: 3px solid #f0f4ff;
-      padding-bottom: 20px;
-    }
-    .header-icon { font-size: 32px; background: #0066ff; color: white; width: 50px; height: 50px; display: flex; align-items: center; justify-content: center; border-radius: 14px; }
-    h2 { font-size: 26px; font-weight: 700; color: #1a2b4a; }
-    .subtitle { color: #5e6f8d; font-size: 14px; margin-bottom: 25px; }
-    .search-box {
-      display: flex;
-      flex-direction: row;
-      gap: 12px;
-      background: #f7faff;
-      padding: 8px;
-      border-radius: 60px;
-      border: 1px solid #e2eaf6;
-      transition: border-color 0.3s, box-shadow 0.3s;
-    }
-    .search-box:focus-within { border-color: #0066ff; box-shadow: 0 0 0 4px rgba(0,102,255,0.12); }
-    .search-box input {
-      flex: 1;
-      padding: 16px 22px;
-      border: none;
-      background: transparent;
-      font-size: 16px;
-      outline: none;
-      color: #1a2b4a;
-      min-width: 0;
-    }
-    .search-box input::placeholder { color: #a0b3cc; }
-    .search-box button {
-      padding: 14px 34px;
-      background: #0066ff;
-      color: #fff;
-      border: none;
-      border-radius: 40px;
-      font-size: 16px;
-      font-weight: 600;
-      cursor: pointer;
-      transition: background 0.2s, transform 0.1s;
-      white-space: nowrap;
-    }
-    .search-box button:hover { background: #0052cc; }
-    .search-box button:active { transform: scale(0.96); }
-    .result-area {
-      margin-top: 28px;
-      background: #fafcff;
-      border-radius: 18px;
-      border: 1px solid #e9eff8;
-      overflow: hidden;
-      min-height: 120px;
-    }
-    #result {
-      padding: 20px 24px;
-      margin: 0;
-      font-size: 14px;
-      font-family: 'Consolas', 'Courier New', monospace;
-      line-height: 1.7;
-      color: #1e2f4a;
-      direction: ltr;
-      text-align: left;
-      white-space: pre-wrap;
-      word-break: break-word;
-      max-height: 450px;
-      overflow-y: auto;
-      background: #fafcff;
-    }
-    #result .empty-state { color: #8a9bb8; text-align: center; padding: 40px 20px; font-size: 16px; font-family: 'Tahoma', Arial, sans-serif; direction: rtl; }
-    #result .empty-state span { display: block; font-size: 48px; margin-bottom: 12px; }
-    #result .loading { display: flex; align-items: center; justify-content: center; gap: 12px; padding: 30px 20px; color: #0066ff; font-family: 'Tahoma', Arial, sans-serif; direction: rtl; }
-    .spinner { width: 22px; height: 22px; border: 3px solid #dce5f2; border-top: 3px solid #0066ff; border-radius: 50%; animation: spin 0.7s linear infinite; }
-    @keyframes spin { to { transform: rotate(360deg); } }
-    .json-key { color: #0033a0; font-weight: 600; }
-    .json-string { color: #0a7a3c; }
-    .json-number { color: #b45b0e; }
-    .json-boolean { color: #b45b0e; }
-    .json-null { color: #b45b0e; }
-    .success-badge { display: inline-block; background: #d4edda; color: #155724; padding: 4px 14px; border-radius: 30px; font-size: 13px; font-weight: 600; margin-bottom: 10px; }
-    .error-badge { display: inline-block; background: #f8d7da; color: #721c24; padding: 4px 14px; border-radius: 30px; font-size: 13px; font-weight: 600; margin-bottom: 10px; }
-    .debug-box {
-      direction: rtl;
-      margin-top: 12px;
-      padding: 14px;
-      background: #f0f4ff;
-      border-radius: 10px;
-      font-family: Tahoma;
-      font-size: 13px;
-      color: #1a2b4a;
-      text-align: right;
-      border-right: 4px solid #0066ff;
-    }
-    .debug-box code { background: #e8edf5; padding: 2px 8px; border-radius: 4px; font-family: 'Consolas', monospace; font-size: 12px; display: inline-block; margin: 2px 0; direction: ltr; text-align: left; word-break: break-all; }
-    .account-info {
-      direction: rtl;
-      margin-top: 10px;
-      padding: 12px 16px;
-      background: #e8f5e9;
-      border-radius: 10px;
-      font-family: Tahoma;
-      font-size: 13px;
-      color: #1e5a2a;
-      border-right: 4px solid #4caf50;
-    }
-    .note-box {
-      direction: rtl;
-      margin-top: 10px;
-      padding: 12px 16px;
-      background: #fff3cd;
-      border-radius: 10px;
-      font-family: Tahoma;
-      font-size: 13px;
-      color: #856404;
-      border-right: 4px solid #ffc107;
-    }
-    @media (max-width: 600px) {
-      .container { padding: 24px 18px; }
-      .search-box { flex-direction: column; border-radius: 24px; padding: 6px; gap: 8px; }
-      .search-box input { padding: 14px 18px; text-align: center; }
-      .search-box button { width: 100%; padding: 14px; border-radius: 30px; }
-      h2 { font-size: 20px; }
-    }
-    .footer { margin-top: 18px; font-size: 12px; color: #9aadc9; text-align: center; border-top: 1px solid #eef3fa; padding-top: 18px; }
-  </style>
+<meta charset="UTF-8">
+<title>J&T Tracking</title>
+
+<!-- CryptoJS -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.2.0/crypto-js.min.js"></script>
 </head>
 <body>
 
-<div class="container">
-  <div class="header">
-    <div class="header-icon">📦</div>
-    <div><h2>تتبع الشحنة الفوري</h2></div>
-  </div>
-  <p class="subtitle">أدخل رقم البوليصة (Bill Code) واضغط بحث لتتبع شحنتك</p>
+<input id="tracking" placeholder="Tracking Number">
+<button onclick="track()">Track</button>
 
-  <div class="account-info">
-    <strong>🔑 معلومات الحساب:</strong><br>
-    <strong>API Account:</strong> 866958120939696147<br>
-    <strong>Source:</strong> D236 - Ibrahim mohamed
-  </div>
-
-  <div class="search-box" style="margin-top: 16px;">
-    <input type="text" id="billCode" value="JEG000498304993" placeholder="مثال: JEG000498304993">
-    <button onclick="trackShipment()">🔍 بحث</button>
-  </div>
-
-  <div class="note-box">
-    ⚠️ <strong>ملاحظة:</strong> بما أن الموقع يعمل في المتصفح، قد تظهر مشكلة CORS. الحل النهائي هو إما:
-    <br>1️⃣ استخدام <strong>Postman</strong> لاختبار الـ API مباشرة.
-    <br>2️⃣ أو إنشاء <strong>خادم وسيط (Backend)</strong> باستخدام Node.js/PHP للاتصال بالـ API.
-    <br>3️⃣ أو طلب من دعم J&T <strong>تفعيل CORS</strong> على حسابك.
-  </div>
-
-  <div class="result-area">
-    <pre id="result"><div class="empty-state"><span>📋</span>انتظر إدخال رقم الشحنة والضغط على بحث</div></pre>
-  </div>
-
-  <div class="footer">مدعوم من J&T Express API • بيئة تجريبية (Sandbox)</div>
-</div>
+<pre id="result"></pre>
 
 <script>
-  function syntaxHighlight(json) {
-    if (typeof json !== 'string') json = JSON.stringify(json, null, 2);
-    json = json.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
-    return json.replace(
-      /("(?:[^"\\]|\\.)*")(?=\s*:)|("(?:[^"\\]|\\.)*")|(\b\d+\.?\d*\b)|(\btrue\b|\bfalse\b|\bnull\b)/g,
-      function (match, key, str, num, bool) {
-        if (key) return '<span class="json-key">' + key + '</span>';
-        if (str) return '<span class="json-string">' + str + '</span>';
-        if (num) return '<span class="json-number">' + num + '</span>';
-        if (bool) return '<span class="json-boolean">' + bool + '</span>';
-        return match;
-      }
+
+const apiAccount = "866958120939696147";
+const privateKey = "29535fad70ca4688aaa5b462320eb096";
+
+const url =
+"https://openapi.jtjms-eg.com/webopenplatformapi/api/logistics/trace";
+
+function createDigest(bizContent){
+
+    // MD5
+    const md5 = CryptoJS.MD5(
+        bizContent + privateKey
     );
-  }
 
-  async function trackShipment() {
-    const code = document.getElementById('billCode').value.trim();
-    const resultDiv = document.getElementById('result');
+    // Base64
+    return CryptoJS.enc.Base64.stringify(md5);
+}
 
-    if (!code) {
-      resultDiv.innerHTML = `<div class="empty-state"><span>⚠️</span>الرجاء إدخال رقم البوليصة</div>`;
-      return;
-    }
+async function track(){
 
-    resultDiv.innerHTML = `
-      <div class="loading">
-        <div class="spinner"></div>
-        جاري حساب التوقيع والاتصال بالخادم...
-      </div>
-    `;
+    const billCode =
+        document.getElementById("tracking").value.trim();
 
-    // ===== بيانات الحساب الجديدة =====
-    const apiAccount = "866958120939696147";
-    const privateKey = "29535fad70ca4688aaa5b462320eb096";
-    const timestamp = Date.now().toString();
-    const bizContentStr = `{'billCodes': '${code}'}`;
+    const bizContent = JSON.stringify({
+        billCodes: billCode
+    });
 
-    // ===== حساب التوقيع =====
-    const dataToSign = bizContentStr + timestamp + apiAccount + privateKey;
-    const hashDigest = CryptoJS.MD5(dataToSign);
-    const digest = CryptoJS.enc.Base64.stringify(hashDigest);
+    const digest = createDigest(bizContent);
 
-    const targetUrl = 'https://demoopenapi.jtjms-eg.com/webopenplatform/api/api/logistics/trace?uuid=c7f405da081d436d8ee146b59f885dce';
+    const timestamp = Date.now();
 
-    // ===== Proxies =====
-    const proxies = [
-      { url: 'https://api.allorigins.win/raw?url=', name: 'allorigins.win' },
-      { url: 'https://corsproxy.io/?', name: 'corsproxy.io' },
-      { url: 'https://thingproxy.freeboard.io/fetch/', name: 'thingproxy' }
-    ];
-
-    let finalResult = null;
-    let usedProxy = '';
-
-    for (let p = 0; p < proxies.length; p++) {
-      const proxy = proxies[p];
-      const proxyUrl = proxy.url + encodeURIComponent(targetUrl);
-
-      try {
-        const res = await fetch(proxyUrl, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/x-www-form-urlencoded',
-            'apiAccount': apiAccount,
-            'timestamp': timestamp,
-            'digest': digest
-          },
-          body: 'bizContent=' + encodeURIComponent(bizContentStr)
+    const body =
+        new URLSearchParams({
+            bizContent: bizContent
         });
 
-        const rawText = await res.text();
-        let data;
-        try { data = JSON.parse(rawText); } catch { data = { raw: rawText }; }
+    try{
 
-        if (rawText.includes('corsdemo')) continue;
+        const response = await fetch(url,{
+            method:"POST",
+            headers:{
+                "apiAccount":apiAccount,
+                "timestamp":timestamp,
+                "digest":digest,
+                "Content-Type":
+                "application/x-www-form-urlencoded"
+            },
+            body:body
+        });
 
-        finalResult = data;
-        usedProxy = proxy.name;
-        break;
-      } catch (e) {
-        console.log(`Proxy ${proxy.name} failed:`, e.message);
-      }
+        const json =
+            await response.json();
+
+        document.getElementById("result")
+            .textContent =
+            JSON.stringify(json,null,4);
+
+    }catch(e){
+
+        document.getElementById("result")
+            .textContent =
+            e.toString();
+
     }
 
-    if (!finalResult) {
-      resultDiv.innerHTML = `
-        <div style="color:#c0392b; padding:16px; font-family:Tahoma; direction:rtl;">
-          <strong>❌ فشل الاتصال بجميع الـ Proxies</strong><br>
-          <span style="font-size:13px; color:#7f8c8d;">
-            <br>
-            <strong>📌 الحلول المقترحة:</strong><br>
-            1️⃣ استخدم <strong>Postman</strong> لاختبار الـ API مباشرة (بدون CORS).<br>
-            2️⃣ أنشئ <strong>خادم وسيط (Backend)</strong> باستخدام Node.js أو PHP.<br>
-            3️⃣ اطلب من دعم J&T <strong>تفعيل CORS</strong> لحسابك.
-          </span>
-        </div>
-      `;
-      return;
-    }
+}
 
-    const pretty = JSON.stringify(finalResult, null, 2);
-    let badge = '';
-    if (finalResult.code === '1' || finalResult.code === '0' || finalResult.success === true || finalResult.code === '10000') {
-      badge = `<div class="success-badge">✅ تم بنجاح (${usedProxy})</div>`;
-    } else {
-      badge = `<div class="error-badge">⚠️ الكود: ${finalResult.code} - ${finalResult.msg || ''}</div>`;
-    }
-
-    const debugInfo = `
-      <div class="debug-box">
-        <strong>🔑 معلومات الطلب:</strong><br>
-        <strong>Proxy:</strong> ${usedProxy}<br>
-        <strong>bizContent:</strong> <code>${bizContentStr}</code><br>
-        <strong>timestamp:</strong> <code>${timestamp}</code><br>
-        <strong>digest:</strong> <code>${digest}</code><br>
-        <strong>apiAccount:</strong> <code>${apiAccount}</code>
-      </div>
-    `;
-
-    resultDiv.innerHTML = syntaxHighlight(pretty) + badge + debugInfo;
-  }
-
-  document.getElementById('billCode').addEventListener('keydown', function(e) {
-    if (e.key === 'Enter') { e.preventDefault(); trackShipment(); }
-  });
 </script>
 
 </body>
