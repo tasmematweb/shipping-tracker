@@ -99,9 +99,15 @@
             try {
                 const res = await fetch(`${API_URL}?action=login&phone=${phone}&password=${password}`);
                 const data = await res.json();
-                if (data.success) { currentUser = data; showDashboard(); }
-                else { errorDiv.textContent = data.msg || "فشل تسجيل الدخول"; }
-            } catch (e) { errorDiv.textContent = "فشل الاتصال"; }
+                if (data.success) { 
+                    currentUser = data; 
+                    showDashboard(); 
+                } else { 
+                    errorDiv.textContent = data.msg || "فشل تسجيل الدخول"; 
+                }
+            } catch (e) { 
+                errorDiv.textContent = "فشل الاتصال"; 
+            }
         }
 
         function logout() {
@@ -185,10 +191,21 @@
 
         function showAddShipmentForm() {
             document.getElementById('modal').classList.remove('hidden');
-            document.getElementById('modalContent').innerHTML = `<span class="close-btn" onclick="closeModal()">✖</span><h3>إضافة شحنة جديدة</h3><div class="form-group"><label>اسم العميل</label><input id="cName"></div><div class="form-group"><label>هاتف العميل</label><input id="cPhone" dir="ltr"></div><div class="form-group"><label>العنوان</label><input id="cAddress"></div><div class="form-group"><label>اسم المنتج</label><input id="cProduct"></div><div class="form-group"><label>الكمية</label><input id="cQuantity" type="number" value="1"></div><div class="form-group"><label>ملاحظات</label><textarea id="cNotes"></textarea></div><button onclick="submitShipment()" style="width:100%;padding:15px;background:#e60012;color:white;border:none;border-radius:8px;font-size:16px;cursor:pointer;">✅ إضافة الشحنة</button><p id="shipError" style="color:red;margin-top:10px;"></p>`;
+            document.getElementById('modalContent').innerHTML = `
+                <span class="close-btn" onclick="closeModal()">✖</span>
+                <h3>إضافة شحنة جديدة</h3>
+                <div class="form-group"><label>اسم العميل</label><input id="cName"></div>
+                <div class="form-group"><label>هاتف العميل</label><input id="cPhone" dir="ltr"></div>
+                <div class="form-group"><label>العنوان</label><input id="cAddress"></div>
+                <div class="form-group"><label>اسم المنتج</label><input id="cProduct"></div>
+                <div class="form-group"><label>الكمية</label><input id="cQuantity" type="number" value="1"></div>
+                <div class="form-group"><label>ملاحظات</label><textarea id="cNotes"></textarea></div>
+                <button onclick="submitShipment()" style="width:100%;padding:15px;background:#e60012;color:white;border:none;border-radius:8px;font-size:16px;cursor:pointer;">✅ إضافة الشحنة</button>
+                <p id="shipError" style="color:red;margin-top:10px;"></p>
+            `;
         }
 
-        // ✅ دالة submitShipment المعدلة (POST)
+        // ✅ دالة submitShipment المعدلة بالكامل
         async function submitShipment() {
             const cName = document.getElementById('cName').value.trim();
             const cPhone = document.getElementById('cPhone').value.trim();
@@ -202,8 +219,14 @@
                 errorDiv.textContent = "يرجى ملء الحقول المطلوبة";
                 return;
             }
-            
-            // ✅ إنشاء FormData لإرسال البيانات كـ POST
+
+            // ✅ التأكد من وجود currentUser
+            if (!currentUser) {
+                errorDiv.textContent = "يرجى تسجيل الدخول أولاً";
+                return;
+            }
+
+            // ✅ إرسال البيانات كـ POST
             const formData = new URLSearchParams();
             formData.append('action', 'addShipment');
             formData.append('phone', currentUser.phone);
@@ -214,7 +237,7 @@
             formData.append('productName', cProduct);
             formData.append('productQuantity', cQuantity);
             formData.append('notes', cNotes);
-            
+
             try {
                 const res = await fetch(API_URL, {
                     method: 'POST',
@@ -223,7 +246,9 @@
                     },
                     body: formData.toString()
                 });
+
                 const data = await res.json();
+
                 if (data.success) {
                     closeModal();
                     loadMyShipments();
@@ -246,14 +271,32 @@
             const errorDiv = document.getElementById('trackError');
             if (!trackingNumber) { errorDiv.textContent = 'يرجى إدخال رقم التتبع'; return; }
             
-            const url = `${API_URL}?action=addTrackingNumber&adminPhone=${encodeURIComponent(currentUser.phone)}&adminPassword=${encodeURIComponent(currentUser.password)}&shipmentId=${encodeURIComponent(shipmentId)}&trackingNumber=${encodeURIComponent(trackingNumber)}`;
+            const formData = new URLSearchParams();
+            formData.append('action', 'addTrackingNumber');
+            formData.append('adminPhone', currentUser.phone);
+            formData.append('adminPassword', currentUser.password);
+            formData.append('shipmentId', shipmentId);
+            formData.append('trackingNumber', trackingNumber);
             
             try {
-                const res = await fetch(url, { method: 'POST' });
+                const res = await fetch(API_URL, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                    },
+                    body: formData.toString()
+                });
                 const data = await res.json();
-                if (data.success) { closeModal(); loadAllShipments(); alert('✅ تم إضافة رقم التتبع!'); }
-                else { errorDiv.textContent = data.msg; }
-            } catch (e) { errorDiv.textContent = 'فشل الاتصال'; }
+                if (data.success) { 
+                    closeModal(); 
+                    loadAllShipments(); 
+                    alert('✅ تم إضافة رقم التتبع!'); 
+                } else { 
+                    errorDiv.textContent = data.msg; 
+                }
+            } catch (e) { 
+                errorDiv.textContent = 'فشل الاتصال'; 
+            }
         }
 
         async function trackShipment(billCode) {
@@ -278,8 +321,18 @@
             document.getElementById('modal').classList.remove('hidden');
             document.getElementById('modalContent').innerHTML = '<div class="loading"><div class="spinner"></div>جاري التحميل...</div>';
             try {
-                const url = `${API_URL}?action=allClients&adminPhone=${encodeURIComponent(currentUser.phone)}&adminPassword=${encodeURIComponent(currentUser.password)}`;
-                const res = await fetch(url, { method: 'POST' });
+                const formData = new URLSearchParams();
+                formData.append('action', 'allClients');
+                formData.append('adminPhone', currentUser.phone);
+                formData.append('adminPassword', currentUser.password);
+                
+                const res = await fetch(API_URL, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                    },
+                    body: formData.toString()
+                });
                 const data = await res.json();
                 if (data.success) {
                     let html = `<span class="close-btn" onclick="closeModal()">✖</span><h3>👥 إدارة العملاء</h3><button onclick="showAddClientForm()" style="width:100%;padding:12px;background:#28a745;color:white;border:none;border-radius:8px;margin-bottom:15px;cursor:pointer;font-size:16px;">➕ إنشاء حساب عميل جديد</button><div id="clientList"></div>`;
@@ -293,8 +346,12 @@
                             listDiv.innerHTML += `<div class="client-card"><div class="client-info"><strong>${c.name}</strong><br>📱 ${c.phone}<br><small>📅 ${c.created}</small></div><div class="client-actions"><button onclick="deleteClient('${c.phone}')" style="background:#dc3545;color:white;border:none;padding:8px 15px;border-radius:5px;cursor:pointer;">🗑️ حذف</button></div></div>`;
                         });
                     }
+                } else {
+                    document.getElementById('modalContent').innerHTML = `<span class="close-btn" onclick="closeModal()">✖</span><p style="color:red;">${data.msg || 'فشل التحميل'}</p>`;
                 }
-            } catch (e) { document.getElementById('modalContent').innerHTML = '<span class="close-btn" onclick="closeModal()">✖</span><p style="color:red;">فشل التحميل</p>'; }
+            } catch (e) { 
+                document.getElementById('modalContent').innerHTML = '<span class="close-btn" onclick="closeModal()">✖</span><p style="color:red;">فشل الاتصال</p>'; 
+            }
         }
 
         function showAddClientForm() {
@@ -309,28 +366,68 @@
             
             if (!name || !phone || !password) { errorDiv.textContent = "يرجى ملء جميع الحقول"; return; }
             
-            const url = `${API_URL}?action=createClient&adminPhone=${encodeURIComponent(currentUser.phone)}&adminPassword=${encodeURIComponent(currentUser.password)}&clientName=${encodeURIComponent(name)}&clientPhone=${encodeURIComponent(phone)}&clientPassword=${encodeURIComponent(password)}`;
+            const formData = new URLSearchParams();
+            formData.append('action', 'createClient');
+            formData.append('adminPhone', currentUser.phone);
+            formData.append('adminPassword', currentUser.password);
+            formData.append('clientName', name);
+            formData.append('clientPhone', phone);
+            formData.append('clientPassword', password);
             
             try {
-                const res = await fetch(url, { method: 'POST' });
+                const res = await fetch(API_URL, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                    },
+                    body: formData.toString()
+                });
                 const data = await res.json();
-                if (data.success) { showClients(); }
-                else { errorDiv.textContent = data.msg; }
-            } catch (e) { errorDiv.textContent = 'فشل الاتصال'; }
+                if (data.success) { 
+                    showClients(); 
+                } else { 
+                    errorDiv.textContent = data.msg; 
+                }
+            } catch (e) { 
+                errorDiv.textContent = 'فشل الاتصال'; 
+            }
         }
 
         async function deleteClient(phone) {
             if (!confirm('هل أنت متأكد من حذف هذا العميل؟')) return;
-            try { 
-                const res = await fetch(`${API_URL}?action=deleteClient&phone=${encodeURIComponent(phone)}`, { method: 'POST' });
+            try {
+                const formData = new URLSearchParams();
+                formData.append('action', 'deleteClient');
+                formData.append('phone', phone);
+                
+                const res = await fetch(API_URL, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                    },
+                    body: formData.toString()
+                });
                 const data = await res.json();
-                if (data.success) { showClients(); } else { alert(data.msg || 'فشل الحذف'); }
-            } catch (e) { alert('فشل الاتصال'); }
+                if (data.success) { 
+                    showClients(); 
+                } else { 
+                    alert(data.msg || 'فشل الحذف'); 
+                }
+            } catch (e) { 
+                alert('فشل الاتصال'); 
+            }
         }
 
-        function closeModal() { document.getElementById('modal').classList.add('hidden'); }
-        document.getElementById('passwordInput').addEventListener('keypress', function(e) { if (e.key === 'Enter') doLogin(); });
-        document.getElementById('phoneInput').addEventListener('keypress', function(e) { if (e.key === 'Enter') document.getElementById('passwordInput').focus(); });
+        function closeModal() { 
+            document.getElementById('modal').classList.add('hidden'); 
+        }
+        
+        document.getElementById('passwordInput').addEventListener('keypress', function(e) { 
+            if (e.key === 'Enter') doLogin(); 
+        });
+        document.getElementById('phoneInput').addEventListener('keypress', function(e) { 
+            if (e.key === 'Enter') document.getElementById('passwordInput').focus(); 
+        });
     </script>
 </body>
 </html>
