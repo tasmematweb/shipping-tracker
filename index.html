@@ -65,6 +65,7 @@
         .event { font-weight: bold; color: #333; margin: 5px 0; }
         .location { color: #666; font-size: 14px; }
         .problem { color: #e60012; font-size: 13px; margin-top: 5px; }
+        .courier { color: #0066cc; font-size: 13px; }
         .active { display: block !important; }
     </style>
 </head>
@@ -78,13 +79,82 @@
             <button onclick="trackShipment()">تتبع 🔍</button>
         </div>
         
-        <div class="loading" id="loading">⏳ جاري البحث...</div>
+        <div class="loading" id="loading">⏳ جاري البحث عن الشحنة...</div>
         <div class="error" id="error"></div>
         <div class="result" id="result"></div>
     </div>
 
     <script>
         const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbw37rQZCBjTIkEw70ZEJn7p_CggvhLEs2V_ChPaZ-IY0YCeKxXPHBX_2F6MpixK7sU/exec";
+
+        // ترجمة أنواع المسح
+        const scanTypeTranslation = {
+            "Pickup scan": "📦 تم استلام الشحنة",
+            "Delivery scan": "🚚 جاري توصيل الشحنة",
+            "Arrival Scan": "📍 وصلت الشحنة",
+            "Sending scan": "📤 تم إرسال الشحنة",
+            "Return Sign": "↩️ تم توقيع الإرجاع",
+            "Returned parcel scan": "🔙 مسح إرجاع الطرد",
+            "Left Over Scan": "📋 مسح المتبقي",
+            "Abnormal parcels scan": "⚠️ طرود غير طبيعية",
+            "Return scan": "↩️ مسح الإرجاع",
+            "Sign scan": "✍️ تم التوقيع"
+        };
+
+        // ترجمة أسباب المشاكل
+        const problemTranslation = {
+            "退件签收": "توقيع إرجاع الشحنة",
+            "派件扫描": "مسح توصيل الشحنة",
+            "到件扫描": "مسح وصول الشحنة",
+            "发件扫描": "مسح إرسال الشحنة",
+            "中心到件": "وصول المركز",
+            "退件扫描": "مسح إرجاع",
+            "留仓件入仓": "تخزين في المستودع",
+            "问题件扫描": "مسح شحنة مشكلة",
+            "快件揽收": "استلام الشحنة",
+            "Customer refuse by WhatsApp": "العميل رفض عبر الواتساب",
+            "No Answer or Phone Switched Off": "لا يوجد رد أو الهاتف مغلق"
+        };
+
+        function translateScanType(scanType) {
+            return scanTypeTranslation[scanType] || scanType || "غير معروف";
+        }
+
+        function translateProblem(problem) {
+            if (!problem) return "";
+            let translated = problem;
+            for (const [key, value] of Object.entries(problemTranslation)) {
+                translated = translated.replace(key, value);
+            }
+            return translated;
+        }
+
+        function extractInfo(desc) {
+            const info = {
+                courier: "",
+                phone: "",
+                branchPhone: "",
+                branchContact: ""
+            };
+
+            // استخراج اسم المندوب
+            const courierMatch = desc.match(/مندوب.*?(\w+ \w+)/);
+            if (courierMatch) info.courier = courierMatch[1];
+
+            // استخراج رقم هاتف المندوب
+            const phoneMatch = desc.match(/\((\d+)\)/);
+            if (phoneMatch) info.phone = phoneMatch[1];
+
+            // استخراج رقم الفرع
+            const branchMatch = desc.match(/رقم هاتف الفرع[:\s]*(\d+)/);
+            if (branchMatch) info.branchPhone = branchMatch[1];
+
+            // استخراج اسم مسؤول الفرع
+            const contactMatch = desc.match(/\|(\w+)/);
+            if (contactMatch) info.branchContact = contactMatch[1];
+
+            return info;
+        }
 
         async function trackShipment() {
             const billCode = document.getElementById('billCode').value.trim();
@@ -113,7 +183,7 @@
                 if (data.code === "1" && data.data && data.data.length > 0) {
                     displayResult(data.data[0]);
                 } else {
-                    errorDiv.textContent = '❌ لم يتم العثور على الشحنة';
+                    errorDiv.textContent = '❌ لم يتم العثور على الشحنة. تأكد من رقم الشحنة.';
                     errorDiv.classList.add('active');
                 }
             } catch (e) {
@@ -129,16 +199,37 @@
             
             let html = `<div class="status">📋 رقم الشحنة: ${shipment.billCode}</div>`;
             
-            if (shipment.details) {
+            if (shipment.details && shipment.details.length > 0) {
                 shipment.details.forEach(d => {
-                    html += `
-                        <div class="timeline-item">
-                            <div class="time">🕐 ${d.scanTime || ''}</div>
-                            <div class="event">📌 ${d.desc || d.scanType || ''}</div>
-                            <div class="location">📍 ${d.scanNetworkName || ''} - ${d.scanNetworkCity || ''}</div>
-                            ${d.probleDescription ? `<div class="problem">⚠️ ${d.probleDescription}</div>` : ''}
-                        </div>
-                    `;
+                    const scanTypeArabic = translateScanType(d.scanType);
+                    const problemArabic = translateProblem(d.probleDescription || d.problemReason);
+                    const info = extractInfo(d.desc || "");
+                    
+                    html += `<div class="timeline-item">`;
+                    html += `<div class="time">🕐 ${d.scanTime || ''}</div>`;
+                    html += `<div class="event">${scanTypeArabic}</div>`;
+                    
+                    if (d.scanNetworkName || d.scanNetworkCity) {
+                        html += `<div class="location">📍 ${d.scanNetworkName || ''} - ${d.scanNetworkCity || ''} - ${d.scanNetworkProvince || ''}</div>`;
+                    }
+                    
+                    if (info.courier) {
+                        html += `<div class="courier">👤 المندوب: ${info.courier}</div>`;
+                    }
+                    
+                    if (info.phone) {
+                        html += `<div class="courier">📱 هاتف المندوب: ${info.phone}</div>`;
+                    }
+                    
+                    if (info.branchPhone) {
+                        html += `<div class="courier">🏢 هاتف الفرع: ${info.branchPhone}</div>`;
+                    }
+                    
+                    if (problemArabic) {
+                        html += `<div class="problem">⚠️ ${problemArabic}</div>`;
+                    }
+                    
+                    html += `</div>`;
                 });
             }
             
