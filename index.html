@@ -541,6 +541,31 @@
             flex-wrap: wrap;
         }
 
+        /* ===== رسالة الخطأ ===== */
+        .error-box {
+            background: #fff3f3;
+            border: 1px solid #ffcdd2;
+            border-radius: 12px;
+            padding: 20px;
+            text-align: center;
+            margin: 20px 0;
+            color: #d32f2f;
+        }
+        .error-box .icon {
+            font-size: 48px;
+            display: block;
+            margin-bottom: 10px;
+        }
+        .error-box .title {
+            font-weight: 600;
+            font-size: 16px;
+            margin-bottom: 4px;
+        }
+        .error-box .sub {
+            font-size: 13px;
+            color: #666;
+        }
+
         /* ===== Scrollbar ===== */
         .modal-box::-webkit-scrollbar {
             width: 4px;
@@ -562,11 +587,11 @@
 
             <div class="input-group">
                 <label>📱 رقم الهاتف</label>
-                <input type="text" id="loginPhone" placeholder="أدخل رقم الهاتف" dir="ltr">
+                <input type="text" id="loginPhone" placeholder="أدخل رقم الهاتف" dir="ltr" value="01140074870">
             </div>
             <div class="input-group">
                 <label>🔒 كلمة المرور</label>
-                <input type="password" id="loginPassword" placeholder="أدخل كلمة المرور" dir="ltr">
+                <input type="password" id="loginPassword" placeholder="أدخل كلمة المرور" dir="ltr" value="123456">
             </div>
 
             <button class="login-btn" onclick="doLogin()">🚀 دخول</button>
@@ -704,10 +729,10 @@
                     currentShipments = data.shipments || [];
                     renderShipments(currentShipments, false);
                 } else {
-                    content.innerHTML = `<div class="empty-state"><div class="icon">❌</div><p>فشل تحميل الشحنات</p></div>`;
+                    showError(content, data.msg || 'فشل تحميل الشحنات');
                 }
             } catch (e) {
-                content.innerHTML = `<div class="empty-state"><div class="icon">📡</div><p>فشل الاتصال بالخادم</p></div>`;
+                showError(content, 'فشل الاتصال بالخادم');
             }
         }
 
@@ -736,11 +761,25 @@
                     updateSummary(currentShipments);
                     renderShipments(currentShipments, true);
                 } else {
-                    content.innerHTML = `<div class="empty-state"><div class="icon">❌</div><p>${data.msg || 'فشل التحميل'}</p></div>`;
+                    showError(content, data.msg || 'فشل تحميل الشحنات');
                 }
             } catch (e) {
-                content.innerHTML = `<div class="empty-state"><div class="icon">📡</div><p>فشل الاتصال بالخادم</p></div>`;
+                showError(content, 'فشل الاتصال بالخادم');
             }
+        }
+
+        // ============================================================
+        //  عرض رسالة خطأ
+        // ============================================================
+        function showError(container, message) {
+            container.innerHTML = `
+                <div class="error-box">
+                    <span class="icon">❌</span>
+                    <div class="title">فشل تحميل الشحنة</div>
+                    <div class="sub">${message}</div>
+                    <button onclick="location.reload()" style="margin-top:12px;padding:8px 24px;background:#e60012;color:white;border:none;border-radius:8px;cursor:pointer;">🔄 إعادة المحاولة</button>
+                </div>
+            `;
         }
 
         // ============================================================
@@ -775,14 +814,12 @@
             }
 
             let html = '';
-            shipments.forEach(s => {
+            shipments.forEach((s, index) => {
                 let statusClass = 'status-waiting';
-                if (s.status) {
-                    if (s.status.includes('تتبع')) statusClass = 'status-tracking';
-                    else if (s.status.includes('تم')) statusClass = 'status-done';
-                }
+                let statusText = s.status || 'في انتظار التتبع';
+                if (statusText.includes('تتبع')) statusClass = 'status-tracking';
+                else if (statusText.includes('تم')) statusClass = 'status-done';
 
-                // تحديد نوع الزر
                 let actionsHtml = '';
                 if (s.trackingNumber) {
                     actionsHtml += `<button class="btn-track" onclick="trackShipment('${s.trackingNumber}')">📍 تتبع</button>`;
@@ -794,16 +831,15 @@
                     actionsHtml += `<button class="btn-delete" onclick="deleteShipment('${s.id}')">🗑️ حذف</button>`;
                 }
 
-                // عرض رقم العميل للأدمن
                 const clientInfo = isAdmin ? `
                     <div class="row"><span class="label">📱 صاحب الشحنة:</span><span class="value ar">${s.clientPhone || 'غير معروف'}</span></div>
                 ` : '';
 
                 html += `
                     <div class="shipment-card">
-                        <span class="status-badge ${statusClass}">${s.status || 'في انتظار التتبع'}</span>
+                        <span class="status-badge ${statusClass}">${statusText}</span>
                         ${clientInfo}
-                        <div class="row"><span class="label">🔢 رقم الشحنة:</span><span class="value">${s.id || ''}</span></div>
+                        <div class="row"><span class="label">🔢 رقم الشحنة:</span><span class="value">${s.id || '#' + (index + 1)}</span></div>
                         <div class="row"><span class="label">📅 التاريخ:</span><span class="value">${s.date || ''}</span></div>
                         <div class="row"><span class="label">👤 المستلم:</span><span class="value ar">${s.customerName || ''}</span></div>
                         <div class="row"><span class="label">📱 هاتف المستلم:</span><span class="value">${s.customerPhone || ''}</span></div>
@@ -1181,13 +1217,6 @@
                 doLogin();
             }
         });
-
-        // ============================================================
-        //  تسجيل دخول تلقائي (اختياري - للاختبار فقط)
-        // ============================================================
-        // يمكن تفعيل الأسطر التالية لتعبئة بيانات الدخول تلقائياً للاختبار
-        // document.getElementById('loginPhone').value = '01140074870';
-        // document.getElementById('loginPassword').value = '123456';
     </script>
 
 </body>
