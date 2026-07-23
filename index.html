@@ -543,9 +543,9 @@
 
     <script>
         // ============================================================
-        //  🔗 الرابط
+        //  🔗 الرابط الجديد - تم التحديث
         // ============================================================
-        const API_URL = "https://script.google.com/macros/s/AKfycbxg_LV0JV1zOaktiPvsUVOLFjPGkWTbOcZkqIX7b_o3FzzriLkQzSmb2rLvklNS6kDN/exec";
+        const API_URL = "https://script.google.com/macros/s/AKfycbwxdpiAaZJpQVVyHKnNs6cmNhHK3M2FfG85ISFbUIzzxAY2Z9LPGN97J3qrU-g4gWyA/exec";
         let currentUser = null;
         let currentShipments = [];
 
@@ -844,7 +844,7 @@
         }
 
         // ============================================================
-        //  ➕ إضافة شحنة جديدة - حسب ترتيب الشيت بالضبط
+        //  ➕ إضافة شحنة جديدة
         // ============================================================
         function showAddShipmentForm() {
             if (!currentUser) {
@@ -916,7 +916,7 @@
         }
 
         // ============================================================
-        //  إرسال الشحنة - حسب ترتيب الشيت بالضبط
+        //  إرسال الشحنة
         // ============================================================
         async function submitShipment() {
             const receiverName = document.getElementById('f_receiverName').value.trim();
@@ -931,7 +931,6 @@
             
             const errorDiv = document.getElementById('shipError');
 
-            // التحقق من الحقول المطلوبة
             if (!receiverName || !receiverPhone || !governorate || !city || !address || !amount) {
                 errorDiv.textContent = '⚠️ يرجى ملء جميع الحقول المطلوبة (*)';
                 errorDiv.classList.remove('hidden');
@@ -944,91 +943,31 @@
                 return;
             }
 
-            // ============================================================
-            //  ترتيب الأعمدة حسب الشيت بالضبط:
-            //  A: مكان رقم التتبع = ' + رقم هاتف العميل
-            //  B: اسم المستلم
-            //  C: هاتف المستلم
-            //  D: هاتف آخر للمستلم
-            //  E: المحافظة
-            //  F: المدينة
-            //  G: اجباري = "."
-            //  H: العنوان التفصيلي
-            //  I: (فارغ)
-            //  J: (فارغ)
-            //  K: (فارغ)
-            //  L: اجباري = "Standard"
-            //  M: (فارغ)
-            //  N: اجباري = "Egypt"
-            //  O: المبلغ المطلوب تحصيله شامل الشحن
-            //  P: (فارغ)
-            //  Q: وزن الشحنة
-            //  R: (فارغ)
-            //  S: (فارغ)
-            //  T: اجباري رقم الهاتف الخاص بالعميل
-            // ============================================================
-
             const formData = new URLSearchParams();
             formData.append('action', 'addShipment');
             
             // A: مكان رقم التتبع = ' + رقم هاتف العميل
             formData.append('trackingPlace', "'" + currentUser.phone);
-            
-            // B: اسم المستلم
             formData.append('receiverName', receiverName);
-            
-            // C: هاتف المستلم
             formData.append('receiverPhone', receiverPhone);
-            
-            // D: هاتف آخر للمستلم
             formData.append('receiverPhone2', receiverPhone2);
-            
-            // E: المحافظة
             formData.append('governorate', governorate);
-            
-            // F: المدينة
             formData.append('city', city);
-            
-            // G: اجباري = "."
             formData.append('dot', '.');
-            
-            // H: العنوان التفصيلي
             formData.append('address', address);
-            
-            // I, J, K: فارغ
             formData.append('empty1', '');
             formData.append('empty2', '');
             formData.append('empty3', '');
-            
-            // L: اجباري = "Standard"
             formData.append('productType', 'Standard');
-            
-            // M: فارغ
             formData.append('empty4', '');
-            
-            // N: اجباري = "Egypt"
             formData.append('country', 'Egypt');
-            
-            // O: المبلغ المطلوب تحصيله شامل الشحن
             formData.append('amount', amount);
-            
-            // P: فارغ
             formData.append('empty5', '');
-            
-            // Q: وزن الشحنة
             formData.append('weight', weight);
-            
-            // R, S: فارغ
             formData.append('empty6', '');
             formData.append('empty7', '');
-            
-            // T: اجباري رقم الهاتف الخاص بالعميل
             formData.append('clientPhone', currentUser.phone);
-            
-            // ملاحظات إضافية
             formData.append('notes', notes);
-            
-            // بيانات المصادقة
             formData.append('phone', currentUser.phone);
             formData.append('password', currentUser.password);
 
