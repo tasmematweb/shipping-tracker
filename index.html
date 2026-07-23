@@ -3,56 +3,124 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>تتبع شحنات J&T Express</title>
+    <title>نظام تتبع وإدارة شحنات J&T Express</title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: #f5f5f5;
+            background: linear-gradient(135deg, #e60012 0%, #cc0000 100%);
+            min-height: 100vh;
             padding: 20px;
         }
         .container {
-            max-width: 800px;
+            max-width: 900px;
             margin: 0 auto;
             background: white;
-            border-radius: 15px;
-            padding: 25px;
-            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
         }
-        h1 { text-align: center; color: #e60012; margin-bottom: 25px; }
-        .logo { text-align: center; font-size: 50px; margin-bottom: 15px; }
-        .search-box { display: flex; gap: 10px; margin-bottom: 25px; }
-        input {
-            flex: 1;
-            padding: 12px 15px;
+        .hidden { display: none !important; }
+        
+        /* صفحة تسجيل الدخول */
+        .login-page { text-align: center; }
+        .login-page .logo { font-size: 60px; margin-bottom: 20px; }
+        .login-page h1 { color: #e60012; margin-bottom: 30px; }
+        .login-page input {
+            display: block;
+            width: 100%;
+            padding: 15px;
+            margin: 15px 0;
             border: 2px solid #ddd;
-            border-radius: 8px;
+            border-radius: 10px;
             font-size: 16px;
-            direction: ltr;
+            text-align: center;
         }
-        button {
-            padding: 12px 25px;
+        .login-page button {
+            width: 100%;
+            padding: 15px;
+            background: #e60012;
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 18px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+        .login-page button:hover { background: #cc0000; }
+        .error-msg { color: red; margin-top: 15px; }
+
+        /* الهيدر */
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #eee;
+        }
+        .header h2 { color: #333; }
+        .header button {
+            padding: 10px 20px;
             background: #e60012;
             color: white;
             border: none;
             border-radius: 8px;
-            font-size: 16px;
             cursor: pointer;
+            font-size: 14px;
+        }
+        .header button.green { background: #28a745; }
+
+        /* قائمة الشحنات */
+        .shipment-card {
+            background: #fafafa;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 15px;
+            border: 1px solid #eee;
+            position: relative;
+        }
+        .shipment-card .status-badge {
+            position: absolute;
+            top: 15px;
+            left: 15px;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 12px;
             font-weight: bold;
         }
-        button:hover { background: #cc0000; }
-        .loading { text-align: center; padding: 20px; display: none; }
-        .result { display: none; }
-        .error { background: #ffe6e6; color: #cc0000; padding: 12px; border-radius: 8px; display: none; margin-bottom: 15px; }
-        .status {
+        .status-waiting { background: #fff3cd; color: #856404; }
+        .status-tracking { background: #d1ecf1; color: #0c5460; }
+        .status-done { background: #d4edda; color: #155724; }
+        .shipment-card .info { margin: 8px 0; color: #555; }
+        .shipment-card .info strong { color: #333; margin-left: 5px; }
+        .shipment-card .actions { margin-top: 15px; }
+        .shipment-card .actions button {
+            padding: 8px 20px;
+            margin: 5px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 13px;
+        }
+        .btn-track { background: #0066cc; color: white; }
+        .btn-add-tracking { background: #28a745; color: white; }
+        .btn-delete { background: #dc3545; color: white; }
+
+        /* الفورم */
+        .form-group { margin-bottom: 15px; }
+        .form-group label { display: block; margin-bottom: 5px; font-weight: bold; color: #333; }
+        .form-group input, .form-group textarea {
+            width: 100%;
             padding: 12px;
-            background: #e6ffe6;
+            border: 2px solid #ddd;
             border-radius: 8px;
-            margin-bottom: 20px;
-            font-weight: bold;
-            color: #006600;
-            text-align: center;
+            font-size: 14px;
         }
+        .form-group textarea { height: 80px; resize: vertical; }
+
+        /* التتبع */
+        .tracking-result { margin-top: 20px; }
         .timeline-item {
             border-right: 3px solid #e60012;
             padding: 12px 15px;
@@ -61,183 +129,425 @@
             background: #fafafa;
             border-radius: 0 8px 8px 0;
         }
-        .time { color: #999; font-size: 13px; }
-        .event { font-weight: bold; color: #333; margin: 5px 0; }
-        .location { color: #666; font-size: 14px; }
-        .problem { color: #e60012; font-size: 13px; margin-top: 5px; }
-        .courier { color: #0066cc; font-size: 13px; }
-        .active { display: block !important; }
+        .timeline-item .time { color: #999; font-size: 13px; }
+        .timeline-item .event { font-weight: bold; color: #333; margin: 5px 0; }
+        .timeline-item .location { color: #666; font-size: 14px; }
+        .timeline-item .problem { color: #e60012; font-size: 13px; margin-top: 5px; }
+
+        /* Modal */
+        .modal {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: rgba(0,0,0,0.5);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+        .modal-content {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            max-width: 500px;
+            width: 90%;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+        .modal-content h3 { margin-bottom: 20px; text-align: center; }
+        .close-btn { float: left; cursor: pointer; font-size: 24px; color: #999; }
+
+        .loading { text-align: center; padding: 20px; }
+        .spinner {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #e60012;
+            border-radius: 50%;
+            width: 40px; height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 10px;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
     </style>
 </head>
 <body>
-    <div class="container">
-        <div class="logo">📦</div>
-        <h1>تتبع شحنات J&T Express مصر</h1>
-        
-        <div class="search-box">
-            <input type="text" id="billCode" placeholder="أدخل رقم الشحنة">
-            <button onclick="trackShipment()">تتبع 🔍</button>
+    <div class="container" id="app">
+        <!-- صفحة تسجيل الدخول -->
+        <div id="loginPage" class="login-page">
+            <div class="logo">📦</div>
+            <h1>نظام تتبع شحنات J&T</h1>
+            <input type="text" id="phoneInput" placeholder="رقم الهاتف" dir="ltr">
+            <input type="password" id="passwordInput" placeholder="كلمة المرور" dir="ltr">
+            <button onclick="doLogin()">دخول</button>
+            <p class="error-msg" id="loginError"></p>
         </div>
-        
-        <div class="loading" id="loading">⏳ جاري البحث عن الشحنة...</div>
-        <div class="error" id="error"></div>
-        <div class="result" id="result"></div>
+
+        <!-- لوحة التحكم -->
+        <div id="dashboard" class="hidden">
+            <div class="header">
+                <h2 id="welcomeMsg">مرحباً</h2>
+                <div>
+                    <button id="addShipmentBtn" class="green" onclick="showAddShipmentForm()">➕ إضافة شحنة</button>
+                    <button id="clientsBtn" class="green hidden" onclick="showClients()">👥 العملاء</button>
+                    <button onclick="logout()">🚪 خروج</button>
+                </div>
+            </div>
+            <div id="content"></div>
+        </div>
+    </div>
+
+    <!-- Modal -->
+    <div id="modal" class="modal hidden">
+        <div class="modal-content" id="modalContent"></div>
     </div>
 
     <script>
-        const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbw37rQZCBjTIkEw70ZEJn7p_CggvhLEs2V_ChPaZ-IY0YCeKxXPHBX_2F6MpixK7sU/exec";
+        const API_URL = "https://script.google.com/macros/s/AKfycby3BM2OjvzP-UGpHs6cxfIfrHCy2WYgbFDfnQr0LUPcYtM0wsork2-RQkWOy9nQKqCT/exec";
+        let currentUser = null;
 
-        // ترجمة أنواع المسح
-        const scanTypeTranslation = {
-            "Pickup scan": "📦 تم استلام الشحنة",
-            "Delivery scan": "🚚 جاري توصيل الشحنة",
-            "Arrival Scan": "📍 وصلت الشحنة",
-            "Sending scan": "📤 تم إرسال الشحنة",
-            "Return Sign": "↩️ تم توقيع الإرجاع",
-            "Returned parcel scan": "🔙 مسح إرجاع الطرد",
-            "Left Over Scan": "📋 مسح المتبقي",
-            "Abnormal parcels scan": "⚠️ طرود غير طبيعية",
-            "Return scan": "↩️ مسح الإرجاع",
-            "Sign scan": "✍️ تم التوقيع"
-        };
-
-        // ترجمة أسباب المشاكل
-        const problemTranslation = {
-            "退件签收": "توقيع إرجاع الشحنة",
-            "派件扫描": "مسح توصيل الشحنة",
-            "到件扫描": "مسح وصول الشحنة",
-            "发件扫描": "مسح إرسال الشحنة",
-            "中心到件": "وصول المركز",
-            "退件扫描": "مسح إرجاع",
-            "留仓件入仓": "تخزين في المستودع",
-            "问题件扫描": "مسح شحنة مشكلة",
-            "快件揽收": "استلام الشحنة",
-            "Customer refuse by WhatsApp": "العميل رفض عبر الواتساب",
-            "No Answer or Phone Switched Off": "لا يوجد رد أو الهاتف مغلق"
-        };
-
-        function translateScanType(scanType) {
-            return scanTypeTranslation[scanType] || scanType || "غير معروف";
-        }
-
-        function translateProblem(problem) {
-            if (!problem) return "";
-            let translated = problem;
-            for (const [key, value] of Object.entries(problemTranslation)) {
-                translated = translated.replace(key, value);
-            }
-            return translated;
-        }
-
-        function extractInfo(desc) {
-            const info = {
-                courier: "",
-                phone: "",
-                branchPhone: "",
-                branchContact: ""
-            };
-
-            // استخراج اسم المندوب
-            const courierMatch = desc.match(/مندوب.*?(\w+ \w+)/);
-            if (courierMatch) info.courier = courierMatch[1];
-
-            // استخراج رقم هاتف المندوب
-            const phoneMatch = desc.match(/\((\d+)\)/);
-            if (phoneMatch) info.phone = phoneMatch[1];
-
-            // استخراج رقم الفرع
-            const branchMatch = desc.match(/رقم هاتف الفرع[:\s]*(\d+)/);
-            if (branchMatch) info.branchPhone = branchMatch[1];
-
-            // استخراج اسم مسؤول الفرع
-            const contactMatch = desc.match(/\|(\w+)/);
-            if (contactMatch) info.branchContact = contactMatch[1];
-
-            return info;
-        }
-
-        async function trackShipment() {
-            const billCode = document.getElementById('billCode').value.trim();
-            const loading = document.getElementById('loading');
-            const errorDiv = document.getElementById('error');
-            const resultDiv = document.getElementById('result');
+        // ==================== تسجيل الدخول ====================
+        async function doLogin() {
+            const phone = document.getElementById('phoneInput').value.trim();
+            const password = document.getElementById('passwordInput').value.trim();
+            const errorDiv = document.getElementById('loginError');
             
-            errorDiv.classList.remove('active');
-            resultDiv.classList.remove('active');
-            resultDiv.innerHTML = '';
-            
-            if (!billCode) {
-                errorDiv.textContent = '⚠️ الرجاء إدخال رقم الشحنة';
-                errorDiv.classList.add('active');
+            if (!phone || !password) {
+                errorDiv.textContent = "يرجى إدخال رقم الهاتف وكلمة المرور";
                 return;
             }
             
-            loading.classList.add('active');
-            
             try {
-                const response = await fetch(SCRIPT_URL + "?billCode=" + encodeURIComponent(billCode));
-                const data = await response.json();
+                const res = await fetch(`${API_URL}?action=login&phone=${phone}&password=${password}`);
+                const data = await res.json();
                 
-                loading.classList.remove('active');
-                
-                if (data.code === "1" && data.data && data.data.length > 0) {
-                    displayResult(data.data[0]);
+                if (data.success) {
+                    currentUser = data;
+                    showDashboard();
                 } else {
-                    errorDiv.textContent = '❌ لم يتم العثور على الشحنة. تأكد من رقم الشحنة.';
-                    errorDiv.classList.add('active');
+                    errorDiv.textContent = data.msg || "فشل تسجيل الدخول";
                 }
             } catch (e) {
-                loading.classList.remove('active');
-                errorDiv.textContent = '❌ فشل الاتصال. حاول مرة أخرى.';
-                errorDiv.classList.add('active');
+                errorDiv.textContent = "فشل الاتصال";
             }
-        }
-        
-        function displayResult(shipment) {
-            const resultDiv = document.getElementById('result');
-            resultDiv.classList.add('active');
-            
-            let html = `<div class="status">📋 رقم الشحنة: ${shipment.billCode}</div>`;
-            
-            if (shipment.details && shipment.details.length > 0) {
-                shipment.details.forEach(d => {
-                    const scanTypeArabic = translateScanType(d.scanType);
-                    const problemArabic = translateProblem(d.probleDescription || d.problemReason);
-                    const info = extractInfo(d.desc || "");
-                    
-                    html += `<div class="timeline-item">`;
-                    html += `<div class="time">🕐 ${d.scanTime || ''}</div>`;
-                    html += `<div class="event">${scanTypeArabic}</div>`;
-                    
-                    if (d.scanNetworkName || d.scanNetworkCity) {
-                        html += `<div class="location">📍 ${d.scanNetworkName || ''} - ${d.scanNetworkCity || ''} - ${d.scanNetworkProvince || ''}</div>`;
-                    }
-                    
-                    if (info.courier) {
-                        html += `<div class="courier">👤 المندوب: ${info.courier}</div>`;
-                    }
-                    
-                    if (info.phone) {
-                        html += `<div class="courier">📱 هاتف المندوب: ${info.phone}</div>`;
-                    }
-                    
-                    if (info.branchPhone) {
-                        html += `<div class="courier">🏢 هاتف الفرع: ${info.branchPhone}</div>`;
-                    }
-                    
-                    if (problemArabic) {
-                        html += `<div class="problem">⚠️ ${problemArabic}</div>`;
-                    }
-                    
-                    html += `</div>`;
-                });
-            }
-            
-            resultDiv.innerHTML = html;
         }
 
-        document.getElementById('billCode').addEventListener('keypress', function(e) {
-            if (e.key === 'Enter') trackShipment();
+        function logout() {
+            currentUser = null;
+            document.getElementById('loginPage').classList.remove('hidden');
+            document.getElementById('dashboard').classList.add('hidden');
+            document.getElementById('phoneInput').value = '';
+            document.getElementById('passwordInput').value = '';
+        }
+
+        // ==================== لوحة التحكم ====================
+        function showDashboard() {
+            document.getElementById('loginPage').classList.add('hidden');
+            document.getElementById('dashboard').classList.remove('hidden');
+            document.getElementById('welcomeMsg').textContent = `مرحباً ${currentUser.name} (${currentUser.role === 'admin' ? 'أدمن' : 'عميل'})`;
+            
+            // أزرار خاصة بالأدمن
+            if (currentUser.role === 'admin') {
+                document.getElementById('clientsBtn').classList.remove('hidden');
+                document.getElementById('addShipmentBtn').classList.add('hidden');
+                loadAllShipments();
+            } else {
+                document.getElementById('clientsBtn').classList.add('hidden');
+                document.getElementById('addShipmentBtn').classList.remove('hidden');
+                loadMyShipments();
+            }
+        }
+
+        // ==================== شحنات العميل ====================
+        async function loadMyShipments() {
+            const content = document.getElementById('content');
+            content.innerHTML = '<div class="loading"><div class="spinner"></div>جاري التحميل...</div>';
+            
+            try {
+                const res = await fetch(`${API_URL}?action=myShipments&phone=${currentUser.phone}&password=${currentUser.password}`);
+                const data = await res.json();
+                
+                if (data.success) {
+                    if (data.shipments.length === 0) {
+                        content.innerHTML = '<p style="text-align:center;color:#999;padding:50px;">لا توجد شحنات حتى الآن</p>';
+                    } else {
+                        content.innerHTML = data.shipments.map(s => createShipmentCard(s)).join('');
+                    }
+                } else {
+                    content.innerHTML = '<p style="color:red;text-align:center;">فشل تحميل الشحنات</p>';
+                }
+            } catch (e) {
+                content.innerHTML = '<p style="color:red;text-align:center;">فشل الاتصال</p>';
+            }
+        }
+
+        // ==================== كل الشحنات (للأدمن) ====================
+        async function loadAllShipments() {
+            const content = document.getElementById('content');
+            content.innerHTML = '<div class="loading"><div class="spinner"></div>جاري التحميل...</div>';
+            
+            try {
+                const formData = new FormData();
+                formData.append('action', 'allShipments');
+                formData.append('adminPhone', currentUser.phone);
+                formData.append('adminPassword', currentUser.password);
+                
+                const res = await fetch(API_URL, { method: 'POST', body: formData });
+                const data = await res.json();
+                
+                if (data.success) {
+                    if (data.shipments.length === 0) {
+                        content.innerHTML = '<p style="text-align:center;color:#999;padding:50px;">لا توجد شحنات</p>';
+                    } else {
+                        content.innerHTML = data.shipments.map(s => createShipmentCard(s, true)).join('');
+                    }
+                }
+            } catch (e) {
+                content.innerHTML = '<p style="color:red;text-align:center;">فشل الاتصال</p>';
+            }
+        }
+
+        function createShipmentCard(s, isAdmin = false) {
+            let statusClass = 'status-waiting';
+            if (s.status.includes('تتبع')) statusClass = 'status-tracking';
+            if (s.status.includes('تم')) statusClass = 'status-done';
+            
+            let actions = '';
+            if (s.trackingNumber) {
+                actions += `<button class="btn-track" onclick="trackShipment('${s.trackingNumber}')">📍 تتبع</button>`;
+            }
+            if (isAdmin && !s.trackingNumber) {
+                actions += `<button class="btn-add-tracking" onclick="showAddTracking('${s.id}')">🔢 إضافة رقم تتبع</button>`;
+            }
+            
+            return `
+                <div class="shipment-card">
+                    <span class="status-badge ${statusClass}">${s.status}</span>
+                    ${isAdmin ? `<div class="info"><strong>العميل:</strong> ${s.clientPhone}</div>` : ''}
+                    <div class="info"><strong>رقم الشحنة:</strong> ${s.id}</div>
+                    <div class="info"><strong>التاريخ:</strong> ${s.date}</div>
+                    <div class="info"><strong>العميل:</strong> ${s.customerName}</div>
+                    <div class="info"><strong>الهاتف:</strong> ${s.customerPhone}</div>
+                    <div class="info"><strong>العنوان:</strong> ${s.customerAddress}</div>
+                    <div class="info"><strong>المنتج:</strong> ${s.productName} (${s.productQuantity})</div>
+                    ${s.notes ? `<div class="info"><strong>ملاحظات:</strong> ${s.notes}</div>` : ''}
+                    ${s.trackingNumber ? `<div class="info"><strong>رقم التتبع:</strong> ${s.trackingNumber}</div>` : ''}
+                    <div class="actions">${actions}</div>
+                </div>
+            `;
+        }
+
+        // ==================== إضافة شحنة ====================
+        function showAddShipmentForm() {
+            const modal = document.getElementById('modal');
+            modal.classList.remove('hidden');
+            document.getElementById('modalContent').innerHTML = `
+                <span class="close-btn" onclick="closeModal()">✖</span>
+                <h3>إضافة شحنة جديدة</h3>
+                <div class="form-group"><label>اسم العميل</label><input id="cName"></div>
+                <div class="form-group"><label>هاتف العميل</label><input id="cPhone" dir="ltr"></div>
+                <div class="form-group"><label>العنوان</label><input id="cAddress"></div>
+                <div class="form-group"><label>اسم المنتج</label><input id="cProduct"></div>
+                <div class="form-group"><label>الكمية</label><input id="cQuantity" type="number" value="1"></div>
+                <div class="form-group"><label>ملاحظات</label><textarea id="cNotes"></textarea></div>
+                <button onclick="submitShipment()" style="width:100%;padding:15px;background:#e60012;color:white;border:none;border-radius:8px;font-size:16px;cursor:pointer;">إضافة الشحنة</button>
+                <p id="shipError" style="color:red;margin-top:10px;text-align:center;"></p>
+            `;
+        }
+
+        async function submitShipment() {
+            const formData = new FormData();
+            formData.append('action', 'addShipment');
+            formData.append('phone', currentUser.phone);
+            formData.append('password', currentUser.password);
+            formData.append('customerName', document.getElementById('cName').value);
+            formData.append('customerPhone', document.getElementById('cPhone').value);
+            formData.append('customerAddress', document.getElementById('cAddress').value);
+            formData.append('productName', document.getElementById('cProduct').value);
+            formData.append('productQuantity', document.getElementById('cQuantity').value);
+            formData.append('notes', document.getElementById('cNotes').value);
+            
+            try {
+                const res = await fetch(API_URL, { method: 'POST', body: formData });
+                const data = await res.json();
+                if (data.success) {
+                    closeModal();
+                    loadMyShipments();
+                } else {
+                    document.getElementById('shipError').textContent = data.msg;
+                }
+            } catch (e) {
+                document.getElementById('shipError').textContent = 'فشل الاتصال';
+            }
+        }
+
+        // ==================== إضافة رقم تتبع (أدمن) ====================
+        function showAddTracking(shipmentId) {
+            const modal = document.getElementById('modal');
+            modal.classList.remove('hidden');
+            document.getElementById('modalContent').innerHTML = `
+                <span class="close-btn" onclick="closeModal()">✖</span>
+                <h3>إضافة رقم تتبع</h3>
+                <div class="form-group"><label>رقم الشحنة: ${shipmentId}</label></div>
+                <div class="form-group"><label>رقم التتبع</label><input id="trackingNum" dir="ltr"></div>
+                <button onclick="submitTracking('${shipmentId}')" style="width:100%;padding:15px;background:#28a745;color:white;border:none;border-radius:8px;font-size:16px;cursor:pointer;">حفظ</button>
+                <p id="trackError" style="color:red;margin-top:10px;text-align:center;"></p>
+            `;
+        }
+
+        async function submitTracking(shipmentId) {
+            const formData = new FormData();
+            formData.append('action', 'addTrackingNumber');
+            formData.append('adminPhone', currentUser.phone);
+            formData.append('adminPassword', currentUser.password);
+            formData.append('shipmentId', shipmentId);
+            formData.append('trackingNumber', document.getElementById('trackingNum').value);
+            
+            try {
+                const res = await fetch(API_URL, { method: 'POST', body: formData });
+                const data = await res.json();
+                if (data.success) {
+                    closeModal();
+                    loadAllShipments();
+                } else {
+                    document.getElementById('trackError').textContent = data.msg;
+                }
+            } catch (e) {
+                document.getElementById('trackError').textContent = 'فشل الاتصال';
+            }
+        }
+
+        // ==================== تتبع شحنة ====================
+        async function trackShipment(billCode) {
+            const modal = document.getElementById('modal');
+            modal.classList.remove('hidden');
+            document.getElementById('modalContent').innerHTML = '<div class="loading"><div class="spinner"></div>جاري تتبع الشحنة...</div>';
+            
+            try {
+                const res = await fetch(`${API_URL}?action=track&billCode=${billCode}`);
+                const data = await res.json();
+                
+                if (data.code === "1" && data.data && data.data[0]) {
+                    const details = data.data[0].details || [];
+                    let html = `<span class="close-btn" onclick="closeModal()">✖</span><h3>مسار الشحنة: ${billCode}</h3>`;
+                    
+                    details.forEach(d => {
+                        html += `
+                            <div class="timeline-item">
+                                <div class="time">🕐 ${d.scanTime || ''}</div>
+                                <div class="event">📌 ${d.desc || d.scanType || ''}</div>
+                                <div class="location">📍 ${d.scanNetworkName || ''} - ${d.scanNetworkCity || ''} - ${d.scanNetworkProvince || ''}</div>
+                                ${d.probleDescription ? `<div class="problem">⚠️ ${d.probleDescription}</div>` : ''}
+                            </div>
+                        `;
+                    });
+                    
+                    document.getElementById('modalContent').innerHTML = html;
+                } else {
+                    document.getElementById('modalContent').innerHTML = '<span class="close-btn" onclick="closeModal()">✖</span><p style="text-align:center;color:red;">فشل تتبع الشحنة</p>';
+                }
+            } catch (e) {
+                document.getElementById('modalContent').innerHTML = '<span class="close-btn" onclick="closeModal()">✖</span><p style="text-align:center;color:red;">فشل الاتصال</p>';
+            }
+        }
+
+        // ==================== إدارة العملاء (أدمن) ====================
+        async function showClients() {
+            const modal = document.getElementById('modal');
+            modal.classList.remove('hidden');
+            document.getElementById('modalContent').innerHTML = '<div class="loading"><div class="spinner"></div>جاري التحميل...</div>';
+            
+            try {
+                const formData = new FormData();
+                formData.append('action', 'allClients');
+                formData.append('adminPhone', currentUser.phone);
+                formData.append('adminPassword', currentUser.password);
+                
+                const res = await fetch(API_URL, { method: 'POST', body: formData });
+                const data = await res.json();
+                
+                if (data.success) {
+                    let html = `<span class="close-btn" onclick="closeModal()">✖</span><h3>العملاء</h3>
+                        <button onclick="showAddClientForm()" style="width:100%;padding:12px;background:#28a745;color:white;border:none;border-radius:8px;margin-bottom:15px;cursor:pointer;">➕ إضافة عميل جديد</button>
+                        <div id="clientList"></div>`;
+                    document.getElementById('modalContent').innerHTML = html;
+                    
+                    const listDiv = document.getElementById('clientList');
+                    data.clients.forEach(c => {
+                        listDiv.innerHTML += `
+                            <div style="background:#fafafa;padding:15px;border-radius:8px;margin-bottom:10px;display:flex;justify-content:space-between;align-items:center;">
+                                <div>
+                                    <strong>${c.name}</strong><br>
+                                    <span style="color:#666;">${c.phone}</span><br>
+                                    <span style="color:#999;font-size:12px;">تاريخ الإنشاء: ${c.created}</span>
+                                </div>
+                                <button onclick="deleteClient('${c.phone}')" style="background:#dc3545;color:white;border:none;padding:8px 15px;border-radius:5px;cursor:pointer;">حذف</button>
+                            </div>
+                        `;
+                    });
+                }
+            } catch (e) {
+                document.getElementById('modalContent').innerHTML = '<span class="close-btn" onclick="closeModal()">✖</span><p style="color:red;">فشل التحميل</p>';
+            }
+        }
+
+        function showAddClientForm() {
+            document.getElementById('modalContent').innerHTML = `
+                <span class="close-btn" onclick="showClients()">✖</span>
+                <h3>إضافة عميل جديد</h3>
+                <div class="form-group"><label>اسم العميل</label><input id="newClientName"></div>
+                <div class="form-group"><label>رقم الهاتف</label><input id="newClientPhone" dir="ltr"></div>
+                <div class="form-group"><label>كلمة المرور</label><input id="newClientPassword" dir="ltr"></div>
+                <button onclick="createClient()" style="width:100%;padding:15px;background:#28a745;color:white;border:none;border-radius:8px;font-size:16px;cursor:pointer;">إنشاء</button>
+                <p id="clientError" style="color:red;margin-top:10px;text-align:center;"></p>
+            `;
+        }
+
+        async function createClient() {
+            const formData = new FormData();
+            formData.append('action', 'createClient');
+            formData.append('adminPhone', currentUser.phone);
+            formData.append('adminPassword', currentUser.password);
+            formData.append('clientName', document.getElementById('newClientName').value);
+            formData.append('clientPhone', document.getElementById('newClientPhone').value);
+            formData.append('clientPassword', document.getElementById('newClientPassword').value);
+            
+            try {
+                const res = await fetch(API_URL, { method: 'POST', body: formData });
+                const data = await res.json();
+                if (data.success) {
+                    showClients();
+                } else {
+                    document.getElementById('clientError').textContent = data.msg;
+                }
+            } catch (e) {
+                document.getElementById('clientError').textContent = 'فشل الاتصال';
+            }
+        }
+
+        async function deleteClient(phone) {
+            if (!confirm('هل أنت متأكد من حذف هذا العميل؟')) return;
+            
+            const formData = new FormData();
+            formData.append('action', 'deleteClient');
+            formData.append('phone', phone);
+            
+            try {
+                await fetch(API_URL, { method: 'POST', body: formData });
+                showClients();
+            } catch (e) {
+                alert('فشل الحذف');
+            }
+        }
+
+        function closeModal() {
+            document.getElementById('modal').classList.add('hidden');
+        }
+
+        // Enter key for login
+        document.getElementById('passwordInput').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') doLogin();
         });
     </script>
 </body>
