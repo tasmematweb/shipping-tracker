@@ -14,8 +14,11 @@
         .login-page h1 { color: #e60012; margin-bottom: 30px; }
         .login-page input { display: block; width: 100%; padding: 15px; margin: 15px 0; border: 2px solid #ddd; border-radius: 10px; font-size: 16px; text-align: center; }
         .login-page button { width: 100%; padding: 15px; background: #e60012; color: white; border: none; border-radius: 10px; font-size: 18px; cursor: pointer; font-weight: bold; }
+        .login-page .register-link { margin-top: 15px; color: #666; }
+        .login-page .register-link a { color: #0066cc; text-decoration: none; font-weight: bold; cursor: pointer; }
         .error-msg { color: red; margin-top: 15px; }
         .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; padding-bottom: 15px; border-bottom: 2px solid #eee; }
+        .header h2 { color: #333; }
         .header button { padding: 10px 20px; background: #e60012; color: white; border: none; border-radius: 8px; cursor: pointer; font-size: 14px; }
         .header button.green { background: #28a745; }
         .shipment-card { background: #fafafa; border-radius: 12px; padding: 20px; margin-bottom: 15px; border: 1px solid #eee; position: relative; }
@@ -24,35 +27,46 @@
         .status-tracking { background: #d1ecf1; color: #0c5460; }
         .status-done { background: #d4edda; color: #155724; }
         .shipment-card .info { margin: 8px 0; color: #555; }
+        .shipment-card .info strong { color: #333; margin-left: 5px; }
         .shipment-card .actions { margin-top: 15px; }
         .shipment-card .actions button { padding: 8px 20px; margin: 5px; border: none; border-radius: 6px; cursor: pointer; font-size: 13px; }
         .btn-track { background: #0066cc; color: white; }
         .btn-add-tracking { background: #28a745; color: white; }
+        .btn-delete { background: #dc3545; color: white; }
         .form-group { margin-bottom: 15px; }
-        .form-group label { display: block; margin-bottom: 5px; font-weight: bold; }
+        .form-group label { display: block; margin-bottom: 5px; font-weight: bold; color: #333; }
         .form-group input, .form-group textarea { width: 100%; padding: 12px; border: 2px solid #ddd; border-radius: 8px; font-size: 14px; }
+        .form-group textarea { height: 80px; resize: vertical; }
+        .tracking-result { margin-top: 20px; }
         .timeline-item { border-right: 3px solid #e60012; padding: 12px 15px; margin-right: 10px; margin-bottom: 15px; background: #fafafa; border-radius: 0 8px 8px 0; }
+        .timeline-item .time { color: #999; font-size: 13px; }
+        .timeline-item .event { font-weight: bold; color: #333; margin: 5px 0; }
+        .timeline-item .location { color: #666; font-size: 14px; }
+        .timeline-item .problem { color: #e60012; font-size: 13px; margin-top: 5px; }
         .modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); display: flex; justify-content: center; align-items: center; z-index: 1000; }
         .modal-content { background: white; border-radius: 15px; padding: 25px; max-width: 500px; width: 90%; max-height: 80vh; overflow-y: auto; }
-        .close-btn { float: left; cursor: pointer; font-size: 24px; }
+        .modal-content h3 { margin-bottom: 20px; text-align: center; }
+        .close-btn { float: left; cursor: pointer; font-size: 24px; color: #999; }
         .loading { text-align: center; padding: 20px; }
         .spinner { border: 4px solid #f3f3f3; border-top: 4px solid #e60012; border-radius: 50%; width: 40px; height: 40px; animation: spin 1s linear infinite; margin: 0 auto 10px; }
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
     </style>
 </head>
 <body>
-    <div class="container">
+    <div class="container" id="app">
         <div id="loginPage" class="login-page">
             <div class="logo">📦</div>
             <h1>نظام تتبع شحنات J&T</h1>
             <input type="text" id="phoneInput" placeholder="رقم الهاتف" dir="ltr">
             <input type="password" id="passwordInput" placeholder="كلمة المرور" dir="ltr">
             <button onclick="doLogin()">دخول</button>
+            <p class="register-link">ليس لديك حساب؟ <a onclick="showRegisterForm()">إنشاء حساب جديد</a></p>
             <p class="error-msg" id="loginError"></p>
         </div>
+
         <div id="dashboard" class="hidden">
             <div class="header">
-                <h2 id="welcomeMsg"></h2>
+                <h2 id="welcomeMsg">مرحباً</h2>
                 <div>
                     <button id="addShipmentBtn" class="green" onclick="showAddShipmentForm()">➕ إضافة شحنة</button>
                     <button id="clientsBtn" class="green hidden" onclick="showClients()">👥 العملاء</button>
@@ -62,7 +76,11 @@
             <div id="content"></div>
         </div>
     </div>
-    <div id="modal" class="modal hidden"><div class="modal-content" id="modalContent"></div></div>
+
+    <div id="modal" class="modal hidden">
+        <div class="modal-content" id="modalContent"></div>
+    </div>
+
     <script>
         const API_URL = "https://script.google.com/macros/s/AKfycbyIM0TQ20pT6BI5_RTe0HoHpsp7oOL2G0aHWiGVLSlOnCveKU0RlnC0DdvCFC0HKZg/exec";
         let currentUser = null;
@@ -78,6 +96,53 @@
                 if (data.success) { currentUser = data; showDashboard(); }
                 else { errorDiv.textContent = data.msg || "فشل تسجيل الدخول"; }
             } catch (e) { errorDiv.textContent = "فشل الاتصال"; }
+        }
+
+        function showRegisterForm() {
+            document.getElementById('modal').classList.remove('hidden');
+            document.getElementById('modalContent').innerHTML = `
+                <span class="close-btn" onclick="closeModal()">✖</span>
+                <h3>إنشاء حساب جديد</h3>
+                <div class="form-group"><label>الاسم</label><input id="regName"></div>
+                <div class="form-group"><label>رقم الهاتف</label><input id="regPhone" dir="ltr"></div>
+                <div class="form-group"><label>كلمة المرور</label><input id="regPassword" type="password" dir="ltr"></div>
+                <button onclick="register()" style="width:100%;padding:15px;background:#28a745;color:white;border:none;border-radius:8px;font-size:16px;cursor:pointer;">إنشاء الحساب</button>
+                <p id="regError" style="color:red;margin-top:10px;text-align:center;"></p>
+            `;
+        }
+
+        async function register() {
+            const name = document.getElementById('regName').value.trim();
+            const phone = document.getElementById('regPhone').value.trim();
+            const password = document.getElementById('regPassword').value.trim();
+            const errorDiv = document.getElementById('regError');
+            
+            if (!name || !phone || !password) {
+                errorDiv.textContent = "يرجى ملء جميع الحقول";
+                return;
+            }
+            
+            try {
+                const formData = new FormData();
+                formData.append('action', 'createClient');
+                formData.append('adminPhone', '01119024874');
+                formData.append('adminPassword', '01119024874');
+                formData.append('clientName', name);
+                formData.append('clientPhone', phone);
+                formData.append('clientPassword', password);
+                
+                const res = await fetch(API_URL, { method: 'POST', body: formData });
+                const data = await res.json();
+                
+                if (data.success) {
+                    alert('تم إنشاء الحساب بنجاح! يمكنك تسجيل الدخول الآن.');
+                    closeModal();
+                } else {
+                    errorDiv.textContent = data.msg || "فشل إنشاء الحساب";
+                }
+            } catch (e) {
+                errorDiv.textContent = "فشل الاتصال";
+            }
         }
 
         function logout() {
