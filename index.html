@@ -543,7 +543,7 @@
 
     <script>
         // ============================================================
-        //  🔗 الرابط الجديد
+        //  🔗 الرابط
         // ============================================================
         const API_URL = "https://script.google.com/macros/s/AKfycbxg_LV0JV1zOaktiPvsUVOLFjPGkWTbOcZkqIX7b_o3FzzriLkQzSmb2rLvklNS6kDN/exec";
         let currentUser = null;
@@ -805,12 +805,14 @@
                         ${clientInfo}
                         <div class="row"><span class="label">🔢 رقم الشحنة:</span><span class="value">${s.id || '#' + (index + 1)}</span></div>
                         <div class="row"><span class="label">📅 التاريخ:</span><span class="value">${s.date || ''}</span></div>
-                        <div class="row"><span class="label">👤 المستلم:</span><span class="value ar">${s.customerName || ''}</span></div>
-                        <div class="row"><span class="label">📱 هاتف المستلم:</span><span class="value">${s.customerPhone || ''}</span></div>
-                        <div class="row"><span class="label">📍 المحافظة:</span><span class="value ar">${s.receivingProvince || ''}</span></div>
-                        <div class="row"><span class="label">🏙️ المدينة:</span><span class="value ar">${s.receivingCity || ''}</span></div>
-                        <div class="row"><span class="label">📍 العنوان:</span><span class="value ar">${s.customerAddress || ''}</span></div>
-                        <div class="row"><span class="label">📦 المنتج:</span><span class="value ar">${s.productName || ''} (${s.productQuantity || '1'})</span></div>
+                        <div class="row"><span class="label">👤 المستلم:</span><span class="value ar">${s.receiverName || ''}</span></div>
+                        <div class="row"><span class="label">📱 هاتف المستلم:</span><span class="value">${s.receiverPhone || ''}</span></div>
+                        ${s.receiverPhone2 ? `<div class="row"><span class="label">📱 هاتف آخر:</span><span class="value">${s.receiverPhone2}</span></div>` : ''}
+                        <div class="row"><span class="label">📍 المحافظة:</span><span class="value ar">${s.governorate || ''}</span></div>
+                        <div class="row"><span class="label">🏙️ المدينة:</span><span class="value ar">${s.city || ''}</span></div>
+                        <div class="row"><span class="label">📍 العنوان:</span><span class="value ar">${s.address || ''}</span></div>
+                        <div class="row"><span class="label">💰 المبلغ:</span><span class="value">${s.amount || '0'}</span></div>
+                        <div class="row"><span class="label">⚖️ الوزن:</span><span class="value">${s.weight || '1'}</span></div>
                         ${s.notes ? `<div class="row"><span class="label">📝 ملاحظات:</span><span class="value ar">${s.notes}</span></div>` : ''}
                         ${s.trackingNumber ? `<div class="row"><span class="label">🚚 رقم التتبع:</span><span class="value">${s.trackingNumber}</span></div>` : ''}
                         ${actionsHtml ? `<div class="card-actions">${actionsHtml}</div>` : ''}
@@ -822,12 +824,12 @@
         }
 
         // ============================================================
-        //  تحديث قائمة المدن عند اختيار المحافظة
+        //  تحديث قائمة المدن
         // ============================================================
         function updateCities() {
-            const governorateSelect = document.getElementById('f_governorate');
+            const govSelect = document.getElementById('f_governorate');
             const citySelect = document.getElementById('f_city');
-            const selected = governorateSelect.value;
+            const selected = govSelect.value;
             
             citySelect.innerHTML = '<option value="">اختر المدينة</option>';
             
@@ -850,7 +852,6 @@
                 return;
             }
 
-            // بناء خيارات المحافظات
             let govOptions = '<option value="">اختر المحافظة</option>';
             Object.keys(governorates).forEach(gov => {
                 govOptions += `<option value="${gov}">${gov}</option>`;
@@ -894,53 +895,14 @@
                     <input id="f_address" placeholder="العنوان بالتفصيل">
                 </div>
                 
-                <hr style="margin: 16px 0; border: 1px dashed #eee;">
-                
                 <div class="form-group">
-                    <label>👤 اسم المرسل *</label>
-                    <input id="f_senderName" placeholder="اسم المرسل">
+                    <label>💰 المبلغ المطلوب تحصيله شامل الشحن *</label>
+                    <input id="f_amount" type="number" placeholder="المبلغ بالجنيه" dir="ltr">
                 </div>
                 
                 <div class="form-group">
-                    <label>📱 هاتف المرسل *</label>
-                    <input id="f_senderPhone" placeholder="مثال: 010xxxxxxxx" dir="ltr">
-                </div>
-                
-                <div class="form-group">
-                    <label>📱 هاتف آخر للمرسل</label>
-                    <input id="f_senderPhone2" placeholder="هاتف آخر (اختياري)" dir="ltr">
-                </div>
-                
-                <div class="two-columns">
-                    <div class="form-group">
-                        <label>🏛️ محافظة المرسل *</label>
-                        <select id="f_senderGovernorate" onchange="updateSenderCities()">
-                            ${govOptions}
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label>🏙️ مدينة المرسل *</label>
-                        <select id="f_senderCity">
-                            <option value="">اختر المحافظة أولاً</option>
-                        </select>
-                    </div>
-                </div>
-                
-                <div class="form-group">
-                    <label>📍 عنوان المرسل التفصيلي *</label>
-                    <input id="f_senderAddress" placeholder="عنوان المرسل بالتفصيل">
-                </div>
-                
-                <hr style="margin: 16px 0; border: 1px dashed #eee;">
-                
-                <div class="form-group">
-                    <label>📦 اسم المنتج *</label>
-                    <input id="f_product" placeholder="اسم المنتج">
-                </div>
-                
-                <div class="form-group">
-                    <label>🔢 الكمية</label>
-                    <input id="f_quantity" type="number" value="1" min="1">
+                    <label>⚖️ وزن الشحنة *</label>
+                    <input id="f_weight" type="number" placeholder="الوزن بالكيلو" dir="ltr" value="1">
                 </div>
                 
                 <div class="form-group">
@@ -953,24 +915,6 @@
             `);
         }
 
-        // تحديث مدن المرسل
-        function updateSenderCities() {
-            const govSelect = document.getElementById('f_senderGovernorate');
-            const citySelect = document.getElementById('f_senderCity');
-            const selected = govSelect.value;
-            
-            citySelect.innerHTML = '<option value="">اختر المدينة</option>';
-            
-            if (selected && governorates[selected]) {
-                governorates[selected].forEach(city => {
-                    const option = document.createElement('option');
-                    option.value = city;
-                    option.textContent = city;
-                    citySelect.appendChild(option);
-                });
-            }
-        }
-
         // ============================================================
         //  إرسال الشحنة - حسب ترتيب الشيت بالضبط
         // ============================================================
@@ -981,23 +925,14 @@
             const governorate = document.getElementById('f_governorate').value;
             const city = document.getElementById('f_city').value;
             const address = document.getElementById('f_address').value.trim();
-            
-            const senderName = document.getElementById('f_senderName').value.trim();
-            const senderPhone = document.getElementById('f_senderPhone').value.trim();
-            const senderPhone2 = document.getElementById('f_senderPhone2').value.trim();
-            const senderGovernorate = document.getElementById('f_senderGovernorate').value;
-            const senderCity = document.getElementById('f_senderCity').value;
-            const senderAddress = document.getElementById('f_senderAddress').value.trim();
-            
-            const product = document.getElementById('f_product').value.trim();
-            const quantity = document.getElementById('f_quantity').value.trim() || '1';
+            const amount = document.getElementById('f_amount').value.trim();
+            const weight = document.getElementById('f_weight').value.trim() || '1';
             const notes = document.getElementById('f_notes').value.trim();
             
             const errorDiv = document.getElementById('shipError');
 
             // التحقق من الحقول المطلوبة
-            if (!receiverName || !receiverPhone || !governorate || !city || !address ||
-                !senderName || !senderPhone || !senderGovernorate || !senderCity || !senderAddress || !product) {
+            if (!receiverName || !receiverPhone || !governorate || !city || !address || !amount) {
                 errorDiv.textContent = '⚠️ يرجى ملء جميع الحقول المطلوبة (*)';
                 errorDiv.classList.remove('hidden');
                 return;
@@ -1012,25 +947,25 @@
             // ============================================================
             //  ترتيب الأعمدة حسب الشيت بالضبط:
             //  A: مكان رقم التتبع = ' + رقم هاتف العميل
-            //  B: العميل = اسم المستلم
-            //  C: العميل = هاتف المستلم
-            //  D: العميل = هاتف آخر للمستلم
-            //  E: العميل = المحافظة
-            //  F: العميل = المدينة
+            //  B: اسم المستلم
+            //  C: هاتف المستلم
+            //  D: هاتف آخر للمستلم
+            //  E: المحافظة
+            //  F: المدينة
             //  G: اجباري = "."
-            //  H: العميل = العنوان التفصيلي
+            //  H: العنوان التفصيلي
             //  I: (فارغ)
             //  J: (فارغ)
             //  K: (فارغ)
             //  L: اجباري = "Standard"
             //  M: (فارغ)
             //  N: اجباري = "Egypt"
-            //  O: (فارغ)
+            //  O: المبلغ المطلوب تحصيله شامل الشحن
             //  P: (فارغ)
-            //  Q: العميل = اسم المرسل
+            //  Q: وزن الشحنة
             //  R: (فارغ)
             //  S: (فارغ)
-            //  T: اجباري رقم الهاتف الخاص بالعميل = رقم هاتف العميل المسجل به الدخول
+            //  T: اجباري رقم الهاتف الخاص بالعميل
             // ============================================================
 
             const formData = new URLSearchParams();
@@ -1074,28 +1009,23 @@
             // N: اجباري = "Egypt"
             formData.append('country', 'Egypt');
             
-            // O, P: فارغ
-            formData.append('empty5', '');
-            formData.append('empty6', '');
+            // O: المبلغ المطلوب تحصيله شامل الشحن
+            formData.append('amount', amount);
             
-            // Q: اسم المرسل
-            formData.append('senderName', senderName);
+            // P: فارغ
+            formData.append('empty5', '');
+            
+            // Q: وزن الشحنة
+            formData.append('weight', weight);
             
             // R, S: فارغ
+            formData.append('empty6', '');
             formData.append('empty7', '');
-            formData.append('empty8', '');
             
             // T: اجباري رقم الهاتف الخاص بالعميل
             formData.append('clientPhone', currentUser.phone);
             
-            // بيانات إضافية للشحنة
-            formData.append('senderPhone', senderPhone);
-            formData.append('senderPhone2', senderPhone2);
-            formData.append('senderGovernorate', senderGovernorate);
-            formData.append('senderCity', senderCity);
-            formData.append('senderAddress', senderAddress);
-            formData.append('productName', product);
-            formData.append('productQuantity', quantity);
+            // ملاحظات إضافية
             formData.append('notes', notes);
             
             // بيانات المصادقة
