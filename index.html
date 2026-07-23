@@ -87,7 +87,8 @@
     </div>
 
     <script>
-        const API_URL = "https://script.google.com/macros/s/AKfycbyIM0TQ20pT6BI5_RTe0HoHpsp7oOL2G0aHWiGVLSlOnCveKU0RlnC0DdvCFC0HKZg/exec";
+        // ✅ تم التحديث بالرابط الجديد
+        const API_URL = "https://script.google.com/macros/s/AKfycby-kvDOW1gwN-sgzCdYV0a_7Ik0u-Vcop8O1E94g2xfnzwdzGWAnDR-nh0pgofSC4jb/exec";
         let currentUser = null;
 
         async function doLogin() {
@@ -158,9 +159,9 @@
         }
 
         function updateSummary(shipments) {
-            const waiting = shipments.filter(s => s.status.includes('انتظار')).length;
-            const tracking = shipments.filter(s => s.status.includes('تتبع')).length;
-            const delivered = shipments.filter(s => s.status.includes('تم')).length;
+            const waiting = shipments.filter(s => s.status && s.status.includes('انتظار')).length;
+            const tracking = shipments.filter(s => s.status && s.status.includes('تتبع')).length;
+            const delivered = shipments.filter(s => s.status && s.status.includes('تم')).length;
             
             document.getElementById('summaryBox').innerHTML = `
                 <div><div class="count">${shipments.length}</div>كل الشحنات</div>
@@ -171,11 +172,15 @@
         }
 
         function createShipmentCard(s, isAdmin = false) {
-            let statusClass = s.status.includes('تتبع') ? 'status-tracking' : s.status.includes('تم') ? 'status-done' : 'status-waiting';
+            let statusClass = 'status-waiting';
+            if (s.status) {
+                if (s.status.includes('تتبع')) statusClass = 'status-tracking';
+                else if (s.status.includes('تم')) statusClass = 'status-done';
+            }
             let actions = '';
             if (s.trackingNumber) actions += `<button class="btn-track" onclick="trackShipment('${s.trackingNumber}')">📍 تتبع</button>`;
             if (isAdmin && !s.trackingNumber) actions += `<button class="btn-add-tracking" onclick="showAddTracking('${s.id}')">🔢 إضافة رقم تتبع</button>`;
-            return `<div class="shipment-card"><span class="status-badge ${statusClass}">${s.status}</span>${isAdmin ? `<div class="info"><strong>📱 صاحب الشحنة:</strong> ${s.clientPhone}</div>` : ''}<div class="info"><strong>🔢 رقم الشحنة:</strong> ${s.id}</div><div class="info"><strong>📅 التاريخ:</strong> ${s.date}</div><div class="info"><strong>👤 العميل:</strong> ${s.customerName}</div><div class="info"><strong>📱 هاتف العميل:</strong> ${s.customerPhone}</div><div class="info"><strong>📍 العنوان:</strong> ${s.customerAddress}</div><div class="info"><strong>📦 المنتج:</strong> ${s.productName} (${s.productQuantity})</div>${s.notes ? `<div class="info"><strong>📝 ملاحظات:</strong> ${s.notes}</div>` : ''}${s.trackingNumber ? `<div class="info"><strong>🚚 رقم التتبع:</strong> ${s.trackingNumber}</div>` : ''}<div class="actions">${actions}</div></div>`;
+            return `<div class="shipment-card"><span class="status-badge ${statusClass}">${s.status || 'في انتظار التتبع'}</span>${isAdmin ? `<div class="info"><strong>📱 صاحب الشحنة:</strong> ${s.clientPhone || ''}</div>` : ''}<div class="info"><strong>🔢 رقم الشحنة:</strong> ${s.id || ''}</div><div class="info"><strong>📅 التاريخ:</strong> ${s.date || ''}</div><div class="info"><strong>👤 العميل:</strong> ${s.customerName || ''}</div><div class="info"><strong>📱 هاتف العميل:</strong> ${s.customerPhone || ''}</div><div class="info"><strong>📍 العنوان:</strong> ${s.customerAddress || ''}</div><div class="info"><strong>📦 المنتج:</strong> ${s.productName || ''} (${s.productQuantity || ''})</div>${s.notes ? `<div class="info"><strong>📝 ملاحظات:</strong> ${s.notes}</div>` : ''}${s.trackingNumber ? `<div class="info"><strong>🚚 رقم التتبع:</strong> ${s.trackingNumber}</div>` : ''}<div class="actions">${actions}</div></div>`;
         }
 
         function showAddShipmentForm() {
@@ -293,9 +298,10 @@
         async function deleteClient(phone) {
             if (!confirm('هل أنت متأكد من حذف هذا العميل؟')) return;
             try { 
-                await fetch(`${API_URL}?action=deleteClient&phone=${encodeURIComponent(phone)}`, { method: 'POST' }); 
-                showClients(); 
-            } catch (e) { alert('فشل الحذف'); }
+                const res = await fetch(`${API_URL}?action=deleteClient&phone=${encodeURIComponent(phone)}`, { method: 'POST' });
+                const data = await res.json();
+                if (data.success) { showClients(); } else { alert(data.msg || 'فشل الحذف'); }
+            } catch (e) { alert('فشل الاتصال'); }
         }
 
         function closeModal() { document.getElementById('modal').classList.add('hidden'); }
