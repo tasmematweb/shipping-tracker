@@ -30,7 +30,6 @@
         .hidden {
             display: none !important;
         }
-        /* ===== صفحة تسجيل الدخول ===== */
         .login-page {
             padding: 40px 25px 30px;
             text-align: center;
@@ -120,8 +119,6 @@
             font-weight: 600;
             text-decoration: none;
         }
-
-        /* ===== الهيدر ===== */
         .app-header {
             background: #e60012;
             padding: 16px 20px 14px;
@@ -189,8 +186,6 @@
             background: transparent;
             border: 1.5px solid rgba(255, 255, 255, 0.5);
         }
-
-        /* ===== ملخص ===== */
         .summary-box {
             display: grid;
             grid-template-columns: repeat(4, 1fr);
@@ -217,8 +212,6 @@
             color: #888;
             margin-top: 2px;
         }
-
-        /* ===== المحتوى ===== */
         .content-area {
             padding: 12px 14px 20px;
         }
@@ -252,8 +245,6 @@
             font-size: 56px;
             margin-bottom: 12px;
         }
-
-        /* ===== بطاقة الشحنة ===== */
         .shipment-card {
             background: white;
             border-radius: 14px;
@@ -336,12 +327,6 @@
             background: #dc3545;
             color: white;
         }
-        .btn-edit {
-            background: #ff9800;
-            color: white;
-        }
-
-        /* ===== المودال ===== */
         .modal-overlay {
             position: fixed;
             top: 0;
@@ -452,8 +437,6 @@
             border-radius: 8px;
             text-align: center;
         }
-
-        /* ===== التتبع (Timeline) ===== */
         .timeline-item {
             border-right: 3px solid #e60012;
             padding: 10px 16px 10px 0;
@@ -480,8 +463,6 @@
             font-size: 13px;
             margin-top: 4px;
         }
-
-        /* ===== إدارة العملاء ===== */
         .client-card {
             background: #fafafa;
             padding: 12px 14px;
@@ -516,32 +497,6 @@
             background: #dc3545;
             color: white;
         }
-
-        /* ===== إضافات ===== */
-        .text-center {
-            text-align: center;
-        }
-        .mt-8 {
-            margin-top: 8px;
-        }
-        .mb-8 {
-            margin-bottom: 8px;
-        }
-        .gap-8 {
-            gap: 8px;
-        }
-        .flex {
-            display: flex;
-        }
-        .flex-between {
-            display: flex;
-            justify-content: space-between;
-        }
-        .flex-wrap {
-            flex-wrap: wrap;
-        }
-
-        /* ===== رسالة الخطأ ===== */
         .error-box {
             background: #fff3f3;
             border: 1px solid #ffcdd2;
@@ -565,14 +520,53 @@
             font-size: 13px;
             color: #666;
         }
-
-        /* ===== Scrollbar ===== */
         .modal-box::-webkit-scrollbar {
             width: 4px;
         }
         .modal-box::-webkit-scrollbar-thumb {
             background: #ccc;
             border-radius: 4px;
+        }
+        .debug-info {
+            background: #f8f9fa;
+            padding: 8px 12px;
+            border-radius: 8px;
+            font-size: 11px;
+            color: #666;
+            margin-top: 6px;
+            border: 1px dashed #ddd;
+            word-break: break-all;
+        }
+        .toast {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #333;
+            color: white;
+            padding: 12px 24px;
+            border-radius: 12px;
+            font-size: 14px;
+            z-index: 99999;
+            animation: toastIn 0.3s ease;
+            max-width: 90%;
+            text-align: center;
+        }
+        .toast.success {
+            background: #28a745;
+        }
+        .toast.error {
+            background: #dc3545;
+        }
+        @keyframes toastIn {
+            from {
+                opacity: 0;
+                transform: translateX(-50%) translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(-50%) translateY(0);
+            }
         }
     </style>
 </head>
@@ -584,25 +578,20 @@
             <span class="logo">📦</span>
             <div class="brand">نظام تتبع شحنات J&T</div>
             <div class="sub-brand">إدارة الشحنات بكل سهولة</div>
-
             <div class="input-group">
                 <label>📱 رقم الهاتف</label>
-                <input type="text" id="loginPhone" placeholder="أدخل رقم الهاتف" dir="ltr" value="01140074870">
+                <input type="text" id="loginPhone" placeholder="أدخل رقم الهاتف" dir="ltr">
             </div>
             <div class="input-group">
                 <label>🔒 كلمة المرور</label>
-                <input type="password" id="loginPassword" placeholder="أدخل كلمة المرور" dir="ltr" value="123456">
+                <input type="password" id="loginPassword" placeholder="أدخل كلمة المرور" dir="ltr">
             </div>
-
             <button class="login-btn" onclick="doLogin()">🚀 دخول</button>
-            <a href="#" class="forgot-link" onclick="alert('تواصل مع الدعم الفني')">نسيت كلمة المرور؟</a>
             <div id="loginError" class="error-msg hidden"></div>
-            <div class="signup-link">ليس لديك حساب؟ <a href="#" onclick="alert('تواصل مع الإدارة لإنشاء حساب')">إنشاء حساب</a></div>
         </div>
 
         <!-- ===== لوحة التحكم ===== -->
         <div id="dashboard" class="hidden">
-            <!-- الهيدر -->
             <div class="app-header">
                 <div class="user-info">
                     <div class="avatar" id="userAvatar">👤</div>
@@ -618,16 +607,12 @@
                     <button class="outline" onclick="logout()">🚪 خروج</button>
                 </div>
             </div>
-
-            <!-- ملخص الإحصائيات -->
             <div id="summaryBox" class="summary-box hidden">
                 <div class="stat"><div class="count" id="totalCount">0</div><div class="label">كل الشحنات</div></div>
                 <div class="stat"><div class="count" id="waitingCount" style="color:#856404;">0</div><div class="label">قيد الانتظار</div></div>
                 <div class="stat"><div class="count" id="trackingCount" style="color:#0c5460;">0</div><div class="label">قيد التتبع</div></div>
                 <div class="stat"><div class="count" id="doneCount" style="color:#155724;">0</div><div class="label">تم التوصيل</div></div>
             </div>
-
-            <!-- المحتوى -->
             <div class="content-area" id="contentArea"></div>
         </div>
     </div>
@@ -642,14 +627,14 @@
 
     <script>
         // ============================================================
-        //  التكوين الأساسي - رابط الـ Web App
+        //  🔗 رابط الـ Web App - تم تحديثه بالرابط الجديد
         // ============================================================
-        const API_URL = "https://script.google.com/macros/s/AKfycbxy8waLDDYz3A2smsOZnZtccUcOSwwAAsOIO9ehCJskfW8ttbnc0q9LTmmnNsV4WOFI/exec";
+        const API_URL = "https://script.google.com/macros/s/AKfycbzr2kJmZrX92QWQ1MCNqiqGwN18dNP5H2hW27ivs0KSYmTKXb0aObTOY4kbmYOLiwo_/exec";
         let currentUser = null;
         let currentShipments = [];
 
         // ============================================================
-        //  دوال تسجيل الدخول والخروج
+        //  🔐 تسجيل الدخول
         // ============================================================
         async function doLogin() {
             const phone = document.getElementById('loginPhone').value.trim();
@@ -663,20 +648,33 @@
             }
 
             try {
-                const res = await fetch(`${API_URL}?action=login&phone=${phone}&password=${password}`);
+                const formData = new URLSearchParams();
+                formData.append('action', 'login');
+                formData.append('phone', phone);
+                formData.append('password', password);
+
+                const res = await fetch(API_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                    body: formData.toString()
+                });
+
                 const data = await res.json();
+                console.log('Login response:', data);
 
                 if (data.success) {
                     currentUser = data;
                     errorDiv.classList.add('hidden');
                     showDashboard();
+                    showToast('✅ مرحباً ' + data.name, 'success');
                 } else {
-                    errorDiv.textContent = data.msg || "❌ فشل تسجيل الدخول";
+                    errorDiv.textContent = data.msg || "❌ رقم الهاتف أو كلمة المرور غير صحيحة";
                     errorDiv.classList.remove('hidden');
                 }
             } catch (e) {
-                errorDiv.textContent = "⚠️ فشل الاتصال بالخادم";
+                errorDiv.textContent = "⚠️ فشل الاتصال بالخادم: " + e.message;
                 errorDiv.classList.remove('hidden');
+                console.error('Login error:', e);
             }
         }
 
@@ -687,10 +685,11 @@
             document.getElementById('loginPhone').value = '';
             document.getElementById('loginPassword').value = '';
             document.getElementById('loginError').classList.add('hidden');
+            showToast('🚪 تم تسجيل الخروج', '');
         }
 
         // ============================================================
-        //  عرض لوحة التحكم
+        //  📊 عرض لوحة التحكم
         // ============================================================
         function showDashboard() {
             document.getElementById('loginPage').classList.add('hidden');
@@ -701,7 +700,6 @@
             document.getElementById('userRole').textContent = isAdmin ? '👑 أدمن' : '👤 عميل';
             document.getElementById('userAvatar').textContent = (currentUser.name || 'U')[0].toUpperCase();
 
-            // إظهار/إخفاء الأزرار حسب الصلاحية
             document.getElementById('addShipmentBtn').classList.toggle('hidden', isAdmin);
             document.getElementById('clientsBtn').classList.toggle('hidden', !isAdmin);
             document.getElementById('allShipmentsBtn').classList.toggle('hidden', !isAdmin);
@@ -715,15 +713,26 @@
         }
 
         // ============================================================
-        //  تحميل الشحنات (للعميل)
+        //  📦 تحميل شحنات العميل
         // ============================================================
         async function loadMyShipments() {
             const content = document.getElementById('contentArea');
             content.innerHTML = '<div class="loading"><div class="spinner"></div><div>جاري التحميل...</div></div>';
 
             try {
-                const res = await fetch(`${API_URL}?action=myShipments&phone=${currentUser.phone}&password=${currentUser.password}`);
+                const formData = new URLSearchParams();
+                formData.append('action', 'myShipments');
+                formData.append('phone', currentUser.phone);
+                formData.append('password', currentUser.password);
+
+                const res = await fetch(API_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                    body: formData.toString()
+                });
+
                 const data = await res.json();
+                console.log('myShipments response:', data);
 
                 if (data.success) {
                     currentShipments = data.shipments || [];
@@ -732,12 +741,13 @@
                     showError(content, data.msg || 'فشل تحميل الشحنات');
                 }
             } catch (e) {
-                showError(content, 'فشل الاتصال بالخادم');
+                console.error('loadMyShipments error:', e);
+                showError(content, 'فشل الاتصال بالخادم: ' + e.message);
             }
         }
 
         // ============================================================
-        //  تحميل جميع الشحنات (للأدمن)
+        //  📦 تحميل جميع الشحنات (للأدمن)
         // ============================================================
         async function loadAllShipments() {
             const content = document.getElementById('contentArea');
@@ -754,7 +764,9 @@
                     headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
                     body: formData.toString()
                 });
+
                 const data = await res.json();
+                console.log('allShipments response:', data);
 
                 if (data.success) {
                     currentShipments = data.shipments || [];
@@ -764,12 +776,13 @@
                     showError(content, data.msg || 'فشل تحميل الشحنات');
                 }
             } catch (e) {
-                showError(content, 'فشل الاتصال بالخادم');
+                console.error('loadAllShipments error:', e);
+                showError(content, 'فشل الاتصال بالخادم: ' + e.message);
             }
         }
 
         // ============================================================
-        //  عرض رسالة خطأ
+        //  ❌ عرض رسالة خطأ
         // ============================================================
         function showError(container, message) {
             container.innerHTML = `
@@ -778,12 +791,13 @@
                     <div class="title">فشل تحميل الشحنة</div>
                     <div class="sub">${message}</div>
                     <button onclick="location.reload()" style="margin-top:12px;padding:8px 24px;background:#e60012;color:white;border:none;border-radius:8px;cursor:pointer;">🔄 إعادة المحاولة</button>
+                    <div class="debug-info">📌 ${API_URL}</div>
                 </div>
             `;
         }
 
         // ============================================================
-        //  تحديث الملخص
+        //  📊 تحديث الملخص
         // ============================================================
         function updateSummary(shipments) {
             const waiting = shipments.filter(s => s.status && s.status.includes('انتظار')).length;
@@ -797,7 +811,7 @@
         }
 
         // ============================================================
-        //  عرض الشحنات
+        //  🎨 عرض الشحنات
         // ============================================================
         function renderShipments(shipments, isAdmin) {
             const content = document.getElementById('contentArea');
@@ -856,7 +870,7 @@
         }
 
         // ============================================================
-        //  إضافة شحنة جديدة (للعميل)
+        //  ➕ إضافة شحنة جديدة
         // ============================================================
         function showAddShipmentForm() {
             openModal(`
@@ -915,19 +929,19 @@
                 if (data.success) {
                     closeModal();
                     loadMyShipments();
-                    alert('✅ تم إضافة الشحنة بنجاح!');
+                    showToast('✅ تم إضافة الشحنة بنجاح!', 'success');
                 } else {
                     errorDiv.textContent = data.msg || '❌ فشل الإضافة';
                     errorDiv.classList.remove('hidden');
                 }
             } catch (e) {
-                errorDiv.textContent = '⚠️ فشل الاتصال بالخادم';
+                errorDiv.textContent = '⚠️ فشل الاتصال بالخادم: ' + e.message;
                 errorDiv.classList.remove('hidden');
             }
         }
 
         // ============================================================
-        //  إضافة رقم تتبع (للأدمن)
+        //  🔢 إضافة رقم تتبع (للأدمن)
         // ============================================================
         function showAddTracking(shipmentId) {
             openModal(`
@@ -967,19 +981,19 @@
                 if (data.success) {
                     closeModal();
                     loadAllShipments();
-                    alert('✅ تم إضافة رقم التتبع بنجاح!');
+                    showToast('✅ تم إضافة رقم التتبع بنجاح!', 'success');
                 } else {
                     errorDiv.textContent = data.msg || '❌ فشل الحفظ';
                     errorDiv.classList.remove('hidden');
                 }
             } catch (e) {
-                errorDiv.textContent = '⚠️ فشل الاتصال بالخادم';
+                errorDiv.textContent = '⚠️ فشل الاتصال بالخادم: ' + e.message;
                 errorDiv.classList.remove('hidden');
             }
         }
 
         // ============================================================
-        //  حذف شحنة (للأدمن)
+        //  🗑️ حذف شحنة (للأدمن)
         // ============================================================
         async function deleteShipment(shipmentId) {
             if (!confirm('⚠️ هل أنت متأكد من حذف هذه الشحنة؟')) return;
@@ -1000,17 +1014,17 @@
 
                 if (data.success) {
                     loadAllShipments();
-                    alert('✅ تم حذف الشحنة بنجاح');
+                    showToast('✅ تم حذف الشحنة بنجاح', 'success');
                 } else {
-                    alert(data.msg || '❌ فشل الحذف');
+                    showToast(data.msg || '❌ فشل الحذف', 'error');
                 }
             } catch (e) {
-                alert('⚠️ فشل الاتصال بالخادم');
+                showToast('⚠️ فشل الاتصال بالخادم: ' + e.message, 'error');
             }
         }
 
         // ============================================================
-        //  تتبع الشحنة (عبر API الخارجي)
+        //  🚚 تتبع الشحنة
         // ============================================================
         async function trackShipment(billCode) {
             openModal(`
@@ -1055,14 +1069,14 @@
                     <div class="modal-title">🚚 تتبع الشحنة</div>
                     <div style="text-align:center;padding:20px;color:#dc3545;">
                         <div style="font-size:48px;margin-bottom:12px;">📡</div>
-                        <p>فشل الاتصال بخدمة التتبع</p>
+                        <p>فشل الاتصال بخدمة التتبع: ${e.message}</p>
                     </div>
                 `;
             }
         }
 
         // ============================================================
-        //  إدارة العملاء (للأدمن)
+        //  👥 إدارة العملاء (للأدمن)
         // ============================================================
         async function showClients() {
             openModal(`
@@ -1110,7 +1124,7 @@
                     listDiv.innerHTML = `<p style="color:#dc3545;">${data.msg || 'فشل التحميل'}</p>`;
                 }
             } catch (e) {
-                document.getElementById('clientList').innerHTML = `<p style="color:#dc3545;">⚠️ فشل الاتصال بالخادم</p>`;
+                document.getElementById('clientList').innerHTML = `<p style="color:#dc3545;">⚠️ فشل الاتصال بالخادم: ${e.message}</p>`;
             }
         }
 
@@ -1156,13 +1170,13 @@
 
                 if (data.success) {
                     showClients();
-                    alert('✅ تم إنشاء الحساب بنجاح!');
+                    showToast('✅ تم إنشاء الحساب بنجاح!', 'success');
                 } else {
                     errorDiv.textContent = data.msg || '❌ فشل الإنشاء';
                     errorDiv.classList.remove('hidden');
                 }
             } catch (e) {
-                errorDiv.textContent = '⚠️ فشل الاتصال بالخادم';
+                errorDiv.textContent = '⚠️ فشل الاتصال بالخادم: ' + e.message;
                 errorDiv.classList.remove('hidden');
             }
         }
@@ -1184,17 +1198,17 @@
 
                 if (data.success) {
                     showClients();
-                    alert('✅ تم حذف العميل بنجاح');
+                    showToast('✅ تم حذف العميل بنجاح', 'success');
                 } else {
-                    alert(data.msg || '❌ فشل الحذف');
+                    showToast(data.msg || '❌ فشل الحذف', 'error');
                 }
             } catch (e) {
-                alert('⚠️ فشل الاتصال بالخادم');
+                showToast('⚠️ فشل الاتصال بالخادم: ' + e.message, 'error');
             }
         }
 
         // ============================================================
-        //  دوال المودال
+        //  🖥️ دوال المودال
         // ============================================================
         function openModal(html) {
             document.getElementById('modalBody').innerHTML = html;
@@ -1208,7 +1222,26 @@
         }
 
         // ============================================================
-        //  اختصارات لوحة المفاتيح
+        //  🔔 عرض إشعار (Toast)
+        // ============================================================
+        function showToast(message, type) {
+            const existing = document.querySelector('.toast');
+            if (existing) existing.remove();
+
+            const toast = document.createElement('div');
+            toast.className = 'toast' + (type ? ' ' + type : '');
+            toast.textContent = message;
+            document.body.appendChild(toast);
+
+            setTimeout(() => {
+                toast.style.opacity = '0';
+                toast.style.transition = 'opacity 0.3s';
+                setTimeout(() => toast.remove(), 300);
+            }, 3000);
+        }
+
+        // ============================================================
+        //  ⌨️ اختصارات لوحة المفاتيح
         // ============================================================
         document.addEventListener('keydown', function(e) {
             if (e.key === 'Escape') closeModal();
@@ -1217,6 +1250,12 @@
                 doLogin();
             }
         });
+
+        // ============================================================
+        //  🚀 تحميل تلقائي للبيانات التجريبية (اختياري)
+        // ============================================================
+        document.getElementById('loginPhone').value = '01140074870';
+        document.getElementById('loginPassword').value = '123456';
     </script>
 
 </body>
