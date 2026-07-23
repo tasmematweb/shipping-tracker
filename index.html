@@ -87,8 +87,8 @@
     </div>
 
     <script>
-        // ✅ تم التحديث بالرابط الجديد
-        const API_URL = "https://script.google.com/macros/s/AKfycby-kvDOW1gwN-sgzCdYV0a_7Ik0u-Vcop8O1E94g2xfnzwdzGWAnDR-nh0pgofSC4jb/exec";
+        // ✅ الرابط الجديد للـ Web App
+        const API_URL = "https://script.google.com/macros/s/AKfycbxy8waLDDYz3A2smsOZnZtccUcOSwwAAsOIO9ehCJskfW8ttbnc0q9LTmmnNsV4WOFI/exec";
         let currentUser = null;
 
         async function doLogin() {
@@ -188,6 +188,7 @@
             document.getElementById('modalContent').innerHTML = `<span class="close-btn" onclick="closeModal()">✖</span><h3>إضافة شحنة جديدة</h3><div class="form-group"><label>اسم العميل</label><input id="cName"></div><div class="form-group"><label>هاتف العميل</label><input id="cPhone" dir="ltr"></div><div class="form-group"><label>العنوان</label><input id="cAddress"></div><div class="form-group"><label>اسم المنتج</label><input id="cProduct"></div><div class="form-group"><label>الكمية</label><input id="cQuantity" type="number" value="1"></div><div class="form-group"><label>ملاحظات</label><textarea id="cNotes"></textarea></div><button onclick="submitShipment()" style="width:100%;padding:15px;background:#e60012;color:white;border:none;border-radius:8px;font-size:16px;cursor:pointer;">✅ إضافة الشحنة</button><p id="shipError" style="color:red;margin-top:10px;"></p>`;
         }
 
+        // ✅ دالة submitShipment المعدلة (POST)
         async function submitShipment() {
             const cName = document.getElementById('cName').value.trim();
             const cPhone = document.getElementById('cPhone').value.trim();
@@ -202,14 +203,37 @@
                 return;
             }
             
-            const url = `${API_URL}?action=addShipment&phone=${encodeURIComponent(currentUser.phone)}&password=${encodeURIComponent(currentUser.password)}&customerName=${encodeURIComponent(cName)}&customerPhone=${encodeURIComponent(cPhone)}&customerAddress=${encodeURIComponent(cAddress)}&productName=${encodeURIComponent(cProduct)}&productQuantity=${encodeURIComponent(cQuantity)}&notes=${encodeURIComponent(cNotes)}`;
+            // ✅ إنشاء FormData لإرسال البيانات كـ POST
+            const formData = new URLSearchParams();
+            formData.append('action', 'addShipment');
+            formData.append('phone', currentUser.phone);
+            formData.append('password', currentUser.password);
+            formData.append('customerName', cName);
+            formData.append('customerPhone', cPhone);
+            formData.append('customerAddress', cAddress);
+            formData.append('productName', cProduct);
+            formData.append('productQuantity', cQuantity);
+            formData.append('notes', cNotes);
             
             try {
-                const res = await fetch(url, { method: 'POST' });
+                const res = await fetch(API_URL, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                    },
+                    body: formData.toString()
+                });
                 const data = await res.json();
-                if (data.success) { closeModal(); loadMyShipments(); alert('✅ تم إضافة الشحنة بنجاح!'); }
-                else { errorDiv.textContent = data.msg || "فشل الإضافة"; }
-            } catch (e) { errorDiv.textContent = 'فشل الاتصال'; }
+                if (data.success) {
+                    closeModal();
+                    loadMyShipments();
+                    alert('✅ تم إضافة الشحنة بنجاح!');
+                } else {
+                    errorDiv.textContent = data.msg || "فشل الإضافة";
+                }
+            } catch (e) {
+                errorDiv.textContent = 'فشل الاتصال: ' + e.message;
+            }
         }
 
         function showAddTracking(shipmentId) {
