@@ -14,13 +14,13 @@
         .login-page h1 { color: #e60012; margin-bottom: 30px; }
         .login-page input { display: block; width: 100%; padding: 15px; margin: 15px 0; border: 2px solid #ddd; border-radius: 10px; font-size: 16px; text-align: center; }
         .login-page button { width: 100%; padding: 15px; background: #e60012; color: white; border: none; border-radius: 10px; font-size: 18px; cursor: pointer; font-weight: bold; }
-        .login-page .register-link { margin-top: 15px; color: #666; }
-        .login-page .register-link a { color: #0066cc; text-decoration: none; font-weight: bold; cursor: pointer; }
         .error-msg { color: red; margin-top: 15px; }
-        .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; padding-bottom: 15px; border-bottom: 2px solid #eee; }
+        .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; padding-bottom: 15px; border-bottom: 2px solid #eee; flex-wrap: wrap; gap: 10px; }
         .header h2 { color: #333; }
-        .header button { padding: 10px 20px; background: #e60012; color: white; border: none; border-radius: 8px; cursor: pointer; font-size: 14px; }
+        .header button { padding: 10px 15px; background: #e60012; color: white; border: none; border-radius: 8px; cursor: pointer; font-size: 13px; margin: 2px; }
         .header button.green { background: #28a745; }
+        .header button.blue { background: #0066cc; }
+        .header button.orange { background: #ff9800; }
         .shipment-card { background: #fafafa; border-radius: 12px; padding: 20px; margin-bottom: 15px; border: 1px solid #eee; position: relative; }
         .status-badge { position: absolute; top: 15px; left: 15px; padding: 5px 15px; border-radius: 20px; font-size: 12px; font-weight: bold; }
         .status-waiting { background: #fff3cd; color: #856404; }
@@ -37,19 +37,23 @@
         .form-group label { display: block; margin-bottom: 5px; font-weight: bold; color: #333; }
         .form-group input, .form-group textarea { width: 100%; padding: 12px; border: 2px solid #ddd; border-radius: 8px; font-size: 14px; }
         .form-group textarea { height: 80px; resize: vertical; }
-        .tracking-result { margin-top: 20px; }
         .timeline-item { border-right: 3px solid #e60012; padding: 12px 15px; margin-right: 10px; margin-bottom: 15px; background: #fafafa; border-radius: 0 8px 8px 0; }
         .timeline-item .time { color: #999; font-size: 13px; }
         .timeline-item .event { font-weight: bold; color: #333; margin: 5px 0; }
         .timeline-item .location { color: #666; font-size: 14px; }
-        .timeline-item .problem { color: #e60012; font-size: 13px; margin-top: 5px; }
         .modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); display: flex; justify-content: center; align-items: center; z-index: 1000; }
-        .modal-content { background: white; border-radius: 15px; padding: 25px; max-width: 500px; width: 90%; max-height: 80vh; overflow-y: auto; }
+        .modal-content { background: white; border-radius: 15px; padding: 25px; max-width: 600px; width: 90%; max-height: 80vh; overflow-y: auto; }
         .modal-content h3 { margin-bottom: 20px; text-align: center; }
         .close-btn { float: left; cursor: pointer; font-size: 24px; color: #999; }
         .loading { text-align: center; padding: 20px; }
         .spinner { border: 4px solid #f3f3f3; border-top: 4px solid #e60012; border-radius: 50%; width: 40px; height: 40px; animation: spin 1s linear infinite; margin: 0 auto 10px; }
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        .summary-box { background: #f0f0f0; padding: 15px; border-radius: 10px; margin-bottom: 20px; display: flex; justify-content: space-around; text-align: center; }
+        .summary-box div { font-size: 14px; }
+        .summary-box .count { font-size: 28px; font-weight: bold; color: #e60012; }
+        .client-card { background: #fafafa; padding: 15px; border-radius: 8px; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center; }
+        .client-card .client-info { flex: 1; }
+        .client-card .client-actions button { margin: 3px; }
     </style>
 </head>
 <body>
@@ -60,7 +64,6 @@
             <input type="text" id="phoneInput" placeholder="رقم الهاتف" dir="ltr">
             <input type="password" id="passwordInput" placeholder="كلمة المرور" dir="ltr">
             <button onclick="doLogin()">دخول</button>
-            <p class="register-link">ليس لديك حساب؟ <a onclick="showRegisterForm()">إنشاء حساب جديد</a></p>
             <p class="error-msg" id="loginError"></p>
         </div>
 
@@ -69,10 +72,12 @@
                 <h2 id="welcomeMsg">مرحباً</h2>
                 <div>
                     <button id="addShipmentBtn" class="green" onclick="showAddShipmentForm()">➕ إضافة شحنة</button>
-                    <button id="clientsBtn" class="green hidden" onclick="showClients()">👥 العملاء</button>
+                    <button id="clientsBtn" class="blue hidden" onclick="showClients()">👥 إدارة العملاء</button>
+                    <button id="allShipmentsBtn" class="orange hidden" onclick="loadAllShipments()">📋 جميع الشحنات</button>
                     <button onclick="logout()">🚪 خروج</button>
                 </div>
             </div>
+            <div id="summaryBox" class="summary-box hidden"></div>
             <div id="content"></div>
         </div>
     </div>
@@ -98,70 +103,30 @@
             } catch (e) { errorDiv.textContent = "فشل الاتصال"; }
         }
 
-        function showRegisterForm() {
-            document.getElementById('modal').classList.remove('hidden');
-            document.getElementById('modalContent').innerHTML = `
-                <span class="close-btn" onclick="closeModal()">✖</span>
-                <h3>إنشاء حساب جديد</h3>
-                <div class="form-group"><label>الاسم</label><input id="regName"></div>
-                <div class="form-group"><label>رقم الهاتف</label><input id="regPhone" dir="ltr"></div>
-                <div class="form-group"><label>كلمة المرور</label><input id="regPassword" type="password" dir="ltr"></div>
-                <button onclick="register()" style="width:100%;padding:15px;background:#28a745;color:white;border:none;border-radius:8px;font-size:16px;cursor:pointer;">إنشاء الحساب</button>
-                <p id="regError" style="color:red;margin-top:10px;text-align:center;"></p>
-            `;
-        }
-
-        async function register() {
-            const name = document.getElementById('regName').value.trim();
-            const phone = document.getElementById('regPhone').value.trim();
-            const password = document.getElementById('regPassword').value.trim();
-            const errorDiv = document.getElementById('regError');
-            
-            if (!name || !phone || !password) {
-                errorDiv.textContent = "يرجى ملء جميع الحقول";
-                return;
-            }
-            
-            try {
-                const formData = new FormData();
-                formData.append('action', 'createClient');
-                formData.append('adminPhone', '01119024874');
-                formData.append('adminPassword', '01119024874');
-                formData.append('clientName', name);
-                formData.append('clientPhone', phone);
-                formData.append('clientPassword', password);
-                
-                const res = await fetch(API_URL, { method: 'POST', body: formData });
-                const data = await res.json();
-                
-                if (data.success) {
-                    alert('تم إنشاء الحساب بنجاح! يمكنك تسجيل الدخول الآن.');
-                    closeModal();
-                } else {
-                    errorDiv.textContent = data.msg || "فشل إنشاء الحساب";
-                }
-            } catch (e) {
-                errorDiv.textContent = "فشل الاتصال";
-            }
-        }
-
         function logout() {
             currentUser = null;
             document.getElementById('loginPage').classList.remove('hidden');
             document.getElementById('dashboard').classList.add('hidden');
+            document.getElementById('phoneInput').value = '';
+            document.getElementById('passwordInput').value = '';
         }
 
         function showDashboard() {
             document.getElementById('loginPage').classList.add('hidden');
             document.getElementById('dashboard').classList.remove('hidden');
             document.getElementById('welcomeMsg').textContent = `مرحباً ${currentUser.name} (${currentUser.role === 'admin' ? 'أدمن' : 'عميل'})`;
+            
             if (currentUser.role === 'admin') {
                 document.getElementById('clientsBtn').classList.remove('hidden');
+                document.getElementById('allShipmentsBtn').classList.remove('hidden');
                 document.getElementById('addShipmentBtn').classList.add('hidden');
+                document.getElementById('summaryBox').classList.remove('hidden');
                 loadAllShipments();
             } else {
                 document.getElementById('clientsBtn').classList.add('hidden');
+                document.getElementById('allShipmentsBtn').classList.add('hidden');
                 document.getElementById('addShipmentBtn').classList.remove('hidden');
+                document.getElementById('summaryBox').classList.add('hidden');
                 loadMyShipments();
             }
         }
@@ -173,8 +138,8 @@
                 const res = await fetch(`${API_URL}?action=myShipments&phone=${currentUser.phone}&password=${currentUser.password}`);
                 const data = await res.json();
                 if (data.success) {
-                    content.innerHTML = data.shipments.length === 0 ? '<p style="text-align:center;color:#999;padding:50px;">لا توجد شحنات</p>' : data.shipments.map(s => createShipmentCard(s)).join('');
-                }
+                    content.innerHTML = data.shipments.length === 0 ? '<p style="text-align:center;color:#999;padding:50px;">لا توجد شحنات حتى الآن</p>' : data.shipments.map(s => createShipmentCard(s)).join('');
+                } else { content.innerHTML = '<p style="color:red;">فشل التحميل</p>'; }
             } catch (e) { content.innerHTML = '<p style="color:red;">فشل الاتصال</p>'; }
         }
 
@@ -189,9 +154,23 @@
                 const res = await fetch(API_URL, { method: 'POST', body: formData });
                 const data = await res.json();
                 if (data.success) {
+                    updateSummary(data.shipments);
                     content.innerHTML = data.shipments.length === 0 ? '<p style="text-align:center;color:#999;padding:50px;">لا توجد شحنات</p>' : data.shipments.map(s => createShipmentCard(s, true)).join('');
-                }
+                } else { content.innerHTML = '<p style="color:red;">فشل التحميل</p>'; }
             } catch (e) { content.innerHTML = '<p style="color:red;">فشل الاتصال</p>'; }
+        }
+
+        function updateSummary(shipments) {
+            const waiting = shipments.filter(s => s.status.includes('انتظار')).length;
+            const tracking = shipments.filter(s => s.status.includes('تتبع')).length;
+            const delivered = shipments.filter(s => s.status.includes('تم')).length;
+            
+            document.getElementById('summaryBox').innerHTML = `
+                <div><div class="count">${shipments.length}</div>كل الشحنات</div>
+                <div><div class="count" style="color:#856404;">${waiting}</div>قيد الانتظار</div>
+                <div><div class="count" style="color:#0c5460;">${tracking}</div>قيد التتبع</div>
+                <div><div class="count" style="color:#155724;">${delivered}</div>تم التوصيل</div>
+            `;
         }
 
         function createShipmentCard(s, isAdmin = false) {
@@ -199,12 +178,12 @@
             let actions = '';
             if (s.trackingNumber) actions += `<button class="btn-track" onclick="trackShipment('${s.trackingNumber}')">📍 تتبع</button>`;
             if (isAdmin && !s.trackingNumber) actions += `<button class="btn-add-tracking" onclick="showAddTracking('${s.id}')">🔢 إضافة رقم تتبع</button>`;
-            return `<div class="shipment-card"><span class="status-badge ${statusClass}">${s.status}</span>${isAdmin ? `<div class="info"><strong>العميل:</strong> ${s.clientPhone}</div>` : ''}<div class="info"><strong>رقم الشحنة:</strong> ${s.id}</div><div class="info"><strong>التاريخ:</strong> ${s.date}</div><div class="info"><strong>العميل:</strong> ${s.customerName}</div><div class="info"><strong>الهاتف:</strong> ${s.customerPhone}</div><div class="info"><strong>العنوان:</strong> ${s.customerAddress}</div><div class="info"><strong>المنتج:</strong> ${s.productName} (${s.productQuantity})</div>${s.notes ? `<div class="info"><strong>ملاحظات:</strong> ${s.notes}</div>` : ''}${s.trackingNumber ? `<div class="info"><strong>رقم التتبع:</strong> ${s.trackingNumber}</div>` : ''}<div class="actions">${actions}</div></div>`;
+            return `<div class="shipment-card"><span class="status-badge ${statusClass}">${s.status}</span>${isAdmin ? `<div class="info"><strong>📱 صاحب الشحنة:</strong> ${s.clientPhone}</div>` : ''}<div class="info"><strong>🔢 رقم الشحنة:</strong> ${s.id}</div><div class="info"><strong>📅 التاريخ:</strong> ${s.date}</div><div class="info"><strong>👤 العميل:</strong> ${s.customerName}</div><div class="info"><strong>📱 هاتف العميل:</strong> ${s.customerPhone}</div><div class="info"><strong>📍 العنوان:</strong> ${s.customerAddress}</div><div class="info"><strong>📦 المنتج:</strong> ${s.productName} (${s.productQuantity})</div>${s.notes ? `<div class="info"><strong>📝 ملاحظات:</strong> ${s.notes}</div>` : ''}${s.trackingNumber ? `<div class="info"><strong>🚚 رقم التتبع:</strong> ${s.trackingNumber}</div>` : ''}<div class="actions">${actions}</div></div>`;
         }
 
         function showAddShipmentForm() {
             document.getElementById('modal').classList.remove('hidden');
-            document.getElementById('modalContent').innerHTML = `<span class="close-btn" onclick="closeModal()">✖</span><h3>إضافة شحنة جديدة</h3><div class="form-group"><label>اسم العميل</label><input id="cName"></div><div class="form-group"><label>هاتف العميل</label><input id="cPhone" dir="ltr"></div><div class="form-group"><label>العنوان</label><input id="cAddress"></div><div class="form-group"><label>اسم المنتج</label><input id="cProduct"></div><div class="form-group"><label>الكمية</label><input id="cQuantity" type="number" value="1"></div><div class="form-group"><label>ملاحظات</label><textarea id="cNotes"></textarea></div><button onclick="submitShipment()" style="width:100%;padding:15px;background:#e60012;color:white;border:none;border-radius:8px;font-size:16px;cursor:pointer;">إضافة</button><p id="shipError" style="color:red;margin-top:10px;"></p>`;
+            document.getElementById('modalContent').innerHTML = `<span class="close-btn" onclick="closeModal()">✖</span><h3>إضافة شحنة جديدة</h3><div class="form-group"><label>اسم العميل</label><input id="cName"></div><div class="form-group"><label>هاتف العميل</label><input id="cPhone" dir="ltr"></div><div class="form-group"><label>العنوان</label><input id="cAddress"></div><div class="form-group"><label>اسم المنتج</label><input id="cProduct"></div><div class="form-group"><label>الكمية</label><input id="cQuantity" type="number" value="1"></div><div class="form-group"><label>ملاحظات</label><textarea id="cNotes"></textarea></div><button onclick="submitShipment()" style="width:100%;padding:15px;background:#e60012;color:white;border:none;border-radius:8px;font-size:16px;cursor:pointer;">✅ إضافة الشحنة</button><p id="shipError" style="color:red;margin-top:10px;"></p>`;
         }
 
         async function submitShipment() {
@@ -221,47 +200,49 @@
             try {
                 const res = await fetch(API_URL, { method: 'POST', body: formData });
                 const data = await res.json();
-                if (data.success) { closeModal(); loadMyShipments(); }
+                if (data.success) { closeModal(); loadMyShipments(); alert('✅ تم إضافة الشحنة بنجاح وستظهر للأدمن!'); }
                 else { document.getElementById('shipError').textContent = data.msg; }
             } catch (e) { document.getElementById('shipError').textContent = 'فشل الاتصال'; }
         }
 
         function showAddTracking(shipmentId) {
             document.getElementById('modal').classList.remove('hidden');
-            document.getElementById('modalContent').innerHTML = `<span class="close-btn" onclick="closeModal()">✖</span><h3>إضافة رقم تتبع</h3><p>رقم الشحنة: ${shipmentId}</p><div class="form-group"><label>رقم التتبع</label><input id="trackingNum" dir="ltr"></div><button onclick="submitTracking('${shipmentId}')" style="width:100%;padding:15px;background:#28a745;color:white;border:none;border-radius:8px;font-size:16px;cursor:pointer;">حفظ</button><p id="trackError" style="color:red;margin-top:10px;"></p>`;
+            document.getElementById('modalContent').innerHTML = `<span class="close-btn" onclick="closeModal()">✖</span><h3>إضافة رقم تتبع</h3><p>رقم الشحنة: <strong>${shipmentId}</strong></p><div class="form-group"><label>رقم التتبع</label><input id="trackingNum" dir="ltr" placeholder="مثال: JEG000470355620"></div><button onclick="submitTracking('${shipmentId}')" style="width:100%;padding:15px;background:#28a745;color:white;border:none;border-radius:8px;font-size:16px;cursor:pointer;">💾 حفظ</button><p id="trackError" style="color:red;margin-top:10px;"></p>`;
         }
 
         async function submitTracking(shipmentId) {
+            const trackingNumber = document.getElementById('trackingNum').value.trim();
+            if (!trackingNumber) { document.getElementById('trackError').textContent = 'يرجى إدخال رقم التتبع'; return; }
             const formData = new FormData();
             formData.append('action', 'addTrackingNumber');
             formData.append('adminPhone', currentUser.phone);
             formData.append('adminPassword', currentUser.password);
             formData.append('shipmentId', shipmentId);
-            formData.append('trackingNumber', document.getElementById('trackingNum').value);
+            formData.append('trackingNumber', trackingNumber);
             try {
                 const res = await fetch(API_URL, { method: 'POST', body: formData });
                 const data = await res.json();
-                if (data.success) { closeModal(); loadAllShipments(); }
+                if (data.success) { closeModal(); loadAllShipments(); alert('✅ تم إضافة رقم التتبع بنجاح!'); }
                 else { document.getElementById('trackError').textContent = data.msg; }
             } catch (e) { document.getElementById('trackError').textContent = 'فشل الاتصال'; }
         }
 
         async function trackShipment(billCode) {
             document.getElementById('modal').classList.remove('hidden');
-            document.getElementById('modalContent').innerHTML = '<div class="loading"><div class="spinner"></div>جاري التتبع...</div>';
+            document.getElementById('modalContent').innerHTML = '<div class="loading"><div class="spinner"></div>جاري تتبع الشحنة...</div>';
             try {
                 const res = await fetch(`${API_URL}?action=track&billCode=${billCode}`);
                 const data = await res.json();
                 if (data.code === "1" && data.data && data.data[0]) {
-                    let html = `<span class="close-btn" onclick="closeModal()">✖</span><h3>مسار الشحنة: ${billCode}</h3>`;
+                    let html = `<span class="close-btn" onclick="closeModal()">✖</span><h3>🚚 مسار الشحنة: ${billCode}</h3>`;
                     (data.data[0].details || []).forEach(d => {
-                        html += `<div class="timeline-item"><div class="time">🕐 ${d.scanTime || ''}</div><div class="event">📌 ${d.desc || d.scanType || ''}</div><div class="location">📍 ${d.scanNetworkName || ''} - ${d.scanNetworkCity || ''}</div>${d.probleDescription ? `<div style="color:red;">⚠️ ${d.probleDescription}</div>` : ''}</div>`;
+                        html += `<div class="timeline-item"><div class="time">🕐 ${d.scanTime || ''}</div><div class="event">📌 ${d.desc || d.scanType || ''}</div><div class="location">📍 ${d.scanNetworkName || ''} - ${d.scanNetworkCity || ''}</div>${d.probleDescription ? `<div style="color:red;margin-top:5px;">⚠️ ${d.probleDescription}</div>` : ''}</div>`;
                     });
                     document.getElementById('modalContent').innerHTML = html;
                 } else {
-                    document.getElementById('modalContent').innerHTML = '<span class="close-btn" onclick="closeModal()">✖</span><p style="color:red;">فشل التتبع</p>';
+                    document.getElementById('modalContent').innerHTML = '<span class="close-btn" onclick="closeModal()">✖</span><p style="text-align:center;color:red;">❌ فشل تتبع الشحنة</p>';
                 }
-            } catch (e) { document.getElementById('modalContent').innerHTML = '<span class="close-btn" onclick="closeModal()">✖</span><p style="color:red;">فشل الاتصال</p>'; }
+            } catch (e) { document.getElementById('modalContent').innerHTML = '<span class="close-btn" onclick="closeModal()">✖</span><p style="text-align:center;color:red;">فشل الاتصال</p>'; }
         }
 
         async function showClients() {
@@ -275,45 +256,60 @@
                 const res = await fetch(API_URL, { method: 'POST', body: formData });
                 const data = await res.json();
                 if (data.success) {
-                    let html = `<span class="close-btn" onclick="closeModal()">✖</span><h3>العملاء</h3><button onclick="showAddClientForm()" style="width:100%;padding:12px;background:#28a745;color:white;border:none;border-radius:8px;margin-bottom:15px;cursor:pointer;">➕ إضافة عميل</button><div id="clientList"></div>`;
+                    let html = `<span class="close-btn" onclick="closeModal()">✖</span><h3>👥 إدارة العملاء</h3><button onclick="showAddClientForm()" style="width:100%;padding:12px;background:#28a745;color:white;border:none;border-radius:8px;margin-bottom:15px;cursor:pointer;font-size:16px;">➕ إنشاء حساب عميل جديد</button><div id="clientList"></div>`;
                     document.getElementById('modalContent').innerHTML = html;
-                    data.clients.forEach(c => {
-                        document.getElementById('clientList').innerHTML += `<div style="background:#fafafa;padding:15px;border-radius:8px;margin-bottom:10px;display:flex;justify-content:space-between;"><div><strong>${c.name}</strong><br>${c.phone}<br><small>${c.created}</small></div><button onclick="deleteClient('${c.phone}')" style="background:#dc3545;color:white;border:none;padding:8px 15px;border-radius:5px;cursor:pointer;">حذف</button></div>`;
-                    });
+                    
+                    const listDiv = document.getElementById('clientList');
+                    if (data.clients.length === 0) {
+                        listDiv.innerHTML = '<p style="text-align:center;color:#999;padding:20px;">لا يوجد عملاء حتى الآن</p>';
+                    } else {
+                        data.clients.forEach(c => {
+                            listDiv.innerHTML += `<div class="client-card"><div class="client-info"><strong>${c.name}</strong><br>📱 ${c.phone}<br><small>📅 تاريخ الإنشاء: ${c.created}</small></div><div class="client-actions"><button onclick="deleteClient('${c.phone}')" style="background:#dc3545;color:white;border:none;padding:8px 15px;border-radius:5px;cursor:pointer;">🗑️ حذف</button></div></div>`;
+                        });
+                    }
                 }
-            } catch (e) { document.getElementById('modalContent').innerHTML = '<span class="close-btn" onclick="closeModal()">✖</span><p style="color:red;">فشل</p>'; }
+            } catch (e) { document.getElementById('modalContent').innerHTML = '<span class="close-btn" onclick="closeModal()">✖</span><p style="color:red;">فشل التحميل</p>'; }
         }
 
         function showAddClientForm() {
-            document.getElementById('modalContent').innerHTML = `<span class="close-btn" onclick="showClients()">✖</span><h3>إضافة عميل</h3><div class="form-group"><label>الاسم</label><input id="newClientName"></div><div class="form-group"><label>الهاتف</label><input id="newClientPhone" dir="ltr"></div><div class="form-group"><label>كلمة المرور</label><input id="newClientPassword" dir="ltr"></div><button onclick="createClient()" style="width:100%;padding:15px;background:#28a745;color:white;border:none;border-radius:8px;cursor:pointer;">إنشاء</button><p id="clientError" style="color:red;margin-top:10px;"></p>`;
+            document.getElementById('modalContent').innerHTML = `<span class="close-btn" onclick="showClients()">✖</span><h3>إنشاء حساب عميل جديد</h3><div class="form-group"><label>اسم العميل</label><input id="newClientName" placeholder="الاسم الكامل"></div><div class="form-group"><label>رقم الهاتف</label><input id="newClientPhone" dir="ltr" placeholder="مثال: 011xxxxxxxx"></div><div class="form-group"><label>كلمة المرور</label><input id="newClientPassword" type="password" dir="ltr" placeholder="كلمة المرور للدخول"></div><button onclick="createClient()" style="width:100%;padding:15px;background:#28a745;color:white;border:none;border-radius:8px;font-size:16px;cursor:pointer;">✅ إنشاء الحساب</button><button onclick="showClients()" style="width:100%;padding:10px;background:#999;color:white;border:none;border-radius:8px;margin-top:10px;cursor:pointer;">↩️ رجوع</button><p id="clientError" style="color:red;margin-top:10px;text-align:center;"></p>`;
         }
 
         async function createClient() {
+            const name = document.getElementById('newClientName').value.trim();
+            const phone = document.getElementById('newClientPhone').value.trim();
+            const password = document.getElementById('newClientPassword').value.trim();
+            const errorDiv = document.getElementById('clientError');
+            
+            if (!name || !phone || !password) { errorDiv.textContent = "يرجى ملء جميع الحقول"; return; }
+            
             const formData = new FormData();
             formData.append('action', 'createClient');
             formData.append('adminPhone', currentUser.phone);
             formData.append('adminPassword', currentUser.password);
-            formData.append('clientName', document.getElementById('newClientName').value);
-            formData.append('clientPhone', document.getElementById('newClientPhone').value);
-            formData.append('clientPassword', document.getElementById('newClientPassword').value);
+            formData.append('clientName', name);
+            formData.append('clientPhone', phone);
+            formData.append('clientPassword', password);
+            
             try {
                 const res = await fetch(API_URL, { method: 'POST', body: formData });
                 const data = await res.json();
-                if (data.success) showClients();
-                else document.getElementById('clientError').textContent = data.msg;
-            } catch (e) { document.getElementById('clientError').textContent = 'فشل'; }
+                if (data.success) { showClients(); }
+                else { errorDiv.textContent = data.msg; }
+            } catch (e) { errorDiv.textContent = 'فشل الاتصال'; }
         }
 
         async function deleteClient(phone) {
-            if (!confirm('حذف هذا العميل؟')) return;
+            if (!confirm('هل أنت متأكد من حذف هذا العميل؟')) return;
             const formData = new FormData();
             formData.append('action', 'deleteClient');
             formData.append('phone', phone);
-            try { await fetch(API_URL, { method: 'POST', body: formData }); showClients(); } catch (e) {}
+            try { await fetch(API_URL, { method: 'POST', body: formData }); showClients(); } catch (e) { alert('فشل الحذف'); }
         }
 
         function closeModal() { document.getElementById('modal').classList.add('hidden'); }
         document.getElementById('passwordInput').addEventListener('keypress', function(e) { if (e.key === 'Enter') doLogin(); });
+        document.getElementById('phoneInput').addEventListener('keypress', function(e) { if (e.key === 'Enter') document.getElementById('passwordInput').focus(); });
     </script>
 </body>
 </html>
