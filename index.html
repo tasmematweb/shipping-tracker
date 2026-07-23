@@ -573,7 +573,6 @@
 <body>
 
     <div class="app-container" id="app">
-        <!-- ===== صفحة تسجيل الدخول ===== -->
         <div id="loginPage" class="login-page">
             <span class="logo">📦</span>
             <div class="brand">نظام تتبع شحنات J&T</div>
@@ -590,7 +589,6 @@
             <div id="loginError" class="error-msg hidden"></div>
         </div>
 
-        <!-- ===== لوحة التحكم ===== -->
         <div id="dashboard" class="hidden">
             <div class="app-header">
                 <div class="user-info">
@@ -617,7 +615,6 @@
         </div>
     </div>
 
-    <!-- ===== مودال ===== -->
     <div id="modalOverlay" class="modal-overlay hidden" onclick="if(event.target===this) closeModal()">
         <div class="modal-box" id="modalBox">
             <span class="close-btn" onclick="closeModal()">✕</span>
@@ -627,7 +624,7 @@
 
     <script>
         // ============================================================
-        //  🔗 رابط الـ Web App - تم تحديثه بالرابط الجديد
+        //  🔗 رابط الـ Web App - الرابط الجديد
         // ============================================================
         const API_URL = "https://script.google.com/macros/s/AKfycbzr2kJmZrX92QWQ1MCNqiqGwN18dNP5H2hW27ivs0KSYmTKXb0aObTOY4kbmYOLiwo_/exec";
         let currentUser = null;
@@ -688,9 +685,6 @@
             showToast('🚪 تم تسجيل الخروج', '');
         }
 
-        // ============================================================
-        //  📊 عرض لوحة التحكم
-        // ============================================================
         function showDashboard() {
             document.getElementById('loginPage').classList.add('hidden');
             document.getElementById('dashboard').classList.remove('hidden');
@@ -712,9 +706,6 @@
             }
         }
 
-        // ============================================================
-        //  📦 تحميل شحنات العميل
-        // ============================================================
         async function loadMyShipments() {
             const content = document.getElementById('contentArea');
             content.innerHTML = '<div class="loading"><div class="spinner"></div><div>جاري التحميل...</div></div>';
@@ -746,9 +737,6 @@
             }
         }
 
-        // ============================================================
-        //  📦 تحميل جميع الشحنات (للأدمن)
-        // ============================================================
         async function loadAllShipments() {
             const content = document.getElementById('contentArea');
             content.innerHTML = '<div class="loading"><div class="spinner"></div><div>جاري التحميل...</div></div>';
@@ -781,9 +769,6 @@
             }
         }
 
-        // ============================================================
-        //  ❌ عرض رسالة خطأ
-        // ============================================================
         function showError(container, message) {
             container.innerHTML = `
                 <div class="error-box">
@@ -796,9 +781,6 @@
             `;
         }
 
-        // ============================================================
-        //  📊 تحديث الملخص
-        // ============================================================
         function updateSummary(shipments) {
             const waiting = shipments.filter(s => s.status && s.status.includes('انتظار')).length;
             const tracking = shipments.filter(s => s.status && s.status.includes('تتبع')).length;
@@ -810,9 +792,6 @@
             document.getElementById('doneCount').textContent = done;
         }
 
-        // ============================================================
-        //  🎨 عرض الشحنات
-        // ============================================================
         function renderShipments(shipments, isAdmin) {
             const content = document.getElementById('contentArea');
 
@@ -869,9 +848,6 @@
             content.innerHTML = html;
         }
 
-        // ============================================================
-        //  ➕ إضافة شحنة جديدة
-        // ============================================================
         function showAddShipmentForm() {
             openModal(`
                 <div class="modal-title">📦 إضافة شحنة جديدة</div>
@@ -940,9 +916,6 @@
             }
         }
 
-        // ============================================================
-        //  🔢 إضافة رقم تتبع (للأدمن)
-        // ============================================================
         function showAddTracking(shipmentId) {
             openModal(`
                 <div class="modal-title">🔢 إضافة رقم تتبع</div>
@@ -992,9 +965,6 @@
             }
         }
 
-        // ============================================================
-        //  🗑️ حذف شحنة (للأدمن)
-        // ============================================================
         async function deleteShipment(shipmentId) {
             if (!confirm('⚠️ هل أنت متأكد من حذف هذه الشحنة؟')) return;
 
@@ -1023,9 +993,6 @@
             }
         }
 
-        // ============================================================
-        //  🚚 تتبع الشحنة
-        // ============================================================
         async function trackShipment(billCode) {
             openModal(`
                 <div class="modal-title">🚚 تتبع الشحنة</div>
@@ -1075,9 +1042,6 @@
             }
         }
 
-        // ============================================================
-        //  👥 إدارة العملاء (للأدمن)
-        // ============================================================
         async function showClients() {
             openModal(`
                 <div class="modal-title">👥 إدارة العملاء</div>
@@ -1207,9 +1171,6 @@
             }
         }
 
-        // ============================================================
-        //  🖥️ دوال المودال
-        // ============================================================
         function openModal(html) {
             document.getElementById('modalBody').innerHTML = html;
             document.getElementById('modalOverlay').classList.remove('hidden');
@@ -1221,9 +1182,6 @@
             document.body.style.overflow = '';
         }
 
-        // ============================================================
-        //  🔔 عرض إشعار (Toast)
-        // ============================================================
         function showToast(message, type) {
             const existing = document.querySelector('.toast');
             if (existing) existing.remove();
@@ -1240,9 +1198,6 @@
             }, 3000);
         }
 
-        // ============================================================
-        //  ⌨️ اختصارات لوحة المفاتيح
-        // ============================================================
         document.addEventListener('keydown', function(e) {
             if (e.key === 'Escape') closeModal();
             if (e.key === 'Enter') {
@@ -1251,11 +1206,8 @@
             }
         });
 
-        // ============================================================
-        //  🚀 تحميل تلقائي للبيانات التجريبية (اختياري)
-        // ============================================================
-        document.getElementById('loginPhone').value = '01140074870';
-        document.getElementById('loginPassword').value = '123456';
+        document.getElementById('loginPhone').value = '01119024874';
+        document.getElementById('loginPassword').value = '01119024874';
     </script>
 
 </body>
