@@ -147,11 +147,8 @@
             const content = document.getElementById('content');
             content.innerHTML = '<div class="loading"><div class="spinner"></div>جاري التحميل...</div>';
             try {
-                const formData = new FormData();
-                formData.append('action', 'allShipments');
-                formData.append('adminPhone', currentUser.phone);
-                formData.append('adminPassword', currentUser.password);
-                const res = await fetch(API_URL, { method: 'POST', body: formData });
+                const url = `${API_URL}?action=allShipments&adminPhone=${encodeURIComponent(currentUser.phone)}&adminPassword=${encodeURIComponent(currentUser.password)}`;
+                const res = await fetch(url, { method: 'POST' });
                 const data = await res.json();
                 if (data.success) {
                     updateSummary(data.shipments);
@@ -187,22 +184,27 @@
         }
 
         async function submitShipment() {
-            const formData = new FormData();
-            formData.append('action', 'addShipment');
-            formData.append('phone', currentUser.phone);
-            formData.append('password', currentUser.password);
-            formData.append('customerName', document.getElementById('cName').value);
-            formData.append('customerPhone', document.getElementById('cPhone').value);
-            formData.append('customerAddress', document.getElementById('cAddress').value);
-            formData.append('productName', document.getElementById('cProduct').value);
-            formData.append('productQuantity', document.getElementById('cQuantity').value);
-            formData.append('notes', document.getElementById('cNotes').value);
+            const cName = document.getElementById('cName').value.trim();
+            const cPhone = document.getElementById('cPhone').value.trim();
+            const cAddress = document.getElementById('cAddress').value.trim();
+            const cProduct = document.getElementById('cProduct').value.trim();
+            const cQuantity = document.getElementById('cQuantity').value.trim();
+            const cNotes = document.getElementById('cNotes').value.trim();
+            const errorDiv = document.getElementById('shipError');
+            
+            if (!cName || !cPhone || !cAddress || !cProduct) {
+                errorDiv.textContent = "يرجى ملء الحقول المطلوبة";
+                return;
+            }
+            
+            const url = `${API_URL}?action=addShipment&phone=${encodeURIComponent(currentUser.phone)}&password=${encodeURIComponent(currentUser.password)}&customerName=${encodeURIComponent(cName)}&customerPhone=${encodeURIComponent(cPhone)}&customerAddress=${encodeURIComponent(cAddress)}&productName=${encodeURIComponent(cProduct)}&productQuantity=${encodeURIComponent(cQuantity)}&notes=${encodeURIComponent(cNotes)}`;
+            
             try {
-                const res = await fetch(API_URL, { method: 'POST', body: formData });
+                const res = await fetch(url, { method: 'POST' });
                 const data = await res.json();
-                if (data.success) { closeModal(); loadMyShipments(); alert('✅ تم إضافة الشحنة بنجاح وستظهر للأدمن!'); }
-                else { document.getElementById('shipError').textContent = data.msg; }
-            } catch (e) { document.getElementById('shipError').textContent = 'فشل الاتصال'; }
+                if (data.success) { closeModal(); loadMyShipments(); alert('✅ تم إضافة الشحنة بنجاح!'); }
+                else { errorDiv.textContent = data.msg || "فشل الإضافة"; }
+            } catch (e) { errorDiv.textContent = 'فشل الاتصال'; }
         }
 
         function showAddTracking(shipmentId) {
@@ -212,19 +214,17 @@
 
         async function submitTracking(shipmentId) {
             const trackingNumber = document.getElementById('trackingNum').value.trim();
-            if (!trackingNumber) { document.getElementById('trackError').textContent = 'يرجى إدخال رقم التتبع'; return; }
-            const formData = new FormData();
-            formData.append('action', 'addTrackingNumber');
-            formData.append('adminPhone', currentUser.phone);
-            formData.append('adminPassword', currentUser.password);
-            formData.append('shipmentId', shipmentId);
-            formData.append('trackingNumber', trackingNumber);
+            const errorDiv = document.getElementById('trackError');
+            if (!trackingNumber) { errorDiv.textContent = 'يرجى إدخال رقم التتبع'; return; }
+            
+            const url = `${API_URL}?action=addTrackingNumber&adminPhone=${encodeURIComponent(currentUser.phone)}&adminPassword=${encodeURIComponent(currentUser.password)}&shipmentId=${encodeURIComponent(shipmentId)}&trackingNumber=${encodeURIComponent(trackingNumber)}`;
+            
             try {
-                const res = await fetch(API_URL, { method: 'POST', body: formData });
+                const res = await fetch(url, { method: 'POST' });
                 const data = await res.json();
-                if (data.success) { closeModal(); loadAllShipments(); alert('✅ تم إضافة رقم التتبع بنجاح!'); }
-                else { document.getElementById('trackError').textContent = data.msg; }
-            } catch (e) { document.getElementById('trackError').textContent = 'فشل الاتصال'; }
+                if (data.success) { closeModal(); loadAllShipments(); alert('✅ تم إضافة رقم التتبع!'); }
+                else { errorDiv.textContent = data.msg; }
+            } catch (e) { errorDiv.textContent = 'فشل الاتصال'; }
         }
 
         async function trackShipment(billCode) {
@@ -249,11 +249,8 @@
             document.getElementById('modal').classList.remove('hidden');
             document.getElementById('modalContent').innerHTML = '<div class="loading"><div class="spinner"></div>جاري التحميل...</div>';
             try {
-                const formData = new FormData();
-                formData.append('action', 'allClients');
-                formData.append('adminPhone', currentUser.phone);
-                formData.append('adminPassword', currentUser.password);
-                const res = await fetch(API_URL, { method: 'POST', body: formData });
+                const url = `${API_URL}?action=allClients&adminPhone=${encodeURIComponent(currentUser.phone)}&adminPassword=${encodeURIComponent(currentUser.password)}`;
+                const res = await fetch(url, { method: 'POST' });
                 const data = await res.json();
                 if (data.success) {
                     let html = `<span class="close-btn" onclick="closeModal()">✖</span><h3>👥 إدارة العملاء</h3><button onclick="showAddClientForm()" style="width:100%;padding:12px;background:#28a745;color:white;border:none;border-radius:8px;margin-bottom:15px;cursor:pointer;font-size:16px;">➕ إنشاء حساب عميل جديد</button><div id="clientList"></div>`;
@@ -264,7 +261,7 @@
                         listDiv.innerHTML = '<p style="text-align:center;color:#999;padding:20px;">لا يوجد عملاء حتى الآن</p>';
                     } else {
                         data.clients.forEach(c => {
-                            listDiv.innerHTML += `<div class="client-card"><div class="client-info"><strong>${c.name}</strong><br>📱 ${c.phone}<br><small>📅 تاريخ الإنشاء: ${c.created}</small></div><div class="client-actions"><button onclick="deleteClient('${c.phone}')" style="background:#dc3545;color:white;border:none;padding:8px 15px;border-radius:5px;cursor:pointer;">🗑️ حذف</button></div></div>`;
+                            listDiv.innerHTML += `<div class="client-card"><div class="client-info"><strong>${c.name}</strong><br>📱 ${c.phone}<br><small>📅 ${c.created}</small></div><div class="client-actions"><button onclick="deleteClient('${c.phone}')" style="background:#dc3545;color:white;border:none;padding:8px 15px;border-radius:5px;cursor:pointer;">🗑️ حذف</button></div></div>`;
                         });
                     }
                 }
@@ -283,16 +280,10 @@
             
             if (!name || !phone || !password) { errorDiv.textContent = "يرجى ملء جميع الحقول"; return; }
             
-            const formData = new FormData();
-            formData.append('action', 'createClient');
-            formData.append('adminPhone', currentUser.phone);
-            formData.append('adminPassword', currentUser.password);
-            formData.append('clientName', name);
-            formData.append('clientPhone', phone);
-            formData.append('clientPassword', password);
+            const url = `${API_URL}?action=createClient&adminPhone=${encodeURIComponent(currentUser.phone)}&adminPassword=${encodeURIComponent(currentUser.password)}&clientName=${encodeURIComponent(name)}&clientPhone=${encodeURIComponent(phone)}&clientPassword=${encodeURIComponent(password)}`;
             
             try {
-                const res = await fetch(API_URL, { method: 'POST', body: formData });
+                const res = await fetch(url, { method: 'POST' });
                 const data = await res.json();
                 if (data.success) { showClients(); }
                 else { errorDiv.textContent = data.msg; }
@@ -301,10 +292,10 @@
 
         async function deleteClient(phone) {
             if (!confirm('هل أنت متأكد من حذف هذا العميل؟')) return;
-            const formData = new FormData();
-            formData.append('action', 'deleteClient');
-            formData.append('phone', phone);
-            try { await fetch(API_URL, { method: 'POST', body: formData }); showClients(); } catch (e) { alert('فشل الحذف'); }
+            try { 
+                await fetch(`${API_URL}?action=deleteClient&phone=${encodeURIComponent(phone)}`, { method: 'POST' }); 
+                showClients(); 
+            } catch (e) { alert('فشل الحذف'); }
         }
 
         function closeModal() { document.getElementById('modal').classList.add('hidden'); }
