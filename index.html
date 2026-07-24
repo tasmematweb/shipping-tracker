@@ -835,7 +835,7 @@
     // ============================================================
     //  🔗 الرابط الجديد
     // ============================================================
-    const API_URL = "https://script.google.com/macros/s/AKfycbwPicknEQbJupHjPwarNJt3vkOKZg04dgaLYRjoMQnRdP9lfBvo5DzfS6GlsxL3dVR8/exec";
+    const API_URL = "https://script.google.com/macros/s/AKfycbxTnUtDDV6tp_zd3dToQ_i2imLL2BOptbycpCtQWOl_ARbXHCiKcF1Qp1nZ-V-QMZLF/exec";
     let currentUser = null;
 
     // ============================================================
@@ -1009,7 +1009,7 @@
     }
 
     // ============================================================
-    //  🎨 عرض بطاقة الشحنة - مع إظهار آخر تحديث في الخارج
+    //  🎨 عرض بطاقة الشحنة
     // ============================================================
     function createShipmentCard(s, isAdmin = false) {
         let statusClass = 'status-waiting';
@@ -1017,7 +1017,6 @@
         if (statusText.includes('تتبع')) statusClass = 'status-tracking';
         else if (statusText.includes('تم')) statusClass = 'status-done';
 
-        // جلب آخر تحديث من التتبع (إذا كان موجوداً)
         let lastUpdate = s.lastUpdate || s.date || '';
         let updateText = lastUpdate ? 'آخر تحديث: ' + lastUpdate : '';
 
