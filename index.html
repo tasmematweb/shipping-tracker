@@ -1015,7 +1015,6 @@
         if (status) {
             statusLabel.textContent = '📍 الحالة الحالية:';
             
-            // تنظيف النص من ❌️ خطأ تم الاستلام وإبراز ✅️ تم التسليم
             let displayStatus = status;
             let isError = false;
             let isSuccess = false;
@@ -1024,9 +1023,11 @@
                 isError = true;
                 displayStatus = '❌ ' + status.replace(/❌️?/g, '').replace(/خطأ/g, '').trim();
                 if (!displayStatus || displayStatus === '❌') displayStatus = '❌ خطأ في التوصيل';
-            } else if (status.includes('تم التسليم') || status.includes('تم التوصيل') || status.includes('Delivered') || status.includes('✅')) {
+            } else if (status.includes('تم التسليم') || status.includes('تم التوصيل') || status.includes('تم الاستلام') || status.includes('Delivered') || status.includes('✅')) {
                 isSuccess = true;
-                displayStatus = '✅ ' + status.replace(/✅️?/g, '').trim();
+                displayStatus = status.replace(/✅️?/g, '').trim();
+                displayStatus = displayStatus.replace(/تم الاستلام/g, 'تم التسليم');
+                displayStatus = '✅ ' + displayStatus;
                 if (!displayStatus || displayStatus === '✅') displayStatus = '✅ تم التسليم';
             }
             
@@ -1063,7 +1064,6 @@
         for (const s of shipmentsWithTracking) {
             const status = await fetchTrackingStatus(s.trackingNumber);
             updateShipmentStatusCard(s.id, status);
-            // تأخير بسيط بين كل طلب وآخر
             await new Promise(resolve => setTimeout(resolve, 500));
         }
     }
@@ -1084,7 +1084,6 @@
                 } else {
                     document.getElementById('totalCountSmall').textContent = data.shipments.length;
                     content.innerHTML = data.shipments.map(s => createShipmentCard(s)).join('');
-                    // بدء تحديث الحالات واحدة تلو الأخرى
                     updateAllTrackingStatuses(data.shipments);
                 }
             } else { content.innerHTML = '<p style="color:red;">' + (data.msg || 'فشل التحميل') + '</p>'; }
@@ -1104,7 +1103,6 @@
             if (data.success) {
                 document.getElementById('totalCountSmall').textContent = data.shipments.length;
                 content.innerHTML = data.shipments.length === 0 ? '<div class="empty-state"><div class="icon">📭</div><p>لا توجد شحنات</p></div>' : data.shipments.map(s => createShipmentCard(s, true)).join('');
-                // بدء تحديث الحالات واحدة تلو الأخرى
                 updateAllTrackingStatuses(data.shipments);
             } else { content.innerHTML = '<p style="color:red;">' + (data.msg || 'فشل التحميل') + '</p>'; }
         } catch (e) { content.innerHTML = '<p style="color:red;">فشل الاتصال</p>'; }
@@ -1117,7 +1115,6 @@
         let statusClass = 'status-waiting';
         let statusText = s.status || '';
         
-        // إذا كانت الحالة "في انتظار التتبع" لا نعرضها
         if (statusText.includes('انتظار التتبع') || statusText.includes('في انتظار')) {
             statusText = '';
         }
@@ -1152,7 +1149,6 @@
         const displayAmount = s.amount || '0';
         const hasTracking = trackingNum && trackingNum.length > 3;
 
-        // بناء HTML الشارة فقط إذا كان هناك نص حالة
         const badgeHTML = statusText ? `<span class="status-badge ${statusClass}">${statusText}</span>` : '';
 
         return `<div class="shipment-card" onclick="toggleDetails(this)" id="card-${s.id}">
@@ -1165,7 +1161,6 @@
                 </div>
                 <div class="last-update">${updateText}</div>
             </div>
-            <!-- الحالة الفعلية من التتبع - تظهر في الخارج -->
             <div class="status-row${hasTracking ? ' loading-status' : ''}">
                 <span class="status-label">📍 الحالة:</span>
                 <span class="status-value">${hasTracking ? '⏳ جاري التحميل...' : (trackingNum ? '⏳ انتظار...' : 'لم يتم التحديد بعد')}</span>
@@ -1373,7 +1368,6 @@
                 
                 const currentStatus = data.data[0].status || '';
                 
-                // معالجة الحالة لإظهار ✅ تم التسليم أو ❌ خطأ
                 let displayStatus = currentStatus;
                 let statusBgColor = '#e8f5e9';
                 let statusBorderColor = '#2e7d32';
@@ -1385,8 +1379,10 @@
                     statusBgColor = '#ffeaea';
                     statusBorderColor = '#dc3545';
                     statusTextColor = '#dc3545';
-                } else if (currentStatus.includes('تم التسليم') || currentStatus.includes('تم التوصيل') || currentStatus.includes('Delivered') || currentStatus.includes('✅')) {
-                    displayStatus = '✅ ' + currentStatus.replace(/✅️?/g, '').trim();
+                } else if (currentStatus.includes('تم التسليم') || currentStatus.includes('تم التوصيل') || currentStatus.includes('تم الاستلام') || currentStatus.includes('Delivered') || currentStatus.includes('✅')) {
+                    displayStatus = currentStatus.replace(/✅️?/g, '').trim();
+                    displayStatus = displayStatus.replace(/تم الاستلام/g, 'تم التسليم');
+                    displayStatus = '✅ ' + displayStatus;
                     if (!displayStatus || displayStatus === '✅') displayStatus = '✅ تم التسليم';
                 } else if (!currentStatus) {
                     displayStatus = 'قيد المعالجة';
