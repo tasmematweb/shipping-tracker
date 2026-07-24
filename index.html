@@ -835,7 +835,7 @@
     // ============================================================
     //  🔗 الرابط الجديد
     // ============================================================
-    const API_URL = "https://script.google.com/macros/s/AKfycbycDitGXHkdifuWiGLldREr33T-8gQ4RJ9v4_v0fgECXz1FsUSsaDxADPsaBUHw2AtR/exec";
+    const API_URL = "https://script.google.com/macros/s/AKfycbwPicknEQbJupHjPwarNJt3vkOKZg04dgaLYRjoMQnRdP9lfBvo5DzfS6GlsxL3dVR8/exec";
     let currentUser = null;
 
     // ============================================================
@@ -917,7 +917,6 @@
             const data = await res.json();
             if (data.success) { 
                 currentUser = { phone, password, name: data.name, role: data.role };
-                // حفظ الجلسة في sessionStorage
                 sessionStorage.setItem('eux_user', JSON.stringify(currentUser));
                 errorDiv.classList.add('hidden');
                 showDashboard(); 
@@ -1154,7 +1153,7 @@
     }
 
     // ============================================================
-    //  🔢 إضافة رقم تتبع (للأدمن) - يتم تحديث العمود A
+    //  🔢 إضافة رقم تتبع (للأدمن) - تحديث العمود A فقط
     // ============================================================
     function showAddTracking(shipmentId) {
         document.getElementById('modal').classList.remove('hidden');
@@ -1229,7 +1228,7 @@
     }
 
     // ============================================================
-    //  🚚 تتبع الشحنة - عرض بالعربي فقط
+    //  🚚 تتبع الشحنة
     // ============================================================
     async function trackShipment(billCode) {
         document.getElementById('modal').classList.remove('hidden');
@@ -1426,7 +1425,6 @@
         if (e.key === 'Enter') document.getElementById('passwordInput').focus(); 
     });
 
-    // منع اختصارات النسخ
     document.addEventListener('keydown', function(e) {
         if (e.ctrlKey && (e.key === 'u' || e.key === 's' || e.key === 'c' || e.key === 'a')) {
             e.preventDefault();
@@ -1434,11 +1432,7 @@
         if (e.key === 'Escape') closeModal();
     });
 
-    // ============================================================
-    //  🚀 التحقق من الجلسة عند تحميل الصفحة
-    // ============================================================
     document.addEventListener('DOMContentLoaded', function() {
-        // لا نضع بيانات تجريبية
         checkSession();
     });
 </script>
