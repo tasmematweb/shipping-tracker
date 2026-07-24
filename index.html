@@ -53,68 +53,69 @@
             text-align: center;
             position: relative;
             z-index: 1;
+            padding: 20px 0;
         }
         .login-page .logo-wrapper {
             display: flex;
             justify-content: center;
-            margin-bottom: 20px;
+            margin-bottom: 25px;
         }
         .login-page .logo-node {
-            width: 120px;
-            height: 120px;
+            width: 130px;
+            height: 130px;
             background: linear-gradient(135deg, #1a3a6b, #0d2137);
-            border: 3px solid rgba(0, 118, 255, 0.4);
-            border-radius: 28px;
+            border: 3px solid rgba(0, 118, 255, 0.3);
+            border-radius: 30px;
             display: flex;
+            flex-direction: column;
             justify-content: center;
             align-items: center;
-            font-size: 48px;
-            font-weight: 900;
-            color: white;
             position: relative;
             animation: nodeFloat 2.6s ease-in-out infinite;
-            box-shadow: 0 0 60px rgba(0, 118, 255, 0.15);
+            box-shadow: 0 0 60px rgba(0, 118, 255, 0.12);
         }
         .login-page .logo-node::after {
             content: '';
             position: absolute;
             inset: -10px;
             border: 2px dashed #0076ff;
-            border-radius: 32px;
-            opacity: 0.4;
+            border-radius: 34px;
+            opacity: 0.3;
             animation: rotateDashed 15s linear infinite;
         }
-        .login-page .logo-node .logo-text {
-            font-size: 20px;
-            font-weight: 900;
-            letter-spacing: 2px;
-            color: #0076ff;
-            background: rgba(0, 118, 255, 0.15);
-            padding: 4px 12px;
-            border-radius: 8px;
-            margin-top: 8px;
-        }
         @keyframes nodeFloat {
-            0%, 100% { transform: translateY(0); box-shadow: 0 0 30px rgba(0, 118, 255, 0.15); }
-            50% { transform: translateY(-15px); box-shadow: 0 0 60px rgba(0, 118, 255, 0.3); }
+            0%, 100% { transform: translateY(0); box-shadow: 0 0 30px rgba(0, 118, 255, 0.12); }
+            50% { transform: translateY(-15px); box-shadow: 0 0 60px rgba(0, 118, 255, 0.25); }
         }
         @keyframes rotateDashed {
             100% { transform: rotate(360deg); }
         }
+        .login-page .logo-node .logo-icon {
+            font-size: 42px;
+        }
+        .login-page .logo-node .logo-text {
+            font-size: 18px;
+            font-weight: 900;
+            color: #0076ff;
+            background: rgba(0, 118, 255, 0.12);
+            padding: 2px 16px;
+            border-radius: 8px;
+            margin-top: 4px;
+            letter-spacing: 1px;
+        }
 
         .login-page .brand {
             color: #0d2137;
-            font-size: 32px;
+            font-size: 28px;
             font-weight: 900;
             margin-bottom: 4px;
-            letter-spacing: -0.5px;
         }
         .login-page .brand span {
             color: #0076ff;
         }
         .login-page .sub-title {
             color: #888;
-            font-size: 16px;
+            font-size: 15px;
             margin-bottom: 30px;
         }
         .login-page .input-group {
@@ -124,7 +125,7 @@
         .login-page .input-group input {
             width: 100%;
             padding: 16px 20px 16px 50px;
-            border: 2px solid #e8e8e8;
+            border: 2px solid #e8ecf0;
             border-radius: 14px;
             font-size: 16px;
             font-family: 'Cairo', sans-serif;
@@ -135,7 +136,7 @@
             border-color: #0076ff;
             outline: none;
             background: white;
-            box-shadow: 0 0 0 4px rgba(0, 118, 255, 0.1);
+            box-shadow: 0 0 0 4px rgba(0, 118, 255, 0.08);
         }
         .login-page .input-group .input-icon {
             position: absolute;
@@ -157,12 +158,12 @@
             cursor: pointer;
             font-family: 'Cairo', sans-serif;
             transition: 0.3s;
-            box-shadow: 0 4px 25px rgba(0, 118, 255, 0.35);
+            box-shadow: 0 4px 25px rgba(0, 118, 255, 0.3);
             margin-top: 8px;
         }
         .login-page .login-btn:hover {
             transform: translateY(-2px);
-            box-shadow: 0 8px 35px rgba(0, 118, 255, 0.45);
+            box-shadow: 0 8px 35px rgba(0, 118, 255, 0.4);
         }
         .login-page .login-btn:active {
             transform: scale(0.97);
@@ -174,6 +175,15 @@
             padding: 10px;
             background: #ffeaea;
             border-radius: 8px;
+        }
+        .login-page .login-footer {
+            margin-top: 20px;
+            color: #aaa;
+            font-size: 13px;
+        }
+        .login-page .login-footer span {
+            color: #0076ff;
+            font-weight: 600;
         }
 
         /* ===== الهيدر ===== */
@@ -757,7 +767,6 @@
         .mt-10 { margin-top: 10px; }
         .mb-10 { margin-bottom: 10px; }
         .glow-text { color: #0076ff; }
-        .brand-name { color: #0d2137; font-weight: 900; }
     </style>
 </head>
 <body oncontextmenu="return false;">
@@ -768,10 +777,8 @@
     <div id="loginPage" class="login-page">
         <div class="logo-wrapper">
             <div class="logo-node">
-                <div style="display:flex;flex-direction:column;align-items:center;">
-                    <span style="font-size:36px;">📦</span>
-                    <span class="logo-text">EUX</span>
-                </div>
+                <span class="logo-icon">📦</span>
+                <span class="logo-text">EUX</span>
             </div>
         </div>
         <div class="brand">مرحباً بك في <span>EUX Express</span></div>
@@ -790,6 +797,7 @@
             <i class="fas fa-sign-in-alt"></i> دخول
         </button>
         <p class="error-msg" id="loginError"></p>
+        <div class="login-footer">© 2026 <span>EUX Express</span> - جميع الحقوق محفوظة</div>
     </div>
 
     <!-- ===== لوحة التحكم ===== -->
@@ -829,6 +837,25 @@
     // ============================================================
     const API_URL = "https://script.google.com/macros/s/AKfycbycDitGXHkdifuWiGLldREr33T-8gQ4RJ9v4_v0fgECXz1FsUSsaDxADPsaBUHw2AtR/exec";
     let currentUser = null;
+
+    // ============================================================
+    //  التحقق من جلسة المستخدم (Session)
+    // ============================================================
+    function checkSession() {
+        const savedUser = sessionStorage.getItem('eux_user');
+        if (savedUser) {
+            try {
+                currentUser = JSON.parse(savedUser);
+                if (currentUser && currentUser.phone && currentUser.password) {
+                    showDashboard();
+                    return true;
+                }
+            } catch(e) {
+                sessionStorage.removeItem('eux_user');
+            }
+        }
+        return false;
+    }
 
     // ============================================================
     //  قائمة المحافظات والمدن
@@ -890,19 +917,28 @@
             const data = await res.json();
             if (data.success) { 
                 currentUser = { phone, password, name: data.name, role: data.role };
+                // حفظ الجلسة في sessionStorage
+                sessionStorage.setItem('eux_user', JSON.stringify(currentUser));
+                errorDiv.classList.add('hidden');
                 showDashboard(); 
             } else { 
                 errorDiv.textContent = data.msg || "فشل تسجيل الدخول"; 
+                errorDiv.classList.remove('hidden');
             }
-        } catch (e) { errorDiv.textContent = "فشل الاتصال"; }
+        } catch (e) { 
+            errorDiv.textContent = "فشل الاتصال"; 
+            errorDiv.classList.remove('hidden');
+        }
     }
 
     function logout() {
         currentUser = null;
+        sessionStorage.removeItem('eux_user');
         document.getElementById('loginPage').classList.remove('hidden');
         document.getElementById('dashboard').classList.add('hidden');
         document.getElementById('phoneInput').value = '';
         document.getElementById('passwordInput').value = '';
+        document.getElementById('loginError').classList.add('hidden');
         showToast('🚪 تم تسجيل الخروج', '');
     }
 
@@ -937,7 +973,6 @@
                 if (data.shipments.length === 0) {
                     content.innerHTML = '<div class="empty-state"><div class="icon">📭</div><p>لا توجد شحنات حتى الآن</p></div>';
                 } else {
-                    // تحديث إجمالي الشحنات للعميل
                     document.getElementById('totalCount').textContent = data.shipments.length;
                     document.getElementById('summaryBox').classList.remove('hidden');
                     content.innerHTML = data.shipments.map(s => createShipmentCard(s)).join('');
@@ -974,7 +1009,7 @@
     }
 
     // ============================================================
-    //  🎨 عرض بطاقة الشحنة - بدون رقم تتبع ورقم شحنة للعميل
+    //  🎨 عرض بطاقة الشحنة
     // ============================================================
     function createShipmentCard(s, isAdmin = false) {
         let statusClass = 'status-waiting';
@@ -987,7 +1022,6 @@
 
         let actions = '';
         const trackingNum = s.trackingNumber || '';
-        // زر التتبع يظهر للعميل والأدمن (بدون عرض الرقم)
         if (trackingNum && trackingNum.length > 3) {
             actions += `<button class="btn-track" onclick="event.stopPropagation(); trackShipment('${trackingNum}')">📍 تتبع</button>`;
         }
@@ -996,7 +1030,6 @@
                 actions += `<button class="btn-add-tracking" onclick="event.stopPropagation(); showAddTracking('${s.id}')">🔢 إضافة تتبع</button>`;
             }
             actions += `<button class="btn-delete" onclick="event.stopPropagation(); deleteShipment('${s.id}')">🗑️ حذف</button>`;
-            // للأدمن فقط: عرض رقم الشحنة ورقم التتبع
             var adminDetails = `
                 <div class="info"><strong>🔢 رقم الشحنة:</strong> ${s.id}</div>
                 ${trackingNum ? `<div class="info"><strong>🚚 رقم التتبع:</strong> ${trackingNum}</div>` : ''}
@@ -1196,7 +1229,7 @@
     }
 
     // ============================================================
-    //  🚚 تتبع الشحنة - عرض بالعربي فقط بدون أرقام هواتف أو أسماء
+    //  🚚 تتبع الشحنة - عرض بالعربي فقط
     // ============================================================
     async function trackShipment(billCode) {
         document.getElementById('modal').classList.remove('hidden');
@@ -1214,11 +1247,8 @@
                     html += `<p style="text-align:center;color:#999;padding:20px;">لا توجد تفاصيل تتبع متاحة</p>`;
                 } else {
                     details.forEach(d => {
-                        // ترجمة الأوصاف إلى العربية وإزالة الأرقام والأسماء
                         let desc = d.desc || d.scanType || '';
-                        // تنقية النص من الأرقام وأسماء الأشخاص
                         desc = desc.replace(/[0-9]/g, '').trim();
-                        // ترجمة الأنواع
                         if (desc.includes('sign')) desc = 'تم التوقيع على الاستلام';
                         else if (desc.includes('delivery')) desc = 'جاري التوصيل';
                         else if (desc.includes('arrival')) desc = 'وصلت إلى المركز';
@@ -1233,7 +1263,6 @@
                         if (city && !location.includes(city)) {
                             locationText = city + (location ? ' - ' + location : '');
                         }
-                        // تنقية الموقع من الأرقام
                         locationText = locationText.replace(/[0-9]/g, '').trim();
                         if (!locationText) locationText = 'مركز الشحن';
 
@@ -1405,9 +1434,13 @@
         if (e.key === 'Escape') closeModal();
     });
 
-    // بيانات تجريبية للاختبار
-    document.getElementById('phoneInput').value = '01119024874';
-    document.getElementById('passwordInput').value = '01119024874';
+    // ============================================================
+    //  🚀 التحقق من الجلسة عند تحميل الصفحة
+    // ============================================================
+    document.addEventListener('DOMContentLoaded', function() {
+        // لا نضع بيانات تجريبية
+        checkSession();
+    });
 </script>
 
 </body>
