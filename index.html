@@ -342,7 +342,7 @@
             border-radius: 20px;
         }
 
-        /* ===== الحالة الخضراء في البطاقة ===== */
+        /* ===== الحالة في البطاقة ===== */
         .shipment-card .status-row {
             display: flex;
             align-items: center;
@@ -376,6 +376,13 @@
         }
         .shipment-card .status-row.error-status .status-value {
             color: #dc3545;
+        }
+        .shipment-card .status-row.info-status {
+            background: #e3f2fd;
+            border-right-color: #0d47a1;
+        }
+        .shipment-card .status-row.info-status .status-value {
+            color: #0d47a1;
         }
 
         .shipment-card .details {
@@ -563,7 +570,7 @@
             box-shadow: none;
         }
 
-        /* ===== التتبع - بدون أرقام هواتف ===== */
+        /* ===== التتبع ===== */
         .timeline-item {
             border-right: 3px solid #0076ff;
             padding: 12px 16px 12px 0;
@@ -1008,7 +1015,7 @@
         const statusRow = card.querySelector('.status-row');
         if (!statusRow) return;
         
-        statusRow.classList.remove('loading-status', 'error-status');
+        statusRow.classList.remove('loading-status', 'error-status', 'info-status');
         const statusValue = statusRow.querySelector('.status-value');
         const statusLabel = statusRow.querySelector('.status-label');
         
@@ -1018,17 +1025,19 @@
             let displayStatus = status;
             let isError = false;
             let isSuccess = false;
+            let isInfo = false;
             
             if (status.includes('خطأ') || status.includes('Error') || status.includes('❌')) {
                 isError = true;
                 displayStatus = '❌ ' + status.replace(/❌️?/g, '').replace(/خطأ/g, '').trim();
                 if (!displayStatus || displayStatus === '❌') displayStatus = '❌ خطأ في التوصيل';
-            } else if (status.includes('تم التسليم') || status.includes('تم التوصيل') || status.includes('تم الاستلام') || status.includes('Delivered') || status.includes('✅')) {
+            } else if (status.includes('تم التسليم') || status.includes('تم التوصيل') || status.includes('Delivered') || status.includes('✅')) {
                 isSuccess = true;
-                displayStatus = status.replace(/✅️?/g, '').trim();
-                displayStatus = displayStatus.replace(/تم الاستلام/g, 'تم التسليم');
-                displayStatus = '✅ ' + displayStatus;
+                displayStatus = '✅ ' + status.replace(/✅️?/g, '').trim();
                 if (!displayStatus || displayStatus === '✅') displayStatus = '✅ تم التسليم';
+            } else if (status.includes('تم الاستلام')) {
+                isInfo = true;
+                displayStatus = '📦 ' + status.replace(/تم الاستلام/g, 'تم استلام الشحنة من المرسل').trim();
             }
             
             statusValue.textContent = displayStatus;
@@ -1041,6 +1050,10 @@
                 statusRow.style.background = '#ffeaea';
                 statusRow.style.borderRightColor = '#dc3545';
                 statusValue.style.color = '#dc3545';
+            } else if (isInfo) {
+                statusRow.style.background = '#e3f2fd';
+                statusRow.style.borderRightColor = '#0d47a1';
+                statusValue.style.color = '#0d47a1';
             } else {
                 statusRow.style.background = '#e3f2fd';
                 statusRow.style.borderRightColor = '#0d47a1';
@@ -1109,7 +1122,7 @@
     }
 
     // ============================================================
-    //  🎨 عرض بطاقة الشحنة - مع ظهور الحالة الفعلية من التتبع
+    //  🎨 عرض بطاقة الشحنة
     // ============================================================
     function createShipmentCard(s, isAdmin = false) {
         let statusClass = 'status-waiting';
@@ -1275,7 +1288,7 @@
     }
 
     // ============================================================
-    //  🔢 إضافة رقم تتبع (للأدمن) - تحديث العمود A فقط
+    //  🔢 إضافة رقم تتبع (للأدمن)
     // ============================================================
     function showAddTracking(shipmentId) {
         document.getElementById('modal').classList.remove('hidden');
@@ -1352,9 +1365,11 @@
     }
 
     // ============================================================
-    //  🚚 تتبع الشحنة - بدون أرقام هواتف
+    //  🚚 تتبع الشحنة
     // ============================================================
     async function trackShipment(billCode) {
+        const isAdmin = currentUser.role === 'admin';
+        
         document.getElementById('modal').classList.remove('hidden');
         document.getElementById('modalBody').innerHTML = '<div class="loading"><div class="spinner"></div>جاري تتبع الشحنة...</div>';
         
@@ -1364,7 +1379,11 @@
 
             if (data.code === "1" && data.data && data.data[0]) {
                 let html = `<h3><i class="fas fa-map-marked-alt"></i> مسار الشحنة</h3>`;
-                html += `<p style="margin-bottom:16px;color:#666;font-size:14px;direction:ltr;text-align:left;"><strong>رقم الشحنة:</strong> ${billCode}</p>`;
+                
+                // إظهار رقم التتبع للأدمن فقط
+                if (isAdmin) {
+                    html += `<p style="margin-bottom:16px;color:#666;font-size:14px;direction:ltr;text-align:left;"><strong>رقم التتبع:</strong> ${billCode}</p>`;
+                }
                 
                 const currentStatus = data.data[0].status || '';
                 
@@ -1379,11 +1398,14 @@
                     statusBgColor = '#ffeaea';
                     statusBorderColor = '#dc3545';
                     statusTextColor = '#dc3545';
-                } else if (currentStatus.includes('تم التسليم') || currentStatus.includes('تم التوصيل') || currentStatus.includes('تم الاستلام') || currentStatus.includes('Delivered') || currentStatus.includes('✅')) {
-                    displayStatus = currentStatus.replace(/✅️?/g, '').trim();
-                    displayStatus = displayStatus.replace(/تم الاستلام/g, 'تم التسليم');
-                    displayStatus = '✅ ' + displayStatus;
+                } else if (currentStatus.includes('تم التسليم') || currentStatus.includes('تم التوصيل') || currentStatus.includes('Delivered') || currentStatus.includes('✅')) {
+                    displayStatus = '✅ ' + currentStatus.replace(/✅️?/g, '').trim();
                     if (!displayStatus || displayStatus === '✅') displayStatus = '✅ تم التسليم';
+                } else if (currentStatus.includes('تم الاستلام')) {
+                    displayStatus = '📦 ' + currentStatus.replace(/تم الاستلام/g, 'تم استلام الشحنة من المرسل').trim();
+                    statusBgColor = '#e3f2fd';
+                    statusBorderColor = '#0d47a1';
+                    statusTextColor = '#0d47a1';
                 } else if (!currentStatus) {
                     displayStatus = 'قيد المعالجة';
                     statusBgColor = '#e3f2fd';
@@ -1550,44 +1572,4 @@
     }
 
     // ============================================================
-    //  🖥️ دوال مساعدة
-    // ============================================================
-    function closeModal() { 
-        document.getElementById('modal').classList.add('hidden'); 
-    }
-
-    function showToast(message, type) {
-        const existing = document.querySelector('.toast');
-        if (existing) existing.remove();
-        const toast = document.createElement('div');
-        toast.className = 'toast' + (type ? ' ' + type : '');
-        toast.textContent = message;
-        document.body.appendChild(toast);
-        setTimeout(() => {
-            toast.style.opacity = '0';
-            toast.style.transition = 'opacity 0.3s';
-            setTimeout(() => toast.remove(), 300);
-        }, 3000);
-    }
-
-    document.getElementById('passwordInput').addEventListener('keypress', function(e) { 
-        if (e.key === 'Enter') doLogin(); 
-    });
-    document.getElementById('phoneInput').addEventListener('keypress', function(e) { 
-        if (e.key === 'Enter') document.getElementById('passwordInput').focus(); 
-    });
-
-    document.addEventListener('keydown', function(e) {
-        if (e.ctrlKey && (e.key === 'u' || e.key === 's' || e.key === 'c' || e.key === 'a')) {
-            e.preventDefault();
-        }
-        if (e.key === 'Escape') closeModal();
-    });
-
-    document.addEventListener('DOMContentLoaded', function() {
-        checkSession();
-    });
-</script>
-
-</body>
-</html>
+    // 
