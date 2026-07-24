@@ -545,7 +545,7 @@
         // ============================================================
         //  🔗 الرابط الجديد - تم التحديث
         // ============================================================
-        const API_URL = "https://script.google.com/macros/s/AKfycbwxdpiAaZJpQVVyHKnNs6cmNhHK3M2FfG85ISFbUIzzxAY2Z9LPGN97J3qrU-g4gWyA/exec";
+        const API_URL = "https://script.google.com/macros/s/AKfycbxIEwBlHu_Q9wFZPORgaf3dCOuRcbm-EmTYFOnKO40TLdh2jLZ5DZFsk0hIji3Dy2SP/exec";
         let currentUser = null;
         let currentShipments = [];
 
@@ -1079,7 +1079,7 @@
         }
 
         // ============================================================
-        //  🚚 تتبع الشحنة
+        //  🚚 تتبع الشحنة - تم التصحيح
         // ============================================================
         async function trackShipment(billCode) {
             openModal(`
@@ -1090,6 +1090,7 @@
             try {
                 const res = await fetch(`${API_URL}?action=track&billCode=${billCode}`);
                 const data = await res.json();
+                console.log('📡 Track response:', data);
 
                 if (data.code === "1" && data.data && data.data[0]) {
                     let html = `<div class="modal-title">🚚 مسار الشحنة: ${billCode}</div>`;
@@ -1110,12 +1111,17 @@
                     }
                     document.getElementById('modalBody').innerHTML = html;
                 } else {
+                    // عرض رسالة خطأ مفصلة من API
+                    let errorMsg = data.msg || data.error || 'فشل تتبع الشحنة';
                     document.getElementById('modalBody').innerHTML = `
                         <div class="modal-title">🚚 تتبع الشحنة</div>
                         <div style="text-align:center;padding:20px;color:#dc3545;">
                             <div style="font-size:48px;margin-bottom:12px;">❌</div>
-                            <p>فشل تتبع الشحنة</p>
-                            <p style="font-size:13px;color:#999;">رقم التتبع: ${billCode}</p>
+                            <p>${errorMsg}</p>
+                            <p style="font-size:13px;color:#999;margin-top:8px;">رقم التتبع: ${billCode}</p>
+                            <div style="margin-top:12px;padding:8px 12px;background:#f8f9fa;border-radius:8px;font-size:11px;color:#666;text-align:right;direction:ltr;word-break:break-all;">
+                                ${JSON.stringify(data, null, 2)}
+                            </div>
                         </div>
                     `;
                 }
@@ -1124,7 +1130,8 @@
                     <div class="modal-title">🚚 تتبع الشحنة</div>
                     <div style="text-align:center;padding:20px;color:#dc3545;">
                         <div style="font-size:48px;margin-bottom:12px;">📡</div>
-                        <p>فشل الاتصال بخدمة التتبع: ${e.message}</p>
+                        <p>فشل الاتصال بخدمة التتبع</p>
+                        <p style="font-size:13px;color:#999;">${e.message}</p>
                     </div>
                 `;
             }
