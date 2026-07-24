@@ -212,6 +212,7 @@
             display: flex;
             gap: 6px;
             flex-wrap: wrap;
+            align-items: center;
         }
         .header .header-actions button {
             padding: 10px 16px;
@@ -251,34 +252,18 @@
             background: #f5f5f5;
         }
 
-        /* ===== ملخص ===== */
-        .summary-box {
-            background: #f0f6fe;
-            padding: 15px 20px;
-            border-radius: 14px;
-            margin-bottom: 20px;
-            display: flex;
-            justify-content: space-around;
-            text-align: center;
-            flex-wrap: wrap;
-            gap: 10px;
-            border: 1px solid #dce8f5;
-            position: relative;
-            z-index: 1;
+        /* ===== إجمالي الشحنات صغير في الأعلى على اليسار ===== */
+        .total-small {
+            font-size: 13px;
+            color: #888;
+            margin-right: 12px;
+            font-weight: 600;
+            white-space: nowrap;
         }
-        .summary-box div {
-            font-size: 14px;
-            padding: 5px 10px;
-        }
-        .summary-box .count {
-            font-size: 28px;
-            font-weight: 900;
+        .total-small .count {
             color: #0076ff;
-        }
-        .summary-box .label {
-            color: #666;
-            font-size: 12px;
-            display: block;
+            font-weight: 900;
+            font-size: 16px;
         }
 
         /* ===== بطاقة الشحنة ===== */
@@ -838,20 +823,16 @@
     <!-- ===== لوحة التحكم ===== -->
     <div id="dashboard" class="hidden">
         <div class="header">
-            <h2><i class="fas fa-tachometer-alt"></i> <span id="welcomeMsg">مرحباً</span></h2>
+            <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
+                <h2><i class="fas fa-tachometer-alt"></i> لوحة التحكم</h2>
+                <span class="total-small">📦 إجمالي الشحنات: <span class="count" id="totalCountSmall">0</span></span>
+            </div>
             <div class="header-actions">
                 <button id="addShipmentBtn" class="green hidden" onclick="showAddShipmentForm()">➕ إضافة شحنة</button>
                 <button id="clientsBtn" class="blue hidden" onclick="showClients()">👥 عملاء</button>
                 <button id="allShipmentsBtn" class="orange hidden" onclick="loadAllShipments()">📋 الكل</button>
                 <button class="outline" onclick="logout()">🚪 خروج</button>
             </div>
-        </div>
-
-        <div id="summaryBox" class="summary-box hidden">
-            <div><span class="count" id="totalCount">0</span><span class="label">إجمالي الشحنات</span></div>
-            <div><span class="count" id="waitingCount" style="color:#f9a825;">0</span><span class="label">قيد الانتظار</span></div>
-            <div><span class="count" id="trackingCount" style="color:#0d47a1;">0</span><span class="label">قيد التتبع</span></div>
-            <div><span class="count" id="doneCount" style="color:#2e7d32;">0</span><span class="label">تم التوصيل</span></div>
         </div>
 
         <div id="content"></div>
@@ -983,12 +964,10 @@
         document.getElementById('loginPage').classList.add('hidden');
         document.getElementById('dashboard').classList.remove('hidden');
         const isAdmin = currentUser.role === 'admin';
-        document.getElementById('welcomeMsg').textContent = `مرحباً ${currentUser.name} (${isAdmin ? 'أدمن' : 'عميل'})`;
         
         document.getElementById('addShipmentBtn').classList.toggle('hidden', isAdmin);
         document.getElementById('clientsBtn').classList.toggle('hidden', !isAdmin);
         document.getElementById('allShipmentsBtn').classList.toggle('hidden', !isAdmin);
-        document.getElementById('summaryBox').classList.toggle('hidden', !isAdmin);
 
         if (isAdmin) {
             loadAllShipments();
@@ -1035,12 +1014,29 @@
         
         if (status) {
             statusLabel.textContent = '📍 الحالة الحالية:';
-            statusValue.textContent = status;
-            if (status.includes('تم التوصيل') || status.includes('تم التسليم') || status.includes('Delivered')) {
+            
+            // تنظيف النص من ❌️ خطأ تم الاستلام وإبراز ✅️ تم التسليم
+            let displayStatus = status;
+            let isError = false;
+            let isSuccess = false;
+            
+            if (status.includes('خطأ') || status.includes('Error') || status.includes('❌')) {
+                isError = true;
+                displayStatus = '❌ ' + status.replace(/❌️?/g, '').replace(/خطأ/g, '').trim();
+                if (!displayStatus || displayStatus === '❌') displayStatus = '❌ خطأ في التوصيل';
+            } else if (status.includes('تم التسليم') || status.includes('تم التوصيل') || status.includes('Delivered') || status.includes('✅')) {
+                isSuccess = true;
+                displayStatus = '✅ ' + status.replace(/✅️?/g, '').trim();
+                if (!displayStatus || displayStatus === '✅') displayStatus = '✅ تم التسليم';
+            }
+            
+            statusValue.textContent = displayStatus;
+            
+            if (isSuccess) {
                 statusRow.style.background = '#e8f5e9';
                 statusRow.style.borderRightColor = '#2e7d32';
                 statusValue.style.color = '#2e7d32';
-            } else if (status.includes('مرتجع') || status.includes('فشل') || status.includes('مرفوض')) {
+            } else if (isError) {
                 statusRow.style.background = '#ffeaea';
                 statusRow.style.borderRightColor = '#dc3545';
                 statusValue.style.color = '#dc3545';
@@ -1050,10 +1046,11 @@
                 statusValue.style.color = '#0d47a1';
             }
         } else {
+            statusLabel.textContent = '📍 الحالة:';
             statusRow.style.background = '#f5f5f5';
             statusRow.style.borderRightColor = '#999';
             statusValue.style.color = '#999';
-            statusValue.textContent = 'لا توجد معلومات تتبع';
+            statusValue.textContent = 'لم يتم التحديد بعد';
         }
     }
 
@@ -1083,9 +1080,9 @@
             if (data.success) {
                 if (data.shipments.length === 0) {
                     content.innerHTML = '<div class="empty-state"><div class="icon">📭</div><p>لا توجد شحنات حتى الآن</p></div>';
+                    document.getElementById('totalCountSmall').textContent = '0';
                 } else {
-                    document.getElementById('totalCount').textContent = data.shipments.length;
-                    document.getElementById('summaryBox').classList.remove('hidden');
+                    document.getElementById('totalCountSmall').textContent = data.shipments.length;
                     content.innerHTML = data.shipments.map(s => createShipmentCard(s)).join('');
                     // بدء تحديث الحالات واحدة تلو الأخرى
                     updateAllTrackingStatuses(data.shipments);
@@ -1105,7 +1102,7 @@
             const res = await fetch(API_URL, { method: 'POST', body: params });
             const data = await res.json();
             if (data.success) {
-                updateSummary(data.shipments);
+                document.getElementById('totalCountSmall').textContent = data.shipments.length;
                 content.innerHTML = data.shipments.length === 0 ? '<div class="empty-state"><div class="icon">📭</div><p>لا توجد شحنات</p></div>' : data.shipments.map(s => createShipmentCard(s, true)).join('');
                 // بدء تحديث الحالات واحدة تلو الأخرى
                 updateAllTrackingStatuses(data.shipments);
@@ -1113,24 +1110,21 @@
         } catch (e) { content.innerHTML = '<p style="color:red;">فشل الاتصال</p>'; }
     }
 
-    function updateSummary(shipments) {
-        const waiting = shipments.filter(s => s.status && s.status.includes('انتظار')).length;
-        const tracking = shipments.filter(s => s.status && s.status.includes('تتبع')).length;
-        const delivered = shipments.filter(s => s.status && s.status.includes('تم')).length;
-        document.getElementById('totalCount').textContent = shipments.length;
-        document.getElementById('waitingCount').textContent = waiting;
-        document.getElementById('trackingCount').textContent = tracking;
-        document.getElementById('doneCount').textContent = delivered;
-    }
-
     // ============================================================
     //  🎨 عرض بطاقة الشحنة - مع ظهور الحالة الفعلية من التتبع
     // ============================================================
     function createShipmentCard(s, isAdmin = false) {
         let statusClass = 'status-waiting';
-        let statusText = s.status || 'في انتظار التتبع';
+        let statusText = s.status || '';
+        
+        // إذا كانت الحالة "في انتظار التتبع" لا نعرضها
+        if (statusText.includes('انتظار التتبع') || statusText.includes('في انتظار')) {
+            statusText = '';
+        }
+        
         if (statusText.includes('تتبع')) statusClass = 'status-tracking';
         else if (statusText.includes('تم')) statusClass = 'status-done';
+        else if (!statusText) statusClass = 'status-waiting';
 
         let lastUpdate = s.lastUpdate || s.date || '';
         let updateText = lastUpdate ? 'آخر تحديث: ' + lastUpdate : '';
@@ -1158,8 +1152,11 @@
         const displayAmount = s.amount || '0';
         const hasTracking = trackingNum && trackingNum.length > 3;
 
+        // بناء HTML الشارة فقط إذا كان هناك نص حالة
+        const badgeHTML = statusText ? `<span class="status-badge ${statusClass}">${statusText}</span>` : '';
+
         return `<div class="shipment-card" onclick="toggleDetails(this)" id="card-${s.id}">
-            <span class="status-badge ${statusClass}">${statusText}</span>
+            ${badgeHTML}
             <div class="summary-row">
                 <div class="main-info">
                     <span class="name">👤 ${displayName}</span>
@@ -1170,8 +1167,8 @@
             </div>
             <!-- الحالة الفعلية من التتبع - تظهر في الخارج -->
             <div class="status-row${hasTracking ? ' loading-status' : ''}">
-                <span class="status-label">📍 الحالة الحالية:</span>
-                <span class="status-value">${hasTracking ? '⏳ جاري التحميل...' : (trackingNum ? '⏳ انتظار...' : 'لا يوجد رقم تتبع')}</span>
+                <span class="status-label">📍 الحالة:</span>
+                <span class="status-value">${hasTracking ? '⏳ جاري التحميل...' : (trackingNum ? '⏳ انتظار...' : 'لم يتم التحديد بعد')}</span>
             </div>
             <div class="details">
                 ${isAdmin ? `<div class="info"><strong>📱 رقم العميل:</strong> ${s.clientPhone || 'غير معروف'}</div>` : ''}
@@ -1374,10 +1371,33 @@
                 let html = `<h3><i class="fas fa-map-marked-alt"></i> مسار الشحنة</h3>`;
                 html += `<p style="margin-bottom:16px;color:#666;font-size:14px;direction:ltr;text-align:left;"><strong>رقم الشحنة:</strong> ${billCode}</p>`;
                 
-                const currentStatus = data.data[0].status || 'في انتظار التتبع';
-                html += `<div style="background:#e8f5e9;padding:10px 16px;border-radius:10px;margin-bottom:16px;border-right:4px solid #2e7d32;">
-                    <strong style="color:#2e7d32;font-size:15px;">📍 الحالة الحالية:</strong>
-                    <span style="color:#2e7d32;font-weight:700;font-size:16px;margin-right:8px;">${currentStatus}</span>
+                const currentStatus = data.data[0].status || '';
+                
+                // معالجة الحالة لإظهار ✅ تم التسليم أو ❌ خطأ
+                let displayStatus = currentStatus;
+                let statusBgColor = '#e8f5e9';
+                let statusBorderColor = '#2e7d32';
+                let statusTextColor = '#2e7d32';
+                
+                if (currentStatus.includes('خطأ') || currentStatus.includes('Error') || currentStatus.includes('❌')) {
+                    displayStatus = '❌ ' + currentStatus.replace(/❌️?/g, '').replace(/خطأ/g, '').trim();
+                    if (!displayStatus || displayStatus === '❌') displayStatus = '❌ خطأ في التوصيل';
+                    statusBgColor = '#ffeaea';
+                    statusBorderColor = '#dc3545';
+                    statusTextColor = '#dc3545';
+                } else if (currentStatus.includes('تم التسليم') || currentStatus.includes('تم التوصيل') || currentStatus.includes('Delivered') || currentStatus.includes('✅')) {
+                    displayStatus = '✅ ' + currentStatus.replace(/✅️?/g, '').trim();
+                    if (!displayStatus || displayStatus === '✅') displayStatus = '✅ تم التسليم';
+                } else if (!currentStatus) {
+                    displayStatus = 'قيد المعالجة';
+                    statusBgColor = '#e3f2fd';
+                    statusBorderColor = '#0d47a1';
+                    statusTextColor = '#0d47a1';
+                }
+                
+                html += `<div style="background:${statusBgColor};padding:10px 16px;border-radius:10px;margin-bottom:16px;border-right:4px solid ${statusBorderColor};">
+                    <strong style="color:${statusTextColor};font-size:15px;">📍 الحالة الحالية:</strong>
+                    <span style="color:${statusTextColor};font-weight:700;font-size:16px;margin-right:8px;">${displayStatus}</span>
                 </div>`;
                 
                 const details = data.data[0].details || [];
