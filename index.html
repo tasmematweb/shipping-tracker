@@ -3,11 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <meta name="description" content="شركة EUX للشحن تقدم خدمات الشحن السريع من مدينة العبور إلى جميع محافظات مصر بأسعار تنافسية وخدمة احترافية.">
-    <meta name="keywords" content="EUX, EUX Express, شركة شحن, شحن مصر, شحن سريع, شحن العبور">
-    <meta name="robots" content="index, follow">
-    <link rel="canonical" href="https://euxexpress.com/">
-    <title>EUX Express | نظام تتبع وإدارة شحنات J&T</title>
+    <title>نظام تتبع وإدارة شحنات J&T</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;900&display=swap" rel="stylesheet">
@@ -40,99 +36,20 @@
             display: none !important;
         }
 
-        /* ===== تنسيقات الصفحة الرئيسية (EUX) ===== */
-        .eux-header {
-            background: #1a1a1a;
-            padding: 20px 24px 16px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            border-bottom-left-radius: 30px;
-            border-bottom-right-radius: 30px;
-            border-bottom: 2px solid rgba(0, 118, 255, 0.3);
-            position: sticky;
-            top: 0;
-            z-index: 100;
-        }
-        .eux-header .logo {
-            color: #0076ff;
-            font-size: 28px;
-            font-weight: 900;
-            letter-spacing: 1px;
-            text-decoration: none;
-        }
-
-        .eux-hero {
-            background: linear-gradient(rgba(26, 26, 26, 0.92), rgba(26, 26, 26, 0.92)), url('https://images.unsplash.com/photo-1524661135-423995f22d0b?ixlib=rb-4.0.3') no-repeat center center/cover;
-            padding: 40px 24px 50px;
-            text-align: center;
-            color: white;
-            position: relative;
-        }
-        .eux-hero .cyber-node {
-            width: 100px;
-            height: 100px;
-            background: linear-gradient(135deg, #131c2e, #080d16);
-            border: 2px solid rgba(0, 210, 255, 0.5);
-            border-radius: 16px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            font-size: 28px;
-            font-weight: 900;
-            color: white;
-            margin: 0 auto 16px;
-            animation: nodeFloat 2.6s ease-in-out infinite;
-            position: relative;
-        }
-        .eux-hero .cyber-node::after {
-            content: '';
-            position: absolute;
-            inset: -10px;
-            border: 2px dashed #0076ff;
-            border-radius: 20px;
-            opacity: 0.5;
-            animation: rotateDashed 15s linear infinite;
-        }
-        @keyframes nodeFloat {
-            0%, 100% { transform: translateY(0); box-shadow: 0 0 25px rgba(0, 210, 255, 0.2); }
-            50% { transform: translateY(-12px); box-shadow: 0 0 40px rgba(0, 210, 255, 0.5); }
-        }
-        @keyframes rotateDashed { 100% { transform: rotate(360deg); } }
-
-        .eux-hero h1 {
-            font-size: 28px;
-            margin-bottom: 8px;
-        }
-        .eux-hero h1 span { color: #0076ff; }
-        .eux-hero p {
-            font-size: 15px;
-            color: #ddd;
-            max-width: 380px;
-            margin: 0 auto 20px;
-            line-height: 1.8;
-        }
-        .eux-btn {
-            display: inline-block;
-            background: #0076ff;
-            color: white;
-            padding: 12px 32px;
-            border: none;
-            border-radius: 30px;
-            font-size: 16px;
-            font-weight: 700;
-            cursor: pointer;
-            font-family: 'Cairo', sans-serif;
-            transition: 0.3s;
-            box-shadow: 0 4px 15px rgba(0, 118, 255, 0.4);
-        }
-        .eux-btn:hover { transform: translateY(-2px); box-shadow: 0 6px 25px rgba(0, 118, 255, 0.6); }
-
         /* ===== تنسيقات صفحة تسجيل الدخول ===== */
         .login-page {
-            padding: 30px 24px 40px;
+            padding: 50px 24px 40px;
             text-align: center;
             background: white;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+        .login-page .logo-icon {
+            font-size: 64px;
+            display: block;
+            margin-bottom: 8px;
         }
         .login-page .brand {
             color: #0076ff;
@@ -143,7 +60,7 @@
         .login-page .sub-brand {
             color: #888;
             font-size: 14px;
-            margin-bottom: 28px;
+            margin-bottom: 32px;
         }
         .login-page .input-group {
             margin-bottom: 16px;
@@ -171,6 +88,7 @@
             border-color: #0076ff;
             outline: none;
             background: white;
+            box-shadow: 0 0 0 4px rgba(0, 118, 255, 0.1);
         }
         .login-page .login-btn {
             width: 100%;
@@ -184,18 +102,22 @@
             cursor: pointer;
             font-family: 'Cairo', sans-serif;
             transition: 0.3s;
+            box-shadow: 0 4px 15px rgba(0, 118, 255, 0.3);
         }
-        .login-page .login-btn:active { background: #005dc7; }
+        .login-page .login-btn:active {
+            background: #005dc7;
+            transform: scale(0.98);
+        }
         .login-page .error-msg {
             color: #dc3545;
             font-size: 14px;
             margin-top: 14px;
-            padding: 8px;
+            padding: 10px;
             background: #ffeaea;
             border-radius: 8px;
         }
 
-        /* ===== تنسيقات لوحة التحكم ===== */
+        /* ===== تنسيقات الهيدر ===== */
         .app-header {
             background: #1a1a1a;
             padding: 16px 20px 14px;
@@ -207,6 +129,7 @@
             gap: 8px;
             border-bottom-left-radius: 24px;
             border-bottom-right-radius: 24px;
+            border-bottom: 2px solid rgba(0, 118, 255, 0.3);
         }
         .app-header .user-info {
             display: flex;
@@ -217,13 +140,14 @@
             width: 40px;
             height: 40px;
             border-radius: 50%;
-            background: rgba(255, 255, 255, 0.15);
+            background: rgba(255, 255, 255, 0.12);
             display: flex;
             align-items: center;
             justify-content: center;
             font-size: 18px;
             font-weight: 700;
             color: #0076ff;
+            border: 2px solid rgba(0, 118, 255, 0.3);
         }
         .app-header .user-info .name {
             font-size: 15px;
@@ -245,19 +169,31 @@
             font-size: 12px;
             font-weight: 600;
             cursor: pointer;
-            background: rgba(255, 255, 255, 0.12);
+            background: rgba(255, 255, 255, 0.1);
             color: white;
             transition: 0.2s;
             font-family: 'Cairo', sans-serif;
             white-space: nowrap;
         }
-        .app-header .header-actions button:active { background: rgba(255, 255, 255, 0.25); }
-        .app-header .header-actions button.green { background: #28a745; }
-        .app-header .header-actions button.blue { background: #0066cc; }
-        .app-header .header-actions button.orange { background: #ff9800; }
-        .app-header .header-actions button.outline { background: transparent; border: 1.5px solid rgba(255, 255, 255, 0.4); }
+        .app-header .header-actions button:active {
+            background: rgba(255, 255, 255, 0.25);
+            transform: scale(0.95);
+        }
+        .app-header .header-actions button.green {
+            background: #28a745;
+        }
+        .app-header .header-actions button.blue {
+            background: #0066cc;
+        }
+        .app-header .header-actions button.orange {
+            background: #ff9800;
+        }
+        .app-header .header-actions button.outline {
+            background: transparent;
+            border: 1.5px solid rgba(255, 255, 255, 0.3);
+        }
 
-        /* ===== ملخص ===== */
+        /* ===== ملخص الإحصائيات ===== */
         .summary-box {
             display: grid;
             grid-template-columns: repeat(4, 1fr);
@@ -272,6 +208,11 @@
             padding: 8px 4px;
             border-radius: 10px;
             box-shadow: 0 1px 4px rgba(0,0,0,0.05);
+            transition: 0.2s;
+        }
+        .summary-box .stat:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
         }
         .summary-box .stat .count {
             font-size: 22px;
@@ -310,7 +251,26 @@
             padding: 40px 20px;
             color: #aaa;
         }
-        .empty-state .icon { font-size: 56px; margin-bottom: 12px; }
+        .empty-state .icon {
+            font-size: 56px;
+            margin-bottom: 12px;
+        }
+        .empty-state button {
+            margin-top: 12px;
+            padding: 10px 30px;
+            background: #0076ff;
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 15px;
+            cursor: pointer;
+            font-family: 'Cairo', sans-serif;
+            transition: 0.3s;
+            box-shadow: 0 4px 12px rgba(0, 118, 255, 0.3);
+        }
+        .empty-state button:active {
+            transform: scale(0.95);
+        }
 
         /* ===== بطاقة الشحنة - تصميم عصري ===== */
         .shipment-card {
@@ -322,9 +282,13 @@
             box-shadow: 0 2px 12px rgba(0,0,0,0.04);
             position: relative;
             cursor: pointer;
-            transition: 0.2s;
+            transition: 0.25s ease;
         }
-        .shipment-card:hover { background: #fafafa; }
+        .shipment-card:hover {
+            background: #fafafa;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.06);
+            transform: translateY(-2px);
+        }
         .shipment-card .status-badge {
             display: inline-block;
             padding: 3px 14px;
@@ -333,9 +297,18 @@
             font-weight: 700;
             margin-bottom: 8px;
         }
-        .status-waiting { background: #fff3cd; color: #856404; }
-        .status-tracking { background: #d1ecf1; color: #0c5460; }
-        .status-done { background: #d4edda; color: #155724; }
+        .status-waiting {
+            background: #fff3cd;
+            color: #856404;
+        }
+        .status-tracking {
+            background: #d1ecf1;
+            color: #0c5460;
+        }
+        .status-done {
+            background: #d4edda;
+            color: #155724;
+        }
 
         .shipment-card .summary-row {
             display: flex;
@@ -379,13 +352,23 @@
             border-top: 1px dashed #ddd;
             display: none;
         }
-        .shipment-card .details.open { display: block; }
+        .shipment-card .details.open {
+            display: block;
+            animation: fadeIn 0.25s ease;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-8px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
         .shipment-card .details .info {
             margin: 4px 0;
             font-size: 13px;
             color: #555;
         }
-        .shipment-card .details .info strong { color: #333; margin-left: 5px; }
+        .shipment-card .details .info strong {
+            color: #333;
+            margin-left: 5px;
+        }
         .shipment-card .card-actions {
             margin-top: 10px;
             display: flex;
@@ -402,10 +385,32 @@
             font-family: 'Cairo', sans-serif;
             flex: 1;
             min-width: 70px;
+            transition: 0.2s;
         }
-        .btn-track { background: #0066cc; color: white; }
-        .btn-add-tracking { background: #28a745; color: white; }
-        .btn-delete { background: #dc3545; color: white; }
+        .shipment-card .card-actions button:active {
+            transform: scale(0.95);
+        }
+        .btn-track {
+            background: #0066cc;
+            color: white;
+        }
+        .btn-track:hover {
+            background: #0055aa;
+        }
+        .btn-add-tracking {
+            background: #28a745;
+            color: white;
+        }
+        .btn-add-tracking:hover {
+            background: #1e7e34;
+        }
+        .btn-delete {
+            background: #dc3545;
+            color: white;
+        }
+        .btn-delete:hover {
+            background: #b02a37;
+        }
 
         /* ===== المودال ===== */
         .modal-overlay {
@@ -432,7 +437,8 @@
             overflow-y: auto;
             padding: 24px 20px 20px;
             position: relative;
-            animation: modalIn 0.25s ease;
+            animation: modalIn 0.3s ease;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
         }
         @keyframes modalIn {
             from { opacity: 0; transform: translateY(30px) scale(0.96); }
@@ -446,6 +452,11 @@
             cursor: pointer;
             color: #aaa;
             line-height: 1;
+            transition: 0.2s;
+        }
+        .modal-box .close-btn:hover {
+            color: #333;
+            transform: rotate(90deg);
         }
         .modal-box .modal-title {
             font-size: 20px;
@@ -454,6 +465,11 @@
             margin-bottom: 18px;
             padding-left: 30px;
         }
+        .modal-box .modal-title i {
+            color: #0076ff;
+            margin-left: 8px;
+        }
+
         .form-group {
             margin-bottom: 14px;
         }
@@ -482,8 +498,13 @@
             border-color: #0076ff;
             outline: none;
             background: white;
+            box-shadow: 0 0 0 4px rgba(0, 118, 255, 0.08);
         }
-        .form-group textarea { height: 80px; resize: vertical; }
+        .form-group textarea {
+            height: 80px;
+            resize: vertical;
+        }
+
         .modal-box .submit-btn {
             width: 100%;
             padding: 14px;
@@ -497,10 +518,20 @@
             font-family: 'Cairo', sans-serif;
             margin-top: 6px;
             transition: 0.3s;
+            box-shadow: 0 4px 12px rgba(0, 118, 255, 0.3);
         }
-        .modal-box .submit-btn:active { background: #005dc7; }
-        .modal-box .submit-btn.green { background: #28a745; }
-        .modal-box .submit-btn.gray { background: #999; }
+        .modal-box .submit-btn:active {
+            background: #005dc7;
+            transform: scale(0.98);
+        }
+        .modal-box .submit-btn.green {
+            background: #28a745;
+            box-shadow: 0 4px 12px rgba(40, 167, 69, 0.3);
+        }
+        .modal-box .submit-btn.gray {
+            background: #999;
+            box-shadow: none;
+        }
         .modal-box .error-msg {
             color: #dc3545;
             font-size: 13px;
@@ -519,11 +550,29 @@
             margin-bottom: 14px;
             background: #fafafa;
             border-radius: 0 10px 10px 0;
+            transition: 0.2s;
         }
-        .timeline-item .time { color: #999; font-size: 12px; }
-        .timeline-item .event { font-weight: 600; color: #222; margin: 4px 0; }
-        .timeline-item .location { color: #666; font-size: 13px; }
-        .timeline-item .problem { color: #dc3545; font-size: 13px; margin-top: 4px; }
+        .timeline-item:hover {
+            background: #f0f7ff;
+        }
+        .timeline-item .time {
+            color: #999;
+            font-size: 12px;
+        }
+        .timeline-item .event {
+            font-weight: 600;
+            color: #222;
+            margin: 4px 0;
+        }
+        .timeline-item .location {
+            color: #666;
+            font-size: 13px;
+        }
+        .timeline-item .problem {
+            color: #dc3545;
+            font-size: 13px;
+            margin-top: 4px;
+        }
 
         /* ===== إدارة العملاء ===== */
         .client-card {
@@ -535,11 +584,26 @@
             justify-content: space-between;
             align-items: center;
             border: 1px solid #eee;
+            transition: 0.2s;
         }
-        .client-card .client-info { flex: 1; }
-        .client-card .client-info .name { font-weight: 600; color: #222; }
-        .client-card .client-info .phone { font-size: 13px; color: #666; }
-        .client-card .client-info .created { font-size: 11px; color: #aaa; }
+        .client-card:hover {
+            background: #f5f5f5;
+        }
+        .client-card .client-info {
+            flex: 1;
+        }
+        .client-card .client-info .name {
+            font-weight: 600;
+            color: #222;
+        }
+        .client-card .client-info .phone {
+            font-size: 13px;
+            color: #666;
+        }
+        .client-card .client-info .created {
+            font-size: 11px;
+            color: #aaa;
+        }
         .client-card .client-actions button {
             padding: 6px 14px;
             border: none;
@@ -549,6 +613,10 @@
             background: #dc3545;
             color: white;
             font-family: 'Cairo', sans-serif;
+            transition: 0.2s;
+        }
+        .client-card .client-actions button:active {
+            transform: scale(0.95);
         }
 
         /* ===== رسائل الخطأ والإشعارات ===== */
@@ -561,9 +629,34 @@
             margin: 20px 0;
             color: #d32f2f;
         }
-        .error-box .icon { font-size: 48px; display: block; margin-bottom: 10px; }
-        .error-box .title { font-weight: 600; font-size: 16px; margin-bottom: 4px; }
-        .error-box .sub { font-size: 13px; color: #666; }
+        .error-box .icon {
+            font-size: 48px;
+            display: block;
+            margin-bottom: 10px;
+        }
+        .error-box .title {
+            font-weight: 600;
+            font-size: 16px;
+            margin-bottom: 4px;
+        }
+        .error-box .sub {
+            font-size: 13px;
+            color: #666;
+        }
+        .error-box button {
+            margin-top: 12px;
+            padding: 8px 24px;
+            background: #0076ff;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-family: 'Cairo', sans-serif;
+            transition: 0.3s;
+        }
+        .error-box button:active {
+            transform: scale(0.95);
+        }
 
         .toast {
             position: fixed;
@@ -580,9 +673,14 @@
             max-width: 90%;
             text-align: center;
             font-family: 'Cairo', sans-serif;
+            box-shadow: 0 8px 30px rgba(0,0,0,0.2);
         }
-        .toast.success { background: #28a745; }
-        .toast.error { background: #dc3545; }
+        .toast.success {
+            background: #28a745;
+        }
+        .toast.error {
+            background: #dc3545;
+        }
         @keyframes toastIn {
             from { opacity: 0; transform: translateX(-50%) translateY(20px); }
             to { opacity: 1; transform: translateX(-50%) translateY(0); }
@@ -593,8 +691,14 @@
             grid-template-columns: 1fr 1fr;
             gap: 10px;
         }
-        .two-columns .form-group { margin-bottom: 10px; }
-        @media (max-width: 400px) { .two-columns { grid-template-columns: 1fr; } }
+        .two-columns .form-group {
+            margin-bottom: 10px;
+        }
+        @media (max-width: 400px) {
+            .two-columns {
+                grid-template-columns: 1fr;
+            }
+        }
 
         .debug-box {
             background: #f8f9fa;
@@ -611,69 +715,57 @@
             overflow: auto;
         }
 
-        .sea-wave-divider {
-            width: 100%;
-            overflow: hidden;
-            line-height: 0;
-            margin-top: -2px;
+        /* ===== أنيميشن الشعار ===== */
+        .login-logo-wrap {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 12px;
         }
-        .sea-wave-divider svg {
-            display: block;
-            width: calc(100% + 1.3px);
-            height: 50px;
+        .login-logo-wrap .logo-node {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, #131c2e, #080d16);
+            border: 2px solid rgba(0, 118, 255, 0.5);
+            border-radius: 16px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 24px;
+            font-weight: 900;
+            color: white;
+            animation: nodeFloat 2.6s ease-in-out infinite;
+            position: relative;
         }
-        .wave-fill-white { fill: white; }
-        .wave-fill-light { fill: #f9f9f9; }
+        .login-logo-wrap .logo-node::after {
+            content: '';
+            position: absolute;
+            inset: -8px;
+            border: 2px dashed #0076ff;
+            border-radius: 20px;
+            opacity: 0.5;
+            animation: rotateDashed 15s linear infinite;
+        }
+        @keyframes nodeFloat {
+            0%, 100% { transform: translateY(0); box-shadow: 0 0 25px rgba(0, 118, 255, 0.2); }
+            50% { transform: translateY(-12px); box-shadow: 0 0 40px rgba(0, 118, 255, 0.5); }
+        }
+        @keyframes rotateDashed {
+            100% { transform: rotate(360deg); }
+        }
     </style>
 </head>
 <body oncontextmenu="return false;">
 
 <div class="app-wrapper" id="app">
 
-    <!-- ===== صفحة EUX الرئيسية ===== -->
-    <div id="euxPage">
-        <div class="eux-header">
-            <a href="#" class="logo">EUX EXPRESS</a>
-        </div>
-
-        <div class="eux-hero">
-            <div class="cyber-node">EUX</div>
-            <h1>شركة <span>EUX</span> للشحن</h1>
-            <p>الريادة في سرعة وحلول الشحن من مدينة العبور إلى جميع محافظات مصر بأفضل الأسعار وأعلى كفاءة.</p>
-            <button onclick="showLoginPage()" class="eux-btn"><i class="fas fa-user-plus"></i> نظام التتبع</button>
-            
-            <div class="sea-wave-divider" style="margin-top: 30px;">
-                <svg viewBox="0 0 1200 60" preserveAspectRatio="none">
-                    <path d="M321.39,56.44c58-10.79,114.16-30.13,172-41.86,82.39-16.72,168.19-17.73,250.45-.39C823.78,31,906.67,72,985.66,92.83c70.05,18.48,146.53,26.09,214.34,3V120H0V0C26.9,4.75,55.05,16.33,81.11,25.09,151,48.56,224.4,74.48,321.39,56.44Z" class="wave-fill-white"></path>
-                </svg>
-            </div>
-        </div>
-
-        <div style="padding: 30px 20px; text-align: center; background: white;">
-            <h2 style="font-size: 22px; margin-bottom: 20px; color: #1a1a1a;">خدماتنا المميزة</h2>
-            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; max-width: 400px; margin: 0 auto;">
-                <div style="background: #f9f9f9; padding: 16px 12px; border-radius: 12px;"><i class="fas fa-shipping-fast" style="color: #0076ff; font-size: 24px; display: block; margin-bottom: 6px;"></i><span style="font-size: 13px; font-weight: 600;">سرعة التسليم</span></div>
-                <div style="background: #f9f9f9; padding: 16px 12px; border-radius: 12px;"><i class="fas fa-shield-alt" style="color: #0076ff; font-size: 24px; display: block; margin-bottom: 6px;"></i><span style="font-size: 13px; font-weight: 600;">حماية الشحنات</span></div>
-                <div style="background: #f9f9f9; padding: 16px 12px; border-radius: 12px;"><i class="fas fa-hand-holding-usd" style="color: #0076ff; font-size: 24px; display: block; margin-bottom: 6px;"></i><span style="font-size: 13px; font-weight: 600;">سعر اقتصادي</span></div>
-                <div style="background: #f9f9f9; padding: 16px 12px; border-radius: 12px;"><i class="fas fa-truck" style="color: #0076ff; font-size: 24px; display: block; margin-bottom: 6px;"></i><span style="font-size: 13px; font-weight: 600;">توصيل سريع</span></div>
-            </div>
-        </div>
-
-        <footer style="background: #1a1a1a; color: #aaa; text-align: center; padding: 20px; font-size: 13px;">
-            <p>&copy; 2026 جميع الحقوق محفوظة لشركة EUX للشحن</p>
-            <div style="margin-top: 10px;">
-                <a href="https://www.facebook.com/share/1JBqQgjooM/" target="_blank" style="color: white; font-size: 24px;"><i class="fab fa-facebook"></i></a>
-            </div>
-        </footer>
-    </div>
-
     <!-- ===== صفحة تسجيل الدخول ===== -->
-    <div id="loginPage" class="login-page hidden">
-        <div style="margin-bottom: 10px;">
-            <span style="font-size: 48px; display: block;">📦</span>
-            <div class="brand">نظام تتبع شحنات J&T</div>
-            <div class="sub-brand">إدارة الشحنات بكل سهولة</div>
+    <div id="loginPage" class="login-page">
+        <div class="login-logo-wrap">
+            <div class="logo-node">📦</div>
         </div>
+        <div class="brand">نظام تتبع شحنات J&T</div>
+        <div class="sub-brand">إدارة الشحنات بكل سهولة</div>
+
         <div class="input-group">
             <label>📱 رقم الهاتف</label>
             <input type="text" id="loginPhone" placeholder="أدخل رقم الهاتف" dir="ltr">
@@ -682,9 +774,9 @@
             <label>🔒 كلمة المرور</label>
             <input type="password" id="loginPassword" placeholder="أدخل كلمة المرور" dir="ltr">
         </div>
+
         <button class="login-btn" onclick="doLogin()">🚀 دخول</button>
         <div id="loginError" class="error-msg hidden"></div>
-        <button onclick="showEuxPage()" style="margin-top: 16px; background: none; border: none; color: #0076ff; font-weight: 600; cursor: pointer; font-family: 'Cairo', sans-serif; font-size: 14px;">↩️ العودة للصفحة الرئيسية</button>
     </div>
 
     <!-- ===== لوحة التحكم ===== -->
@@ -704,12 +796,14 @@
                 <button class="outline" onclick="logout()">🚪 خروج</button>
             </div>
         </div>
+
         <div id="summaryBox" class="summary-box hidden">
             <div class="stat"><div class="count" id="totalCount">0</div><div class="label">كل الشحنات</div></div>
             <div class="stat"><div class="count" id="waitingCount" style="color:#856404;">0</div><div class="label">قيد الانتظار</div></div>
             <div class="stat"><div class="count" id="trackingCount" style="color:#0c5460;">0</div><div class="label">قيد التتبع</div></div>
             <div class="stat"><div class="count" id="doneCount" style="color:#155724;">0</div><div class="label">تم التوصيل</div></div>
         </div>
+
         <div class="content-area" id="contentArea"></div>
     </div>
 </div>
@@ -724,7 +818,7 @@
 
 <script>
     // ============================================================
-    //  🔗 الرابط الجديد
+    //  🔗 رابط الـ Web App
     // ============================================================
     const API_URL = "https://script.google.com/macros/s/AKfycbxSi9PXrWqKyaw0k7sh80w0_-eSWetaDy2VubgWlr8sLRopS67opRMdUH1hJ33bDPhw/exec";
     let currentUser = null;
@@ -775,21 +869,6 @@
                 citySelect.appendChild(option);
             });
         }
-    }
-
-    // ============================================================
-    //  التنقل بين الصفحات
-    // ============================================================
-    function showLoginPage() {
-        document.getElementById('euxPage').classList.add('hidden');
-        document.getElementById('loginPage').classList.remove('hidden');
-        document.getElementById('dashboard').classList.add('hidden');
-    }
-
-    function showEuxPage() {
-        document.getElementById('euxPage').classList.remove('hidden');
-        document.getElementById('loginPage').classList.add('hidden');
-        document.getElementById('dashboard').classList.add('hidden');
     }
 
     // ============================================================
@@ -850,11 +929,9 @@
         document.getElementById('loginPassword').value = '';
         document.getElementById('loginError').classList.add('hidden');
         showToast('🚪 تم تسجيل الخروج', '');
-        showLoginPage();
     }
 
     function showDashboard() {
-        document.getElementById('euxPage').classList.add('hidden');
         document.getElementById('loginPage').classList.add('hidden');
         document.getElementById('dashboard').classList.remove('hidden');
 
@@ -957,7 +1034,7 @@
                 <span class="icon">❌</span>
                 <div class="title">فشل تحميل الشحنة</div>
                 <div class="sub">${message}</div>
-                <button onclick="location.reload()" style="margin-top:12px;padding:8px 24px;background:#0076ff;color:white;border:none;border-radius:8px;cursor:pointer;font-family:'Cairo',sans-serif;">🔄 إعادة المحاولة</button>
+                <button onclick="location.reload()">🔄 إعادة المحاولة</button>
             </div>
         `;
     }
@@ -974,7 +1051,7 @@
     }
 
     // ============================================================
-    //  🎨 عرض بطاقة الشحنة - تصميم عصري
+    //  🎨 عرض بطاقة الشحنة
     // ============================================================
     function renderShipments(shipments, isAdmin) {
         const content = document.getElementById('contentArea');
@@ -984,14 +1061,14 @@
                 <div class="empty-state">
                     <div class="icon">📭</div>
                     <p>لا توجد شحنات حتى الآن</p>
-                    ${!isAdmin ? '<button onclick="showAddShipmentForm()" style="margin-top:12px;padding:10px 30px;background:#0076ff;color:white;border:none;border-radius:10px;font-size:15px;cursor:pointer;font-family:\'Cairo\',sans-serif;">➕ إضافة شحنة</button>' : ''}
+                    ${!isAdmin ? '<button onclick="showAddShipmentForm()">➕ إضافة شحنة</button>' : ''}
                 </div>
             `;
             return;
         }
 
         let html = '';
-        shipments.forEach((s, index) => {
+        shipments.forEach((s) => {
             let statusClass = 'status-waiting';
             let statusText = s.status || 'في انتظار التتبع';
             if (statusText.includes('تتبع')) statusClass = 'status-tracking';
@@ -1067,7 +1144,7 @@
         });
 
         openModal(`
-            <div class="modal-title">📦 إضافة شحنة جديدة</div>
+            <div class="modal-title"><i class="fas fa-box"></i> إضافة شحنة جديدة</div>
             <div class="form-group"><label>👤 اسم المستلم *</label><input id="f_receiverName" placeholder="اسم المستلم"></div>
             <div class="form-group"><label>📱 هاتف المستلم *</label><input id="f_receiverPhone" placeholder="مثال: 010xxxxxxxx" dir="ltr"></div>
             <div class="form-group"><label>📱 هاتف آخر للمستلم</label><input id="f_receiverPhone2" placeholder="هاتف آخر (اختياري)" dir="ltr"></div>
@@ -1151,7 +1228,7 @@
     // ============================================================
     function showAddTracking(shipmentId) {
         openModal(`
-            <div class="modal-title">🔢 إضافة رقم تتبع</div>
+            <div class="modal-title"><i class="fas fa-qrcode"></i> إضافة رقم تتبع</div>
             <p style="margin-bottom:12px;color:#666;">رقم الشحنة: <strong>${shipmentId}</strong></p>
             <div class="form-group"><label>🚚 رقم التتبع</label><input id="trackingNum" placeholder="مثال: JEG000470355620" dir="ltr"></div>
             <button class="submit-btn green" onclick="submitTracking('${shipmentId}')">💾 حفظ رقم التتبع</button>
@@ -1234,7 +1311,7 @@
     // ============================================================
     async function trackShipment(billCode) {
         openModal(`
-            <div class="modal-title">🚚 تتبع الشحنة</div>
+            <div class="modal-title"><i class="fas fa-map-marked-alt"></i> تتبع الشحنة</div>
             <div class="loading"><div class="spinner"></div><div>جاري التتبع...</div></div>
         `);
 
@@ -1244,7 +1321,7 @@
             console.log('📡 Track response:', data);
 
             if (data.code === "1" && data.data && data.data[0]) {
-                let html = `<div class="modal-title">🚚 مسار الشحنة: ${billCode}</div>`;
+                let html = `<div class="modal-title"><i class="fas fa-map-marked-alt"></i> مسار الشحنة: ${billCode}</div>`;
                 const details = data.data[0].details || [];
                 if (details.length === 0) {
                     html += `<p style="text-align:center;color:#999;padding:20px;">لا توجد تفاصيل تتبع متاحة</p>`;
@@ -1264,7 +1341,7 @@
             } else {
                 let errorMsg = data.msg || data.error || 'فشل تتبع الشحنة';
                 document.getElementById('modalBody').innerHTML = `
-                    <div class="modal-title">🚚 تتبع الشحنة</div>
+                    <div class="modal-title"><i class="fas fa-map-marked-alt"></i> تتبع الشحنة</div>
                     <div style="text-align:center;padding:20px;color:#dc3545;">
                         <div style="font-size:48px;margin-bottom:12px;">❌</div>
                         <p>${errorMsg}</p>
@@ -1275,7 +1352,7 @@
             }
         } catch (e) {
             document.getElementById('modalBody').innerHTML = `
-                <div class="modal-title">🚚 تتبع الشحنة</div>
+                <div class="modal-title"><i class="fas fa-map-marked-alt"></i> تتبع الشحنة</div>
                 <div style="text-align:center;padding:20px;color:#dc3545;">
                     <div style="font-size:48px;margin-bottom:12px;">📡</div>
                     <p>فشل الاتصال بخدمة التتبع: ${e.message}</p>
@@ -1289,7 +1366,7 @@
     // ============================================================
     async function showClients() {
         openModal(`
-            <div class="modal-title">👥 إدارة العملاء</div>
+            <div class="modal-title"><i class="fas fa-users"></i> إدارة العملاء</div>
             <button class="submit-btn green" onclick="showAddClientForm()" style="margin-bottom:14px;">➕ إنشاء حساب عميل جديد</button>
             <div id="clientList"><div class="loading"><div class="spinner"></div><div>جاري التحميل...</div></div></div>
         `);
@@ -1339,7 +1416,7 @@
 
     function showAddClientForm() {
         openModal(`
-            <div class="modal-title">➕ إنشاء حساب عميل جديد</div>
+            <div class="modal-title"><i class="fas fa-user-plus"></i> إنشاء حساب عميل جديد</div>
             <div class="form-group"><label>👤 اسم العميل *</label><input id="nc_name" placeholder="الاسم الكامل"></div>
             <div class="form-group"><label>📱 رقم الهاتف *</label><input id="nc_phone" placeholder="مثال: 011xxxxxxxx" dir="ltr"></div>
             <div class="form-group"><label>🔒 كلمة المرور *</label><input id="nc_password" type="password" placeholder="كلمة المرور للدخول" dir="ltr"></div>
@@ -1449,8 +1526,9 @@
     document.addEventListener('keydown', function(e) {
         if (e.key === 'Escape') closeModal();
         if (e.key === 'Enter') {
-            if (document.getElementById('loginPage').classList.contains('hidden')) return;
-            doLogin();
+            if (document.getElementById('dashboard').classList.contains('hidden')) {
+                doLogin();
+            }
         }
         // منع اختصارات النسخ
         if (e.ctrlKey && (e.key === 'u' || e.key === 's' || e.key === 'c' || e.key === 'a')) {
@@ -1458,10 +1536,11 @@
         }
     });
 
-    // عرض صفحة EUX افتراضياً
-    document.addEventListener('DOMContentLoaded', function() {
-        showEuxPage();
-    });
+    // ============================================================
+    //  🚀 بيانات تجريبية للاختبار
+    // ============================================================
+    document.getElementById('loginPhone').value = '01119024874';
+    document.getElementById('loginPassword').value = '01119024874';
 </script>
 
 </body>
