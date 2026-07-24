@@ -21,15 +21,25 @@
         .header button.green { background: #28a745; }
         .header button.blue { background: #0066cc; }
         .header button.orange { background: #ff9800; }
-        .shipment-card { background: #fafafa; border-radius: 12px; padding: 20px; margin-bottom: 15px; border: 1px solid #eee; position: relative; }
-        .status-badge { position: absolute; top: 15px; left: 15px; padding: 5px 15px; border-radius: 20px; font-size: 12px; font-weight: bold; }
+        .shipment-card { background: #fafafa; border-radius: 12px; padding: 15px 20px; margin-bottom: 12px; border: 1px solid #eee; position: relative; cursor: pointer; transition: 0.2s; }
+        .shipment-card:hover { background: #f0f0f0; }
+        .status-badge { position: absolute; top: 12px; left: 15px; padding: 4px 14px; border-radius: 20px; font-size: 11px; font-weight: bold; }
         .status-waiting { background: #fff3cd; color: #856404; }
         .status-tracking { background: #d1ecf1; color: #0c5460; }
         .status-done { background: #d4edda; color: #155724; }
-        .shipment-card .info { margin: 8px 0; color: #555; }
+        .shipment-card .info { margin: 6px 0; color: #444; font-size: 14px; }
         .shipment-card .info strong { color: #333; margin-left: 5px; }
-        .shipment-card .actions { margin-top: 15px; }
-        .shipment-card .actions button { padding: 8px 20px; margin: 5px; border: none; border-radius: 6px; cursor: pointer; font-size: 13px; }
+        .shipment-card .summary-row { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px; }
+        .shipment-card .summary-row .main-info { display: flex; align-items: center; gap: 15px; flex-wrap: wrap; }
+        .shipment-card .summary-row .main-info .name { font-weight: bold; font-size: 16px; color: #222; }
+        .shipment-card .summary-row .main-info .phone { color: #555; direction: ltr; }
+        .shipment-card .summary-row .main-info .amount { color: #e60012; font-weight: bold; }
+        .shipment-card .summary-row .last-update { font-size: 12px; color: #888; direction: ltr; background: #f5f5f5; padding: 4px 12px; border-radius: 12px; }
+        .shipment-card .details { margin-top: 12px; padding-top: 12px; border-top: 1px dashed #ddd; display: none; }
+        .shipment-card .details.open { display: block; }
+        .shipment-card .details .info { margin: 5px 0; font-size: 13px; }
+        .shipment-card .actions { margin-top: 12px; display: flex; gap: 8px; flex-wrap: wrap; }
+        .shipment-card .actions button { padding: 6px 18px; border: none; border-radius: 6px; cursor: pointer; font-size: 13px; }
         .btn-track { background: #0066cc; color: white; }
         .btn-add-tracking { background: #28a745; color: white; }
         .btn-delete { background: #dc3545; color: white; }
@@ -62,6 +72,7 @@
         .toast.error { background: #dc3545; }
         @keyframes toastIn { from { opacity: 0; transform: translateX(-50%) translateY(20px); } to { opacity: 1; transform: translateX(-50%) translateY(0); } }
         .debug-box { background: #f8f9fa; padding: 10px; border-radius: 8px; margin-top: 10px; font-size: 11px; color: #666; border: 1px dashed #ddd; word-break: break-all; text-align: left; direction: ltr; max-height: 150px; overflow: auto; }
+        .arabic-only { font-family: 'Segoe UI', Tahoma, Arial, sans-serif; }
     </style>
 </head>
 <body>
@@ -240,7 +251,7 @@
         }
 
         // ============================================================
-        //  🎨 عرض بطاقة الشحنة
+        //  🎨 عرض بطاقة الشحنة - تصميم شريطي مع تفاصيل قابلة للطي
         // ============================================================
         function createShipmentCard(s, isAdmin = false) {
             let statusClass = 'status-waiting';
@@ -248,20 +259,59 @@
             if (statusText.includes('تتبع')) statusClass = 'status-tracking';
             else if (statusText.includes('تم')) statusClass = 'status-done';
 
+            // الحصول على آخر تحديث من البيانات أو إنشاء نص افتراضي
+            let lastUpdate = s.lastUpdate || s.date || '';
+            let updateText = lastUpdate ? 'آخر تحديث: ' + lastUpdate : '';
+
             let actions = '';
-            // استخدام trackingNumber من العمود A
+            // زر التتبع يظهر فقط إذا كان هناك رقم تتبع
             const trackingNum = s.trackingNumber || '';
             if (trackingNum && trackingNum.length > 3) {
-                actions += `<button class="btn-track" onclick="trackShipment('${trackingNum}')">📍 تتبع</button>`;
+                actions += `<button class="btn-track" onclick="event.stopPropagation(); trackShipment('${trackingNum}')">📍 تتبع</button>`;
             }
             if (isAdmin) {
                 if (!trackingNum || trackingNum.length < 3) {
-                    actions += `<button class="btn-add-tracking" onclick="showAddTracking('${s.id}')">🔢 إضافة رقم تتبع</button>`;
+                    actions += `<button class="btn-add-tracking" onclick="event.stopPropagation(); showAddTracking('${s.id}')">🔢 إضافة رقم تتبع</button>`;
                 }
-                actions += `<button class="btn-delete" onclick="deleteShipment('${s.id}')">🗑️ حذف</button>`;
+                actions += `<button class="btn-delete" onclick="event.stopPropagation(); deleteShipment('${s.id}')">🗑️ حذف</button>`;
             }
 
-            return `<div class="shipment-card"><span class="status-badge ${statusClass}">${statusText}</span>${isAdmin ? `<div class="info"><strong>📱 صاحب الشحنة:</strong> ${s.clientPhone || 'غير معروف'}</div>` : ''}<div class="info"><strong>🔢 رقم الشحنة:</strong> ${s.id}</div><div class="info"><strong>📅 التاريخ:</strong> ${s.date || ''}</div>${trackingNum ? `<div class="info"><strong>🚚 رقم التتبع:</strong> ${trackingNum}</div>` : ''}<div class="info"><strong>👤 المستلم:</strong> ${s.receiverName || ''}</div><div class="info"><strong>📱 هاتف المستلم:</strong> ${s.receiverPhone || ''}</div>${s.receiverPhone2 ? `<div class="info"><strong>📱 هاتف آخر:</strong> ${s.receiverPhone2}</div>` : ''}${s.governorate ? `<div class="info"><strong>📍 المحافظة:</strong> ${s.governorate}</div>` : ''}${s.city ? `<div class="info"><strong>🏙️ المدينة:</strong> ${s.city}</div>` : ''}<div class="info"><strong>📍 العنوان:</strong> ${s.address || ''}</div>${s.amount ? `<div class="info"><strong>💰 المبلغ:</strong> ${s.amount}</div>` : ''}${s.weight ? `<div class="info"><strong>⚖️ الوزن:</strong> ${s.weight}</div>` : ''}${s.notes ? `<div class="info"><strong>📝 ملاحظات:</strong> ${s.notes}</div>` : ''}<div class="actions">${actions}</div></div>`;
+            // عرض مختصر للعميل (الاسم، الهاتف، المبلغ)
+            const displayName = s.receiverName || s.customerName || 'غير معروف';
+            const displayPhone = s.receiverPhone || s.customerPhone || '';
+            const displayAmount = s.amount || '0';
+
+            return `<div class="shipment-card" onclick="toggleDetails(this)">
+                <span class="status-badge ${statusClass}">${statusText}</span>
+                <div class="summary-row">
+                    <div class="main-info">
+                        <span class="name">👤 ${displayName}</span>
+                        <span class="phone">📱 ${displayPhone}</span>
+                        <span class="amount">💰 ${displayAmount} ج.م</span>
+                    </div>
+                    <div class="last-update">${updateText}</div>
+                </div>
+                <div class="details">
+                    ${isAdmin ? `<div class="info"><strong>📱 رقم العميل:</strong> ${s.clientPhone || 'غير معروف'}</div>` : ''}
+                    <div class="info"><strong>🔢 رقم الشحنة:</strong> ${s.id}</div>
+                    ${trackingNum ? `<div class="info"><strong>🚚 رقم التتبع:</strong> ${trackingNum}</div>` : ''}
+                    ${s.receiverPhone2 ? `<div class="info"><strong>📱 هاتف آخر:</strong> ${s.receiverPhone2}</div>` : ''}
+                    ${s.governorate ? `<div class="info"><strong>📍 المحافظة:</strong> ${s.governorate}</div>` : ''}
+                    ${s.city ? `<div class="info"><strong>🏙️ المدينة:</strong> ${s.city}</div>` : ''}
+                    <div class="info"><strong>📍 العنوان:</strong> ${s.address || s.customerAddress || ''}</div>
+                    ${s.weight ? `<div class="info"><strong>⚖️ الوزن:</strong> ${s.weight} كجم</div>` : ''}
+                    ${s.notes ? `<div class="info"><strong>📝 ملاحظات:</strong> ${s.notes}</div>` : ''}
+                    ${actions ? `<div class="actions">${actions}</div>` : ''}
+                </div>
+            </div>`;
+        }
+
+        // دالة لإظهار/إخفاء التفاصيل عند النقر على البطاقة
+        function toggleDetails(element) {
+            const details = element.querySelector('.details');
+            if (details) {
+                details.classList.toggle('open');
+            }
         }
 
         // ============================================================
