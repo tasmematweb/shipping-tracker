@@ -786,7 +786,7 @@
         
         <div class="input-group">
             <span class="input-icon"><i class="fas fa-phone"></i></span>
-            <input type="text" id="phoneInput" placeholder="رقم الهاتف" dir="ltr">
+            <input type="text" id="phoneInput" placeholder="رقم الهاتف" dir="ltr" maxlength="11" oninput="this.value=this.value.replace(/[^0-9]/g,'')">
         </div>
         <div class="input-group">
             <span class="input-icon"><i class="fas fa-lock"></i></span>
@@ -912,6 +912,7 @@
         const password = document.getElementById('passwordInput').value.trim();
         const errorDiv = document.getElementById('loginError');
         if (!phone || !password) { errorDiv.textContent = "يرجى إدخال رقم الهاتف وكلمة المرور"; return; }
+        if (phone.length !== 11) { errorDiv.textContent = "⚠️ رقم الهاتف يجب أن يكون 11 رقم"; return; }
         try {
             const res = await fetch(`${API_URL}?action=login&phone=${phone}&password=${password}`);
             const data = await res.json();
@@ -1008,7 +1009,7 @@
     }
 
     // ============================================================
-    //  🎨 عرض بطاقة الشحنة
+    //  🎨 عرض بطاقة الشحنة - مع إظهار آخر تحديث في الخارج
     // ============================================================
     function createShipmentCard(s, isAdmin = false) {
         let statusClass = 'status-waiting';
@@ -1016,6 +1017,7 @@
         if (statusText.includes('تتبع')) statusClass = 'status-tracking';
         else if (statusText.includes('تم')) statusClass = 'status-done';
 
+        // جلب آخر تحديث من التتبع (إذا كان موجوداً)
         let lastUpdate = s.lastUpdate || s.date || '';
         let updateText = lastUpdate ? 'آخر تحديث: ' + lastUpdate : '';
 
@@ -1087,8 +1089,8 @@
         document.getElementById('modalBody').innerHTML = `
             <h3><i class="fas fa-box"></i> إضافة شحنة جديدة</h3>
             <div class="form-group"><label>👤 اسم المستلم *</label><input id="f_receiverName" placeholder="اسم المستلم"></div>
-            <div class="form-group"><label>📱 هاتف المستلم *</label><input id="f_receiverPhone" placeholder="مثال: 010xxxxxxxx" dir="ltr"></div>
-            <div class="form-group"><label>📱 هاتف آخر للمستلم</label><input id="f_receiverPhone2" placeholder="هاتف آخر (اختياري)" dir="ltr"></div>
+            <div class="form-group"><label>📱 هاتف المستلم *</label><input id="f_receiverPhone" placeholder="مثال: 010xxxxxxxx" dir="ltr" maxlength="11" oninput="this.value=this.value.replace(/[^0-9]/g,'')"></div>
+            <div class="form-group"><label>📱 هاتف آخر للمستلم</label><input id="f_receiverPhone2" placeholder="هاتف آخر (اختياري)" dir="ltr" maxlength="11" oninput="this.value=this.value.replace(/[^0-9]/g,'')"></div>
             <div class="two-columns">
                 <div class="form-group"><label>🏛️ المحافظة *</label><select id="f_governorate" onchange="updateCities()">${govOptions}</select></div>
                 <div class="form-group"><label>🏙️ المدينة *</label><select id="f_city"><option value="">اختر المحافظة أولاً</option></select></div>
@@ -1116,6 +1118,14 @@
 
         if (!receiverName || !receiverPhone || !governorate || !city || !address || !amount) {
             errorDiv.textContent = "يرجى ملء جميع الحقول المطلوبة (*)";
+            return;
+        }
+        if (receiverPhone.length !== 11) {
+            errorDiv.textContent = "⚠️ رقم هاتف المستلم يجب أن يكون 11 رقم";
+            return;
+        }
+        if (receiverPhone2 && receiverPhone2.length !== 11) {
+            errorDiv.textContent = "⚠️ رقم هاتف آخر يجب أن يكون 11 رقم";
             return;
         }
 
@@ -1344,7 +1354,7 @@
         document.getElementById('modalBody').innerHTML = `
             <h3><i class="fas fa-user-plus"></i> إنشاء حساب عميل جديد</h3>
             <div class="form-group"><label>👤 اسم العميل *</label><input id="newClientName" placeholder="الاسم الكامل"></div>
-            <div class="form-group"><label>📱 رقم الهاتف *</label><input id="newClientPhone" dir="ltr" placeholder="مثال: 011xxxxxxxx"></div>
+            <div class="form-group"><label>📱 رقم الهاتف *</label><input id="newClientPhone" dir="ltr" placeholder="مثال: 011xxxxxxxx" maxlength="11" oninput="this.value=this.value.replace(/[^0-9]/g,'')"></div>
             <div class="form-group"><label>🔒 كلمة المرور *</label><input id="newClientPassword" type="password" dir="ltr" placeholder="كلمة المرور للدخول"></div>
             <button class="submit-btn green" onclick="createClient()">✅ إنشاء الحساب</button>
             <button class="submit-btn gray" onclick="showClients()" style="margin-top:8px;">↩️ رجوع</button>
@@ -1358,6 +1368,7 @@
         const password = document.getElementById('newClientPassword').value.trim();
         const errorDiv = document.getElementById('clientError');
         if (!name || !phone || !password) { errorDiv.textContent = "يرجى ملء جميع الحقول"; return; }
+        if (phone.length !== 11) { errorDiv.textContent = "⚠️ رقم الهاتف يجب أن يكون 11 رقم"; return; }
         
         const params = new URLSearchParams();
         params.append('action', 'createClient');
