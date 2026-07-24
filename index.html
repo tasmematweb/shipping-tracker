@@ -378,6 +378,20 @@
             color: #2e7d32;
             font-weight: 700;
         }
+        .shipment-card .status-row.loading-status {
+            background: #fff8e1;
+            border-right-color: #f9a825;
+        }
+        .shipment-card .status-row.loading-status .status-value {
+            color: #f9a825;
+        }
+        .shipment-card .status-row.error-status {
+            background: #ffeaea;
+            border-right-color: #dc3545;
+        }
+        .shipment-card .status-row.error-status .status-value {
+            color: #dc3545;
+        }
 
         .shipment-card .details {
             margin-top: 14px;
@@ -854,10 +868,11 @@
 
 <script>
     // ============================================================
-    //  🔗 الرابط الجديد
+    //  🔗 الرابط
     // ============================================================
     const API_URL = "https://script.google.com/macros/s/AKfycbyZYhdpkYQH-ZxM8te39VoEnoKJjx2vY5VzvgHg18y6FadPRMdpbZyTW2YuHByyI-ha/exec";
     let currentUser = null;
+    let trackingCache = {};
 
     // ============================================================
     //  التحقق من جلسة المستخدم (Session)
@@ -954,6 +969,7 @@
 
     function logout() {
         currentUser = null;
+        trackingCache = {};
         sessionStorage.removeItem('eux_user');
         document.getElementById('loginPage').classList.remove('hidden');
         document.getElementById('dashboard').classList.add('hidden');
@@ -982,6 +998,80 @@
     }
 
     // ============================================================
+    //  دالة جلب الحالة الفعلية من API التتبع
+    // ============================================================
+    async function fetchTrackingStatus(trackingNumber) {
+        if (!trackingNumber || trackingNumber.length < 3) return null;
+        if (trackingCache[trackingNumber]) return trackingCache[trackingNumber];
+        
+        try {
+            const res = await fetch(`${API_URL}?action=track&billCode=${trackingNumber}`);
+            const data = await res.json();
+            if (data.code === "1" && data.data && data.data[0]) {
+                const status = data.data[0].status || null;
+                trackingCache[trackingNumber] = status;
+                return status;
+            }
+            trackingCache[trackingNumber] = null;
+            return null;
+        } catch (e) {
+            console.error('فشل تتبع:', trackingNumber, e);
+            return null;
+        }
+    }
+
+    // ============================================================
+    //  تحديث حالة واحدة في البطاقة
+    // ============================================================
+    function updateShipmentStatusCard(shipmentId, status) {
+        const card = document.getElementById(`card-${shipmentId}`);
+        if (!card) return;
+        const statusRow = card.querySelector('.status-row');
+        if (!statusRow) return;
+        
+        statusRow.classList.remove('loading-status', 'error-status');
+        const statusValue = statusRow.querySelector('.status-value');
+        const statusLabel = statusRow.querySelector('.status-label');
+        
+        if (status) {
+            statusLabel.textContent = '📍 الحالة الحالية:';
+            statusValue.textContent = status;
+            if (status.includes('تم التوصيل') || status.includes('تم التسليم') || status.includes('Delivered')) {
+                statusRow.style.background = '#e8f5e9';
+                statusRow.style.borderRightColor = '#2e7d32';
+                statusValue.style.color = '#2e7d32';
+            } else if (status.includes('مرتجع') || status.includes('فشل') || status.includes('مرفوض')) {
+                statusRow.style.background = '#ffeaea';
+                statusRow.style.borderRightColor = '#dc3545';
+                statusValue.style.color = '#dc3545';
+            } else {
+                statusRow.style.background = '#e3f2fd';
+                statusRow.style.borderRightColor = '#0d47a1';
+                statusValue.style.color = '#0d47a1';
+            }
+        } else {
+            statusRow.style.background = '#f5f5f5';
+            statusRow.style.borderRightColor = '#999';
+            statusValue.style.color = '#999';
+            statusValue.textContent = 'لا توجد معلومات تتبع';
+        }
+    }
+
+    // ============================================================
+    //  تحديث جميع الحالات واحدة تلو الأخرى
+    // ============================================================
+    async function updateAllTrackingStatuses(shipments) {
+        const shipmentsWithTracking = shipments.filter(s => s.trackingNumber && s.trackingNumber.length > 3);
+        
+        for (const s of shipmentsWithTracking) {
+            const status = await fetchTrackingStatus(s.trackingNumber);
+            updateShipmentStatusCard(s.id, status);
+            // تأخير بسيط بين كل طلب وآخر
+            await new Promise(resolve => setTimeout(resolve, 500));
+        }
+    }
+
+    // ============================================================
     //  📦 تحميل الشحنات
     // ============================================================
     async function loadMyShipments() {
@@ -997,6 +1087,8 @@
                     document.getElementById('totalCount').textContent = data.shipments.length;
                     document.getElementById('summaryBox').classList.remove('hidden');
                     content.innerHTML = data.shipments.map(s => createShipmentCard(s)).join('');
+                    // بدء تحديث الحالات واحدة تلو الأخرى
+                    updateAllTrackingStatuses(data.shipments);
                 }
             } else { content.innerHTML = '<p style="color:red;">' + (data.msg || 'فشل التحميل') + '</p>'; }
         } catch (e) { content.innerHTML = '<p style="color:red;">فشل الاتصال</p>'; }
@@ -1015,6 +1107,8 @@
             if (data.success) {
                 updateSummary(data.shipments);
                 content.innerHTML = data.shipments.length === 0 ? '<div class="empty-state"><div class="icon">📭</div><p>لا توجد شحنات</p></div>' : data.shipments.map(s => createShipmentCard(s, true)).join('');
+                // بدء تحديث الحالات واحدة تلو الأخرى
+                updateAllTrackingStatuses(data.shipments);
             } else { content.innerHTML = '<p style="color:red;">' + (data.msg || 'فشل التحميل') + '</p>'; }
         } catch (e) { content.innerHTML = '<p style="color:red;">فشل الاتصال</p>'; }
     }
@@ -1030,7 +1124,7 @@
     }
 
     // ============================================================
-    //  🎨 عرض بطاقة الشحنة - مع ظهور الحالة الخضراء في الخارج
+    //  🎨 عرض بطاقة الشحنة - مع ظهور الحالة الفعلية من التتبع
     // ============================================================
     function createShipmentCard(s, isAdmin = false) {
         let statusClass = 'status-waiting';
@@ -1062,8 +1156,9 @@
         const displayName = s.receiverName || s.customerName || 'غير معروف';
         const displayPhone = s.receiverPhone || s.customerPhone || '';
         const displayAmount = s.amount || '0';
+        const hasTracking = trackingNum && trackingNum.length > 3;
 
-        return `<div class="shipment-card" onclick="toggleDetails(this)">
+        return `<div class="shipment-card" onclick="toggleDetails(this)" id="card-${s.id}">
             <span class="status-badge ${statusClass}">${statusText}</span>
             <div class="summary-row">
                 <div class="main-info">
@@ -1073,10 +1168,10 @@
                 </div>
                 <div class="last-update">${updateText}</div>
             </div>
-            <!-- الحالة الخضراء تظهر في الخارج -->
-            <div class="status-row">
+            <!-- الحالة الفعلية من التتبع - تظهر في الخارج -->
+            <div class="status-row${hasTracking ? ' loading-status' : ''}">
                 <span class="status-label">📍 الحالة الحالية:</span>
-                <span class="status-value">${statusText}</span>
+                <span class="status-value">${hasTracking ? '⏳ جاري التحميل...' : (trackingNum ? '⏳ انتظار...' : 'لا يوجد رقم تتبع')}</span>
             </div>
             <div class="details">
                 ${isAdmin ? `<div class="info"><strong>📱 رقم العميل:</strong> ${s.clientPhone || 'غير معروف'}</div>` : ''}
@@ -1222,6 +1317,7 @@
             const data = await res.json();
             if (data.success) { 
                 closeModal(); 
+                trackingCache = {};
                 loadAllShipments(); 
                 showToast('✅ تم إضافة رقم التتبع!', 'success');
             } else { 
@@ -1252,6 +1348,7 @@
             });
             const data = await res.json();
             if (data.success) { 
+                trackingCache = {};
                 loadAllShipments(); 
                 showToast('✅ تم حذف الشحنة بنجاح', 'success');
             } else { 
@@ -1272,7 +1369,6 @@
         try {
             const res = await fetch(`${API_URL}?action=track&billCode=${billCode}`);
             const data = await res.json();
-            console.log('📡 Track response:', data);
 
             if (data.code === "1" && data.data && data.data[0]) {
                 let html = `<h3><i class="fas fa-map-marked-alt"></i> مسار الشحنة</h3>`;
@@ -1290,7 +1386,6 @@
                 } else {
                     details.forEach(d => {
                         let desc = d.desc || '';
-                        // إزالة أي أرقام هواتف من الوصف
                         desc = desc.replace(/\([0-9]{10,11}\)/g, '');
                         desc = desc.replace(/[0-9]{10,11}/g, '');
                         desc = desc.replace(/J&T/gi, '');
@@ -1303,7 +1398,6 @@
                         if (city && !location.includes(city)) {
                             locationText = city + (location ? ' - ' + location : '');
                         }
-                        // إزالة الأرقام من الموقع
                         locationText = locationText.replace(/[0-9]/g, '').trim();
                         
                         html += `<div class="timeline-item">
