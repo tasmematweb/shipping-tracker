@@ -35,7 +35,7 @@
         .btn-delete { background: #dc3545; color: white; }
         .form-group { margin-bottom: 15px; }
         .form-group label { display: block; margin-bottom: 5px; font-weight: bold; color: #333; }
-        .form-group input, .form-group textarea { width: 100%; padding: 12px; border: 2px solid #ddd; border-radius: 8px; font-size: 14px; }
+        .form-group input, .form-group textarea, .form-group select { width: 100%; padding: 12px; border: 2px solid #ddd; border-radius: 8px; font-size: 14px; }
         .form-group textarea { height: 80px; resize: vertical; }
         .timeline-item { border-right: 3px solid #e60012; padding: 12px 15px; margin-right: 10px; margin-bottom: 15px; background: #fafafa; border-radius: 0 8px 8px 0; }
         .timeline-item .time { color: #999; font-size: 13px; }
@@ -96,9 +96,9 @@
 
     <script>
         // ============================================================
-        //  🔗 الرابط الجديد - تم التحديث
+        //  🔗 الرابط الجديد
         // ============================================================
-        const API_URL = "https://script.google.com/macros/s/AKfycbwh3Ksg7DEi9_5oxcDNBvHz-_9D3qchg0EN5CT8uWeJhJL06dhUR7Hg_gk3UuobNWWB/exec";
+        const API_URL = "https://script.google.com/macros/s/AKfycbycDitGXHkdifuWiGLldREr33T-8gQ4RJ9v4_v0fgECXz1FsUSsaDxADPsaBUHw2AtR/exec";
         let currentUser = null;
 
         // ============================================================
@@ -206,7 +206,7 @@
                 const data = await res.json();
                 if (data.success) {
                     content.innerHTML = data.shipments.length === 0 ? '<p style="text-align:center;color:#999;padding:50px;">لا توجد شحنات حتى الآن</p>' : data.shipments.map(s => createShipmentCard(s)).join('');
-                } else { content.innerHTML = '<p style="color:red;">فشل التحميل</p>'; }
+                } else { content.innerHTML = '<p style="color:red;">' + (data.msg || 'فشل التحميل') + '</p>'; }
             } catch (e) { content.innerHTML = '<p style="color:red;">فشل الاتصال</p>'; }
         }
 
@@ -214,13 +214,16 @@
             const content = document.getElementById('content');
             content.innerHTML = '<div class="loading"><div class="spinner"></div>جاري التحميل...</div>';
             try {
-                const url = `${API_URL}?action=allShipments&adminPhone=${encodeURIComponent(currentUser.phone)}&adminPassword=${encodeURIComponent(currentUser.password)}`;
-                const res = await fetch(url, { method: 'POST' });
+                const params = new URLSearchParams();
+                params.append('action', 'allShipments');
+                params.append('adminPhone', currentUser.phone);
+                params.append('adminPassword', currentUser.password);
+                const res = await fetch(API_URL, { method: 'POST', body: params });
                 const data = await res.json();
                 if (data.success) {
                     updateSummary(data.shipments);
                     content.innerHTML = data.shipments.length === 0 ? '<p style="text-align:center;color:#999;padding:50px;">لا توجد شحنات</p>' : data.shipments.map(s => createShipmentCard(s, true)).join('');
-                } else { content.innerHTML = '<p style="color:red;">فشل التحميل</p>'; }
+                } else { content.innerHTML = '<p style="color:red;">' + (data.msg || 'فشل التحميل') + '</p>'; }
             } catch (e) { content.innerHTML = '<p style="color:red;">فشل الاتصال</p>'; }
         }
 
@@ -246,11 +249,19 @@
             else if (statusText.includes('تم')) statusClass = 'status-done';
 
             let actions = '';
-            if (s.trackingNumber) actions += `<button class="btn-track" onclick="trackShipment('${s.trackingNumber}')">📍 تتبع</button>`;
-            if (isAdmin && !s.trackingNumber) actions += `<button class="btn-add-tracking" onclick="showAddTracking('${s.id}')">🔢 إضافة رقم تتبع</button>`;
-            if (isAdmin) actions += `<button class="btn-delete" onclick="deleteShipment('${s.id}')">🗑️ حذف</button>`;
+            // استخدام trackingNumber من العمود A
+            const trackingNum = s.trackingNumber || '';
+            if (trackingNum && trackingNum.length > 3) {
+                actions += `<button class="btn-track" onclick="trackShipment('${trackingNum}')">📍 تتبع</button>`;
+            }
+            if (isAdmin) {
+                if (!trackingNum || trackingNum.length < 3) {
+                    actions += `<button class="btn-add-tracking" onclick="showAddTracking('${s.id}')">🔢 إضافة رقم تتبع</button>`;
+                }
+                actions += `<button class="btn-delete" onclick="deleteShipment('${s.id}')">🗑️ حذف</button>`;
+            }
 
-            return `<div class="shipment-card"><span class="status-badge ${statusClass}">${statusText}</span>${isAdmin ? `<div class="info"><strong>📱 صاحب الشحنة:</strong> ${s.clientPhone || 'غير معروف'}</div>` : ''}<div class="info"><strong>🔢 رقم الشحنة:</strong> ${s.id}</div><div class="info"><strong>📅 التاريخ:</strong> ${s.date || ''}</div><div class="info"><strong>👤 المستلم:</strong> ${s.customerName || s.receiverName || ''}</div><div class="info"><strong>📱 هاتف المستلم:</strong> ${s.customerPhone || s.receiverPhone || ''}</div>${s.receiverPhone2 ? `<div class="info"><strong>📱 هاتف آخر:</strong> ${s.receiverPhone2}</div>` : ''}${s.governorate ? `<div class="info"><strong>📍 المحافظة:</strong> ${s.governorate}</div>` : ''}${s.city ? `<div class="info"><strong>🏙️ المدينة:</strong> ${s.city}</div>` : ''}<div class="info"><strong>📍 العنوان:</strong> ${s.customerAddress || s.address || ''}</div>${s.amount ? `<div class="info"><strong>💰 المبلغ:</strong> ${s.amount}</div>` : ''}${s.weight ? `<div class="info"><strong>⚖️ الوزن:</strong> ${s.weight}</div>` : ''}${s.productName ? `<div class="info"><strong>📦 المنتج:</strong> ${s.productName} (${s.productQuantity || '1'})</div>` : ''}${s.notes ? `<div class="info"><strong>📝 ملاحظات:</strong> ${s.notes}</div>` : ''}${s.trackingNumber ? `<div class="info"><strong>🚚 رقم التتبع:</strong> ${s.trackingNumber}</div>` : ''}<div class="actions">${actions}</div></div>`;
+            return `<div class="shipment-card"><span class="status-badge ${statusClass}">${statusText}</span>${isAdmin ? `<div class="info"><strong>📱 صاحب الشحنة:</strong> ${s.clientPhone || 'غير معروف'}</div>` : ''}<div class="info"><strong>🔢 رقم الشحنة:</strong> ${s.id}</div><div class="info"><strong>📅 التاريخ:</strong> ${s.date || ''}</div>${trackingNum ? `<div class="info"><strong>🚚 رقم التتبع:</strong> ${trackingNum}</div>` : ''}<div class="info"><strong>👤 المستلم:</strong> ${s.receiverName || ''}</div><div class="info"><strong>📱 هاتف المستلم:</strong> ${s.receiverPhone || ''}</div>${s.receiverPhone2 ? `<div class="info"><strong>📱 هاتف آخر:</strong> ${s.receiverPhone2}</div>` : ''}${s.governorate ? `<div class="info"><strong>📍 المحافظة:</strong> ${s.governorate}</div>` : ''}${s.city ? `<div class="info"><strong>🏙️ المدينة:</strong> ${s.city}</div>` : ''}<div class="info"><strong>📍 العنوان:</strong> ${s.address || ''}</div>${s.amount ? `<div class="info"><strong>💰 المبلغ:</strong> ${s.amount}</div>` : ''}${s.weight ? `<div class="info"><strong>⚖️ الوزن:</strong> ${s.weight}</div>` : ''}${s.notes ? `<div class="info"><strong>📝 ملاحظات:</strong> ${s.notes}</div>` : ''}<div class="actions">${actions}</div></div>`;
         }
 
         // ============================================================
@@ -305,13 +316,6 @@
             params.append('action', 'addShipment');
             params.append('phone', currentUser.phone);
             params.append('password', currentUser.password);
-            params.append('customerName', receiverName);
-            params.append('customerPhone', receiverPhone);
-            params.append('customerAddress', address);
-            params.append('productName', '');
-            params.append('productQuantity', '1');
-            params.append('notes', notes);
-            // بيانات إضافية للشيت الجديد
             params.append('receiverName', receiverName);
             params.append('receiverPhone', receiverPhone);
             params.append('receiverPhone2', receiverPhone2);
@@ -320,6 +324,7 @@
             params.append('address', address);
             params.append('amount', amount);
             params.append('weight', weight);
+            params.append('notes', notes);
 
             try {
                 const res = await fetch(API_URL, {
@@ -341,7 +346,7 @@
         }
 
         // ============================================================
-        //  🔢 إضافة رقم تتبع (للأدمن)
+        //  🔢 إضافة رقم تتبع (للأدمن) - تحديث العمود A
         // ============================================================
         function showAddTracking(shipmentId) {
             document.getElementById('modal').classList.remove('hidden');
