@@ -856,9 +856,8 @@
     // ============================================================
     //  🔗 الرابط الجديد
     // ============================================================
-    const API_URL = "https://script.google.com/macros/s/AKfycbx5N4GGTO4NX3KU_oLhh5oxIioPA-ls2uhL8h36q1tz9rvbmWEdPAxNZz-JLRAeyHeV/exec";
+    const API_URL = "https://script.google.com/macros/s/AKfycbyZYhdpkYQH-ZxM8te39VoEnoKJjx2vY5VzvgHg18y6FadPRMdpbZyTW2YuHByyI-ha/exec";
     let currentUser = null;
-    let updateInterval = null;
 
     // ============================================================
     //  التحقق من جلسة المستخدم (Session)
@@ -877,40 +876,6 @@
             }
         }
         return false;
-    }
-
-    // ============================================================
-    //  تحديث جميع الشحنات تلقائياً كل نصف ساعة
-    // ============================================================
-    function startAutoUpdate() {
-        if (updateInterval) {
-            clearInterval(updateInterval);
-        }
-        // تحديث كل 30 دقيقة (1800000 ملي ثانية)
-        updateInterval = setInterval(function() {
-            if (currentUser) {
-                console.log('🔄 جاري التحديث التلقائي للشحنات...');
-                // تحديث الشحنات في الخلفية
-                fetch(`${API_URL}?action=updateAllStatus`, {
-                    method: 'POST'
-                })
-                .then(response => response.json())
-                .then(data => {
-                    console.log('✅ تم تحديث الشحنات:', data);
-                    // إعادة تحميل الشحنات إذا كان المستخدم موجوداً
-                    if (currentUser && !document.getElementById('dashboard').classList.contains('hidden')) {
-                        if (currentUser.role === 'admin') {
-                            loadAllShipments();
-                        } else {
-                            loadMyShipments();
-                        }
-                    }
-                })
-                .catch(error => {
-                    console.error('❌ فشل التحديث التلقائي:', error);
-                });
-            }
-        }, 1800000); // 30 دقيقة
     }
 
     // ============================================================
@@ -977,7 +942,6 @@
                 sessionStorage.setItem('eux_user', JSON.stringify(currentUser));
                 errorDiv.classList.add('hidden');
                 showDashboard(); 
-                startAutoUpdate();
             } else { 
                 errorDiv.textContent = data.msg || "فشل تسجيل الدخول"; 
                 errorDiv.classList.remove('hidden');
@@ -990,10 +954,6 @@
 
     function logout() {
         currentUser = null;
-        if (updateInterval) {
-            clearInterval(updateInterval);
-            updateInterval = null;
-        }
         sessionStorage.removeItem('eux_user');
         document.getElementById('loginPage').classList.remove('hidden');
         document.getElementById('dashboard').classList.add('hidden');
@@ -1075,12 +1035,8 @@
     function createShipmentCard(s, isAdmin = false) {
         let statusClass = 'status-waiting';
         let statusText = s.status || 'في انتظار التتبع';
-        if (statusText.includes('تتبع') || statusText.includes('تم الاستلام') || statusText.includes('وصلت')) {
-            statusClass = 'status-tracking';
-        }
-        if (statusText.includes('تم التسليم')) {
-            statusClass = 'status-done';
-        }
+        if (statusText.includes('تتبع')) statusClass = 'status-tracking';
+        else if (statusText.includes('تم')) statusClass = 'status-done';
 
         let lastUpdate = s.lastUpdate || s.date || '';
         let updateText = lastUpdate ? 'آخر تحديث: ' + lastUpdate : '';
