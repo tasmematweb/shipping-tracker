@@ -835,7 +835,7 @@
     // ============================================================
     //  🔗 الرابط الجديد
     // ============================================================
-    const API_URL = "https://script.google.com/macros/s/AKfycbzD7FNHqTtwZmuoAMdlOOV36xcbFzDGcEXa97aJi7g22KCQwLMKLqz7YUuwX53tRjM/exec";
+    const API_URL = "https://script.google.com/macros/s/AKfycbyZYhdpkYQH-ZxM8te39VoEnoKJjx2vY5VzvgHg18y6FadPRMdpbZyTW2YuHByyI-ha/exec";
     let currentUser = null;
 
     // ============================================================
@@ -1237,7 +1237,7 @@
     }
 
     // ============================================================
-    //  🚚 تتبع الشحنة
+    //  🚚 تتبع الشحنة - عرض بالعربي مع تحديد الحالة الصحيحة
     // ============================================================
     async function trackShipment(billCode) {
         document.getElementById('modal').classList.remove('hidden');
@@ -1250,35 +1250,34 @@
 
             if (data.code === "1" && data.data && data.data[0]) {
                 let html = `<h3><i class="fas fa-map-marked-alt"></i> مسار الشحنة</h3>`;
+                html += `<p style="margin-bottom:16px;color:#666;font-size:14px;direction:ltr;text-align:left;"><strong>رقم الشحنة:</strong> ${billCode}</p>`;
+                
+                // عرض الحالة الحالية للشحنة
+                const currentStatus = data.data[0].status || 'في انتظار التتبع';
+                html += `<div style="background:#e8f5e9;padding:10px 16px;border-radius:10px;margin-bottom:16px;border-right:4px solid #2e7d32;">
+                    <strong style="color:#2e7d32;font-size:15px;">📍 الحالة الحالية:</strong>
+                    <span style="color:#2e7d32;font-weight:700;font-size:16px;margin-right:8px;">${currentStatus}</span>
+                </div>`;
+                
                 const details = data.data[0].details || [];
                 if (details.length === 0) {
                     html += `<p style="text-align:center;color:#999;padding:20px;">لا توجد تفاصيل تتبع متاحة</p>`;
                 } else {
                     details.forEach(d => {
-                        let desc = d.desc || d.scanType || '';
-                        desc = desc.replace(/[0-9]/g, '').trim();
-                        if (desc.includes('sign')) desc = 'تم التوقيع على الاستلام';
-                        else if (desc.includes('delivery')) desc = 'جاري التوصيل';
-                        else if (desc.includes('arrival')) desc = 'وصلت إلى المركز';
-                        else if (desc.includes('departure')) desc = 'غادرت المركز';
-                        else if (desc.includes('pickup')) desc = 'تم استلام الشحنة';
-                        else if (desc.includes('scan')) desc = 'مسح ضوئي';
-                        else if (!desc) desc = 'تحديث حالة الشحنة';
-                        
+                        // استخدام الوصف المترجم من الخلف
+                        let desc = d.desc || '';
                         let location = d.scanNetworkName || '';
                         let city = d.scanNetworkCity || '';
                         let locationText = location;
                         if (city && !location.includes(city)) {
                             locationText = city + (location ? ' - ' + location : '');
                         }
-                        locationText = locationText.replace(/[0-9]/g, '').trim();
-                        if (!locationText) locationText = 'مركز الشحن';
-
+                        
                         html += `<div class="timeline-item">
                             <div class="time">🕐 ${d.scanTime || ''}</div>
                             <div class="event">📌 ${desc}</div>
                             <div class="location">📍 ${locationText}</div>
-                            ${d.probleDescription ? `<div class="problem">⚠️ ${d.probleDescription.replace(/[0-9]/g, '').trim()}</div>` : ''}
+                            ${d.probleDescription ? `<div class="problem">⚠️ ${d.probleDescription}</div>` : ''}
                         </div>`;
                     });
                 }
