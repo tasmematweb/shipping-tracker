@@ -3,1545 +3,656 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>نظام تتبع وإدارة شحنات J&T</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;900&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <title>نظام تتبع وإدارة شحنات J&T Express</title>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-        body {
-            font-family: 'Cairo', sans-serif;
-            background: #f5f5f5;
-            min-height: 100vh;
-            color: #333;
-            -webkit-user-select: none;
-            -moz-user-select: none;
-            -ms-user-select: none;
-            user-select: none;
-        }
-        .app-wrapper {
-            max-width: 480px;
-            margin: 0 auto;
-            background: white;
-            min-height: 100vh;
-            position: relative;
-            box-shadow: 0 0 40px rgba(0,0,0,0.08);
-        }
-        .hidden {
-            display: none !important;
-        }
-
-        /* ===== تنسيقات صفحة تسجيل الدخول ===== */
-        .login-page {
-            padding: 50px 24px 40px;
-            text-align: center;
-            background: white;
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-        }
-        .login-page .logo-icon {
-            font-size: 64px;
-            display: block;
-            margin-bottom: 8px;
-        }
-        .login-page .brand {
-            color: #0076ff;
-            font-size: 28px;
-            font-weight: 900;
-            margin-bottom: 4px;
-        }
-        .login-page .sub-brand {
-            color: #888;
-            font-size: 14px;
-            margin-bottom: 32px;
-        }
-        .login-page .input-group {
-            margin-bottom: 16px;
-            text-align: right;
-        }
-        .login-page .input-group label {
-            display: block;
-            font-size: 14px;
-            font-weight: 600;
-            color: #333;
-            margin-bottom: 5px;
-        }
-        .login-page .input-group input {
-            width: 100%;
-            padding: 14px 16px;
-            border: 2px solid #e8e8e8;
-            border-radius: 12px;
-            font-size: 15px;
-            background: #fafafa;
-            transition: border 0.2s;
-            text-align: right;
-            font-family: 'Cairo', sans-serif;
-        }
-        .login-page .input-group input:focus {
-            border-color: #0076ff;
-            outline: none;
-            background: white;
-            box-shadow: 0 0 0 4px rgba(0, 118, 255, 0.1);
-        }
-        .login-page .login-btn {
-            width: 100%;
-            padding: 16px;
-            background: #0076ff;
-            color: white;
-            border: none;
-            border-radius: 12px;
-            font-size: 18px;
-            font-weight: 700;
-            cursor: pointer;
-            font-family: 'Cairo', sans-serif;
-            transition: 0.3s;
-            box-shadow: 0 4px 15px rgba(0, 118, 255, 0.3);
-        }
-        .login-page .login-btn:active {
-            background: #005dc7;
-            transform: scale(0.98);
-        }
-        .login-page .error-msg {
-            color: #dc3545;
-            font-size: 14px;
-            margin-top: 14px;
-            padding: 10px;
-            background: #ffeaea;
-            border-radius: 8px;
-        }
-
-        /* ===== تنسيقات الهيدر ===== */
-        .app-header {
-            background: #1a1a1a;
-            padding: 16px 20px 14px;
-            color: white;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            flex-wrap: wrap;
-            gap: 8px;
-            border-bottom-left-radius: 24px;
-            border-bottom-right-radius: 24px;
-            border-bottom: 2px solid rgba(0, 118, 255, 0.3);
-        }
-        .app-header .user-info {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-        .app-header .user-info .avatar {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            background: rgba(255, 255, 255, 0.12);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 18px;
-            font-weight: 700;
-            color: #0076ff;
-            border: 2px solid rgba(0, 118, 255, 0.3);
-        }
-        .app-header .user-info .name {
-            font-size: 15px;
-            font-weight: 600;
-        }
-        .app-header .user-info .role {
-            font-size: 11px;
-            opacity: 0.7;
-        }
-        .app-header .header-actions {
-            display: flex;
-            gap: 6px;
-            flex-wrap: wrap;
-        }
-        .app-header .header-actions button {
-            padding: 7px 14px;
-            border: none;
-            border-radius: 10px;
-            font-size: 12px;
-            font-weight: 600;
-            cursor: pointer;
-            background: rgba(255, 255, 255, 0.1);
-            color: white;
-            transition: 0.2s;
-            font-family: 'Cairo', sans-serif;
-            white-space: nowrap;
-        }
-        .app-header .header-actions button:active {
-            background: rgba(255, 255, 255, 0.25);
-            transform: scale(0.95);
-        }
-        .app-header .header-actions button.green {
-            background: #28a745;
-        }
-        .app-header .header-actions button.blue {
-            background: #0066cc;
-        }
-        .app-header .header-actions button.orange {
-            background: #ff9800;
-        }
-        .app-header .header-actions button.outline {
-            background: transparent;
-            border: 1.5px solid rgba(255, 255, 255, 0.3);
-        }
-
-        /* ===== ملخص الإحصائيات ===== */
-        .summary-box {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 6px;
-            padding: 12px 14px;
-            background: #f8f8f8;
-            border-bottom: 1px solid #eee;
-        }
-        .summary-box .stat {
-            text-align: center;
-            background: white;
-            padding: 8px 4px;
-            border-radius: 10px;
-            box-shadow: 0 1px 4px rgba(0,0,0,0.05);
-            transition: 0.2s;
-        }
-        .summary-box .stat:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
-        }
-        .summary-box .stat .count {
-            font-size: 22px;
-            font-weight: 700;
-            color: #0076ff;
-        }
-        .summary-box .stat .label {
-            font-size: 10px;
-            color: #888;
-            margin-top: 2px;
-        }
-
-        /* ===== المحتوى ===== */
-        .content-area {
-            padding: 12px 14px 20px;
-        }
-        .loading {
-            text-align: center;
-            padding: 40px 0;
-        }
-        .spinner {
-            border: 4px solid #f3f3f3;
-            border-top: 4px solid #0076ff;
-            border-radius: 50%;
-            width: 40px;
-            height: 40px;
-            animation: spin 0.8s linear infinite;
-            margin: 0 auto 12px;
-        }
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-        .empty-state {
-            text-align: center;
-            padding: 40px 20px;
-            color: #aaa;
-        }
-        .empty-state .icon {
-            font-size: 56px;
-            margin-bottom: 12px;
-        }
-        .empty-state button {
-            margin-top: 12px;
-            padding: 10px 30px;
-            background: #0076ff;
-            color: white;
-            border: none;
-            border-radius: 10px;
-            font-size: 15px;
-            cursor: pointer;
-            font-family: 'Cairo', sans-serif;
-            transition: 0.3s;
-            box-shadow: 0 4px 12px rgba(0, 118, 255, 0.3);
-        }
-        .empty-state button:active {
-            transform: scale(0.95);
-        }
-
-        /* ===== بطاقة الشحنة ===== */
-        .shipment-card {
-            background: white;
-            border-radius: 16px;
-            padding: 16px 18px;
-            margin-bottom: 14px;
-            border: 1px solid #eee;
-            box-shadow: 0 2px 12px rgba(0,0,0,0.04);
-            position: relative;
-            cursor: pointer;
-            transition: 0.25s ease;
-        }
-        .shipment-card:hover {
-            background: #fafafa;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.06);
-            transform: translateY(-2px);
-        }
-        .shipment-card .status-badge {
-            display: inline-block;
-            padding: 3px 14px;
-            border-radius: 20px;
-            font-size: 11px;
-            font-weight: 700;
-            margin-bottom: 8px;
-        }
-        .status-waiting {
-            background: #fff3cd;
-            color: #856404;
-        }
-        .status-tracking {
-            background: #d1ecf1;
-            color: #0c5460;
-        }
-        .status-done {
-            background: #d4edda;
-            color: #155724;
-        }
-
-        .shipment-card .summary-row {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            flex-wrap: wrap;
-            gap: 8px;
-        }
-        .shipment-card .summary-row .main-info {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            flex-wrap: wrap;
-        }
-        .shipment-card .summary-row .main-info .name {
-            font-weight: 700;
-            font-size: 16px;
-            color: #222;
-        }
-        .shipment-card .summary-row .main-info .phone {
-            color: #555;
-            direction: ltr;
-            font-size: 14px;
-        }
-        .shipment-card .summary-row .main-info .amount {
-            color: #0076ff;
-            font-weight: 700;
-        }
-        .shipment-card .summary-row .last-update {
-            font-size: 12px;
-            color: #888;
-            direction: ltr;
-            background: #f5f5f5;
-            padding: 3px 12px;
-            border-radius: 12px;
-        }
-
-        .shipment-card .details {
-            margin-top: 12px;
-            padding-top: 12px;
-            border-top: 1px dashed #ddd;
-            display: none;
-        }
-        .shipment-card .details.open {
-            display: block;
-            animation: fadeIn 0.25s ease;
-        }
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(-8px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        .shipment-card .details .info {
-            margin: 4px 0;
-            font-size: 13px;
-            color: #555;
-        }
-        .shipment-card .details .info strong {
-            color: #333;
-            margin-left: 5px;
-        }
-        .shipment-card .card-actions {
-            margin-top: 10px;
-            display: flex;
-            gap: 8px;
-            flex-wrap: wrap;
-        }
-        .shipment-card .card-actions button {
-            padding: 6px 18px;
-            border: none;
-            border-radius: 8px;
-            font-size: 13px;
-            font-weight: 600;
-            cursor: pointer;
-            font-family: 'Cairo', sans-serif;
-            flex: 1;
-            min-width: 70px;
-            transition: 0.2s;
-        }
-        .shipment-card .card-actions button:active {
-            transform: scale(0.95);
-        }
-        .btn-track {
-            background: #0066cc;
-            color: white;
-        }
-        .btn-track:hover {
-            background: #0055aa;
-        }
-        .btn-add-tracking {
-            background: #28a745;
-            color: white;
-        }
-        .btn-add-tracking:hover {
-            background: #1e7e34;
-        }
-        .btn-delete {
-            background: #dc3545;
-            color: white;
-        }
-        .btn-delete:hover {
-            background: #b02a37;
-        }
-
-        /* ===== المودال ===== */
-        .modal-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0,0,0,0.6);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            z-index: 9999;
-            padding: 16px;
-            backdrop-filter: blur(4px);
-            -webkit-backdrop-filter: blur(4px);
-        }
-        .modal-box {
-            background: white;
-            border-radius: 20px;
-            max-width: 440px;
-            width: 100%;
-            max-height: 90vh;
-            overflow-y: auto;
-            padding: 24px 20px 20px;
-            position: relative;
-            animation: modalIn 0.3s ease;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
-        }
-        @keyframes modalIn {
-            from { opacity: 0; transform: translateY(30px) scale(0.96); }
-            to { opacity: 1; transform: translateY(0) scale(1); }
-        }
-        .modal-box .close-btn {
-            position: absolute;
-            top: 14px;
-            left: 16px;
-            font-size: 26px;
-            cursor: pointer;
-            color: #aaa;
-            line-height: 1;
-            transition: 0.2s;
-        }
-        .modal-box .close-btn:hover {
-            color: #333;
-            transform: rotate(90deg);
-        }
-        .modal-box .modal-title {
-            font-size: 20px;
-            font-weight: 700;
-            color: #222;
-            margin-bottom: 18px;
-            padding-left: 30px;
-        }
-        .modal-box .modal-title i {
-            color: #0076ff;
-            margin-left: 8px;
-        }
-
-        .form-group {
-            margin-bottom: 14px;
-        }
-        .form-group label {
-            display: block;
-            font-size: 13px;
-            font-weight: 600;
-            color: #444;
-            margin-bottom: 4px;
-        }
-        .form-group input,
-        .form-group textarea,
-        .form-group select {
-            width: 100%;
-            padding: 12px 14px;
-            border: 2px solid #e8e8e8;
-            border-radius: 10px;
-            font-size: 14px;
-            background: #fafafa;
-            transition: border 0.2s;
-            font-family: 'Cairo', sans-serif;
-        }
-        .form-group input:focus,
-        .form-group textarea:focus,
-        .form-group select:focus {
-            border-color: #0076ff;
-            outline: none;
-            background: white;
-            box-shadow: 0 0 0 4px rgba(0, 118, 255, 0.08);
-        }
-        .form-group textarea {
-            height: 80px;
-            resize: vertical;
-        }
-
-        .modal-box .submit-btn {
-            width: 100%;
-            padding: 14px;
-            background: #0076ff;
-            color: white;
-            border: none;
-            border-radius: 12px;
-            font-size: 16px;
-            font-weight: 700;
-            cursor: pointer;
-            font-family: 'Cairo', sans-serif;
-            margin-top: 6px;
-            transition: 0.3s;
-            box-shadow: 0 4px 12px rgba(0, 118, 255, 0.3);
-        }
-        .modal-box .submit-btn:active {
-            background: #005dc7;
-            transform: scale(0.98);
-        }
-        .modal-box .submit-btn.green {
-            background: #28a745;
-            box-shadow: 0 4px 12px rgba(40, 167, 69, 0.3);
-        }
-        .modal-box .submit-btn.gray {
-            background: #999;
-            box-shadow: none;
-        }
-        .modal-box .error-msg {
-            color: #dc3545;
-            font-size: 13px;
-            margin-top: 10px;
-            padding: 8px;
-            background: #ffeaea;
-            border-radius: 8px;
-            text-align: center;
-        }
-
-        /* ===== التتبع (Timeline) ===== */
-        .timeline-item {
-            border-right: 3px solid #0076ff;
-            padding: 10px 16px 10px 0;
-            margin-right: 8px;
-            margin-bottom: 14px;
-            background: #fafafa;
-            border-radius: 0 10px 10px 0;
-            transition: 0.2s;
-        }
-        .timeline-item:hover {
-            background: #f0f7ff;
-        }
-        .timeline-item .time {
-            color: #999;
-            font-size: 12px;
-        }
-        .timeline-item .event {
-            font-weight: 600;
-            color: #222;
-            margin: 4px 0;
-        }
-        .timeline-item .location {
-            color: #666;
-            font-size: 13px;
-        }
-        .timeline-item .problem {
-            color: #dc3545;
-            font-size: 13px;
-            margin-top: 4px;
-        }
-
-        /* ===== إدارة العملاء ===== */
-        .client-card {
-            background: #fafafa;
-            padding: 12px 14px;
-            border-radius: 10px;
-            margin-bottom: 10px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            border: 1px solid #eee;
-            transition: 0.2s;
-        }
-        .client-card:hover {
-            background: #f5f5f5;
-        }
-        .client-card .client-info {
-            flex: 1;
-        }
-        .client-card .client-info .name {
-            font-weight: 600;
-            color: #222;
-        }
-        .client-card .client-info .phone {
-            font-size: 13px;
-            color: #666;
-        }
-        .client-card .client-info .created {
-            font-size: 11px;
-            color: #aaa;
-        }
-        .client-card .client-actions button {
-            padding: 6px 14px;
-            border: none;
-            border-radius: 8px;
-            font-size: 12px;
-            cursor: pointer;
-            background: #dc3545;
-            color: white;
-            font-family: 'Cairo', sans-serif;
-            transition: 0.2s;
-        }
-        .client-card .client-actions button:active {
-            transform: scale(0.95);
-        }
-
-        /* ===== رسائل الخطأ والإشعارات ===== */
-        .error-box {
-            background: #fff3f3;
-            border: 1px solid #ffcdd2;
-            border-radius: 12px;
-            padding: 20px;
-            text-align: center;
-            margin: 20px 0;
-            color: #d32f2f;
-        }
-        .error-box .icon {
-            font-size: 48px;
-            display: block;
-            margin-bottom: 10px;
-        }
-        .error-box .title {
-            font-weight: 600;
-            font-size: 16px;
-            margin-bottom: 4px;
-        }
-        .error-box .sub {
-            font-size: 13px;
-            color: #666;
-        }
-        .error-box button {
-            margin-top: 12px;
-            padding: 8px 24px;
-            background: #0076ff;
-            color: white;
-            border: none;
-            border-radius: 8px;
-            cursor: pointer;
-            font-family: 'Cairo', sans-serif;
-            transition: 0.3s;
-        }
-        .error-box button:active {
-            transform: scale(0.95);
-        }
-
-        .toast {
-            position: fixed;
-            bottom: 20px;
-            left: 50%;
-            transform: translateX(-50%);
-            background: #333;
-            color: white;
-            padding: 12px 24px;
-            border-radius: 12px;
-            font-size: 14px;
-            z-index: 99999;
-            animation: toastIn 0.3s ease;
-            max-width: 90%;
-            text-align: center;
-            font-family: 'Cairo', sans-serif;
-            box-shadow: 0 8px 30px rgba(0,0,0,0.2);
-        }
-        .toast.success {
-            background: #28a745;
-        }
-        .toast.error {
-            background: #dc3545;
-        }
-        @keyframes toastIn {
-            from { opacity: 0; transform: translateX(-50%) translateY(20px); }
-            to { opacity: 1; transform: translateX(-50%) translateY(0); }
-        }
-
-        .two-columns {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 10px;
-        }
-        .two-columns .form-group {
-            margin-bottom: 10px;
-        }
-        @media (max-width: 400px) {
-            .two-columns {
-                grid-template-columns: 1fr;
-            }
-        }
-
-        .debug-box {
-            background: #f8f9fa;
-            padding: 10px;
-            border-radius: 8px;
-            margin-top: 10px;
-            font-size: 11px;
-            color: #666;
-            border: 1px dashed #ddd;
-            word-break: break-all;
-            text-align: left;
-            direction: ltr;
-            max-height: 150px;
-            overflow: auto;
-        }
-
-        /* ===== أنيميشن الشعار ===== */
-        .login-logo-wrap {
-            display: flex;
-            justify-content: center;
-            margin-bottom: 12px;
-        }
-        .login-logo-wrap .logo-node {
-            width: 80px;
-            height: 80px;
-            background: linear-gradient(135deg, #131c2e, #080d16);
-            border: 2px solid rgba(0, 118, 255, 0.5);
-            border-radius: 16px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            font-size: 24px;
-            font-weight: 900;
-            color: white;
-            animation: nodeFloat 2.6s ease-in-out infinite;
-            position: relative;
-        }
-        .login-logo-wrap .logo-node::after {
-            content: '';
-            position: absolute;
-            inset: -8px;
-            border: 2px dashed #0076ff;
-            border-radius: 20px;
-            opacity: 0.5;
-            animation: rotateDashed 15s linear infinite;
-        }
-        @keyframes nodeFloat {
-            0%, 100% { transform: translateY(0); box-shadow: 0 0 25px rgba(0, 118, 255, 0.2); }
-            50% { transform: translateY(-12px); box-shadow: 0 0 40px rgba(0, 118, 255, 0.5); }
-        }
-        @keyframes rotateDashed {
-            100% { transform: rotate(360deg); }
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Segoe UI', Tahoma; background: linear-gradient(135deg, #e60012, #cc0000); min-height: 100vh; padding: 20px; }
+        .container { max-width: 900px; margin: 0 auto; background: white; border-radius: 20px; padding: 30px; box-shadow: 0 20px 60px rgba(0,0,0,0.3); }
+        .hidden { display: none !important; }
+        .login-page { text-align: center; }
+        .login-page .logo { font-size: 60px; margin-bottom: 20px; }
+        .login-page h1 { color: #e60012; margin-bottom: 30px; }
+        .login-page input { display: block; width: 100%; padding: 15px; margin: 15px 0; border: 2px solid #ddd; border-radius: 10px; font-size: 16px; text-align: center; }
+        .login-page button { width: 100%; padding: 15px; background: #e60012; color: white; border: none; border-radius: 10px; font-size: 18px; cursor: pointer; font-weight: bold; }
+        .error-msg { color: red; margin-top: 15px; }
+        .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; padding-bottom: 15px; border-bottom: 2px solid #eee; flex-wrap: wrap; gap: 10px; }
+        .header h2 { color: #333; }
+        .header button { padding: 10px 15px; background: #e60012; color: white; border: none; border-radius: 8px; cursor: pointer; font-size: 13px; margin: 2px; }
+        .header button.green { background: #28a745; }
+        .header button.blue { background: #0066cc; }
+        .header button.orange { background: #ff9800; }
+        .shipment-card { background: #fafafa; border-radius: 12px; padding: 15px 20px; margin-bottom: 12px; border: 1px solid #eee; position: relative; cursor: pointer; transition: 0.2s; }
+        .shipment-card:hover { background: #f0f0f0; }
+        .status-badge { position: absolute; top: 12px; left: 15px; padding: 4px 14px; border-radius: 20px; font-size: 11px; font-weight: bold; }
+        .status-waiting { background: #fff3cd; color: #856404; }
+        .status-tracking { background: #d1ecf1; color: #0c5460; }
+        .status-done { background: #d4edda; color: #155724; }
+        .shipment-card .info { margin: 6px 0; color: #444; font-size: 14px; }
+        .shipment-card .info strong { color: #333; margin-left: 5px; }
+        .shipment-card .summary-row { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px; }
+        .shipment-card .summary-row .main-info { display: flex; align-items: center; gap: 15px; flex-wrap: wrap; }
+        .shipment-card .summary-row .main-info .name { font-weight: bold; font-size: 16px; color: #222; }
+        .shipment-card .summary-row .main-info .phone { color: #555; direction: ltr; }
+        .shipment-card .summary-row .main-info .amount { color: #e60012; font-weight: bold; }
+        .shipment-card .summary-row .last-update { font-size: 12px; color: #888; direction: ltr; background: #f5f5f5; padding: 4px 12px; border-radius: 12px; }
+        .shipment-card .details { margin-top: 12px; padding-top: 12px; border-top: 1px dashed #ddd; display: none; }
+        .shipment-card .details.open { display: block; }
+        .shipment-card .details .info { margin: 5px 0; font-size: 13px; }
+        .shipment-card .actions { margin-top: 12px; display: flex; gap: 8px; flex-wrap: wrap; }
+        .shipment-card .actions button { padding: 6px 18px; border: none; border-radius: 6px; cursor: pointer; font-size: 13px; }
+        .btn-track { background: #0066cc; color: white; }
+        .btn-add-tracking { background: #28a745; color: white; }
+        .btn-delete { background: #dc3545; color: white; }
+        .form-group { margin-bottom: 15px; }
+        .form-group label { display: block; margin-bottom: 5px; font-weight: bold; color: #333; }
+        .form-group input, .form-group textarea, .form-group select { width: 100%; padding: 12px; border: 2px solid #ddd; border-radius: 8px; font-size: 14px; }
+        .form-group textarea { height: 80px; resize: vertical; }
+        .timeline-item { border-right: 3px solid #e60012; padding: 12px 15px; margin-right: 10px; margin-bottom: 15px; background: #fafafa; border-radius: 0 8px 8px 0; }
+        .timeline-item .time { color: #999; font-size: 13px; }
+        .timeline-item .event { font-weight: bold; color: #333; margin: 5px 0; }
+        .timeline-item .location { color: #666; font-size: 14px; }
+        .modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); display: flex; justify-content: center; align-items: center; z-index: 1000; }
+        .modal-content { background: white; border-radius: 15px; padding: 25px; max-width: 600px; width: 90%; max-height: 80vh; overflow-y: auto; }
+        .modal-content h3 { margin-bottom: 20px; text-align: center; }
+        .close-btn { float: left; cursor: pointer; font-size: 24px; color: #999; }
+        .loading { text-align: center; padding: 20px; }
+        .spinner { border: 4px solid #f3f3f3; border-top: 4px solid #e60012; border-radius: 50%; width: 40px; height: 40px; animation: spin 1s linear infinite; margin: 0 auto 10px; }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        .summary-box { background: #f0f0f0; padding: 15px; border-radius: 10px; margin-bottom: 20px; display: flex; justify-content: space-around; text-align: center; flex-wrap: wrap; }
+        .summary-box div { font-size: 14px; padding: 5px; }
+        .summary-box .count { font-size: 28px; font-weight: bold; color: #e60012; }
+        .client-card { background: #fafafa; padding: 15px; border-radius: 8px; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; }
+        .client-info { flex: 1; }
+        .client-actions button { background: #dc3545; color: white; border: none; padding: 8px 15px; border-radius: 5px; cursor: pointer; }
+        .two-columns { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+        .two-columns .form-group { margin-bottom: 10px; }
+        @media (max-width: 500px) { .two-columns { grid-template-columns: 1fr; } }
+        .toast { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); background: #333; color: white; padding: 12px 24px; border-radius: 12px; font-size: 14px; z-index: 9999; animation: toastIn 0.3s ease; max-width: 90%; text-align: center; }
+        .toast.success { background: #28a745; }
+        .toast.error { background: #dc3545; }
+        @keyframes toastIn { from { opacity: 0; transform: translateX(-50%) translateY(20px); } to { opacity: 1; transform: translateX(-50%) translateY(0); } }
+        .debug-box { background: #f8f9fa; padding: 10px; border-radius: 8px; margin-top: 10px; font-size: 11px; color: #666; border: 1px dashed #ddd; word-break: break-all; text-align: left; direction: ltr; max-height: 150px; overflow: auto; }
+        .arabic-only { font-family: 'Segoe UI', Tahoma, Arial, sans-serif; }
     </style>
 </head>
-<body oncontextmenu="return false;">
-
-<div class="app-wrapper" id="app">
-
-    <!-- ===== صفحة تسجيل الدخول ===== -->
-    <div id="loginPage" class="login-page">
-        <div class="login-logo-wrap">
-            <div class="logo-node">📦</div>
-        </div>
-        <div class="brand">نظام تتبع شحنات J&T</div>
-        <div class="sub-brand">إدارة الشحنات بكل سهولة</div>
-
-        <div class="input-group">
-            <label>📱 رقم الهاتف</label>
-            <input type="text" id="loginPhone" placeholder="أدخل رقم الهاتف" dir="ltr">
-        </div>
-        <div class="input-group">
-            <label>🔒 كلمة المرور</label>
-            <input type="password" id="loginPassword" placeholder="أدخل كلمة المرور" dir="ltr">
+<body>
+    <div class="container" id="app">
+        <div id="loginPage" class="login-page">
+            <div class="logo">📦</div>
+            <h1>نظام تتبع شحنات J&T</h1>
+            <input type="text" id="phoneInput" placeholder="رقم الهاتف" dir="ltr">
+            <input type="password" id="passwordInput" placeholder="كلمة المرور" dir="ltr">
+            <button onclick="doLogin()">دخول</button>
+            <p class="error-msg" id="loginError"></p>
         </div>
 
-        <button class="login-btn" onclick="doLogin()">🚀 دخول</button>
-        <div id="loginError" class="error-msg hidden"></div>
-    </div>
-
-    <!-- ===== لوحة التحكم ===== -->
-    <div id="dashboard" class="hidden">
-        <div class="app-header">
-            <div class="user-info">
-                <div class="avatar" id="userAvatar">👤</div>
+        <div id="dashboard" class="hidden">
+            <div class="header">
+                <h2 id="welcomeMsg">مرحباً</h2>
                 <div>
-                    <div class="name" id="userName">مرحباً</div>
-                    <div class="role" id="userRole">عميل</div>
+                    <button id="addShipmentBtn" class="green hidden" onclick="showAddShipmentForm()">➕ إضافة شحنة</button>
+                    <button id="clientsBtn" class="blue hidden" onclick="showClients()">👥 إدارة العملاء</button>
+                    <button id="allShipmentsBtn" class="orange hidden" onclick="loadAllShipments()">📋 جميع الشحنات</button>
+                    <button onclick="logout()">🚪 خروج</button>
                 </div>
             </div>
-            <div class="header-actions">
-                <button id="addShipmentBtn" class="green hidden" onclick="showAddShipmentForm()">➕ إضافة</button>
-                <button id="clientsBtn" class="blue hidden" onclick="showClients()">👥 عملاء</button>
-                <button id="allShipmentsBtn" class="orange hidden" onclick="loadAllShipments()">📋 الكل</button>
-                <button class="outline" onclick="logout()">🚪 خروج</button>
-            </div>
+            <div id="summaryBox" class="summary-box hidden"></div>
+            <div id="content"></div>
         </div>
-
-        <div id="summaryBox" class="summary-box hidden">
-            <div class="stat"><div class="count" id="totalCount">0</div><div class="label">كل الشحنات</div></div>
-            <div class="stat"><div class="count" id="waitingCount" style="color:#856404;">0</div><div class="label">قيد الانتظار</div></div>
-            <div class="stat"><div class="count" id="trackingCount" style="color:#0c5460;">0</div><div class="label">قيد التتبع</div></div>
-            <div class="stat"><div class="count" id="doneCount" style="color:#155724;">0</div><div class="label">تم التوصيل</div></div>
-        </div>
-
-        <div class="content-area" id="contentArea"></div>
     </div>
-</div>
 
-<!-- ===== مودال ===== -->
-<div id="modalOverlay" class="modal-overlay hidden" onclick="if(event.target===this) closeModal()">
-    <div class="modal-box" id="modalBox">
-        <span class="close-btn" onclick="closeModal()">✕</span>
-        <div id="modalBody"></div>
+    <div id="modal" class="modal hidden">
+        <div class="modal-content" id="modalContent"></div>
     </div>
-</div>
 
-<script>
-    // ============================================================
-    //  🔗 رابط الـ Web App
-    // ============================================================
-    const API_URL = "https://script.google.com/macros/s/AKfycbxSi9PXrWqKyaw0k7sh80w0_-eSWetaDy2VubgWlr8sLRopS67opRMdUH1hJ33bDPhw/exec";
-    let currentUser = null;
-    let currentShipments = [];
+    <script>
+        // ============================================================
+        //  🔗 الرابط الجديد
+        // ============================================================
+        const API_URL = "https://script.google.com/macros/s/AKfycbycDitGXHkdifuWiGLldREr33T-8gQ4RJ9v4_v0fgECXz1FsUSsaDxADPsaBUHw2AtR/exec";
+        let currentUser = null;
 
-    // ============================================================
-    //  قائمة المحافظات والمدن
-    // ============================================================
-    const governorates = {
-        'الشرقية': ['بلبيس', 'انشاص الرمل', 'أولاد صقر', 'الحسينية', 'ديرب نجم', 'فاقوس', 'كفر صقر', 'مشتول السوق', 'منيا القمح', 'الصالحية القديمة', 'الصالحية الجديدة', 'صان الحجر', 'مدينة العاشر من رمضان'],
-        'الجيزة': ['مدينة السادس من أكتوبر', 'مدينة الشيخ زايد', 'العياط', 'الحوامدية', 'البدرشين', 'الصف', 'العمرانية', 'أطفيح', 'الواحات البحرية', 'الجيزة', 'حدائق الاهرام', 'فيصل', 'الهرم', 'أبو النمرس', 'العجوزة', 'الوراق', 'أوسيم', 'بولاق الدكرور', 'الدقي', 'أرض اللواء', 'المهندسين', 'كرداسة', 'إمبابة', 'منشأة القناطر'],
-        'الغربية': ['كفر الزيات', 'المحلة الكبرى', 'سمنود', 'بسيون', 'السنطة', 'زفتى', 'قطور', 'طنطا'],
-        'الدقهلية': ['المنصورة', 'أجا', 'المنزلة', 'بلقاس', 'دكرنس', 'السنبلاوين', 'منية النصر', 'ميت غمر', 'شربين', 'طلخا'],
-        'الإسكندرية': ['الدخيلة', 'العامرية', 'برج العرب', 'محرم بيك', 'باب شرقي', 'الساحل الشمالي', 'سيدي جابر', 'العطارين', 'المنشية', 'اللبان', 'الجمرك', 'مينا البصل', 'كرموز', 'الرمل', 'المنتزه'],
-        'أسيوط': ['أبنوب', 'أبوتيج', 'البداري', 'الغنايم', 'الفتح', 'القوصية', 'ديروط', 'ساحل سليم', 'صدفا', 'مدينة أسيوط', 'منفلوط', 'منقباد'],
-        'أسوان': ['أسوان', 'كوم امبو', 'دراو', 'إدفو'],
-        'بني سويف': ['الواسطى', 'ناصر', 'مدينة بني سويف', 'مركز بني سويف', 'أهناسيا', 'ببا', 'سمسطا', 'الفشن'],
-        'القليوبية': ['بنها', 'الخانكة', 'العبور', 'القناطر الخيرية', 'شبين القناطر', 'طوخ', 'كفر شكر', 'قليوب', 'شبرا الخيمة'],
-        'القاهرة': ['عابدين', 'العباسية', 'الأزبكية', 'القطامية', 'المنيل', 'المقطم', 'دار السلام', 'البساتين', 'الجمالية', 'السيدة زينب', 'حلوان', 'المعادي', 'مصر القديمة', 'قصر النيل', 'الخليفة', 'طرة', 'الزمالك', 'الشروق', 'مدينة بدر', 'عين شمس', 'مدينتي', 'الزيتون', 'مدينة نصر', 'القاهرة الجديدة', 'هليوبوليس', 'الأميرية', 'السلام', 'الوايلي', 'الشرابية', 'المرج', 'المطرية', 'النزهة', 'حدائق القبة', 'شبرا مصر', 'كورنيش النيل'],
-        'البحيرة': ['دمنهور', 'كفر الدوار', 'أبو حمص', 'المحمودية', 'وادي النطرون', 'النوبارية', 'أبوالمطامير', 'حوش عيسي', 'إيتاي البارود', 'شبراخيت', 'رشيد', 'إدكوا', 'مركز بدر', 'الدلنجات', 'الرحمانية', 'كوم حمادة'],
-        'دمياط': ['فارسكور', 'دمياط القديمة', 'كفر سعد', 'الزرقا', 'كفر البطيخ', 'دمياط الجديدة', 'رأس البر', 'عزبة البرج'],
-        'الفيوم': ['طامية', 'سنورس', 'مركز الفيوم', 'مدينة الفيوم', 'أطسا', 'أبشواي', 'يوسف الصديق'],
-        'البحر الأحمر': ['الغردقة', 'رأس غارب', 'سفاجا', 'القصير', 'مرسى علم'],
-        'الإسماعيلية': ['الإسماعيلية'],
-        'كفر الشيخ': ['كفر الشيخ', 'دسوق', 'فوه', 'مطوبس', 'بلطيم', 'الحامول', 'الرياض', 'بيلا', 'قلين', 'سيدى سالم'],
-        'الأقصر': ['مدينة الأقصر', 'أرمنت', 'أسنا', 'القرنة'],
-        'مرسى مطروح': ['مرسى مطروح'],
-        'المنيا': ['العدوة', 'مغاغة', 'بني مزار', 'مطاي', 'سمالوط', 'مركز المنيا', 'مدينة المنيا', 'أبو قرقاص', 'ملوي', 'دير مواس'],
-        'بور سعيد': ['بورسعيد'],
-        'قنا': ['قنا', 'قوص', 'مدينة قفط', 'دشنا', 'نقادة', 'نجع حمادي', 'فرشوط', 'أبوتشت'],
-        'المنوفية': ['قويسنا', 'بركة السبع', 'السادات', 'الشهداء', 'تلا', 'شبين الكوم', 'الباجور', 'منوف', 'أشمون'],
-        'سوهاج': ['طما', 'طهطا', 'جهينة', 'مدينة سوهاج', 'المراغة', 'أخميم', 'ساقلته', 'المنشأة', 'جرجا', 'البلينا', 'دار السلام', 'العسيرات'],
-        'السويس': ['السويس'],
-        'الوادي الجديد': ['الخارجة', 'الداخلة', 'الفرافرة'],
-        'جنوب سيناء': ['جنوب سيناء', 'شرم الشيخ', 'دهب']
-    };
+        // ============================================================
+        //  قائمة المحافظات والمدن
+        // ============================================================
+        const governorates = {
+            'الشرقية': ['بلبيس', 'انشاص الرمل', 'أولاد صقر', 'الحسينية', 'ديرب نجم', 'فاقوس', 'كفر صقر', 'مشتول السوق', 'منيا القمح', 'الصالحية القديمة', 'الصالحية الجديدة', 'صان الحجر', 'مدينة العاشر من رمضان'],
+            'الجيزة': ['مدينة السادس من أكتوبر', 'مدينة الشيخ زايد', 'العياط', 'الحوامدية', 'البدرشين', 'الصف', 'العمرانية', 'أطفيح', 'الواحات البحرية', 'الجيزة', 'حدائق الاهرام', 'فيصل', 'الهرم', 'أبو النمرس', 'العجوزة', 'الوراق', 'أوسيم', 'بولاق الدكرور', 'الدقي', 'أرض اللواء', 'المهندسين', 'كرداسة', 'إمبابة', 'منشأة القناطر'],
+            'الغربية': ['كفر الزيات', 'المحلة الكبرى', 'سمنود', 'بسيون', 'السنطة', 'زفتى', 'قطور', 'طنطا'],
+            'الدقهلية': ['المنصورة', 'أجا', 'المنزلة', 'بلقاس', 'دكرنس', 'السنبلاوين', 'منية النصر', 'ميت غمر', 'شربين', 'طلخا'],
+            'الإسكندرية': ['الدخيلة', 'العامرية', 'برج العرب', 'محرم بيك', 'باب شرقي', 'الساحل الشمالي', 'سيدي جابر', 'العطارين', 'المنشية', 'اللبان', 'الجمرك', 'مينا البصل', 'كرموز', 'الرمل', 'المنتزه'],
+            'أسيوط': ['أبنوب', 'أبوتيج', 'البداري', 'الغنايم', 'الفتح', 'القوصية', 'ديروط', 'ساحل سليم', 'صدفا', 'مدينة أسيوط', 'منفلوط', 'منقباد'],
+            'أسوان': ['أسوان', 'كوم امبو', 'دراو', 'إدفو'],
+            'بني سويف': ['الواسطى', 'ناصر', 'مدينة بني سويف', 'مركز بني سويف', 'أهناسيا', 'ببا', 'سمسطا', 'الفشن'],
+            'القليوبية': ['بنها', 'الخانكة', 'العبور', 'القناطر الخيرية', 'شبين القناطر', 'طوخ', 'كفر شكر', 'قليوب', 'شبرا الخيمة'],
+            'القاهرة': ['عابدين', 'العباسية', 'الأزبكية', 'القطامية', 'المنيل', 'المقطم', 'دار السلام', 'البساتين', 'الجمالية', 'السيدة زينب', 'حلوان', 'المعادي', 'مصر القديمة', 'قصر النيل', 'الخليفة', 'طرة', 'الزمالك', 'الشروق', 'مدينة بدر', 'عين شمس', 'مدينتي', 'الزيتون', 'مدينة نصر', 'القاهرة الجديدة', 'هليوبوليس', 'الأميرية', 'السلام', 'الوايلي', 'الشرابية', 'المرج', 'المطرية', 'النزهة', 'حدائق القبة', 'شبرا مصر', 'كورنيش النيل'],
+            'البحيرة': ['دمنهور', 'كفر الدوار', 'أبو حمص', 'المحمودية', 'وادي النطرون', 'النوبارية', 'أبوالمطامير', 'حوش عيسي', 'إيتاي البارود', 'شبراخيت', 'رشيد', 'إدكوا', 'مركز بدر', 'الدلنجات', 'الرحمانية', 'كوم حمادة'],
+            'دمياط': ['فارسكور', 'دمياط القديمة', 'كفر سعد', 'الزرقا', 'كفر البطيخ', 'دمياط الجديدة', 'رأس البر', 'عزبة البرج'],
+            'الفيوم': ['طامية', 'سنورس', 'مركز الفيوم', 'مدينة الفيوم', 'أطسا', 'أبشواي', 'يوسف الصديق'],
+            'البحر الأحمر': ['الغردقة', 'رأس غارب', 'سفاجا', 'القصير', 'مرسى علم'],
+            'الإسماعيلية': ['الإسماعيلية'],
+            'كفر الشيخ': ['كفر الشيخ', 'دسوق', 'فوه', 'مطوبس', 'بلطيم', 'الحامول', 'الرياض', 'بيلا', 'قلين', 'سيدى سالم'],
+            'الأقصر': ['مدينة الأقصر', 'أرمنت', 'أسنا', 'القرنة'],
+            'مرسى مطروح': ['مرسى مطروح'],
+            'المنيا': ['العدوة', 'مغاغة', 'بني مزار', 'مطاي', 'سمالوط', 'مركز المنيا', 'مدينة المنيا', 'أبو قرقاص', 'ملوي', 'دير مواس'],
+            'بور سعيد': ['بورسعيد'],
+            'قنا': ['قنا', 'قوص', 'مدينة قفط', 'دشنا', 'نقادة', 'نجع حمادي', 'فرشوط', 'أبوتشت'],
+            'المنوفية': ['قويسنا', 'بركة السبع', 'السادات', 'الشهداء', 'تلا', 'شبين الكوم', 'الباجور', 'منوف', 'أشمون'],
+            'سوهاج': ['طما', 'طهطا', 'جهينة', 'مدينة سوهاج', 'المراغة', 'أخميم', 'ساقلته', 'المنشأة', 'جرجا', 'البلينا', 'دار السلام', 'العسيرات'],
+            'السويس': ['السويس'],
+            'الوادي الجديد': ['الخارجة', 'الداخلة', 'الفرافرة'],
+            'جنوب سيناء': ['جنوب سيناء', 'شرم الشيخ', 'دهب']
+        };
 
-    function updateCities() {
-        const govSelect = document.getElementById('f_governorate');
-        const citySelect = document.getElementById('f_city');
-        const selected = govSelect.value;
-        citySelect.innerHTML = '<option value="">اختر المدينة</option>';
-        if (selected && governorates[selected]) {
-            governorates[selected].forEach(city => {
-                const option = document.createElement('option');
-                option.value = city;
-                option.textContent = city;
-                citySelect.appendChild(option);
-            });
-        }
-    }
-
-    // ============================================================
-    //  🔐 تسجيل الدخول
-    // ============================================================
-    async function doLogin() {
-        const phone = document.getElementById('loginPhone').value.trim();
-        const password = document.getElementById('loginPassword').value.trim();
-        const errorDiv = document.getElementById('loginError');
-
-        if (!phone || !password) {
-            errorDiv.textContent = "⚠️ يرجى إدخال رقم الهاتف وكلمة المرور";
-            errorDiv.classList.remove('hidden');
-            return;
-        }
-
-        try {
-            const formData = new URLSearchParams();
-            formData.append('action', 'login');
-            formData.append('phone', phone);
-            formData.append('password', password);
-
-            const res = await fetch(API_URL, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-                body: formData.toString()
-            });
-
-            const data = await res.json();
-            console.log('✅ Login response:', data);
-
-            if (data.success) {
-                currentUser = {
-                    phone: phone,
-                    password: password,
-                    name: data.name,
-                    role: data.role
-                };
-                errorDiv.classList.add('hidden');
-                showDashboard();
-                showToast('✅ مرحباً ' + data.name, 'success');
-            } else {
-                errorDiv.textContent = data.msg || "❌ رقم الهاتف أو كلمة المرور غير صحيحة";
-                errorDiv.classList.remove('hidden');
+        function updateCities() {
+            const govSelect = document.getElementById('f_governorate');
+            const citySelect = document.getElementById('f_city');
+            const selected = govSelect.value;
+            citySelect.innerHTML = '<option value="">اختر المدينة</option>';
+            if (selected && governorates[selected]) {
+                governorates[selected].forEach(city => {
+                    const option = document.createElement('option');
+                    option.value = city;
+                    option.textContent = city;
+                    citySelect.appendChild(option);
+                });
             }
-        } catch (e) {
-            errorDiv.textContent = "⚠️ فشل الاتصال بالخادم: " + e.message;
-            errorDiv.classList.remove('hidden');
-            console.error('❌ Login error:', e);
-        }
-    }
-
-    function logout() {
-        currentUser = null;
-        document.getElementById('loginPage').classList.remove('hidden');
-        document.getElementById('dashboard').classList.add('hidden');
-        document.getElementById('loginPhone').value = '';
-        document.getElementById('loginPassword').value = '';
-        document.getElementById('loginError').classList.add('hidden');
-        showToast('🚪 تم تسجيل الخروج', '');
-    }
-
-    function showDashboard() {
-        document.getElementById('loginPage').classList.add('hidden');
-        document.getElementById('dashboard').classList.remove('hidden');
-
-        const isAdmin = currentUser.role === 'admin';
-        document.getElementById('userName').textContent = currentUser.name || 'مستخدم';
-        document.getElementById('userRole').textContent = isAdmin ? '👑 أدمن' : '👤 عميل';
-        document.getElementById('userAvatar').textContent = (currentUser.name || 'U')[0].toUpperCase();
-
-        document.getElementById('addShipmentBtn').classList.toggle('hidden', isAdmin);
-        document.getElementById('clientsBtn').classList.toggle('hidden', !isAdmin);
-        document.getElementById('allShipmentsBtn').classList.toggle('hidden', !isAdmin);
-        document.getElementById('summaryBox').classList.toggle('hidden', !isAdmin);
-
-        if (isAdmin) {
-            loadAllShipments();
-        } else {
-            loadMyShipments();
-        }
-    }
-
-    // ============================================================
-    //  📦 تحميل الشحنات
-    // ============================================================
-    async function loadMyShipments() {
-        const content = document.getElementById('contentArea');
-        content.innerHTML = '<div class="loading"><div class="spinner"></div><div>جاري التحميل...</div></div>';
-
-        if (!currentUser) {
-            showError(content, 'يرجى تسجيل الدخول أولاً');
-            return;
         }
 
-        try {
-            const formData = new URLSearchParams();
-            formData.append('action', 'myShipments');
-            formData.append('phone', currentUser.phone);
-            formData.append('password', currentUser.password);
+        // ============================================================
+        //  🔐 تسجيل الدخول
+        // ============================================================
+        async function doLogin() {
+            const phone = document.getElementById('phoneInput').value.trim();
+            const password = document.getElementById('passwordInput').value.trim();
+            const errorDiv = document.getElementById('loginError');
+            if (!phone || !password) { errorDiv.textContent = "يرجى إدخال رقم الهاتف وكلمة المرور"; return; }
+            try {
+                const res = await fetch(`${API_URL}?action=login&phone=${phone}&password=${password}`);
+                const data = await res.json();
+                if (data.success) { 
+                    currentUser = { phone, password, name: data.name, role: data.role };
+                    showDashboard(); 
+                } else { 
+                    errorDiv.textContent = data.msg || "فشل تسجيل الدخول"; 
+                }
+            } catch (e) { errorDiv.textContent = "فشل الاتصال"; }
+        }
 
-            const res = await fetch(API_URL, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-                body: formData.toString()
-            });
+        function logout() {
+            currentUser = null;
+            document.getElementById('loginPage').classList.remove('hidden');
+            document.getElementById('dashboard').classList.add('hidden');
+            document.getElementById('phoneInput').value = '';
+            document.getElementById('passwordInput').value = '';
+            showToast('🚪 تم تسجيل الخروج', '');
+        }
 
-            const data = await res.json();
-            console.log('📦 myShipments response:', data);
+        function showDashboard() {
+            document.getElementById('loginPage').classList.add('hidden');
+            document.getElementById('dashboard').classList.remove('hidden');
+            const isAdmin = currentUser.role === 'admin';
+            document.getElementById('welcomeMsg').textContent = `مرحباً ${currentUser.name} (${isAdmin ? 'أدمن' : 'عميل'})`;
+            
+            document.getElementById('addShipmentBtn').classList.toggle('hidden', isAdmin);
+            document.getElementById('clientsBtn').classList.toggle('hidden', !isAdmin);
+            document.getElementById('allShipmentsBtn').classList.toggle('hidden', !isAdmin);
+            document.getElementById('summaryBox').classList.toggle('hidden', !isAdmin);
 
-            if (data.success) {
-                currentShipments = data.shipments || [];
-                renderShipments(currentShipments, false);
+            if (isAdmin) {
+                loadAllShipments();
             } else {
-                showError(content, data.msg || 'فشل تحميل الشحنات');
+                loadMyShipments();
             }
-        } catch (e) {
-            console.error('❌ loadMyShipments error:', e);
-            showError(content, 'فشل الاتصال بالخادم: ' + e.message);
-        }
-    }
-
-    async function loadAllShipments() {
-        const content = document.getElementById('contentArea');
-        content.innerHTML = '<div class="loading"><div class="spinner"></div><div>جاري التحميل...</div></div>';
-
-        if (!currentUser) {
-            showError(content, 'يرجى تسجيل الدخول أولاً');
-            return;
         }
 
-        try {
-            const formData = new URLSearchParams();
-            formData.append('action', 'allShipments');
-            formData.append('adminPhone', currentUser.phone);
-            formData.append('adminPassword', currentUser.password);
-
-            const res = await fetch(API_URL, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-                body: formData.toString()
-            });
-
-            const data = await res.json();
-            console.log('📦 allShipments response:', data);
-
-            if (data.success) {
-                currentShipments = data.shipments || [];
-                updateSummary(currentShipments);
-                renderShipments(currentShipments, true);
-            } else {
-                showError(content, data.msg || 'فشل تحميل الشحنات');
-            }
-        } catch (e) {
-            console.error('❌ loadAllShipments error:', e);
-            showError(content, 'فشل الاتصال بالخادم: ' + e.message);
+        // ============================================================
+        //  📦 تحميل الشحنات
+        // ============================================================
+        async function loadMyShipments() {
+            const content = document.getElementById('content');
+            content.innerHTML = '<div class="loading"><div class="spinner"></div>جاري التحميل...</div>';
+            try {
+                const res = await fetch(`${API_URL}?action=myShipments&phone=${currentUser.phone}&password=${currentUser.password}`);
+                const data = await res.json();
+                if (data.success) {
+                    content.innerHTML = data.shipments.length === 0 ? '<p style="text-align:center;color:#999;padding:50px;">لا توجد شحنات حتى الآن</p>' : data.shipments.map(s => createShipmentCard(s)).join('');
+                } else { content.innerHTML = '<p style="color:red;">' + (data.msg || 'فشل التحميل') + '</p>'; }
+            } catch (e) { content.innerHTML = '<p style="color:red;">فشل الاتصال</p>'; }
         }
-    }
 
-    function showError(container, message) {
-        container.innerHTML = `
-            <div class="error-box">
-                <span class="icon">❌</span>
-                <div class="title">فشل تحميل الشحنة</div>
-                <div class="sub">${message}</div>
-                <button onclick="location.reload()">🔄 إعادة المحاولة</button>
-            </div>
-        `;
-    }
+        async function loadAllShipments() {
+            const content = document.getElementById('content');
+            content.innerHTML = '<div class="loading"><div class="spinner"></div>جاري التحميل...</div>';
+            try {
+                const params = new URLSearchParams();
+                params.append('action', 'allShipments');
+                params.append('adminPhone', currentUser.phone);
+                params.append('adminPassword', currentUser.password);
+                const res = await fetch(API_URL, { method: 'POST', body: params });
+                const data = await res.json();
+                if (data.success) {
+                    updateSummary(data.shipments);
+                    content.innerHTML = data.shipments.length === 0 ? '<p style="text-align:center;color:#999;padding:50px;">لا توجد شحنات</p>' : data.shipments.map(s => createShipmentCard(s, true)).join('');
+                } else { content.innerHTML = '<p style="color:red;">' + (data.msg || 'فشل التحميل') + '</p>'; }
+            } catch (e) { content.innerHTML = '<p style="color:red;">فشل الاتصال</p>'; }
+        }
 
-    function updateSummary(shipments) {
-        const waiting = shipments.filter(s => s.status && s.status.includes('انتظار')).length;
-        const tracking = shipments.filter(s => s.status && s.status.includes('تتبع')).length;
-        const done = shipments.filter(s => s.status && s.status.includes('تم')).length;
-
-        document.getElementById('totalCount').textContent = shipments.length;
-        document.getElementById('waitingCount').textContent = waiting;
-        document.getElementById('trackingCount').textContent = tracking;
-        document.getElementById('doneCount').textContent = done;
-    }
-
-    // ============================================================
-    //  🎨 عرض بطاقة الشحنة
-    // ============================================================
-    function renderShipments(shipments, isAdmin) {
-        const content = document.getElementById('contentArea');
-
-        if (!shipments || shipments.length === 0) {
-            content.innerHTML = `
-                <div class="empty-state">
-                    <div class="icon">📭</div>
-                    <p>لا توجد شحنات حتى الآن</p>
-                    ${!isAdmin ? '<button onclick="showAddShipmentForm()">➕ إضافة شحنة</button>' : ''}
-                </div>
+        function updateSummary(shipments) {
+            const waiting = shipments.filter(s => s.status && s.status.includes('انتظار')).length;
+            const tracking = shipments.filter(s => s.status && s.status.includes('تتبع')).length;
+            const delivered = shipments.filter(s => s.status && s.status.includes('تم')).length;
+            document.getElementById('summaryBox').innerHTML = `
+                <div><div class="count">${shipments.length}</div>كل الشحنات</div>
+                <div><div class="count" style="color:#856404;">${waiting}</div>قيد الانتظار</div>
+                <div><div class="count" style="color:#0c5460;">${tracking}</div>قيد التتبع</div>
+                <div><div class="count" style="color:#155724;">${delivered}</div>تم التوصيل</div>
             `;
-            return;
         }
 
-        let html = '';
-        shipments.forEach((s) => {
+        // ============================================================
+        //  🎨 عرض بطاقة الشحنة - تصميم شريطي مع تفاصيل قابلة للطي
+        // ============================================================
+        function createShipmentCard(s, isAdmin = false) {
             let statusClass = 'status-waiting';
             let statusText = s.status || 'في انتظار التتبع';
             if (statusText.includes('تتبع')) statusClass = 'status-tracking';
             else if (statusText.includes('تم')) statusClass = 'status-done';
 
-            let actionsHtml = '';
+            // الحصول على آخر تحديث من البيانات أو إنشاء نص افتراضي
+            let lastUpdate = s.lastUpdate || s.date || '';
+            let updateText = lastUpdate ? 'آخر تحديث: ' + lastUpdate : '';
+
+            let actions = '';
+            // زر التتبع يظهر فقط إذا كان هناك رقم تتبع
             const trackingNum = s.trackingNumber || '';
             if (trackingNum && trackingNum.length > 3) {
-                actionsHtml += `<button class="btn-track" onclick="event.stopPropagation(); trackShipment('${trackingNum}')">📍 تتبع</button>`;
-            }
-            if (isAdmin && (!trackingNum || trackingNum.length < 3)) {
-                actionsHtml += `<button class="btn-add-tracking" onclick="event.stopPropagation(); showAddTracking('${s.id}')">🔢 إضافة تتبع</button>`;
+                actions += `<button class="btn-track" onclick="event.stopPropagation(); trackShipment('${trackingNum}')">📍 تتبع</button>`;
             }
             if (isAdmin) {
-                actionsHtml += `<button class="btn-delete" onclick="event.stopPropagation(); deleteShipment('${s.id}')">🗑️ حذف</button>`;
+                if (!trackingNum || trackingNum.length < 3) {
+                    actions += `<button class="btn-add-tracking" onclick="event.stopPropagation(); showAddTracking('${s.id}')">🔢 إضافة رقم تتبع</button>`;
+                }
+                actions += `<button class="btn-delete" onclick="event.stopPropagation(); deleteShipment('${s.id}')">🗑️ حذف</button>`;
             }
 
+            // عرض مختصر للعميل (الاسم، الهاتف، المبلغ)
             const displayName = s.receiverName || s.customerName || 'غير معروف';
             const displayPhone = s.receiverPhone || s.customerPhone || '';
             const displayAmount = s.amount || '0';
-            let lastUpdateText = s.lastUpdate || s.date || '';
-            let updateDisplay = lastUpdateText ? 'آخر تحديث: ' + lastUpdateText : '';
 
-            html += `
-                <div class="shipment-card" onclick="toggleDetails(this)">
-                    <span class="status-badge ${statusClass}">${statusText}</span>
-                    <div class="summary-row">
-                        <div class="main-info">
-                            <span class="name">👤 ${displayName}</span>
-                            <span class="phone">📱 ${displayPhone}</span>
-                            <span class="amount">💰 ${displayAmount} ج.م</span>
-                        </div>
-                        <div class="last-update">${updateDisplay}</div>
+            return `<div class="shipment-card" onclick="toggleDetails(this)">
+                <span class="status-badge ${statusClass}">${statusText}</span>
+                <div class="summary-row">
+                    <div class="main-info">
+                        <span class="name">👤 ${displayName}</span>
+                        <span class="phone">📱 ${displayPhone}</span>
+                        <span class="amount">💰 ${displayAmount} ج.م</span>
                     </div>
-                    <div class="details">
-                        ${isAdmin ? `<div class="info"><strong>📱 رقم العميل:</strong> ${s.clientPhone || 'غير معروف'}</div>` : ''}
-                        <div class="info"><strong>🔢 رقم الشحنة:</strong> ${s.id}</div>
-                        ${trackingNum ? `<div class="info"><strong>🚚 رقم التتبع:</strong> ${trackingNum}</div>` : ''}
-                        ${s.receiverPhone2 ? `<div class="info"><strong>📱 هاتف آخر:</strong> ${s.receiverPhone2}</div>` : ''}
-                        ${s.governorate ? `<div class="info"><strong>📍 المحافظة:</strong> ${s.governorate}</div>` : ''}
-                        ${s.city ? `<div class="info"><strong>🏙️ المدينة:</strong> ${s.city}</div>` : ''}
-                        <div class="info"><strong>📍 العنوان:</strong> ${s.address || s.customerAddress || ''}</div>
-                        ${s.weight ? `<div class="info"><strong>⚖️ الوزن:</strong> ${s.weight} كجم</div>` : ''}
-                        ${s.notes ? `<div class="info"><strong>📝 ملاحظات:</strong> ${s.notes}</div>` : ''}
-                        ${actionsHtml ? `<div class="card-actions">${actionsHtml}</div>` : ''}
-                    </div>
+                    <div class="last-update">${updateText}</div>
                 </div>
+                <div class="details">
+                    ${isAdmin ? `<div class="info"><strong>📱 رقم العميل:</strong> ${s.clientPhone || 'غير معروف'}</div>` : ''}
+                    <div class="info"><strong>🔢 رقم الشحنة:</strong> ${s.id}</div>
+                    ${trackingNum ? `<div class="info"><strong>🚚 رقم التتبع:</strong> ${trackingNum}</div>` : ''}
+                    ${s.receiverPhone2 ? `<div class="info"><strong>📱 هاتف آخر:</strong> ${s.receiverPhone2}</div>` : ''}
+                    ${s.governorate ? `<div class="info"><strong>📍 المحافظة:</strong> ${s.governorate}</div>` : ''}
+                    ${s.city ? `<div class="info"><strong>🏙️ المدينة:</strong> ${s.city}</div>` : ''}
+                    <div class="info"><strong>📍 العنوان:</strong> ${s.address || s.customerAddress || ''}</div>
+                    ${s.weight ? `<div class="info"><strong>⚖️ الوزن:</strong> ${s.weight} كجم</div>` : ''}
+                    ${s.notes ? `<div class="info"><strong>📝 ملاحظات:</strong> ${s.notes}</div>` : ''}
+                    ${actions ? `<div class="actions">${actions}</div>` : ''}
+                </div>
+            </div>`;
+        }
+
+        // دالة لإظهار/إخفاء التفاصيل عند النقر على البطاقة
+        function toggleDetails(element) {
+            const details = element.querySelector('.details');
+            if (details) {
+                details.classList.toggle('open');
+            }
+        }
+
+        // ============================================================
+        //  ➕ إضافة شحنة جديدة
+        // ============================================================
+        function showAddShipmentForm() {
+            if (!currentUser) { showToast('⚠️ يرجى تسجيل الدخول أولاً', 'error'); return; }
+            
+            let govOptions = '<option value="">اختر المحافظة</option>';
+            Object.keys(governorates).forEach(gov => {
+                govOptions += `<option value="${gov}">${gov}</option>`;
+            });
+
+            document.getElementById('modal').classList.remove('hidden');
+            document.getElementById('modalContent').innerHTML = `
+                <span class="close-btn" onclick="closeModal()">✖</span>
+                <h3>📦 إضافة شحنة جديدة</h3>
+                <div class="form-group"><label>👤 اسم المستلم *</label><input id="f_receiverName" placeholder="اسم المستلم"></div>
+                <div class="form-group"><label>📱 هاتف المستلم *</label><input id="f_receiverPhone" placeholder="مثال: 010xxxxxxxx" dir="ltr"></div>
+                <div class="form-group"><label>📱 هاتف آخر للمستلم</label><input id="f_receiverPhone2" placeholder="هاتف آخر (اختياري)" dir="ltr"></div>
+                <div class="two-columns">
+                    <div class="form-group"><label>🏛️ المحافظة *</label><select id="f_governorate" onchange="updateCities()">${govOptions}</select></div>
+                    <div class="form-group"><label>🏙️ المدينة *</label><select id="f_city"><option value="">اختر المحافظة أولاً</option></select></div>
+                </div>
+                <div class="form-group"><label>📍 العنوان التفصيلي *</label><input id="f_address" placeholder="العنوان بالتفصيل"></div>
+                <div class="form-group"><label>💰 المبلغ المطلوب تحصيله شامل الشحن *</label><input id="f_amount" type="number" placeholder="المبلغ بالجنيه" dir="ltr"></div>
+                <div class="form-group"><label>⚖️ وزن الشحنة *</label><input id="f_weight" type="number" placeholder="الوزن بالكيلو" dir="ltr" value="1"></div>
+                <div class="form-group"><label>📝 ملاحظات</label><textarea id="f_notes" placeholder="ملاحظات إضافية"></textarea></div>
+                <button onclick="submitShipment()" style="width:100%;padding:15px;background:#e60012;color:white;border:none;border-radius:8px;font-size:16px;cursor:pointer;">✅ إضافة الشحنة</button>
+                <p id="shipError" style="color:red;margin-top:10px;"></p>
             `;
-        });
-
-        content.innerHTML = html;
-    }
-
-    function toggleDetails(element) {
-        const details = element.querySelector('.details');
-        if (details) {
-            details.classList.toggle('open');
-        }
-    }
-
-    // ============================================================
-    //  ➕ إضافة شحنة جديدة
-    // ============================================================
-    function showAddShipmentForm() {
-        if (!currentUser) {
-            showToast('⚠️ يرجى تسجيل الدخول أولاً', 'error');
-            return;
         }
 
-        let govOptions = '<option value="">اختر المحافظة</option>';
-        Object.keys(governorates).forEach(gov => {
-            govOptions += `<option value="${gov}">${gov}</option>`;
-        });
+        async function submitShipment() {
+            const receiverName = document.getElementById('f_receiverName').value.trim();
+            const receiverPhone = document.getElementById('f_receiverPhone').value.trim();
+            const receiverPhone2 = document.getElementById('f_receiverPhone2').value.trim();
+            const governorate = document.getElementById('f_governorate').value;
+            const city = document.getElementById('f_city').value;
+            const address = document.getElementById('f_address').value.trim();
+            const amount = document.getElementById('f_amount').value.trim();
+            const weight = document.getElementById('f_weight').value.trim() || '1';
+            const notes = document.getElementById('f_notes').value.trim();
+            const errorDiv = document.getElementById('shipError');
 
-        openModal(`
-            <div class="modal-title"><i class="fas fa-box"></i> إضافة شحنة جديدة</div>
-            <div class="form-group"><label>👤 اسم المستلم *</label><input id="f_receiverName" placeholder="اسم المستلم"></div>
-            <div class="form-group"><label>📱 هاتف المستلم *</label><input id="f_receiverPhone" placeholder="مثال: 010xxxxxxxx" dir="ltr"></div>
-            <div class="form-group"><label>📱 هاتف آخر للمستلم</label><input id="f_receiverPhone2" placeholder="هاتف آخر (اختياري)" dir="ltr"></div>
-            <div class="two-columns">
-                <div class="form-group"><label>🏛️ المحافظة *</label><select id="f_governorate" onchange="updateCities()">${govOptions}</select></div>
-                <div class="form-group"><label>🏙️ المدينة *</label><select id="f_city"><option value="">اختر المحافظة أولاً</option></select></div>
-            </div>
-            <div class="form-group"><label>📍 العنوان التفصيلي *</label><input id="f_address" placeholder="العنوان بالتفصيل"></div>
-            <div class="form-group"><label>💰 المبلغ المطلوب تحصيله شامل الشحن *</label><input id="f_amount" type="number" placeholder="المبلغ بالجنيه" dir="ltr"></div>
-            <div class="form-group"><label>⚖️ وزن الشحنة *</label><input id="f_weight" type="number" placeholder="الوزن بالكيلو" dir="ltr" value="1"></div>
-            <div class="form-group"><label>📝 ملاحظات</label><textarea id="f_notes" placeholder="ملاحظات إضافية"></textarea></div>
-            <button class="submit-btn" onclick="submitShipment()">✅ إضافة الشحنة</button>
-            <div id="shipError" class="error-msg hidden"></div>
-        `);
-    }
-
-    async function submitShipment() {
-        const name = document.getElementById('f_receiverName').value.trim();
-        const phone = document.getElementById('f_receiverPhone').value.trim();
-        const phone2 = document.getElementById('f_receiverPhone2').value.trim();
-        const governorate = document.getElementById('f_governorate').value;
-        const city = document.getElementById('f_city').value;
-        const address = document.getElementById('f_address').value.trim();
-        const amount = document.getElementById('f_amount').value.trim();
-        const weight = document.getElementById('f_weight').value.trim() || '1';
-        const notes = document.getElementById('f_notes').value.trim();
-        const errorDiv = document.getElementById('shipError');
-
-        if (!name || !phone || !governorate || !city || !address || !amount) {
-            errorDiv.textContent = '⚠️ يرجى ملء جميع الحقول المطلوبة (*)';
-            errorDiv.classList.remove('hidden');
-            return;
-        }
-
-        if (!currentUser) {
-            errorDiv.textContent = '⚠️ يرجى تسجيل الدخول أولاً';
-            errorDiv.classList.remove('hidden');
-            return;
-        }
-
-        const formData = new URLSearchParams();
-        formData.append('action', 'addShipment');
-        formData.append('phone', currentUser.phone);
-        formData.append('password', currentUser.password);
-        formData.append('receiverName', name);
-        formData.append('receiverPhone', phone);
-        formData.append('receiverPhone2', phone2);
-        formData.append('governorate', governorate);
-        formData.append('city', city);
-        formData.append('address', address);
-        formData.append('amount', amount);
-        formData.append('weight', weight);
-        formData.append('notes', notes);
-
-        try {
-            const res = await fetch(API_URL, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-                body: formData.toString()
-            });
-            const data = await res.json();
-            console.log('📥 addShipment response:', data);
-
-            if (data.success) {
-                closeModal();
-                loadMyShipments();
-                showToast('✅ تم إضافة الشحنة بنجاح!', 'success');
-            } else {
-                errorDiv.textContent = data.msg || '❌ فشل الإضافة';
-                errorDiv.classList.remove('hidden');
+            if (!receiverName || !receiverPhone || !governorate || !city || !address || !amount) {
+                errorDiv.textContent = "يرجى ملء جميع الحقول المطلوبة (*)";
+                return;
             }
-        } catch (e) {
-            errorDiv.textContent = '⚠️ فشل الاتصال بالخادم: ' + e.message;
-            errorDiv.classList.remove('hidden');
-            console.error('❌ submitShipment error:', e);
-        }
-    }
 
-    // ============================================================
-    //  🔢 إضافة رقم تتبع (للأدمن)
-    // ============================================================
-    function showAddTracking(shipmentId) {
-        openModal(`
-            <div class="modal-title"><i class="fas fa-qrcode"></i> إضافة رقم تتبع</div>
-            <p style="margin-bottom:12px;color:#666;">رقم الشحنة: <strong>${shipmentId}</strong></p>
-            <div class="form-group"><label>🚚 رقم التتبع</label><input id="trackingNum" placeholder="مثال: JEG000470355620" dir="ltr"></div>
-            <button class="submit-btn green" onclick="submitTracking('${shipmentId}')">💾 حفظ رقم التتبع</button>
-            <div id="trackError" class="error-msg hidden"></div>
-        `);
-    }
+            const params = new URLSearchParams();
+            params.append('action', 'addShipment');
+            params.append('phone', currentUser.phone);
+            params.append('password', currentUser.password);
+            params.append('receiverName', receiverName);
+            params.append('receiverPhone', receiverPhone);
+            params.append('receiverPhone2', receiverPhone2);
+            params.append('governorate', governorate);
+            params.append('city', city);
+            params.append('address', address);
+            params.append('amount', amount);
+            params.append('weight', weight);
+            params.append('notes', notes);
 
-    async function submitTracking(shipmentId) {
-        const trackingNumber = document.getElementById('trackingNum').value.trim();
-        const errorDiv = document.getElementById('trackError');
-
-        if (!trackingNumber) {
-            errorDiv.textContent = '⚠️ يرجى إدخال رقم التتبع';
-            errorDiv.classList.remove('hidden');
-            return;
-        }
-
-        const formData = new URLSearchParams();
-        formData.append('action', 'addTrackingNumber');
-        formData.append('adminPhone', currentUser.phone);
-        formData.append('adminPassword', currentUser.password);
-        formData.append('shipmentId', shipmentId);
-        formData.append('trackingNumber', trackingNumber);
-
-        try {
-            const res = await fetch(API_URL, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-                body: formData.toString()
-            });
-            const data = await res.json();
-
-            if (data.success) {
-                closeModal();
-                loadAllShipments();
-                showToast('✅ تم إضافة رقم التتبع بنجاح!', 'success');
-            } else {
-                errorDiv.textContent = data.msg || '❌ فشل الحفظ';
-                errorDiv.classList.remove('hidden');
+            try {
+                const res = await fetch(API_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                    body: params.toString()
+                });
+                const data = await res.json();
+                if (data.success) { 
+                    closeModal(); 
+                    loadMyShipments(); 
+                    showToast('✅ تم إضافة الشحنة بنجاح!', 'success');
+                } else { 
+                    errorDiv.textContent = data.msg || "فشل الإضافة"; 
+                }
+            } catch (e) { 
+                errorDiv.textContent = 'فشل الاتصال'; 
             }
-        } catch (e) {
-            errorDiv.textContent = '⚠️ فشل الاتصال بالخادم: ' + e.message;
-            errorDiv.classList.remove('hidden');
         }
-    }
 
-    // ============================================================
-    //  🗑️ حذف شحنة (للأدمن)
-    // ============================================================
-    async function deleteShipment(shipmentId) {
-        if (!confirm('⚠️ هل أنت متأكد من حذف هذه الشحنة؟')) return;
+        // ============================================================
+        //  🔢 إضافة رقم تتبع (للأدمن) - تحديث العمود A
+        // ============================================================
+        function showAddTracking(shipmentId) {
+            document.getElementById('modal').classList.remove('hidden');
+            document.getElementById('modalContent').innerHTML = `
+                <span class="close-btn" onclick="closeModal()">✖</span>
+                <h3>🔢 إضافة رقم تتبع</h3>
+                <p>رقم الشحنة: <strong>${shipmentId}</strong></p>
+                <div class="form-group"><label>🚚 رقم التتبع</label><input id="trackingNum" dir="ltr" placeholder="مثال: JEG000470355620"></div>
+                <button onclick="submitTracking('${shipmentId}')" style="width:100%;padding:15px;background:#28a745;color:white;border:none;border-radius:8px;font-size:16px;cursor:pointer;">💾 حفظ</button>
+                <p id="trackError" style="color:red;margin-top:10px;"></p>
+            `;
+        }
 
-        const formData = new URLSearchParams();
-        formData.append('action', 'deleteShipment');
-        formData.append('adminPhone', currentUser.phone);
-        formData.append('adminPassword', currentUser.password);
-        formData.append('shipmentId', shipmentId);
+        async function submitTracking(shipmentId) {
+            const trackingNumber = document.getElementById('trackingNum').value.trim();
+            const errorDiv = document.getElementById('trackError');
+            if (!trackingNumber) { errorDiv.textContent = 'يرجى إدخال رقم التتبع'; return; }
+            
+            const params = new URLSearchParams();
+            params.append('action', 'addTrackingNumber');
+            params.append('adminPhone', currentUser.phone);
+            params.append('adminPassword', currentUser.password);
+            params.append('shipmentId', shipmentId);
+            params.append('trackingNumber', trackingNumber);
 
-        try {
-            const res = await fetch(API_URL, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-                body: formData.toString()
-            });
-            const data = await res.json();
-
-            if (data.success) {
-                loadAllShipments();
-                showToast('✅ تم حذف الشحنة بنجاح', 'success');
-            } else {
-                showToast(data.msg || '❌ فشل الحذف', 'error');
+            try {
+                const res = await fetch(API_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                    body: params.toString()
+                });
+                const data = await res.json();
+                if (data.success) { 
+                    closeModal(); 
+                    loadAllShipments(); 
+                    showToast('✅ تم إضافة رقم التتبع!', 'success');
+                } else { 
+                    errorDiv.textContent = data.msg; 
+                }
+            } catch (e) { 
+                errorDiv.textContent = 'فشل الاتصال'; 
             }
-        } catch (e) {
-            showToast('⚠️ فشل الاتصال بالخادم: ' + e.message, 'error');
         }
-    }
 
-    // ============================================================
-    //  🚚 تتبع الشحنة
-    // ============================================================
-    async function trackShipment(billCode) {
-        openModal(`
-            <div class="modal-title"><i class="fas fa-map-marked-alt"></i> تتبع الشحنة</div>
-            <div class="loading"><div class="spinner"></div><div>جاري التتبع...</div></div>
-        `);
+        // ============================================================
+        //  🗑️ حذف شحنة (للأدمن)
+        // ============================================================
+        async function deleteShipment(shipmentId) {
+            if (!confirm('⚠️ هل أنت متأكد من حذف هذه الشحنة؟')) return;
+            
+            const params = new URLSearchParams();
+            params.append('action', 'deleteShipment');
+            params.append('adminPhone', currentUser.phone);
+            params.append('adminPassword', currentUser.password);
+            params.append('shipmentId', shipmentId);
 
-        try {
-            const res = await fetch(`${API_URL}?action=track&billCode=${billCode}`);
-            const data = await res.json();
-            console.log('📡 Track response:', data);
+            try {
+                const res = await fetch(API_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                    body: params.toString()
+                });
+                const data = await res.json();
+                if (data.success) { 
+                    loadAllShipments(); 
+                    showToast('✅ تم حذف الشحنة بنجاح', 'success');
+                } else { 
+                    showToast(data.msg || '❌ فشل الحذف', 'error');
+                }
+            } catch (e) { 
+                showToast('⚠️ فشل الاتصال بالخادم', 'error');
+            }
+        }
 
-            if (data.code === "1" && data.data && data.data[0]) {
-                let html = `<div class="modal-title"><i class="fas fa-map-marked-alt"></i> مسار الشحنة: ${billCode}</div>`;
-                const details = data.data[0].details || [];
-                if (details.length === 0) {
-                    html += `<p style="text-align:center;color:#999;padding:20px;">لا توجد تفاصيل تتبع متاحة</p>`;
-                } else {
-                    details.forEach(d => {
-                        html += `
-                            <div class="timeline-item">
+        // ============================================================
+        //  🚚 تتبع الشحنة
+        // ============================================================
+        async function trackShipment(billCode) {
+            document.getElementById('modal').classList.remove('hidden');
+            document.getElementById('modalContent').innerHTML = '<div class="loading"><div class="spinner"></div>جاري تتبع الشحنة...</div>';
+            
+            try {
+                const res = await fetch(`${API_URL}?action=track&billCode=${billCode}`);
+                const data = await res.json();
+                console.log('📡 Track response:', data);
+
+                if (data.code === "1" && data.data && data.data[0]) {
+                    let html = `<span class="close-btn" onclick="closeModal()">✖</span><h3>🚚 مسار الشحنة: ${billCode}</h3>`;
+                    const details = data.data[0].details || [];
+                    if (details.length === 0) {
+                        html += `<p style="text-align:center;color:#999;padding:20px;">لا توجد تفاصيل تتبع متاحة</p>`;
+                    } else {
+                        details.forEach(d => {
+                            html += `<div class="timeline-item">
                                 <div class="time">🕐 ${d.scanTime || ''}</div>
                                 <div class="event">📌 ${d.desc || d.scanType || ''}</div>
                                 <div class="location">📍 ${d.scanNetworkName || ''} ${d.scanNetworkCity ? '- ' + d.scanNetworkCity : ''}</div>
-                                ${d.probleDescription ? `<div class="problem">⚠️ ${d.probleDescription}</div>` : ''}
-                            </div>
-                        `;
-                    });
+                                ${d.probleDescription ? `<div style="color:red;margin-top:5px;">⚠️ ${d.probleDescription}</div>` : ''}
+                            </div>`;
+                        });
+                    }
+                    document.getElementById('modalContent').innerHTML = html;
+                } else {
+                    let errorMsg = data.msg || data.error || 'فشل تتبع الشحنة';
+                    document.getElementById('modalContent').innerHTML = `
+                        <span class="close-btn" onclick="closeModal()">✖</span>
+                        <div style="text-align:center;padding:20px;color:#dc3545;">
+                            <div style="font-size:48px;margin-bottom:12px;">❌</div>
+                            <p>${errorMsg}</p>
+                            <p style="font-size:13px;color:#999;">رقم التتبع: ${billCode}</p>
+                            <div class="debug-box">${JSON.stringify(data, null, 2)}</div>
+                        </div>
+                    `;
                 }
-                document.getElementById('modalBody').innerHTML = html;
-            } else {
-                let errorMsg = data.msg || data.error || 'فشل تتبع الشحنة';
-                document.getElementById('modalBody').innerHTML = `
-                    <div class="modal-title"><i class="fas fa-map-marked-alt"></i> تتبع الشحنة</div>
+            } catch (e) {
+                document.getElementById('modalContent').innerHTML = `
+                    <span class="close-btn" onclick="closeModal()">✖</span>
                     <div style="text-align:center;padding:20px;color:#dc3545;">
-                        <div style="font-size:48px;margin-bottom:12px;">❌</div>
-                        <p>${errorMsg}</p>
-                        <p style="font-size:13px;color:#999;">رقم التتبع: ${billCode}</p>
-                        <div class="debug-box">${JSON.stringify(data, null, 2)}</div>
+                        <div style="font-size:48px;margin-bottom:12px;">📡</div>
+                        <p>فشل الاتصال بخدمة التتبع</p>
+                        <p style="font-size:13px;color:#999;">${e.message}</p>
                     </div>
                 `;
             }
-        } catch (e) {
-            document.getElementById('modalBody').innerHTML = `
-                <div class="modal-title"><i class="fas fa-map-marked-alt"></i> تتبع الشحنة</div>
-                <div style="text-align:center;padding:20px;color:#dc3545;">
-                    <div style="font-size:48px;margin-bottom:12px;">📡</div>
-                    <p>فشل الاتصال بخدمة التتبع: ${e.message}</p>
-                </div>
+        }
+
+        // ============================================================
+        //  👥 إدارة العملاء (للأدمن)
+        // ============================================================
+        async function showClients() {
+            document.getElementById('modal').classList.remove('hidden');
+            document.getElementById('modalContent').innerHTML = '<div class="loading"><div class="spinner"></div>جاري التحميل...</div>';
+            
+            try {
+                const params = new URLSearchParams();
+                params.append('action', 'allClients');
+                params.append('adminPhone', currentUser.phone);
+                params.append('adminPassword', currentUser.password);
+
+                const res = await fetch(API_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                    body: params.toString()
+                });
+                const data = await res.json();
+                
+                if (data.success) {
+                    let html = `<span class="close-btn" onclick="closeModal()">✖</span><h3>👥 إدارة العملاء</h3>
+                        <button onclick="showAddClientForm()" style="width:100%;padding:12px;background:#28a745;color:white;border:none;border-radius:8px;margin-bottom:15px;cursor:pointer;font-size:16px;">➕ إنشاء حساب عميل جديد</button>
+                        <div id="clientList"></div>`;
+                    document.getElementById('modalContent').innerHTML = html;
+                    
+                    const listDiv = document.getElementById('clientList');
+                    if (data.clients.length === 0) {
+                        listDiv.innerHTML = '<p style="text-align:center;color:#999;padding:20px;">لا يوجد عملاء حتى الآن</p>';
+                    } else {
+                        data.clients.forEach(c => {
+                            listDiv.innerHTML += `<div class="client-card">
+                                <div class="client-info"><strong>${c.name}</strong><br>📱 ${c.phone}<br><small>📅 ${c.created}</small></div>
+                                <div class="client-actions"><button onclick="deleteClient('${c.phone}')">🗑️ حذف</button></div>
+                            </div>`;
+                        });
+                    }
+                } else {
+                    document.getElementById('modalContent').innerHTML = `<span class="close-btn" onclick="closeModal()">✖</span><p style="color:red;">${data.msg || 'فشل التحميل'}</p>`;
+                }
+            } catch (e) {
+                document.getElementById('modalContent').innerHTML = `<span class="close-btn" onclick="closeModal()">✖</span><p style="color:red;">فشل الاتصال</p>`;
+            }
+        }
+
+        function showAddClientForm() {
+            document.getElementById('modalContent').innerHTML = `
+                <span class="close-btn" onclick="showClients()">✖</span>
+                <h3>➕ إنشاء حساب عميل جديد</h3>
+                <div class="form-group"><label>👤 اسم العميل</label><input id="newClientName" placeholder="الاسم الكامل"></div>
+                <div class="form-group"><label>📱 رقم الهاتف</label><input id="newClientPhone" dir="ltr" placeholder="مثال: 011xxxxxxxx"></div>
+                <div class="form-group"><label>🔒 كلمة المرور</label><input id="newClientPassword" type="password" dir="ltr" placeholder="كلمة المرور للدخول"></div>
+                <button onclick="createClient()" style="width:100%;padding:15px;background:#28a745;color:white;border:none;border-radius:8px;font-size:16px;cursor:pointer;">✅ إنشاء الحساب</button>
+                <button onclick="showClients()" style="width:100%;padding:10px;background:#999;color:white;border:none;border-radius:8px;margin-top:10px;cursor:pointer;">↩️ رجوع</button>
+                <p id="clientError" style="color:red;margin-top:10px;text-align:center;"></p>
             `;
         }
-    }
 
-    // ============================================================
-    //  👥 إدارة العملاء (للأدمن)
-    // ============================================================
-    async function showClients() {
-        openModal(`
-            <div class="modal-title"><i class="fas fa-users"></i> إدارة العملاء</div>
-            <button class="submit-btn green" onclick="showAddClientForm()" style="margin-bottom:14px;">➕ إنشاء حساب عميل جديد</button>
-            <div id="clientList"><div class="loading"><div class="spinner"></div><div>جاري التحميل...</div></div></div>
-        `);
+        async function createClient() {
+            const name = document.getElementById('newClientName').value.trim();
+            const phone = document.getElementById('newClientPhone').value.trim();
+            const password = document.getElementById('newClientPassword').value.trim();
+            const errorDiv = document.getElementById('clientError');
+            if (!name || !phone || !password) { errorDiv.textContent = "يرجى ملء جميع الحقول"; return; }
+            
+            const params = new URLSearchParams();
+            params.append('action', 'createClient');
+            params.append('adminPhone', currentUser.phone);
+            params.append('adminPassword', currentUser.password);
+            params.append('clientName', name);
+            params.append('clientPhone', phone);
+            params.append('clientPassword', password);
 
-        try {
-            const formData = new URLSearchParams();
-            formData.append('action', 'allClients');
-            formData.append('adminPhone', currentUser.phone);
-            formData.append('adminPassword', currentUser.password);
-
-            const res = await fetch(API_URL, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-                body: formData.toString()
-            });
-            const data = await res.json();
-
-            const listDiv = document.getElementById('clientList');
-            if (data.success) {
-                if (data.clients.length === 0) {
-                    listDiv.innerHTML = `<p style="text-align:center;color:#999;padding:20px;">لا يوجد عملاء حتى الآن</p>`;
-                } else {
-                    let html = '';
-                    data.clients.forEach(c => {
-                        html += `
-                            <div class="client-card">
-                                <div class="client-info">
-                                    <div class="name">${c.name || 'غير معروف'}</div>
-                                    <div class="phone">📱 ${c.phone || ''}</div>
-                                    <div class="created">📅 ${c.created || ''}</div>
-                                </div>
-                                <div class="client-actions">
-                                    <button onclick="deleteClient('${c.phone}')">🗑️ حذف</button>
-                                </div>
-                            </div>
-                        `;
-                    });
-                    listDiv.innerHTML = html;
-                }
-            } else {
-                listDiv.innerHTML = `<p style="color:#dc3545;">${data.msg || 'فشل التحميل'}</p>`;
-            }
-        } catch (e) {
-            document.getElementById('clientList').innerHTML = `<p style="color:#dc3545;">⚠️ فشل الاتصال بالخادم: ${e.message}</p>`;
-        }
-    }
-
-    function showAddClientForm() {
-        openModal(`
-            <div class="modal-title"><i class="fas fa-user-plus"></i> إنشاء حساب عميل جديد</div>
-            <div class="form-group"><label>👤 اسم العميل *</label><input id="nc_name" placeholder="الاسم الكامل"></div>
-            <div class="form-group"><label>📱 رقم الهاتف *</label><input id="nc_phone" placeholder="مثال: 011xxxxxxxx" dir="ltr"></div>
-            <div class="form-group"><label>🔒 كلمة المرور *</label><input id="nc_password" type="password" placeholder="كلمة المرور للدخول" dir="ltr"></div>
-            <button class="submit-btn green" onclick="createClient()">✅ إنشاء الحساب</button>
-            <button class="submit-btn gray" onclick="showClients()" style="margin-top:8px;">↩️ رجوع</button>
-            <div id="clientError" class="error-msg hidden"></div>
-        `);
-    }
-
-    async function createClient() {
-        const name = document.getElementById('nc_name').value.trim();
-        const phone = document.getElementById('nc_phone').value.trim();
-        const password = document.getElementById('nc_password').value.trim();
-        const errorDiv = document.getElementById('clientError');
-
-        if (!name || !phone || !password) {
-            errorDiv.textContent = '⚠️ يرجى ملء جميع الحقول';
-            errorDiv.classList.remove('hidden');
-            return;
+            try {
+                const res = await fetch(API_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                    body: params.toString()
+                });
+                const data = await res.json();
+                if (data.success) { showClients(); showToast('✅ تم إنشاء الحساب!', 'success'); }
+                else { errorDiv.textContent = data.msg; }
+            } catch (e) { errorDiv.textContent = 'فشل الاتصال'; }
         }
 
-        const formData = new URLSearchParams();
-        formData.append('action', 'createClient');
-        formData.append('adminPhone', currentUser.phone);
-        formData.append('adminPassword', currentUser.password);
-        formData.append('clientName', name);
-        formData.append('clientPhone', phone);
-        formData.append('clientPassword', password);
-
-        try {
-            const res = await fetch(API_URL, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-                body: formData.toString()
-            });
-            const data = await res.json();
-
-            if (data.success) {
+        async function deleteClient(phone) {
+            if (!confirm('هل أنت متأكد من حذف هذا العميل؟')) return;
+            try {
+                const params = new URLSearchParams();
+                params.append('action', 'deleteClient');
+                params.append('phone', phone);
+                await fetch(API_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                    body: params.toString()
+                });
                 showClients();
-                showToast('✅ تم إنشاء الحساب بنجاح!', 'success');
-            } else {
-                errorDiv.textContent = data.msg || '❌ فشل الإنشاء';
-                errorDiv.classList.remove('hidden');
-            }
-        } catch (e) {
-            errorDiv.textContent = '⚠️ فشل الاتصال بالخادم: ' + e.message;
-            errorDiv.classList.remove('hidden');
-        }
-    }
-
-    async function deleteClient(phone) {
-        if (!confirm('⚠️ هل أنت متأكد من حذف هذا العميل؟')) return;
-
-        const formData = new URLSearchParams();
-        formData.append('action', 'deleteClient');
-        formData.append('phone', phone);
-
-        try {
-            const res = await fetch(API_URL, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-                body: formData.toString()
-            });
-            const data = await res.json();
-
-            if (data.success) {
-                showClients();
-                showToast('✅ تم حذف العميل بنجاح', 'success');
-            } else {
-                showToast(data.msg || '❌ فشل الحذف', 'error');
-            }
-        } catch (e) {
-            showToast('⚠️ فشل الاتصال بالخادم: ' + e.message, 'error');
-        }
-    }
-
-    // ============================================================
-    //  🖥️ دوال المودال والإشعارات
-    // ============================================================
-    function openModal(html) {
-        document.getElementById('modalBody').innerHTML = html;
-        document.getElementById('modalOverlay').classList.remove('hidden');
-        document.body.style.overflow = 'hidden';
-    }
-
-    function closeModal() {
-        document.getElementById('modalOverlay').classList.add('hidden');
-        document.body.style.overflow = '';
-    }
-
-    function showToast(message, type) {
-        const existing = document.querySelector('.toast');
-        if (existing) existing.remove();
-
-        const toast = document.createElement('div');
-        toast.className = 'toast' + (type ? ' ' + type : '');
-        toast.textContent = message;
-        document.body.appendChild(toast);
-
-        setTimeout(() => {
-            toast.style.opacity = '0';
-            toast.style.transition = 'opacity 0.3s';
-            setTimeout(() => toast.remove(), 300);
-        }, 3000);
-    }
-
-    document.addEventListener('keydown', function(e) {
-        if (e.key === 'Escape') closeModal();
-        if (e.key === 'Enter') {
-            if (document.getElementById('dashboard').classList.contains('hidden')) {
-                doLogin();
+                showToast('✅ تم حذف العميل', 'success');
+            } catch (e) { 
+                showToast('⚠️ فشل الحذف', 'error');
             }
         }
-        // منع اختصارات النسخ
-        if (e.ctrlKey && (e.key === 'u' || e.key === 's' || e.key === 'c' || e.key === 'a')) {
-            e.preventDefault();
+
+        // ============================================================
+        //  🖥️ دوال مساعدة
+        // ============================================================
+        function closeModal() { 
+            document.getElementById('modal').classList.add('hidden'); 
         }
-    });
 
-    // ============================================================
-    //  🚀 بيانات تجريبية للاختبار
-    // ============================================================
-    document.getElementById('loginPhone').value = '01119024874';
-    document.getElementById('loginPassword').value = '01119024874';
-</script>
+        function showToast(message, type) {
+            const existing = document.querySelector('.toast');
+            if (existing) existing.remove();
+            const toast = document.createElement('div');
+            toast.className = 'toast' + (type ? ' ' + type : '');
+            toast.textContent = message;
+            document.body.appendChild(toast);
+            setTimeout(() => {
+                toast.style.opacity = '0';
+                toast.style.transition = 'opacity 0.3s';
+                setTimeout(() => toast.remove(), 300);
+            }, 3000);
+        }
 
+        document.getElementById('passwordInput').addEventListener('keypress', function(e) { 
+            if (e.key === 'Enter') doLogin(); 
+        });
+        document.getElementById('phoneInput').addEventListener('keypress', function(e) { 
+            if (e.key === 'Enter') document.getElementById('passwordInput').focus(); 
+        });
+    </script>
 </body>
 </html>
