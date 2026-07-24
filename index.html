@@ -1572,4 +1572,44 @@
     }
 
     // ============================================================
-    // 
+    //  🖥️ دوال مساعدة
+    // ============================================================
+    function closeModal() { 
+        document.getElementById('modal').classList.add('hidden'); 
+    }
+
+    function showToast(message, type) {
+        const existing = document.querySelector('.toast');
+        if (existing) existing.remove();
+        const toast = document.createElement('div');
+        toast.className = 'toast' + (type ? ' ' + type : '');
+        toast.textContent = message;
+        document.body.appendChild(toast);
+        setTimeout(() => {
+            toast.style.opacity = '0';
+            toast.style.transition = 'opacity 0.3s';
+            setTimeout(() => toast.remove(), 300);
+        }, 3000);
+    }
+
+    document.getElementById('passwordInput').addEventListener('keypress', function(e) { 
+        if (e.key === 'Enter') doLogin(); 
+    });
+    document.getElementById('phoneInput').addEventListener('keypress', function(e) { 
+        if (e.key === 'Enter') document.getElementById('passwordInput').focus(); 
+    });
+
+    document.addEventListener('keydown', function(e) {
+        if (e.ctrlKey && (e.key === 'u' || e.key === 's' || e.key === 'c' || e.key === 'a')) {
+            e.preventDefault();
+        }
+        if (e.key === 'Escape') closeModal();
+    });
+
+    document.addEventListener('DOMContentLoaded', function() {
+        checkSession();
+    });
+</script>
+
+</body>
+</html>
