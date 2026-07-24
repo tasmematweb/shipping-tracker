@@ -1,1547 +1,331 @@
-<!DOCTYPE html>
-<html lang="ar" dir="rtl">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>نظام تتبع وإدارة شحنات J&T</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;900&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-        body {
-            font-family: 'Cairo', sans-serif;
-            background: #f5f5f5;
-            min-height: 100vh;
-            color: #333;
-            -webkit-user-select: none;
-            -moz-user-select: none;
-            -ms-user-select: none;
-            user-select: none;
-        }
-        .app-wrapper {
-            max-width: 480px;
-            margin: 0 auto;
-            background: white;
-            min-height: 100vh;
-            position: relative;
-            box-shadow: 0 0 40px rgba(0,0,0,0.08);
-        }
-        .hidden {
-            display: none !important;
-        }
+const SHEET_ID = "1ITSg_dnepI0jurMYxGBE18LbbFLNYXEEuGWWwo4-yK4";
+const ADMIN_PHONE = "01119024874";
+const ADMIN_PASSWORD = "01119024874";
+const ADMIN_NAME = "الأدمن";
 
-        /* ===== تنسيقات صفحة تسجيل الدخول ===== */
-        .login-page {
-            padding: 50px 24px 40px;
-            text-align: center;
-            background: white;
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-        }
-        .login-page .logo-icon {
-            font-size: 64px;
-            display: block;
-            margin-bottom: 8px;
-        }
-        .login-page .brand {
-            color: #0076ff;
-            font-size: 28px;
-            font-weight: 900;
-            margin-bottom: 4px;
-        }
-        .login-page .sub-brand {
-            color: #888;
-            font-size: 14px;
-            margin-bottom: 32px;
-        }
-        .login-page .input-group {
-            margin-bottom: 16px;
-            text-align: right;
-        }
-        .login-page .input-group label {
-            display: block;
-            font-size: 14px;
-            font-weight: 600;
-            color: #333;
-            margin-bottom: 5px;
-        }
-        .login-page .input-group input {
-            width: 100%;
-            padding: 14px 16px;
-            border: 2px solid #e8e8e8;
-            border-radius: 12px;
-            font-size: 15px;
-            background: #fafafa;
-            transition: border 0.2s;
-            text-align: right;
-            font-family: 'Cairo', sans-serif;
-        }
-        .login-page .input-group input:focus {
-            border-color: #0076ff;
-            outline: none;
-            background: white;
-            box-shadow: 0 0 0 4px rgba(0, 118, 255, 0.1);
-        }
-        .login-page .login-btn {
-            width: 100%;
-            padding: 16px;
-            background: #0076ff;
-            color: white;
-            border: none;
-            border-radius: 12px;
-            font-size: 18px;
-            font-weight: 700;
-            cursor: pointer;
-            font-family: 'Cairo', sans-serif;
-            transition: 0.3s;
-            box-shadow: 0 4px 15px rgba(0, 118, 255, 0.3);
-        }
-        .login-page .login-btn:active {
-            background: #005dc7;
-            transform: scale(0.98);
-        }
-        .login-page .error-msg {
-            color: #dc3545;
-            font-size: 14px;
-            margin-top: 14px;
-            padding: 10px;
-            background: #ffeaea;
-            border-radius: 8px;
-        }
+function getSheet(name) {
+  return SpreadsheetApp.openById(SHEET_ID).getSheetByName(name);
+}
 
-        /* ===== تنسيقات الهيدر ===== */
-        .app-header {
-            background: #1a1a1a;
-            padding: 16px 20px 14px;
-            color: white;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            flex-wrap: wrap;
-            gap: 8px;
-            border-bottom-left-radius: 24px;
-            border-bottom-right-radius: 24px;
-            border-bottom: 2px solid rgba(0, 118, 255, 0.3);
-        }
-        .app-header .user-info {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-        .app-header .user-info .avatar {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            background: rgba(255, 255, 255, 0.12);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 18px;
-            font-weight: 700;
-            color: #0076ff;
-            border: 2px solid rgba(0, 118, 255, 0.3);
-        }
-        .app-header .user-info .name {
-            font-size: 15px;
-            font-weight: 600;
-        }
-        .app-header .user-info .role {
-            font-size: 11px;
-            opacity: 0.7;
-        }
-        .app-header .header-actions {
-            display: flex;
-            gap: 6px;
-            flex-wrap: wrap;
-        }
-        .app-header .header-actions button {
-            padding: 7px 14px;
-            border: none;
-            border-radius: 10px;
-            font-size: 12px;
-            font-weight: 600;
-            cursor: pointer;
-            background: rgba(255, 255, 255, 0.1);
-            color: white;
-            transition: 0.2s;
-            font-family: 'Cairo', sans-serif;
-            white-space: nowrap;
-        }
-        .app-header .header-actions button:active {
-            background: rgba(255, 255, 255, 0.25);
-            transform: scale(0.95);
-        }
-        .app-header .header-actions button.green {
-            background: #28a745;
-        }
-        .app-header .header-actions button.blue {
-            background: #0066cc;
-        }
-        .app-header .header-actions button.orange {
-            background: #ff9800;
-        }
-        .app-header .header-actions button.outline {
-            background: transparent;
-            border: 1.5px solid rgba(255, 255, 255, 0.3);
-        }
+function doGet(e) {
+  var action = e.parameter.action;
+  if (action === "track") return trackShipment(e.parameter.billCode);
+  if (action === "login") return login(e.parameter.phone, e.parameter.password);
+  if (action === "myShipments") return getMyShipments(e.parameter.phone, e.parameter.password);
+  return response({ error: "Unknown action" });
+}
 
-        /* ===== ملخص الإحصائيات ===== */
-        .summary-box {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 6px;
-            padding: 12px 14px;
-            background: #f8f8f8;
-            border-bottom: 1px solid #eee;
-        }
-        .summary-box .stat {
-            text-align: center;
-            background: white;
-            padding: 8px 4px;
-            border-radius: 10px;
-            box-shadow: 0 1px 4px rgba(0,0,0,0.05);
-            transition: 0.2s;
-        }
-        .summary-box .stat:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
-        }
-        .summary-box .stat .count {
-            font-size: 22px;
-            font-weight: 700;
-            color: #0076ff;
-        }
-        .summary-box .stat .label {
-            font-size: 10px;
-            color: #888;
-            margin-top: 2px;
-        }
+function doPost(e) {
+  var action = e.parameter.action;
+  if (action === "addShipment") return addShipment(e.parameter);
+  if (action === "createClient") return createClient(e.parameter);
+  if (action === "deleteClient") return deleteClient(e.parameter.phone);
+  if (action === "addTrackingNumber") return addTrackingNumber(e.parameter);
+  if (action === "allShipments") return getAllShipments(e.parameter.adminPhone, e.parameter.adminPassword);
+  if (action === "allClients") return getAllClients(e.parameter.adminPhone, e.parameter.adminPassword);
+  if (action === "deleteShipment") return deleteShipment(e.parameter);
+  return response({ error: "Unknown action" });
+}
 
-        /* ===== المحتوى ===== */
-        .content-area {
-            padding: 12px 14px 20px;
-        }
-        .loading {
-            text-align: center;
-            padding: 40px 0;
-        }
-        .spinner {
-            border: 4px solid #f3f3f3;
-            border-top: 4px solid #0076ff;
-            border-radius: 50%;
-            width: 40px;
-            height: 40px;
-            animation: spin 0.8s linear infinite;
-            margin: 0 auto 12px;
-        }
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-        .empty-state {
-            text-align: center;
-            padding: 40px 20px;
-            color: #aaa;
-        }
-        .empty-state .icon {
-            font-size: 56px;
-            margin-bottom: 12px;
-        }
-        .empty-state button {
-            margin-top: 12px;
-            padding: 10px 30px;
-            background: #0076ff;
-            color: white;
-            border: none;
-            border-radius: 10px;
-            font-size: 15px;
-            cursor: pointer;
-            font-family: 'Cairo', sans-serif;
-            transition: 0.3s;
-            box-shadow: 0 4px 12px rgba(0, 118, 255, 0.3);
-        }
-        .empty-state button:active {
-            transform: scale(0.95);
-        }
-
-        /* ===== بطاقة الشحنة - تصميم عصري ===== */
-        .shipment-card {
-            background: white;
-            border-radius: 16px;
-            padding: 16px 18px;
-            margin-bottom: 14px;
-            border: 1px solid #eee;
-            box-shadow: 0 2px 12px rgba(0,0,0,0.04);
-            position: relative;
-            cursor: pointer;
-            transition: 0.25s ease;
-        }
-        .shipment-card:hover {
-            background: #fafafa;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.06);
-            transform: translateY(-2px);
-        }
-        .shipment-card .status-badge {
-            display: inline-block;
-            padding: 3px 14px;
-            border-radius: 20px;
-            font-size: 11px;
-            font-weight: 700;
-            margin-bottom: 8px;
-        }
-        .status-waiting {
-            background: #fff3cd;
-            color: #856404;
-        }
-        .status-tracking {
-            background: #d1ecf1;
-            color: #0c5460;
-        }
-        .status-done {
-            background: #d4edda;
-            color: #155724;
-        }
-
-        .shipment-card .summary-row {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            flex-wrap: wrap;
-            gap: 8px;
-        }
-        .shipment-card .summary-row .main-info {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            flex-wrap: wrap;
-        }
-        .shipment-card .summary-row .main-info .name {
-            font-weight: 700;
-            font-size: 16px;
-            color: #222;
-        }
-        .shipment-card .summary-row .main-info .phone {
-            color: #555;
-            direction: ltr;
-            font-size: 14px;
-        }
-        .shipment-card .summary-row .main-info .amount {
-            color: #0076ff;
-            font-weight: 700;
-        }
-        .shipment-card .summary-row .last-update {
-            font-size: 12px;
-            color: #888;
-            direction: ltr;
-            background: #f5f5f5;
-            padding: 3px 12px;
-            border-radius: 12px;
-        }
-
-        .shipment-card .details {
-            margin-top: 12px;
-            padding-top: 12px;
-            border-top: 1px dashed #ddd;
-            display: none;
-        }
-        .shipment-card .details.open {
-            display: block;
-            animation: fadeIn 0.25s ease;
-        }
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(-8px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        .shipment-card .details .info {
-            margin: 4px 0;
-            font-size: 13px;
-            color: #555;
-        }
-        .shipment-card .details .info strong {
-            color: #333;
-            margin-left: 5px;
-        }
-        .shipment-card .card-actions {
-            margin-top: 10px;
-            display: flex;
-            gap: 8px;
-            flex-wrap: wrap;
-        }
-        .shipment-card .card-actions button {
-            padding: 6px 18px;
-            border: none;
-            border-radius: 8px;
-            font-size: 13px;
-            font-weight: 600;
-            cursor: pointer;
-            font-family: 'Cairo', sans-serif;
-            flex: 1;
-            min-width: 70px;
-            transition: 0.2s;
-        }
-        .shipment-card .card-actions button:active {
-            transform: scale(0.95);
-        }
-        .btn-track {
-            background: #0066cc;
-            color: white;
-        }
-        .btn-track:hover {
-            background: #0055aa;
-        }
-        .btn-add-tracking {
-            background: #28a745;
-            color: white;
-        }
-        .btn-add-tracking:hover {
-            background: #1e7e34;
-        }
-        .btn-delete {
-            background: #dc3545;
-            color: white;
-        }
-        .btn-delete:hover {
-            background: #b02a37;
-        }
-
-        /* ===== المودال ===== */
-        .modal-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0,0,0,0.6);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            z-index: 9999;
-            padding: 16px;
-            backdrop-filter: blur(4px);
-            -webkit-backdrop-filter: blur(4px);
-        }
-        .modal-box {
-            background: white;
-            border-radius: 20px;
-            max-width: 440px;
-            width: 100%;
-            max-height: 90vh;
-            overflow-y: auto;
-            padding: 24px 20px 20px;
-            position: relative;
-            animation: modalIn 0.3s ease;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
-        }
-        @keyframes modalIn {
-            from { opacity: 0; transform: translateY(30px) scale(0.96); }
-            to { opacity: 1; transform: translateY(0) scale(1); }
-        }
-        .modal-box .close-btn {
-            position: absolute;
-            top: 14px;
-            left: 16px;
-            font-size: 26px;
-            cursor: pointer;
-            color: #aaa;
-            line-height: 1;
-            transition: 0.2s;
-        }
-        .modal-box .close-btn:hover {
-            color: #333;
-            transform: rotate(90deg);
-        }
-        .modal-box .modal-title {
-            font-size: 20px;
-            font-weight: 700;
-            color: #222;
-            margin-bottom: 18px;
-            padding-left: 30px;
-        }
-        .modal-box .modal-title i {
-            color: #0076ff;
-            margin-left: 8px;
-        }
-
-        .form-group {
-            margin-bottom: 14px;
-        }
-        .form-group label {
-            display: block;
-            font-size: 13px;
-            font-weight: 600;
-            color: #444;
-            margin-bottom: 4px;
-        }
-        .form-group input,
-        .form-group textarea,
-        .form-group select {
-            width: 100%;
-            padding: 12px 14px;
-            border: 2px solid #e8e8e8;
-            border-radius: 10px;
-            font-size: 14px;
-            background: #fafafa;
-            transition: border 0.2s;
-            font-family: 'Cairo', sans-serif;
-        }
-        .form-group input:focus,
-        .form-group textarea:focus,
-        .form-group select:focus {
-            border-color: #0076ff;
-            outline: none;
-            background: white;
-            box-shadow: 0 0 0 4px rgba(0, 118, 255, 0.08);
-        }
-        .form-group textarea {
-            height: 80px;
-            resize: vertical;
-        }
-
-        .modal-box .submit-btn {
-            width: 100%;
-            padding: 14px;
-            background: #0076ff;
-            color: white;
-            border: none;
-            border-radius: 12px;
-            font-size: 16px;
-            font-weight: 700;
-            cursor: pointer;
-            font-family: 'Cairo', sans-serif;
-            margin-top: 6px;
-            transition: 0.3s;
-            box-shadow: 0 4px 12px rgba(0, 118, 255, 0.3);
-        }
-        .modal-box .submit-btn:active {
-            background: #005dc7;
-            transform: scale(0.98);
-        }
-        .modal-box .submit-btn.green {
-            background: #28a745;
-            box-shadow: 0 4px 12px rgba(40, 167, 69, 0.3);
-        }
-        .modal-box .submit-btn.gray {
-            background: #999;
-            box-shadow: none;
-        }
-        .modal-box .error-msg {
-            color: #dc3545;
-            font-size: 13px;
-            margin-top: 10px;
-            padding: 8px;
-            background: #ffeaea;
-            border-radius: 8px;
-            text-align: center;
-        }
-
-        /* ===== التتبع (Timeline) ===== */
-        .timeline-item {
-            border-right: 3px solid #0076ff;
-            padding: 10px 16px 10px 0;
-            margin-right: 8px;
-            margin-bottom: 14px;
-            background: #fafafa;
-            border-radius: 0 10px 10px 0;
-            transition: 0.2s;
-        }
-        .timeline-item:hover {
-            background: #f0f7ff;
-        }
-        .timeline-item .time {
-            color: #999;
-            font-size: 12px;
-        }
-        .timeline-item .event {
-            font-weight: 600;
-            color: #222;
-            margin: 4px 0;
-        }
-        .timeline-item .location {
-            color: #666;
-            font-size: 13px;
-        }
-        .timeline-item .problem {
-            color: #dc3545;
-            font-size: 13px;
-            margin-top: 4px;
-        }
-
-        /* ===== إدارة العملاء ===== */
-        .client-card {
-            background: #fafafa;
-            padding: 12px 14px;
-            border-radius: 10px;
-            margin-bottom: 10px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            border: 1px solid #eee;
-            transition: 0.2s;
-        }
-        .client-card:hover {
-            background: #f5f5f5;
-        }
-        .client-card .client-info {
-            flex: 1;
-        }
-        .client-card .client-info .name {
-            font-weight: 600;
-            color: #222;
-        }
-        .client-card .client-info .phone {
-            font-size: 13px;
-            color: #666;
-        }
-        .client-card .client-info .created {
-            font-size: 11px;
-            color: #aaa;
-        }
-        .client-card .client-actions button {
-            padding: 6px 14px;
-            border: none;
-            border-radius: 8px;
-            font-size: 12px;
-            cursor: pointer;
-            background: #dc3545;
-            color: white;
-            font-family: 'Cairo', sans-serif;
-            transition: 0.2s;
-        }
-        .client-card .client-actions button:active {
-            transform: scale(0.95);
-        }
-
-        /* ===== رسائل الخطأ والإشعارات ===== */
-        .error-box {
-            background: #fff3f3;
-            border: 1px solid #ffcdd2;
-            border-radius: 12px;
-            padding: 20px;
-            text-align: center;
-            margin: 20px 0;
-            color: #d32f2f;
-        }
-        .error-box .icon {
-            font-size: 48px;
-            display: block;
-            margin-bottom: 10px;
-        }
-        .error-box .title {
-            font-weight: 600;
-            font-size: 16px;
-            margin-bottom: 4px;
-        }
-        .error-box .sub {
-            font-size: 13px;
-            color: #666;
-        }
-        .error-box button {
-            margin-top: 12px;
-            padding: 8px 24px;
-            background: #0076ff;
-            color: white;
-            border: none;
-            border-radius: 8px;
-            cursor: pointer;
-            font-family: 'Cairo', sans-serif;
-            transition: 0.3s;
-        }
-        .error-box button:active {
-            transform: scale(0.95);
-        }
-
-        .toast {
-            position: fixed;
-            bottom: 20px;
-            left: 50%;
-            transform: translateX(-50%);
-            background: #333;
-            color: white;
-            padding: 12px 24px;
-            border-radius: 12px;
-            font-size: 14px;
-            z-index: 99999;
-            animation: toastIn 0.3s ease;
-            max-width: 90%;
-            text-align: center;
-            font-family: 'Cairo', sans-serif;
-            box-shadow: 0 8px 30px rgba(0,0,0,0.2);
-        }
-        .toast.success {
-            background: #28a745;
-        }
-        .toast.error {
-            background: #dc3545;
-        }
-        @keyframes toastIn {
-            from { opacity: 0; transform: translateX(-50%) translateY(20px); }
-            to { opacity: 1; transform: translateX(-50%) translateY(0); }
-        }
-
-        .two-columns {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 10px;
-        }
-        .two-columns .form-group {
-            margin-bottom: 10px;
-        }
-        @media (max-width: 400px) {
-            .two-columns {
-                grid-template-columns: 1fr;
-            }
-        }
-
-        .debug-box {
-            background: #f8f9fa;
-            padding: 10px;
-            border-radius: 8px;
-            margin-top: 10px;
-            font-size: 11px;
-            color: #666;
-            border: 1px dashed #ddd;
-            word-break: break-all;
-            text-align: left;
-            direction: ltr;
-            max-height: 150px;
-            overflow: auto;
-        }
-
-        /* ===== أنيميشن الشعار ===== */
-        .login-logo-wrap {
-            display: flex;
-            justify-content: center;
-            margin-bottom: 12px;
-        }
-        .login-logo-wrap .logo-node {
-            width: 80px;
-            height: 80px;
-            background: linear-gradient(135deg, #131c2e, #080d16);
-            border: 2px solid rgba(0, 118, 255, 0.5);
-            border-radius: 16px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            font-size: 24px;
-            font-weight: 900;
-            color: white;
-            animation: nodeFloat 2.6s ease-in-out infinite;
-            position: relative;
-        }
-        .login-logo-wrap .logo-node::after {
-            content: '';
-            position: absolute;
-            inset: -8px;
-            border: 2px dashed #0076ff;
-            border-radius: 20px;
-            opacity: 0.5;
-            animation: rotateDashed 15s linear infinite;
-        }
-        @keyframes nodeFloat {
-            0%, 100% { transform: translateY(0); box-shadow: 0 0 25px rgba(0, 118, 255, 0.2); }
-            50% { transform: translateY(-12px); box-shadow: 0 0 40px rgba(0, 118, 255, 0.5); }
-        }
-        @keyframes rotateDashed {
-            100% { transform: rotate(360deg); }
-        }
-    </style>
-</head>
-<body oncontextmenu="return false;">
-
-<div class="app-wrapper" id="app">
-
-    <!-- ===== صفحة تسجيل الدخول ===== -->
-    <div id="loginPage" class="login-page">
-        <div class="login-logo-wrap">
-            <div class="logo-node">📦</div>
-        </div>
-        <div class="brand">نظام تتبع شحنات J&T</div>
-        <div class="sub-brand">إدارة الشحنات بكل سهولة</div>
-
-        <div class="input-group">
-            <label>📱 رقم الهاتف</label>
-            <input type="text" id="loginPhone" placeholder="أدخل رقم الهاتف" dir="ltr">
-        </div>
-        <div class="input-group">
-            <label>🔒 كلمة المرور</label>
-            <input type="password" id="loginPassword" placeholder="أدخل كلمة المرور" dir="ltr">
-        </div>
-
-        <button class="login-btn" onclick="doLogin()">🚀 دخول</button>
-        <div id="loginError" class="error-msg hidden"></div>
-    </div>
-
-    <!-- ===== لوحة التحكم ===== -->
-    <div id="dashboard" class="hidden">
-        <div class="app-header">
-            <div class="user-info">
-                <div class="avatar" id="userAvatar">👤</div>
-                <div>
-                    <div class="name" id="userName">مرحباً</div>
-                    <div class="role" id="userRole">عميل</div>
-                </div>
-            </div>
-            <div class="header-actions">
-                <button id="addShipmentBtn" class="green hidden" onclick="showAddShipmentForm()">➕ إضافة</button>
-                <button id="clientsBtn" class="blue hidden" onclick="showClients()">👥 عملاء</button>
-                <button id="allShipmentsBtn" class="orange hidden" onclick="loadAllShipments()">📋 الكل</button>
-                <button class="outline" onclick="logout()">🚪 خروج</button>
-            </div>
-        </div>
-
-        <div id="summaryBox" class="summary-box hidden">
-            <div class="stat"><div class="count" id="totalCount">0</div><div class="label">كل الشحنات</div></div>
-            <div class="stat"><div class="count" id="waitingCount" style="color:#856404;">0</div><div class="label">قيد الانتظار</div></div>
-            <div class="stat"><div class="count" id="trackingCount" style="color:#0c5460;">0</div><div class="label">قيد التتبع</div></div>
-            <div class="stat"><div class="count" id="doneCount" style="color:#155724;">0</div><div class="label">تم التوصيل</div></div>
-        </div>
-
-        <div class="content-area" id="contentArea"></div>
-    </div>
-</div>
-
-<!-- ===== مودال ===== -->
-<div id="modalOverlay" class="modal-overlay hidden" onclick="if(event.target===this) closeModal()">
-    <div class="modal-box" id="modalBox">
-        <span class="close-btn" onclick="closeModal()">✕</span>
-        <div id="modalBody"></div>
-    </div>
-</div>
-
-<script>
-    // ============================================================
-    //  🔗 رابط الـ Web App
-    // ============================================================
-    const API_URL = "https://script.google.com/macros/s/AKfycbxSi9PXrWqKyaw0k7sh80w0_-eSWetaDy2VubgWlr8sLRopS67opRMdUH1hJ33bDPhw/exec";
-    let currentUser = null;
-    let currentShipments = [];
-
-    // ============================================================
-    //  قائمة المحافظات والمدن
-    // ============================================================
-    const governorates = {
-        'الشرقية': ['بلبيس', 'انشاص الرمل', 'أولاد صقر', 'الحسينية', 'ديرب نجم', 'فاقوس', 'كفر صقر', 'مشتول السوق', 'منيا القمح', 'الصالحية القديمة', 'الصالحية الجديدة', 'صان الحجر', 'مدينة العاشر من رمضان'],
-        'الجيزة': ['مدينة السادس من أكتوبر', 'مدينة الشيخ زايد', 'العياط', 'الحوامدية', 'البدرشين', 'الصف', 'العمرانية', 'أطفيح', 'الواحات البحرية', 'الجيزة', 'حدائق الاهرام', 'فيصل', 'الهرم', 'أبو النمرس', 'العجوزة', 'الوراق', 'أوسيم', 'بولاق الدكرور', 'الدقي', 'أرض اللواء', 'المهندسين', 'كرداسة', 'إمبابة', 'منشأة القناطر'],
-        'الغربية': ['كفر الزيات', 'المحلة الكبرى', 'سمنود', 'بسيون', 'السنطة', 'زفتى', 'قطور', 'طنطا'],
-        'الدقهلية': ['المنصورة', 'أجا', 'المنزلة', 'بلقاس', 'دكرنس', 'السنبلاوين', 'منية النصر', 'ميت غمر', 'شربين', 'طلخا'],
-        'الإسكندرية': ['الدخيلة', 'العامرية', 'برج العرب', 'محرم بيك', 'باب شرقي', 'الساحل الشمالي', 'سيدي جابر', 'العطارين', 'المنشية', 'اللبان', 'الجمرك', 'مينا البصل', 'كرموز', 'الرمل', 'المنتزه'],
-        'أسيوط': ['أبنوب', 'أبوتيج', 'البداري', 'الغنايم', 'الفتح', 'القوصية', 'ديروط', 'ساحل سليم', 'صدفا', 'مدينة أسيوط', 'منفلوط', 'منقباد'],
-        'أسوان': ['أسوان', 'كوم امبو', 'دراو', 'إدفو'],
-        'بني سويف': ['الواسطى', 'ناصر', 'مدينة بني سويف', 'مركز بني سويف', 'أهناسيا', 'ببا', 'سمسطا', 'الفشن'],
-        'القليوبية': ['بنها', 'الخانكة', 'العبور', 'القناطر الخيرية', 'شبين القناطر', 'طوخ', 'كفر شكر', 'قليوب', 'شبرا الخيمة'],
-        'القاهرة': ['عابدين', 'العباسية', 'الأزبكية', 'القطامية', 'المنيل', 'المقطم', 'دار السلام', 'البساتين', 'الجمالية', 'السيدة زينب', 'حلوان', 'المعادي', 'مصر القديمة', 'قصر النيل', 'الخليفة', 'طرة', 'الزمالك', 'الشروق', 'مدينة بدر', 'عين شمس', 'مدينتي', 'الزيتون', 'مدينة نصر', 'القاهرة الجديدة', 'هليوبوليس', 'الأميرية', 'السلام', 'الوايلي', 'الشرابية', 'المرج', 'المطرية', 'النزهة', 'حدائق القبة', 'شبرا مصر', 'كورنيش النيل'],
-        'البحيرة': ['دمنهور', 'كفر الدوار', 'أبو حمص', 'المحمودية', 'وادي النطرون', 'النوبارية', 'أبوالمطامير', 'حوش عيسي', 'إيتاي البارود', 'شبراخيت', 'رشيد', 'إدكوا', 'مركز بدر', 'الدلنجات', 'الرحمانية', 'كوم حمادة'],
-        'دمياط': ['فارسكور', 'دمياط القديمة', 'كفر سعد', 'الزرقا', 'كفر البطيخ', 'دمياط الجديدة', 'رأس البر', 'عزبة البرج'],
-        'الفيوم': ['طامية', 'سنورس', 'مركز الفيوم', 'مدينة الفيوم', 'أطسا', 'أبشواي', 'يوسف الصديق'],
-        'البحر الأحمر': ['الغردقة', 'رأس غارب', 'سفاجا', 'القصير', 'مرسى علم'],
-        'الإسماعيلية': ['الإسماعيلية'],
-        'كفر الشيخ': ['كفر الشيخ', 'دسوق', 'فوه', 'مطوبس', 'بلطيم', 'الحامول', 'الرياض', 'بيلا', 'قلين', 'سيدى سالم'],
-        'الأقصر': ['مدينة الأقصر', 'أرمنت', 'أسنا', 'القرنة'],
-        'مرسى مطروح': ['مرسى مطروح'],
-        'المنيا': ['العدوة', 'مغاغة', 'بني مزار', 'مطاي', 'سمالوط', 'مركز المنيا', 'مدينة المنيا', 'أبو قرقاص', 'ملوي', 'دير مواس'],
-        'بور سعيد': ['بورسعيد'],
-        'قنا': ['قنا', 'قوص', 'مدينة قفط', 'دشنا', 'نقادة', 'نجع حمادي', 'فرشوط', 'أبوتشت'],
-        'المنوفية': ['قويسنا', 'بركة السبع', 'السادات', 'الشهداء', 'تلا', 'شبين الكوم', 'الباجور', 'منوف', 'أشمون'],
-        'سوهاج': ['طما', 'طهطا', 'جهينة', 'مدينة سوهاج', 'المراغة', 'أخميم', 'ساقلته', 'المنشأة', 'جرجا', 'البلينا', 'دار السلام', 'العسيرات'],
-        'السويس': ['السويس'],
-        'الوادي الجديد': ['الخارجة', 'الداخلة', 'الفرافرة'],
-        'جنوب سيناء': ['جنوب سيناء', 'شرم الشيخ', 'دهب']
-    };
-
-    function updateCities() {
-        const govSelect = document.getElementById('f_governorate');
-        const citySelect = document.getElementById('f_city');
-        const selected = govSelect.value;
-        citySelect.innerHTML = '<option value="">اختر المدينة</option>';
-        if (selected && governorates[selected]) {
-            governorates[selected].forEach(city => {
-                const option = document.createElement('option');
-                option.value = city;
-                option.textContent = city;
-                citySelect.appendChild(option);
-            });
-        }
+function login(phone, password) {
+  if (!phone || !password) return response({ success: false, msg: "يرجى إدخال رقم الهاتف وكلمة المرور" });
+  
+  if (phone === ADMIN_PHONE && password === ADMIN_PASSWORD) {
+    return response({ success: true, role: "admin", name: ADMIN_NAME, phone: phone });
+  }
+  
+  var ss = SpreadsheetApp.openById(SHEET_ID);
+  var clientSheet = ss.getSheetByName("Clients");
+  if (clientSheet) {
+    var clients = clientSheet.getDataRange().getValues();
+    for (var i = 1; i < clients.length; i++) {
+      var clientPhone = String(clients[i][0]).trim();
+      var clientPass = String(clients[i][1]).trim();
+      var clientName = String(clients[i][2]).trim();
+      
+      if (clientPhone === phone && clientPass === password) {
+        return response({ success: true, role: "client", name: clientName, phone: phone });
+      }
     }
-
-    // ============================================================
-    //  🔐 تسجيل الدخول
-    // ============================================================
-    async function doLogin() {
-        const phone = document.getElementById('loginPhone').value.trim();
-        const password = document.getElementById('loginPassword').value.trim();
-        const errorDiv = document.getElementById('loginError');
-
-        if (!phone || !password) {
-            errorDiv.textContent = "⚠️ يرجى إدخال رقم الهاتف وكلمة المرور";
-            errorDiv.classList.remove('hidden');
-            return;
-        }
-
-        try {
-            const formData = new URLSearchParams();
-            formData.append('action', 'login');
-            formData.append('phone', phone);
-            formData.append('password', password);
-
-            const res = await fetch(API_URL, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-                body: formData.toString()
-            });
-
-            const data = await res.json();
-            console.log('✅ Login response:', data);
-
-            if (data.success) {
-                currentUser = {
-                    phone: phone,
-                    password: password,
-                    name: data.name,
-                    role: data.role
-                };
-                errorDiv.classList.add('hidden');
-                showDashboard();
-                showToast('✅ مرحباً ' + data.name, 'success');
-            } else {
-                errorDiv.textContent = data.msg || "❌ رقم الهاتف أو كلمة المرور غير صحيحة";
-                errorDiv.classList.remove('hidden');
-            }
-        } catch (e) {
-            errorDiv.textContent = "⚠️ فشل الاتصال بالخادم: " + e.message;
-            errorDiv.classList.remove('hidden');
-            console.error('❌ Login error:', e);
-        }
-    }
-
-    function logout() {
-        currentUser = null;
-        document.getElementById('loginPage').classList.remove('hidden');
-        document.getElementById('dashboard').classList.add('hidden');
-        document.getElementById('loginPhone').value = '';
-        document.getElementById('loginPassword').value = '';
-        document.getElementById('loginError').classList.add('hidden');
-        showToast('🚪 تم تسجيل الخروج', '');
-    }
-
-    function showDashboard() {
-        document.getElementById('loginPage').classList.add('hidden');
-        document.getElementById('dashboard').classList.remove('hidden');
-
-        const isAdmin = currentUser.role === 'admin';
-        document.getElementById('userName').textContent = currentUser.name || 'مستخدم';
-        document.getElementById('userRole').textContent = isAdmin ? '👑 أدمن' : '👤 عميل';
-        document.getElementById('userAvatar').textContent = (currentUser.name || 'U')[0].toUpperCase();
-
-        document.getElementById('addShipmentBtn').classList.toggle('hidden', isAdmin);
-        document.getElementById('clientsBtn').classList.toggle('hidden', !isAdmin);
-        document.getElementById('allShipmentsBtn').classList.toggle('hidden', !isAdmin);
-        document.getElementById('summaryBox').classList.toggle('hidden', !isAdmin);
-
-        if (isAdmin) {
-            loadAllShipments();
-        } else {
-            loadMyShipments();
-        }
-    }
-
-    // ============================================================
-    //  📦 تحميل الشحنات
-    // ============================================================
-    async function loadMyShipments() {
-        const content = document.getElementById('contentArea');
-        content.innerHTML = '<div class="loading"><div class="spinner"></div><div>جاري التحميل...</div></div>';
-
-        if (!currentUser) {
-            showError(content, 'يرجى تسجيل الدخول أولاً');
-            return;
-        }
-
-        try {
-            const formData = new URLSearchParams();
-            formData.append('action', 'myShipments');
-            formData.append('phone', currentUser.phone);
-            formData.append('password', currentUser.password);
-
-            const res = await fetch(API_URL, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-                body: formData.toString()
-            });
-
-            const data = await res.json();
-            console.log('📦 myShipments response:', data);
-
-            if (data.success) {
-                currentShipments = data.shipments || [];
-                renderShipments(currentShipments, false);
-            } else {
-                showError(content, data.msg || 'فشل تحميل الشحنات');
-            }
-        } catch (e) {
-            console.error('❌ loadMyShipments error:', e);
-            showError(content, 'فشل الاتصال بالخادم: ' + e.message);
-        }
-    }
-
-    async function loadAllShipments() {
-        const content = document.getElementById('contentArea');
-        content.innerHTML = '<div class="loading"><div class="spinner"></div><div>جاري التحميل...</div></div>';
-
-        if (!currentUser) {
-            showError(content, 'يرجى تسجيل الدخول أولاً');
-            return;
-        }
-
-        try {
-            const formData = new URLSearchParams();
-            formData.append('action', 'allShipments');
-            formData.append('adminPhone', currentUser.phone);
-            formData.append('adminPassword', currentUser.password);
-
-            const res = await fetch(API_URL, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-                body: formData.toString()
-            });
-
-            const data = await res.json();
-            console.log('📦 allShipments response:', data);
-
-            if (data.success) {
-                currentShipments = data.shipments || [];
-                updateSummary(currentShipments);
-                renderShipments(currentShipments, true);
-            } else {
-                showError(content, data.msg || 'فشل تحميل الشحنات');
-            }
-        } catch (e) {
-            console.error('❌ loadAllShipments error:', e);
-            showError(content, 'فشل الاتصال بالخادم: ' + e.message);
-        }
-    }
-
-    function showError(container, message) {
-        container.innerHTML = `
-            <div class="error-box">
-                <span class="icon">❌</span>
-                <div class="title">فشل تحميل الشحنة</div>
-                <div class="sub">${message}</div>
-                <button onclick="location.reload()">🔄 إعادة المحاولة</button>
-            </div>
-        `;
-    }
-
-    function updateSummary(shipments) {
-        const waiting = shipments.filter(s => s.status && s.status.includes('انتظار')).length;
-        const tracking = shipments.filter(s => s.status && s.status.includes('تتبع')).length;
-        const done = shipments.filter(s => s.status && s.status.includes('تم')).length;
-
-        document.getElementById('totalCount').textContent = shipments.length;
-        document.getElementById('waitingCount').textContent = waiting;
-        document.getElementById('trackingCount').textContent = tracking;
-        document.getElementById('doneCount').textContent = done;
-    }
-
-    // ============================================================
-    //  🎨 عرض بطاقة الشحنة
-    // ============================================================
-    function renderShipments(shipments, isAdmin) {
-        const content = document.getElementById('contentArea');
-
-        if (!shipments || shipments.length === 0) {
-            content.innerHTML = `
-                <div class="empty-state">
-                    <div class="icon">📭</div>
-                    <p>لا توجد شحنات حتى الآن</p>
-                    ${!isAdmin ? '<button onclick="showAddShipmentForm()">➕ إضافة شحنة</button>' : ''}
-                </div>
-            `;
-            return;
-        }
-
-        let html = '';
-        shipments.forEach((s) => {
-            let statusClass = 'status-waiting';
-            let statusText = s.status || 'في انتظار التتبع';
-            if (statusText.includes('تتبع')) statusClass = 'status-tracking';
-            else if (statusText.includes('تم')) statusClass = 'status-done';
-
-            let actionsHtml = '';
-            const trackingNum = s.trackingNumber || '';
-            if (trackingNum && trackingNum.length > 3) {
-                actionsHtml += `<button class="btn-track" onclick="event.stopPropagation(); trackShipment('${trackingNum}')">📍 تتبع</button>`;
-            }
-            if (isAdmin && (!trackingNum || trackingNum.length < 3)) {
-                actionsHtml += `<button class="btn-add-tracking" onclick="event.stopPropagation(); showAddTracking('${s.id}')">🔢 إضافة تتبع</button>`;
-            }
-            if (isAdmin) {
-                actionsHtml += `<button class="btn-delete" onclick="event.stopPropagation(); deleteShipment('${s.id}')">🗑️ حذف</button>`;
-            }
-
-            const displayName = s.receiverName || s.customerName || 'غير معروف';
-            const displayPhone = s.receiverPhone || s.customerPhone || '';
-            const displayAmount = s.amount || '0';
-            let lastUpdateText = s.lastUpdate || s.date || '';
-            let updateDisplay = lastUpdateText ? 'آخر تحديث: ' + lastUpdateText : '';
-
-            html += `
-                <div class="shipment-card" onclick="toggleDetails(this)">
-                    <span class="status-badge ${statusClass}">${statusText}</span>
-                    <div class="summary-row">
-                        <div class="main-info">
-                            <span class="name">👤 ${displayName}</span>
-                            <span class="phone">📱 ${displayPhone}</span>
-                            <span class="amount">💰 ${displayAmount} ج.م</span>
-                        </div>
-                        <div class="last-update">${updateDisplay}</div>
-                    </div>
-                    <div class="details">
-                        ${isAdmin ? `<div class="info"><strong>📱 رقم العميل:</strong> ${s.clientPhone || 'غير معروف'}</div>` : ''}
-                        <div class="info"><strong>🔢 رقم الشحنة:</strong> ${s.id}</div>
-                        ${trackingNum ? `<div class="info"><strong>🚚 رقم التتبع:</strong> ${trackingNum}</div>` : ''}
-                        ${s.receiverPhone2 ? `<div class="info"><strong>📱 هاتف آخر:</strong> ${s.receiverPhone2}</div>` : ''}
-                        ${s.governorate ? `<div class="info"><strong>📍 المحافظة:</strong> ${s.governorate}</div>` : ''}
-                        ${s.city ? `<div class="info"><strong>🏙️ المدينة:</strong> ${s.city}</div>` : ''}
-                        <div class="info"><strong>📍 العنوان:</strong> ${s.address || s.customerAddress || ''}</div>
-                        ${s.weight ? `<div class="info"><strong>⚖️ الوزن:</strong> ${s.weight} كجم</div>` : ''}
-                        ${s.notes ? `<div class="info"><strong>📝 ملاحظات:</strong> ${s.notes}</div>` : ''}
-                        ${actionsHtml ? `<div class="card-actions">${actionsHtml}</div>` : ''}
-                    </div>
-                </div>
-            `;
-        });
-
-        content.innerHTML = html;
-    }
-
-    function toggleDetails(element) {
-        const details = element.querySelector('.details');
-        if (details) {
-            details.classList.toggle('open');
-        }
-    }
-
-    // ============================================================
-    //  ➕ إضافة شحنة جديدة
-    // ============================================================
-    function showAddShipmentForm() {
-        if (!currentUser) {
-            showToast('⚠️ يرجى تسجيل الدخول أولاً', 'error');
-            return;
-        }
-
-        let govOptions = '<option value="">اختر المحافظة</option>';
-        Object.keys(governorates).forEach(gov => {
-            govOptions += `<option value="${gov}">${gov}</option>`;
-        });
-
-        openModal(`
-            <div class="modal-title"><i class="fas fa-box"></i> إضافة شحنة جديدة</div>
-            <div class="form-group"><label>👤 اسم المستلم *</label><input id="f_receiverName" placeholder="اسم المستلم"></div>
-            <div class="form-group"><label>📱 هاتف المستلم *</label><input id="f_receiverPhone" placeholder="مثال: 010xxxxxxxx" dir="ltr"></div>
-            <div class="form-group"><label>📱 هاتف آخر للمستلم</label><input id="f_receiverPhone2" placeholder="هاتف آخر (اختياري)" dir="ltr"></div>
-            <div class="two-columns">
-                <div class="form-group"><label>🏛️ المحافظة *</label><select id="f_governorate" onchange="updateCities()">${govOptions}</select></div>
-                <div class="form-group"><label>🏙️ المدينة *</label><select id="f_city"><option value="">اختر المحافظة أولاً</option></select></div>
-            </div>
-            <div class="form-group"><label>📍 العنوان التفصيلي *</label><input id="f_address" placeholder="العنوان بالتفصيل"></div>
-            <div class="form-group"><label>💰 المبلغ المطلوب تحصيله شامل الشحن *</label><input id="f_amount" type="number" placeholder="المبلغ بالجنيه" dir="ltr"></div>
-            <div class="form-group"><label>⚖️ وزن الشحنة *</label><input id="f_weight" type="number" placeholder="الوزن بالكيلو" dir="ltr" value="1"></div>
-            <div class="form-group"><label>📝 ملاحظات</label><textarea id="f_notes" placeholder="ملاحظات إضافية"></textarea></div>
-            <button class="submit-btn" onclick="submitShipment()">✅ إضافة الشحنة</button>
-            <div id="shipError" class="error-msg hidden"></div>
-        `);
-    }
-
-    async function submitShipment() {
-        const name = document.getElementById('f_receiverName').value.trim();
-        const phone = document.getElementById('f_receiverPhone').value.trim();
-        const phone2 = document.getElementById('f_receiverPhone2').value.trim();
-        const governorate = document.getElementById('f_governorate').value;
-        const city = document.getElementById('f_city').value;
-        const address = document.getElementById('f_address').value.trim();
-        const amount = document.getElementById('f_amount').value.trim();
-        const weight = document.getElementById('f_weight').value.trim() || '1';
-        const notes = document.getElementById('f_notes').value.trim();
-        const errorDiv = document.getElementById('shipError');
-
-        if (!name || !phone || !governorate || !city || !address || !amount) {
-            errorDiv.textContent = '⚠️ يرجى ملء جميع الحقول المطلوبة (*)';
-            errorDiv.classList.remove('hidden');
-            return;
-        }
-
-        if (!currentUser) {
-            errorDiv.textContent = '⚠️ يرجى تسجيل الدخول أولاً';
-            errorDiv.classList.remove('hidden');
-            return;
-        }
-
-        const formData = new URLSearchParams();
-        formData.append('action', 'addShipment');
-        formData.append('phone', currentUser.phone);
-        formData.append('password', currentUser.password);
-        formData.append('receiverName', name);
-        formData.append('receiverPhone', phone);
-        formData.append('receiverPhone2', phone2);
-        formData.append('governorate', governorate);
-        formData.append('city', city);
-        formData.append('address', address);
-        formData.append('amount', amount);
-        formData.append('weight', weight);
-        formData.append('notes', notes);
-
-        try {
-            const res = await fetch(API_URL, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-                body: formData.toString()
-            });
-            const data = await res.json();
-            console.log('📥 addShipment response:', data);
-
-            if (data.success) {
-                closeModal();
-                loadMyShipments();
-                showToast('✅ تم إضافة الشحنة بنجاح!', 'success');
-            } else {
-                errorDiv.textContent = data.msg || '❌ فشل الإضافة';
-                errorDiv.classList.remove('hidden');
-            }
-        } catch (e) {
-            errorDiv.textContent = '⚠️ فشل الاتصال بالخادم: ' + e.message;
-            errorDiv.classList.remove('hidden');
-            console.error('❌ submitShipment error:', e);
-        }
-    }
-
-    // ============================================================
-    //  🔢 إضافة رقم تتبع (للأدمن)
-    // ============================================================
-    function showAddTracking(shipmentId) {
-        openModal(`
-            <div class="modal-title"><i class="fas fa-qrcode"></i> إضافة رقم تتبع</div>
-            <p style="margin-bottom:12px;color:#666;">رقم الشحنة: <strong>${shipmentId}</strong></p>
-            <div class="form-group"><label>🚚 رقم التتبع</label><input id="trackingNum" placeholder="مثال: JEG000470355620" dir="ltr"></div>
-            <button class="submit-btn green" onclick="submitTracking('${shipmentId}')">💾 حفظ رقم التتبع</button>
-            <div id="trackError" class="error-msg hidden"></div>
-        `);
-    }
-
-    async function submitTracking(shipmentId) {
-        const trackingNumber = document.getElementById('trackingNum').value.trim();
-        const errorDiv = document.getElementById('trackError');
-
-        if (!trackingNumber) {
-            errorDiv.textContent = '⚠️ يرجى إدخال رقم التتبع';
-            errorDiv.classList.remove('hidden');
-            return;
-        }
-
-        const formData = new URLSearchParams();
-        formData.append('action', 'addTrackingNumber');
-        formData.append('adminPhone', currentUser.phone);
-        formData.append('adminPassword', currentUser.password);
-        formData.append('shipmentId', shipmentId);
-        formData.append('trackingNumber', trackingNumber);
-
-        try {
-            const res = await fetch(API_URL, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-                body: formData.toString()
-            });
-            const data = await res.json();
-
-            if (data.success) {
-                closeModal();
-                loadAllShipments();
-                showToast('✅ تم إضافة رقم التتبع بنجاح!', 'success');
-            } else {
-                errorDiv.textContent = data.msg || '❌ فشل الحفظ';
-                errorDiv.classList.remove('hidden');
-            }
-        } catch (e) {
-            errorDiv.textContent = '⚠️ فشل الاتصال بالخادم: ' + e.message;
-            errorDiv.classList.remove('hidden');
-        }
-    }
-
-    // ============================================================
-    //  🗑️ حذف شحنة (للأدمن)
-    // ============================================================
-    async function deleteShipment(shipmentId) {
-        if (!confirm('⚠️ هل أنت متأكد من حذف هذه الشحنة؟')) return;
-
-        const formData = new URLSearchParams();
-        formData.append('action', 'deleteShipment');
-        formData.append('adminPhone', currentUser.phone);
-        formData.append('adminPassword', currentUser.password);
-        formData.append('shipmentId', shipmentId);
-
-        try {
-            const res = await fetch(API_URL, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-                body: formData.toString()
-            });
-            const data = await res.json();
-
-            if (data.success) {
-                loadAllShipments();
-                showToast('✅ تم حذف الشحنة بنجاح', 'success');
-            } else {
-                showToast(data.msg || '❌ فشل الحذف', 'error');
-            }
-        } catch (e) {
-            showToast('⚠️ فشل الاتصال بالخادم: ' + e.message, 'error');
-        }
-    }
-
-    // ============================================================
-    //  🚚 تتبع الشحنة
-    // ============================================================
-    async function trackShipment(billCode) {
-        openModal(`
-            <div class="modal-title"><i class="fas fa-map-marked-alt"></i> تتبع الشحنة</div>
-            <div class="loading"><div class="spinner"></div><div>جاري التتبع...</div></div>
-        `);
-
-        try {
-            const res = await fetch(`${API_URL}?action=track&billCode=${billCode}`);
-            const data = await res.json();
-            console.log('📡 Track response:', data);
-
-            if (data.code === "1" && data.data && data.data[0]) {
-                let html = `<div class="modal-title"><i class="fas fa-map-marked-alt"></i> مسار الشحنة: ${billCode}</div>`;
-                const details = data.data[0].details || [];
-                if (details.length === 0) {
-                    html += `<p style="text-align:center;color:#999;padding:20px;">لا توجد تفاصيل تتبع متاحة</p>`;
-                } else {
-                    details.forEach(d => {
-                        html += `
-                            <div class="timeline-item">
-                                <div class="time">🕐 ${d.scanTime || ''}</div>
-                                <div class="event">📌 ${d.desc || d.scanType || ''}</div>
-                                <div class="location">📍 ${d.scanNetworkName || ''} ${d.scanNetworkCity ? '- ' + d.scanNetworkCity : ''}</div>
-                                ${d.probleDescription ? `<div class="problem">⚠️ ${d.probleDescription}</div>` : ''}
-                            </div>
-                        `;
-                    });
-                }
-                document.getElementById('modalBody').innerHTML = html;
-            } else {
-                let errorMsg = data.msg || data.error || 'فشل تتبع الشحنة';
-                document.getElementById('modalBody').innerHTML = `
-                    <div class="modal-title"><i class="fas fa-map-marked-alt"></i> تتبع الشحنة</div>
-                    <div style="text-align:center;padding:20px;color:#dc3545;">
-                        <div style="font-size:48px;margin-bottom:12px;">❌</div>
-                        <p>${errorMsg}</p>
-                        <p style="font-size:13px;color:#999;">رقم التتبع: ${billCode}</p>
-                        <div class="debug-box">${JSON.stringify(data, null, 2)}</div>
-                    </div>
-                `;
-            }
-        } catch (e) {
-            document.getElementById('modalBody').innerHTML = `
-                <div class="modal-title"><i class="fas fa-map-marked-alt"></i> تتبع الشحنة</div>
-                <div style="text-align:center;padding:20px;color:#dc3545;">
-                    <div style="font-size:48px;margin-bottom:12px;">📡</div>
-                    <p>فشل الاتصال بخدمة التتبع: ${e.message}</p>
-                </div>
-            `;
-        }
-    }
-
-    // ============================================================
-    //  👥 إدارة العملاء (للأدمن)
-    // ============================================================
-    async function showClients() {
-        openModal(`
-            <div class="modal-title"><i class="fas fa-users"></i> إدارة العملاء</div>
-            <button class="submit-btn green" onclick="showAddClientForm()" style="margin-bottom:14px;">➕ إنشاء حساب عميل جديد</button>
-            <div id="clientList"><div class="loading"><div class="spinner"></div><div>جاري التحميل...</div></div></div>
-        `);
-
-        try {
-            const formData = new URLSearchParams();
-            formData.append('action', 'allClients');
-            formData.append('adminPhone', currentUser.phone);
-            formData.append('adminPassword', currentUser.password);
-
-            const res = await fetch(API_URL, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-                body: formData.toString()
-            });
-            const data = await res.json();
-
-            const listDiv = document.getElementById('clientList');
-            if (data.success) {
-                if (data.clients.length === 0) {
-                    listDiv.innerHTML = `<p style="text-align:center;color:#999;padding:20px;">لا يوجد عملاء حتى الآن</p>`;
-                } else {
-                    let html = '';
-                    data.clients.forEach(c => {
-                        html += `
-                            <div class="client-card">
-                                <div class="client-info">
-                                    <div class="name">${c.name || 'غير معروف'}</div>
-                                    <div class="phone">📱 ${c.phone || ''}</div>
-                                    <div class="created">📅 ${c.created || ''}</div>
-                                </div>
-                                <div class="client-actions">
-                                    <button onclick="deleteClient('${c.phone}')">🗑️ حذف</button>
-                                </div>
-                            </div>
-                        `;
-                    });
-                    listDiv.innerHTML = html;
-                }
-            } else {
-                listDiv.innerHTML = `<p style="color:#dc3545;">${data.msg || 'فشل التحميل'}</p>`;
-            }
-        } catch (e) {
-            document.getElementById('clientList').innerHTML = `<p style="color:#dc3545;">⚠️ فشل الاتصال بالخادم: ${e.message}</p>`;
-        }
-    }
-
-    function showAddClientForm() {
-        openModal(`
-            <div class="modal-title"><i class="fas fa-user-plus"></i> إنشاء حساب عميل جديد</div>
-            <div class="form-group"><label>👤 اسم العميل *</label><input id="nc_name" placeholder="الاسم الكامل"></div>
-            <div class="form-group"><label>📱 رقم الهاتف *</label><input id="nc_phone" placeholder="مثال: 011xxxxxxxx" dir="ltr"></div>
-            <div class="form-group"><label>🔒 كلمة المرور *</label><input id="nc_password" type="password" placeholder="كلمة المرور للدخول" dir="ltr"></div>
-            <button class="submit-btn green" onclick="createClient()">✅ إنشاء الحساب</button>
-            <button class="submit-btn gray" onclick="showClients()" style="margin-top:8px;">↩️ رجوع</button>
-            <div id="clientError" class="error-msg hidden"></div>
-        `);
-    }
-
-    async function createClient() {
-        const name = document.getElementById('nc_name').value.trim();
-        const phone = document.getElementById('nc_phone').value.trim();
-        const password = document.getElementById('nc_password').value.trim();
-        const errorDiv = document.getElementById('clientError');
-
-        if (!name || !phone || !password) {
-            errorDiv.textContent = '⚠️ يرجى ملء جميع الحقول';
-            errorDiv.classList.remove('hidden');
-            return;
-        }
-
-        const formData = new URLSearchParams();
-        formData.append('action', 'createClient');
-        formData.append('adminPhone', currentUser.phone);
-        formData.append('adminPassword', currentUser.password);
-        formData.append('clientName', name);
-        formData.append('clientPhone', phone);
-        formData.append('clientPassword', password);
-
-        try {
-            const res = await fetch(API_URL, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-                body: formData.toString()
-            });
-            const data = await res.json();
-
-            if (data.success) {
-                showClients();
-                showToast('✅ تم إنشاء الحساب بنجاح!', 'success');
-            } else {
-                errorDiv.textContent = data.msg || '❌ فشل الإنشاء';
-                errorDiv.classList.remove('hidden');
-            }
-        } catch (e) {
-            errorDiv.textContent = '⚠️ فشل الاتصال بالخادم: ' + e.message;
-            errorDiv.classList.remove('hidden');
-        }
-    }
-
-    async function deleteClient(phone) {
-        if (!confirm('⚠️ هل أنت متأكد من حذف هذا العميل؟')) return;
-
-        const formData = new URLSearchParams();
-        formData.append('action', 'deleteClient');
-        formData.append('phone', phone);
-
-        try {
-            const res = await fetch(API_URL, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-                body: formData.toString()
-            });
-            const data = await res.json();
-
-            if (data.success) {
-                showClients();
-                showToast('✅ تم حذف العميل بنجاح', 'success');
-            } else {
-                showToast(data.msg || '❌ فشل الحذف', 'error');
-            }
-        } catch (e) {
-            showToast('⚠️ فشل الاتصال بالخادم: ' + e.message, 'error');
-        }
-    }
-
-    // ============================================================
-    //  🖥️ دوال المودال والإشعارات
-    // ============================================================
-    function openModal(html) {
-        document.getElementById('modalBody').innerHTML = html;
-        document.getElementById('modalOverlay').classList.remove('hidden');
-        document.body.style.overflow = 'hidden';
-    }
-
-    function closeModal() {
-        document.getElementById('modalOverlay').classList.add('hidden');
-        document.body.style.overflow = '';
-    }
-
-    function showToast(message, type) {
-        const existing = document.querySelector('.toast');
-        if (existing) existing.remove();
-
-        const toast = document.createElement('div');
-        toast.className = 'toast' + (type ? ' ' + type : '');
-        toast.textContent = message;
-        document.body.appendChild(toast);
-
-        setTimeout(() => {
-            toast.style.opacity = '0';
-            toast.style.transition = 'opacity 0.3s';
-            setTimeout(() => toast.remove(), 300);
-        }, 3000);
-    }
-
-    document.addEventListener('keydown', function(e) {
-        if (e.key === 'Escape') closeModal();
-        if (e.key === 'Enter') {
-            if (document.getElementById('dashboard').classList.contains('hidden')) {
-                doLogin();
-            }
-        }
-        // منع اختصارات النسخ
-        if (e.ctrlKey && (e.key === 'u' || e.key === 's' || e.key === 'c' || e.key === 'a')) {
-            e.preventDefault();
-        }
+  }
+  
+  return response({ success: false, msg: "رقم الهاتف أو كلمة المرور غير صحيحة" });
+}
+
+// ============================================================
+//  🚚 تتبع الشحنة - النسخة التي تعمل
+// ============================================================
+function trackShipment(billCode) {
+  if (!billCode) return response({ error: "يجب إدخال رقم الشحنة" });
+  
+  var API_ACCOUNT = "866958120939696147";
+  var PRIVATE_KEY = "29535fad70ca4688aaa5b462320eb096";
+  var API_URL = "https://openapi.jtjms-eg.com/webopenplatformapi/api/logistics/trace";
+  var timestamp = Date.now().toString();
+  var bizContent = JSON.stringify({ billCodes: billCode });
+  var md5Hash = Utilities.computeDigest(Utilities.DigestAlgorithm.MD5, bizContent + PRIVATE_KEY);
+  var digest = Utilities.base64Encode(md5Hash);
+  
+  try {
+    var res = UrlFetchApp.fetch(API_URL, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded',
+        'apiAccount': API_ACCOUNT,
+        'timestamp': timestamp,
+        'digest': digest
+      },
+      payload: { bizContent: bizContent }
     });
+    return ContentService.createTextOutput(res.getContentText()).setMimeType(ContentService.MimeType.JSON);
+  } catch (e) {
+    return response({ error: e.toString() });
+  }
+}
 
-    // ============================================================
-    //  🚀 بيانات تجريبية للاختبار
-    // ============================================================
-    document.getElementById('loginPhone').value = '01119024874';
-    document.getElementById('loginPassword').value = '01119024874';
-</script>
+// ============================================================
+//  ➕ إضافة شحنة جديدة
+// ============================================================
+function addShipment(params) {
+  var phone = params.phone;
+  var password = params.password;
+  
+  var auth = JSON.parse(login(phone, password).getContent());
+  if (!auth.success) return response({ success: false, msg: "يرجى تسجيل الدخول أولاً" });
+  
+  var sheet = getSheet("Shipments");
+  if (!sheet) return response({ success: false, msg: "ورقة الشحنات غير موجودة" });
+  
+  var receiverName = params.receiverName || params.customerName || "";
+  var receiverPhone = params.receiverPhone || params.customerPhone || "";
+  var receiverPhone2 = params.receiverPhone2 || "";
+  var governorate = params.governorate || "";
+  var city = params.city || "";
+  var address = params.address || params.customerAddress || "";
+  var amount = params.amount || "0";
+  var weight = params.weight || "1";
+  var notes = params.notes || "";
+  
+  var row = [
+    "",                   // A: رقم التتبع (فارغ)
+    receiverName,         // B: اسم المستلم
+    receiverPhone,        // C: هاتف المستلم
+    receiverPhone2,       // D: هاتف آخر للمستلم
+    governorate,          // E: المحافظة
+    city,                 // F: المدينة
+    ".",                  // G: اجباري
+    address,              // H: العنوان التفصيلي
+    "",                   // I: فارغ
+    "",                   // J: فارغ
+    "في انتظار التتبع",   // K: الحالة
+    "Standard",           // L: اجباري
+    "",                   // M: فارغ
+    "Egypt",              // N: اجباري
+    amount,               // O: المبلغ المطلوب تحصيله
+    "",                   // P: فارغ
+    weight,               // Q: وزن الشحنة
+    "",                   // R: فارغ
+    "",                   // S: فارغ
+    phone                 // T: رقم هاتف العميل
+  ];
+  
+  sheet.appendRow(row);
+  return response({ success: true, msg: "تم إضافة الشحنة بنجاح" });
+}
 
-</body>
-</html>
+// ============================================================
+//  📦 جلب شحنات العميل
+// ============================================================
+function getMyShipments(phone, password) {
+  var auth = JSON.parse(login(phone, password).getContent());
+  if (!auth.success) return response({ success: false, msg: "يرجى تسجيل الدخول أولاً" });
+  
+  var sheet = getSheet("Shipments");
+  if (!sheet) return response({ success: true, shipments: [] });
+  
+  var data = sheet.getDataRange().getValues();
+  var shipments = [];
+  for (var i = 1; i < data.length; i++) {
+    var row = data[i];
+    var clientPhone = String(row[19] || "").trim(); // العمود T
+    
+    if (clientPhone === phone) {
+      shipments.push({
+        id: i,
+        date: new Date().toLocaleString('ar-EG'),
+        trackingNumber: row[0] || "",        // A
+        receiverName: row[1] || "",          // B
+        receiverPhone: row[2] || "",         // C
+        receiverPhone2: row[3] || "",        // D
+        governorate: row[4] || "",           // E
+        city: row[5] || "",                  // F
+        address: row[7] || "",               // H
+        status: row[10] || "في انتظار التتبع", // K
+        amount: row[14] || "",               // O
+        weight: row[16] || "",               // Q
+        notes: row[17] || "",                // R
+        clientPhone: clientPhone
+      });
+    }
+  }
+  return response({ success: true, shipments: shipments.reverse() });
+}
+
+// ============================================================
+//  📦 جلب جميع الشحنات (للأدمن)
+// ============================================================
+function getAllShipments(adminPhone, adminPassword) {
+  var auth = JSON.parse(login(adminPhone, adminPassword).getContent());
+  if (!auth.success || auth.role !== "admin") return response({ success: false, msg: "غير مصرح" });
+  
+  var sheet = getSheet("Shipments");
+  if (!sheet) return response({ success: true, shipments: [] });
+  
+  var data = sheet.getDataRange().getValues();
+  var shipments = [];
+  for (var i = 1; i < data.length; i++) {
+    var row = data[i];
+    shipments.push({
+      id: i,
+      date: new Date().toLocaleString('ar-EG'),
+      trackingNumber: row[0] || "",          // A
+      receiverName: row[1] || "",            // B
+      receiverPhone: row[2] || "",           // C
+      receiverPhone2: row[3] || "",          // D
+      governorate: row[4] || "",             // E
+      city: row[5] || "",                    // F
+      address: row[7] || "",                 // H
+      status: row[10] || "في انتظار التتبع", // K
+      amount: row[14] || "",                 // O
+      weight: row[16] || "",                 // Q
+      notes: row[17] || "",                  // R
+      clientPhone: row[19] || ""             // T
+    });
+  }
+  return response({ success: true, shipments: shipments.reverse() });
+}
+
+// ============================================================
+//  🔢 إضافة رقم تتبع (للأدمن)
+// ============================================================
+function addTrackingNumber(params) {
+  var adminPhone = params.adminPhone;
+  var adminPassword = params.adminPassword;
+  var shipmentId = params.shipmentId;
+  var trackingNumber = params.trackingNumber;
+  
+  var auth = JSON.parse(login(adminPhone, adminPassword).getContent());
+  if (!auth.success || auth.role !== "admin") return response({ success: false, msg: "غير مصرح" });
+  
+  var sheet = getSheet("Shipments");
+  if (!sheet) return response({ success: false, msg: "ورقة الشحنات غير موجودة" });
+  
+  var rowIndex = parseInt(shipmentId);
+  if (isNaN(rowIndex) || rowIndex < 1) {
+    return response({ success: false, msg: "رقم الشحنة غير صحيح" });
+  }
+  
+  var lastRow = sheet.getLastRow();
+  if (rowIndex > lastRow) {
+    return response({ success: false, msg: "الشحنة غير موجودة" });
+  }
+  
+  // تحديث العمود A برقم التتبع
+  sheet.getRange(rowIndex + 1, 1).setValue(trackingNumber);
+  // تحديث الحالة في العمود K
+  sheet.getRange(rowIndex + 1, 11).setValue("قيد التتبع");
+  
+  return response({ success: true, msg: "تم إضافة رقم التتبع بنجاح" });
+}
+
+// ============================================================
+//  🗑️ حذف شحنة (للأدمن)
+// ============================================================
+function deleteShipment(params) {
+  var adminPhone = params.adminPhone;
+  var adminPassword = params.adminPassword;
+  var shipmentId = params.shipmentId;
+  
+  var auth = JSON.parse(login(adminPhone, adminPassword).getContent());
+  if (!auth.success || auth.role !== "admin") return response({ success: false, msg: "غير مصرح" });
+  
+  var sheet = getSheet("Shipments");
+  if (!sheet) return response({ success: false, msg: "ورقة الشحنات غير موجودة" });
+  
+  var rowIndex = parseInt(shipmentId);
+  if (isNaN(rowIndex) || rowIndex < 1) {
+    return response({ success: false, msg: "رقم الشحنة غير صحيح" });
+  }
+  
+  var lastRow = sheet.getLastRow();
+  if (rowIndex > lastRow) {
+    return response({ success: false, msg: "الشحنة غير موجودة" });
+  }
+  
+  sheet.deleteRow(rowIndex + 1);
+  return response({ success: true, msg: "تم حذف الشحنة بنجاح" });
+}
+
+// ============================================================
+//  👥 إدارة العملاء
+// ============================================================
+function createClient(params) {
+  var adminPhone = params.adminPhone;
+  var adminPassword = params.adminPassword;
+  var clientPhone = params.clientPhone;
+  var clientPassword = params.clientPassword;
+  var clientName = params.clientName;
+  
+  var auth = JSON.parse(login(adminPhone, adminPassword).getContent());
+  if (!auth.success || auth.role !== "admin") return response({ success: false, msg: "غير مصرح" });
+  
+  var sheet = getSheet("Clients");
+  if (!sheet) return response({ success: false, msg: "ورقة العملاء غير موجودة" });
+  
+  var clients = sheet.getDataRange().getValues();
+  for (var i = 1; i < clients.length; i++) {
+    if (String(clients[i][0]).trim() === clientPhone) {
+      return response({ success: false, msg: "رقم الهاتف مسجل بالفعل" });
+    }
+  }
+  
+  sheet.appendRow([clientPhone, clientPassword, clientName, new Date().toLocaleString('ar-EG')]);
+  return response({ success: true, msg: "تم إنشاء حساب العميل بنجاح" });
+}
+
+function deleteClient(phone) {
+  var sheet = getSheet("Clients");
+  if (!sheet) return response({ success: false, msg: "ورقة العملاء غير موجودة" });
+  
+  var data = sheet.getDataRange().getValues();
+  for (var i = 1; i < data.length; i++) {
+    if (String(data[i][0]).trim() === phone) {
+      sheet.deleteRow(i + 1);
+      return response({ success: true, msg: "تم حذف العميل بنجاح" });
+    }
+  }
+  return response({ success: false, msg: "العميل غير موجود" });
+}
+
+function getAllClients(adminPhone, adminPassword) {
+  var auth = JSON.parse(login(adminPhone, adminPassword).getContent());
+  if (!auth.success || auth.role !== "admin") return response({ success: false, msg: "غير مصرح" });
+  
+  var sheet = getSheet("Clients");
+  if (!sheet) return response({ success: true, clients: [] });
+  
+  var data = sheet.getDataRange().getValues();
+  var clients = [];
+  for (var i = 1; i < data.length; i++) {
+    clients.push({
+      phone: String(data[i][0]).trim(),
+      name: data[i][2],
+      created: data[i][3]
+    });
+  }
+  return response({ success: true, clients: clients });
+}
+
+function response(obj) {
+  return ContentService.createTextOutput(JSON.stringify(obj)).setMimeType(ContentService.MimeType.JSON);
+}
