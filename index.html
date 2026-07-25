@@ -1050,9 +1050,27 @@
             const res = await fetch(`${API_URL}?action=track&billCode=${trackingNumber}`);
             const data = await res.json();
             if (data.code === "1" && data.data && data.data[0]) {
-                const status = data.data[0].status || null;
-                trackingCache[trackingNumber] = status;
-                return status;
+                let finalStatus = data.data[0].status || null;
+                const details = data.data[0].details || [];
+                
+                // البحث عن "تم التسليم" في كل التفاصيل
+                for (const d of details) {
+                    const desc = d.desc || '';
+                    if (desc.includes('تم التسليم')) {
+                        finalStatus = '✅ تم التسليم';
+                        break;
+                    }
+                }
+                
+                // إذا لم نجد "تم التسليم" في التفاصيل، نبحث في الحالة العامة
+                if (!finalStatus || !finalStatus.includes('تم التسليم')) {
+                    if (finalStatus && finalStatus.includes('تم التسليم')) {
+                        finalStatus = '✅ تم التسليم';
+                    }
+                }
+                
+                trackingCache[trackingNumber] = finalStatus;
+                return finalStatus;
             }
             trackingCache[trackingNumber] = null;
             return null;
@@ -1087,7 +1105,7 @@
                 isError = true;
                 displayStatus = '❌ ' + status.replace(/❌️?/g, '').replace(/خطأ/g, '').trim();
                 if (!displayStatus || displayStatus === '❌') displayStatus = '❌ خطأ في التوصيل';
-            } else if (status.includes('تم التسليم')) {
+            } else if (status.includes('تم التسليم') || status.includes('✅ تم التسليم')) {
                 isSuccess = true;
                 displayStatus = '✅ تم التسليم';
             } else if (status.includes('تم الاستلام')) {
@@ -1443,20 +1461,31 @@
                 }
                 
                 const currentStatus = data.data[0].status || '';
+                const details = data.data[0].details || [];
+                
+                // البحث عن "تم التسليم" في كل التفاصيل
+                let foundDelivered = false;
+                for (const d of details) {
+                    const desc = d.desc || '';
+                    if (desc.includes('تم التسليم')) {
+                        foundDelivered = true;
+                        break;
+                    }
+                }
                 
                 let displayStatus = currentStatus;
                 let statusBgColor = '#e8f5e9';
                 let statusBorderColor = '#2e7d32';
                 let statusTextColor = '#2e7d32';
                 
-                if (currentStatus.includes('خطأ') || currentStatus.includes('Error') || currentStatus.includes('❌')) {
+                if (foundDelivered || currentStatus.includes('تم التسليم')) {
+                    displayStatus = '✅ تم التسليم';
+                } else if (currentStatus.includes('خطأ') || currentStatus.includes('Error') || currentStatus.includes('❌')) {
                     displayStatus = '❌ ' + currentStatus.replace(/❌️?/g, '').replace(/خطأ/g, '').trim();
                     if (!displayStatus || displayStatus === '❌') displayStatus = '❌ خطأ في التوصيل';
                     statusBgColor = '#ffeaea';
                     statusBorderColor = '#dc3545';
                     statusTextColor = '#dc3545';
-                } else if (currentStatus.includes('تم التسليم')) {
-                    displayStatus = '✅ تم التسليم';
                 } else if (currentStatus.includes('تم الاستلام')) {
                     displayStatus = '📦 تم استلام الشحنة';
                     statusBgColor = '#e3f2fd';
@@ -1476,7 +1505,6 @@
                     <span style="color:${statusTextColor};font-weight:700;font-size:16px;margin-right:8px;">${displayStatus}</span>
                 </div>`;
                 
-                const details = data.data[0].details || [];
                 if (details.length === 0) {
                     html += `<p style="text-align:center;color:#999;padding:20px;">لا توجد تفاصيل تتبع متاحة</p>`;
                 } else {
