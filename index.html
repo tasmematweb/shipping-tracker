@@ -1,4 +1,3 @@
-```html
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
@@ -936,10 +935,13 @@
 
 <script>
     // ============================================================
-    //  🔗 الروابط
+    //  🔗 الروابط - تم التعديل
     // ============================================================
     const API_URL = "https://script.google.com/macros/s/AKfycbyZYhdpkYQH-ZxM8te39VoEnoKJjx2vY5VzvgHg18y6FadPRMdpbZyTW2YuHByyI-ha/exec";
-    const BASE_URL = "https://tasmematweb.github.io/tracking-system";
+    
+    // 🔥 التعديل الرئيسي: استخدام المسار الصحيح للموقع
+    const BASE_URL = "https://tasmematweb.github.io/shipping-tracker";
+    
     let currentUser = null;
     let trackingCache = {};
     let publicClientPhone = null;
@@ -1115,10 +1117,11 @@
     }
 
     // ============================================================
-    //  نسخ رابط التسجيل
+    //  🔗 نسخ رابط التسجيل - تم التعديل
     // ============================================================
     function copyShareLink() {
-        const shareUrl = `${BASE_URL}?ref=${currentUser.phone}`;
+        // 🔥 استخدام الرابط الصحيح مع رقم العميل الحالي
+        const shareUrl = `${BASE_URL}/?ref=${currentUser.phone}`;
         
         if (navigator.clipboard && navigator.clipboard.writeText) {
             navigator.clipboard.writeText(shareUrl).then(() => {
@@ -1896,4 +1899,3 @@
 
 </body>
 </html>
-```
