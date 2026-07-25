@@ -60,7 +60,7 @@
             justify-content: center;
             margin-bottom: 25px;
             position: relative;
-            height: 170px;
+            height: 200px;
         }
 
         /* ============================================================
@@ -271,11 +271,6 @@
         .login-page .brand span {
             color: #0076ff;
         }
-        .login-page .sub-title {
-            color: #888;
-            font-size: 15px;
-            margin-bottom: 30px;
-        }
         .login-page .input-group {
             position: relative;
             margin-bottom: 16px;
@@ -333,15 +328,6 @@
             padding: 10px;
             background: #ffeaea;
             border-radius: 8px;
-        }
-        .login-page .login-footer {
-            margin-top: 20px;
-            color: #aaa;
-            font-size: 13px;
-        }
-        .login-page .login-footer span {
-            color: #0076ff;
-            font-weight: 600;
         }
 
         /* ===== الهيدر ===== */
@@ -1070,6 +1056,67 @@
     let publicClientPhone = null;
 
     // ============================================================
+    //  حفظ الجلسة - تذكر العميل لمدة 10 تسجيلات دخول
+    // ============================================================
+    function saveUserSession(userData) {
+        try {
+            // حفظ بيانات المستخدم
+            sessionStorage.setItem('eux_user', JSON.stringify(userData));
+            
+            // حفظ عدد مرات الدخول (للتذكر لمدة 10 مرات)
+            let loginCount = parseInt(localStorage.getItem('eux_login_count') || '0');
+            loginCount++;
+            localStorage.setItem('eux_login_count', loginCount.toString());
+            localStorage.setItem('eux_user_data', JSON.stringify(userData));
+            
+            // إذا تجاوز 10 مرات، نعيد العد من الصفر ونحتفظ بالبيانات
+            if (loginCount > 10) {
+                localStorage.setItem('eux_login_count', '1');
+            }
+        } catch(e) {
+            console.log('خطأ في حفظ الجلسة:', e);
+        }
+    }
+
+    function getSavedUser() {
+        try {
+            const savedUser = sessionStorage.getItem('eux_user');
+            if (savedUser) {
+                return JSON.parse(savedUser);
+            }
+            
+            // إذا لم يكن في session، نبحث في localStorage (للحالات التي تم فيها إغلاق المتصفح)
+            const localUser = localStorage.getItem('eux_user_data');
+            if (localUser) {
+                const user = JSON.parse(localUser);
+                // التحقق من أن عدد مرات الدخول لم يتجاوز 10
+                const loginCount = parseInt(localStorage.getItem('eux_login_count') || '0');
+                if (loginCount <= 10) {
+                    // إعادة حفظ الجلسة في sessionStorage
+                    sessionStorage.setItem('eux_user', JSON.stringify(user));
+                    return user;
+                } else {
+                    // تجاوز 10 مرات، نطلب تسجيل دخول جديد
+                    localStorage.removeItem('eux_user_data');
+                    localStorage.removeItem('eux_login_count');
+                    return null;
+                }
+            }
+            return null;
+        } catch(e) {
+            return null;
+        }
+    }
+
+    function clearUserSession() {
+        sessionStorage.removeItem('eux_user');
+        // لا نمسح localStorage حتى لا نفقد التذكر لمدة 10 مرات
+        // ولكن نمسحها عند تسجيل الخروج بشكل صريح
+        localStorage.removeItem('eux_user_data');
+        localStorage.removeItem('eux_login_count');
+    }
+
+    // ============================================================
     //  التحقق من جلسة المستخدم (Session)
     // ============================================================
     function checkSession() {
@@ -1081,17 +1128,12 @@
             return true;
         }
         
-        const savedUser = sessionStorage.getItem('eux_user');
-        if (savedUser) {
-            try {
-                currentUser = JSON.parse(savedUser);
-                if (currentUser && currentUser.phone && currentUser.password) {
-                    showDashboard();
-                    return true;
-                }
-            } catch(e) {
-                sessionStorage.removeItem('eux_user');
-            }
+        // استخدام نظام الحفظ الجديد
+        const savedUser = getSavedUser();
+        if (savedUser && savedUser.phone && savedUser.password) {
+            currentUser = savedUser;
+            showDashboard();
+            return true;
         }
         return false;
     }
@@ -1304,7 +1346,7 @@
     }
 
     // ============================================================
-    //  🔐 تسجيل الدخول
+    //  🔐 تسجيل الدخول - مع حفظ الجلسة
     // ============================================================
     async function doLogin() {
         const phone = document.getElementById('phoneInput').value.trim();
@@ -1317,7 +1359,8 @@
             const data = await res.json();
             if (data.success) { 
                 currentUser = { phone, password, name: data.name, role: data.role };
-                sessionStorage.setItem('eux_user', JSON.stringify(currentUser));
+                // حفظ الجلسة مع التذكر لمدة 10 مرات
+                saveUserSession(currentUser);
                 errorDiv.classList.add('hidden');
                 showDashboard(); 
             } else { 
@@ -1333,7 +1376,7 @@
     function logout() {
         currentUser = null;
         trackingCache = {};
-        sessionStorage.removeItem('eux_user');
+        clearUserSession(); // حذف الجلسة بالكامل عند تسجيل الخروج
         document.getElementById('loginPage').classList.remove('hidden');
         document.getElementById('dashboard').classList.add('hidden');
         document.getElementById('publicOrderPage').classList.add('hidden');
