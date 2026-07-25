@@ -1,7 +1,3 @@
-نختار نفس الصفحة مع قسم جديد - أفضل لأنه أسهل للعميل ولا يحتاج صفحة منفصلة.
-
-الكود كامل مع الإضافة الجديدة:
-
 ```html
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
@@ -951,7 +947,6 @@
     //  التحقق من جلسة المستخدم (Session)
     // ============================================================
     function checkSession() {
-        // التحقق من وجود رابط تسجيل عام
         const urlParams = new URLSearchParams(window.location.search);
         const refPhone = urlParams.get('ref');
         if (refPhone && refPhone.length === 11) {
@@ -1045,7 +1040,6 @@
         document.getElementById('dashboard').classList.add('hidden');
         document.getElementById('publicOrderPage').classList.remove('hidden');
         
-        // ملء قائمة المحافظات
         let govOptions = '<option value="">اختر المحافظة</option>';
         Object.keys(governorates).forEach(gov => {
             govOptions += `<option value="${gov}">${gov}</option>`;
@@ -1130,24 +1124,58 @@
             navigator.clipboard.writeText(shareUrl).then(() => {
                 showToast('✅ تم نسخ رابط التسجيل!', 'success');
             }).catch(() => {
-                showToast('⚠️ فشل النسخ التلقائي', 'error');
+                fallbackCopy(shareUrl);
             });
         } else {
-            // طريقة بديلة للنسخ
-            const textarea = document.createElement('textarea');
-            textarea.value = shareUrl;
-            textarea.style.position = 'fixed';
-            textarea.style.opacity = '0';
-            document.body.appendChild(textarea);
-            textarea.select();
-            try {
-                document.execCommand('copy');
-                showToast('✅ تم نسخ رابط التسجيل!', 'success');
-            } catch (e) {
-                showToast('⚠️ فشل النسخ - الرابط: ' + shareUrl, 'error');
-            }
-            document.body.removeChild(textarea);
+            fallbackCopy(shareUrl);
         }
+    }
+
+    function fallbackCopy(text) {
+        const textarea = document.createElement('textarea');
+        textarea.value = text;
+        textarea.style.position = 'fixed';
+        textarea.style.top = '0';
+        textarea.style.left = '0';
+        textarea.style.width = '2em';
+        textarea.style.height = '2em';
+        textarea.style.padding = '0';
+        textarea.style.border = 'none';
+        textarea.style.outline = 'none';
+        textarea.style.boxShadow = 'none';
+        textarea.style.background = 'transparent';
+        textarea.style.opacity = '0';
+        textarea.style.zIndex = '9999';
+        textarea.setAttribute('readonly', '');
+        document.body.appendChild(textarea);
+        
+        textarea.focus();
+        textarea.select();
+        textarea.setSelectionRange(0, 999999);
+        
+        try {
+            const successful = document.execCommand('copy');
+            if (successful) {
+                showToast('✅ تم نسخ رابط التسجيل!', 'success');
+            } else {
+                showModalWithLink(text);
+            }
+        } catch (e) {
+            showModalWithLink(text);
+        }
+        
+        document.body.removeChild(textarea);
+    }
+
+    function showModalWithLink(url) {
+        document.getElementById('modal').classList.remove('hidden');
+        document.getElementById('modalBody').innerHTML = `
+            <h3><i class="fas fa-link"></i> رابط التسجيل</h3>
+            <p style="margin-bottom:12px;color:#666;font-size:13px;">انسخ الرابط يدوياً:</p>
+            <div style="background:#f0f6fe;padding:14px;border-radius:10px;word-break:break-all;direction:ltr;text-align:left;margin-bottom:14px;font-size:13px;border:1px solid #dce8f5;">${url}</div>
+            <button class="submit-btn" onclick="navigator.clipboard.writeText('${url.replace(/'/g, "\\'")}').then(()=>showToast('✅ تم النسخ!','success')).catch(()=>showToast('⚠️ فشل النسخ','error'))">📋 نسخ الرابط</button>
+            <button class="submit-btn gray" onclick="closeModal()" style="margin-top:8px;">إغلاق</button>
+        `;
     }
 
     // ============================================================
@@ -1187,7 +1215,6 @@
         document.getElementById('phoneInput').value = '';
         document.getElementById('passwordInput').value = '';
         document.getElementById('loginError').classList.add('hidden');
-        // إزالة معلمات الرابط من المتصفح
         if (window.history && window.history.pushState) {
             window.history.pushState({}, '', window.location.pathname);
         }
