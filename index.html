@@ -1,3 +1,4 @@
+```html
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
@@ -1191,7 +1192,14 @@
         document.getElementById('landingPage').classList.add('hidden');
         document.getElementById('trackingApp').classList.remove('hidden');
         document.body.style.background = 'linear-gradient(135deg, #e8f0fe, #d4e4f7)';
-        checkSession();
+        
+        // التحقق من وجود ref أو جلسة
+        if (!checkSession()) {
+            // إذا لم يكن هناك ref ولا جلسة، أظهر صفحة تسجيل الدخول
+            document.getElementById('loginPage').classList.remove('hidden');
+            document.getElementById('dashboard').classList.add('hidden');
+            document.getElementById('publicOrderPage').classList.add('hidden');
+        }
     }
 
     function backToLanding() {
@@ -1250,17 +1258,23 @@
     function checkSession() {
         const urlParams = new URLSearchParams(window.location.search);
         const refPhone = urlParams.get('ref');
+        
+        // أولاً: التحقق من وجود ref في الرابط
         if (refPhone && refPhone.length === 11) {
             publicClientPhone = refPhone;
-            showPublicOrderPage();
+            showPublicOrderPage(); // ظهور صفحة تسجيل الشحنة فوراً
             return true;
         }
+        
+        // ثانياً: التحقق من وجود جلسة مستخدم
         const savedUser = getSavedUser();
         if (savedUser && savedUser.phone && savedUser.password) {
             currentUser = savedUser;
             showDashboard();
             return true;
         }
+        
+        // إذا لم يكن هناك ref ولا جلسة، ابق على صفحة الهبوط
         return false;
     }
 
@@ -1330,12 +1344,24 @@
     //  صفحة التسجيل العامة
     // ============================================================
     function showPublicOrderPage() {
+        // إخفاء كل الصفحات الأخرى
+        document.getElementById('landingPage').classList.add('hidden');
         document.getElementById('loginPage').classList.add('hidden');
         document.getElementById('dashboard').classList.add('hidden');
-        document.getElementById('publicOrderPage').classList.remove('hidden');
+        
+        // إظهار صفحة تسجيل الشحنة
+        const publicPage = document.getElementById('publicOrderPage');
+        publicPage.classList.remove('hidden');
+        
+        // تعبئة قائمة المحافظات
         let govOptions = '<option value="">اختر المحافظة</option>';
-        Object.keys(governorates).forEach(gov => { govOptions += `<option value="${gov}">${gov}</option>`; });
+        Object.keys(governorates).forEach(gov => {
+            govOptions += `<option value="${gov}">${gov}</option>`;
+        });
         document.getElementById('pf_governorate').innerHTML = govOptions;
+        
+        // تغيير خلفية الصفحة
+        document.body.style.background = 'linear-gradient(135deg, #e8f0fe, #d4e4f7)';
     }
 
     async function submitPublicOrder() {
@@ -1862,3 +1888,4 @@
 
 </body>
 </html>
+```
