@@ -377,6 +377,13 @@
         .shipment-card .status-row.error-status .status-value {
             color: #dc3545;
         }
+        .shipment-card .status-row.info-status {
+            background: #e3f2fd;
+            border-right-color: #0d47a1;
+        }
+        .shipment-card .status-row.info-status .status-value {
+            color: #0d47a1;
+        }
 
         .shipment-card .details {
             margin-top: 14px;
@@ -1008,7 +1015,7 @@
         const statusRow = card.querySelector('.status-row');
         if (!statusRow) return;
         
-        statusRow.classList.remove('loading-status', 'error-status');
+        statusRow.classList.remove('loading-status', 'error-status', 'info-status');
         const statusValue = statusRow.querySelector('.status-value');
         const statusLabel = statusRow.querySelector('.status-label');
         
@@ -1018,17 +1025,21 @@
             let displayStatus = status;
             let isError = false;
             let isSuccess = false;
+            let isInfo = false;
             
             if (status.includes('خطأ') || status.includes('Error') || status.includes('❌')) {
                 isError = true;
                 displayStatus = '❌ ' + status.replace(/❌️?/g, '').replace(/خطأ/g, '').trim();
                 if (!displayStatus || displayStatus === '❌') displayStatus = '❌ خطأ في التوصيل';
-            } else if (status.includes('تم التسليم') || status.includes('تم التوصيل') || status.includes('تم الاستلام') || status.includes('Delivered') || status.includes('✅')) {
+            } else if (status.includes('تم التسليم') || status.includes('تم التوصيل') || status.includes('تم الاستلام بواسطة') || status.includes('Delivered') || status.includes('✅')) {
                 isSuccess = true;
                 displayStatus = status.replace(/✅️?/g, '').trim();
-                displayStatus = displayStatus.replace(/تم الاستلام/g, 'تم التسليم');
+                displayStatus = displayStatus.replace(/تم الاستلام بواسطة/g, 'تم التسليم');
                 displayStatus = '✅ ' + displayStatus;
                 if (!displayStatus || displayStatus === '✅') displayStatus = '✅ تم التسليم';
+            } else if (status.includes('تم الاستلام')) {
+                isInfo = true;
+                displayStatus = '📦 تم استلام الشحنة';
             }
             
             statusValue.textContent = displayStatus;
@@ -1041,6 +1052,10 @@
                 statusRow.style.background = '#ffeaea';
                 statusRow.style.borderRightColor = '#dc3545';
                 statusValue.style.color = '#dc3545';
+            } else if (isInfo) {
+                statusRow.style.background = '#e3f2fd';
+                statusRow.style.borderRightColor = '#0d47a1';
+                statusValue.style.color = '#0d47a1';
             } else {
                 statusRow.style.background = '#e3f2fd';
                 statusRow.style.borderRightColor = '#0d47a1';
@@ -1384,11 +1399,16 @@
                     statusBgColor = '#ffeaea';
                     statusBorderColor = '#dc3545';
                     statusTextColor = '#dc3545';
-                } else if (currentStatus.includes('تم التسليم') || currentStatus.includes('تم التوصيل') || currentStatus.includes('تم الاستلام') || currentStatus.includes('Delivered') || currentStatus.includes('✅')) {
+                } else if (currentStatus.includes('تم التسليم') || currentStatus.includes('تم التوصيل') || currentStatus.includes('تم الاستلام بواسطة') || currentStatus.includes('Delivered') || currentStatus.includes('✅')) {
                     displayStatus = currentStatus.replace(/✅️?/g, '').trim();
-                    displayStatus = displayStatus.replace(/تم الاستلام/g, 'تم التسليم');
+                    displayStatus = displayStatus.replace(/تم الاستلام بواسطة/g, 'تم التسليم');
                     displayStatus = '✅ ' + displayStatus;
                     if (!displayStatus || displayStatus === '✅') displayStatus = '✅ تم التسليم';
+                } else if (currentStatus.includes('تم الاستلام')) {
+                    displayStatus = '📦 تم استلام الشحنة';
+                    statusBgColor = '#e3f2fd';
+                    statusBorderColor = '#0d47a1';
+                    statusTextColor = '#0d47a1';
                 } else if (!currentStatus) {
                     displayStatus = 'قيد المعالجة';
                     statusBgColor = '#e3f2fd';
