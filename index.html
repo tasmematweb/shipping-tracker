@@ -1,3 +1,7 @@
+نختار نفس الصفحة مع قسم جديد - أفضل لأنه أسهل للعميل ولا يحتاج صفحة منفصلة.
+
+الكود كامل مع الإضافة الجديدة:
+
 ```html
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
@@ -891,6 +895,7 @@
                 <span class="total-small">📦 إجمالي الشحنات: <span class="count" id="totalCountSmall">0</span></span>
             </div>
             <div class="header-actions">
+                <button id="shareLinkBtn" class="green hidden" onclick="copyShareLink()" style="background:#ff9800;box-shadow: 0 2px 10px rgba(255, 152, 0, 0.2);">🔗 رابط التسجيل</button>
                 <button id="addShipmentBtn" class="green hidden" onclick="showAddShipmentForm()">➕ إضافة شحنة</button>
                 <button id="clientsBtn" class="blue hidden" onclick="showClients()">👥 عملاء</button>
                 <button id="allShipmentsBtn" class="orange hidden" onclick="loadAllShipments()">📋 الكل</button>
@@ -899,6 +904,29 @@
         </div>
 
         <div id="content"></div>
+    </div>
+
+    <!-- ===== صفحة التسجيل العامة ===== -->
+    <div id="publicOrderPage" class="hidden">
+        <div style="text-align:center;padding:20px 0;">
+            <div style="font-size:42px;margin-bottom:10px;">📦</div>
+            <h2 style="color:#0d2137;margin-bottom:4px;">EUX Express</h2>
+            <p style="color:#888;font-size:14px;margin-bottom:25px;">تسجيل شحنة جديدة</p>
+        </div>
+        
+        <div class="form-group"><label>👤 اسم المستلم *</label><input id="pf_receiverName" placeholder="اسم المستلم"></div>
+        <div class="form-group"><label>📱 هاتف المستلم *</label><input id="pf_receiverPhone" placeholder="مثال: 010xxxxxxxx" dir="ltr" maxlength="11" oninput="this.value=this.value.replace(/[^0-9]/g,'')"></div>
+        <div class="form-group"><label>📱 هاتف آخر للمستلم</label><input id="pf_receiverPhone2" placeholder="هاتف آخر (اختياري)" dir="ltr" maxlength="11" oninput="this.value=this.value.replace(/[^0-9]/g,'')"></div>
+        <div class="two-columns">
+            <div class="form-group"><label>🏛️ المحافظة *</label><select id="pf_governorate" onchange="updatePublicCities()"><option value="">اختر المحافظة</option></select></div>
+            <div class="form-group"><label>🏙️ المدينة *</label><select id="pf_city"><option value="">اختر المحافظة أولاً</option></select></div>
+        </div>
+        <div class="form-group"><label>📍 العنوان التفصيلي *</label><input id="pf_address" placeholder="العنوان بالتفصيل"></div>
+        <div class="form-group"><label>💰 المبلغ المطلوب تحصيله شامل الشحن *</label><input id="pf_amount" type="number" placeholder="المبلغ بالجنيه" dir="ltr"></div>
+        <div class="form-group"><label>⚖️ وزن الشحنة *</label><input id="pf_weight" type="number" placeholder="الوزن بالكيلو" dir="ltr" value="1"></div>
+        <div class="form-group"><label>📝 ملاحظات</label><textarea id="pf_notes" placeholder="ملاحظات إضافية"></textarea></div>
+        <button class="submit-btn" onclick="submitPublicOrder()" style="width:100%;padding:14px;background:#0076ff;color:white;border:none;border-radius:12px;font-size:16px;font-weight:700;cursor:pointer;font-family:'Cairo',sans-serif;box-shadow:0 4px 16px rgba(0,118,255,0.3);">✅ تسجيل الشحنة</button>
+        <p id="publicError" style="color:red;margin-top:10px;text-align:center;"></p>
     </div>
 </div>
 
@@ -917,11 +945,21 @@
     const API_URL = "https://script.google.com/macros/s/AKfycbyZYhdpkYQH-ZxM8te39VoEnoKJjx2vY5VzvgHg18y6FadPRMdpbZyTW2YuHByyI-ha/exec";
     let currentUser = null;
     let trackingCache = {};
+    let publicClientPhone = null;
 
     // ============================================================
     //  التحقق من جلسة المستخدم (Session)
     // ============================================================
     function checkSession() {
+        // التحقق من وجود رابط تسجيل عام
+        const urlParams = new URLSearchParams(window.location.search);
+        const refPhone = urlParams.get('ref');
+        if (refPhone && refPhone.length === 11) {
+            publicClientPhone = refPhone;
+            showPublicOrderPage();
+            return true;
+        }
+        
         const savedUser = sessionStorage.getItem('eux_user');
         if (savedUser) {
             try {
@@ -984,6 +1022,134 @@
         }
     }
 
+    function updatePublicCities() {
+        const govSelect = document.getElementById('pf_governorate');
+        const citySelect = document.getElementById('pf_city');
+        const selected = govSelect.value;
+        citySelect.innerHTML = '<option value="">اختر المدينة</option>';
+        if (selected && governorates[selected]) {
+            governorates[selected].forEach(city => {
+                const option = document.createElement('option');
+                option.value = city;
+                option.textContent = city;
+                citySelect.appendChild(option);
+            });
+        }
+    }
+
+    // ============================================================
+    //  صفحة التسجيل العامة
+    // ============================================================
+    function showPublicOrderPage() {
+        document.getElementById('loginPage').classList.add('hidden');
+        document.getElementById('dashboard').classList.add('hidden');
+        document.getElementById('publicOrderPage').classList.remove('hidden');
+        
+        // ملء قائمة المحافظات
+        let govOptions = '<option value="">اختر المحافظة</option>';
+        Object.keys(governorates).forEach(gov => {
+            govOptions += `<option value="${gov}">${gov}</option>`;
+        });
+        document.getElementById('pf_governorate').innerHTML = govOptions;
+    }
+
+    async function submitPublicOrder() {
+        const receiverName = document.getElementById('pf_receiverName').value.trim();
+        const receiverPhone = document.getElementById('pf_receiverPhone').value.trim();
+        const receiverPhone2 = document.getElementById('pf_receiverPhone2').value.trim();
+        const governorate = document.getElementById('pf_governorate').value;
+        const city = document.getElementById('pf_city').value;
+        const address = document.getElementById('pf_address').value.trim();
+        const amount = document.getElementById('pf_amount').value.trim();
+        const weight = document.getElementById('pf_weight').value.trim() || '1';
+        const notes = document.getElementById('pf_notes').value.trim();
+        const errorDiv = document.getElementById('publicError');
+
+        if (!receiverName || !receiverPhone || !governorate || !city || !address || !amount) {
+            errorDiv.textContent = "يرجى ملء جميع الحقول المطلوبة (*)";
+            return;
+        }
+        if (receiverPhone.length !== 11) {
+            errorDiv.textContent = "⚠️ رقم هاتف المستلم يجب أن يكون 11 رقم";
+            return;
+        }
+        if (receiverPhone2 && receiverPhone2.length !== 11) {
+            errorDiv.textContent = "⚠️ رقم هاتف آخر يجب أن يكون 11 رقم";
+            return;
+        }
+
+        const params = new URLSearchParams();
+        params.append('action', 'addShipment');
+        params.append('phone', publicClientPhone);
+        params.append('password', 'public');
+        params.append('receiverName', receiverName);
+        params.append('receiverPhone', receiverPhone);
+        params.append('receiverPhone2', receiverPhone2);
+        params.append('governorate', governorate);
+        params.append('city', city);
+        params.append('address', address);
+        params.append('amount', amount);
+        params.append('weight', weight);
+        params.append('notes', notes);
+
+        try {
+            const res = await fetch(API_URL, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                body: params.toString()
+            });
+            const data = await res.json();
+            if (data.success) { 
+                showToast('✅ تم تسجيل الشحنة بنجاح!', 'success');
+                document.getElementById('pf_receiverName').value = '';
+                document.getElementById('pf_receiverPhone').value = '';
+                document.getElementById('pf_receiverPhone2').value = '';
+                document.getElementById('pf_governorate').value = '';
+                document.getElementById('pf_city').innerHTML = '<option value="">اختر المحافظة أولاً</option>';
+                document.getElementById('pf_address').value = '';
+                document.getElementById('pf_amount').value = '';
+                document.getElementById('pf_weight').value = '1';
+                document.getElementById('pf_notes').value = '';
+                errorDiv.textContent = '';
+            } else { 
+                errorDiv.textContent = data.msg || "فشل التسجيل"; 
+            }
+        } catch (e) { 
+            errorDiv.textContent = 'فشل الاتصال'; 
+        }
+    }
+
+    // ============================================================
+    //  نسخ رابط التسجيل
+    // ============================================================
+    function copyShareLink() {
+        const baseUrl = window.location.origin + window.location.pathname;
+        const shareUrl = `${baseUrl}?ref=${currentUser.phone}`;
+        
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+            navigator.clipboard.writeText(shareUrl).then(() => {
+                showToast('✅ تم نسخ رابط التسجيل!', 'success');
+            }).catch(() => {
+                showToast('⚠️ فشل النسخ التلقائي', 'error');
+            });
+        } else {
+            // طريقة بديلة للنسخ
+            const textarea = document.createElement('textarea');
+            textarea.value = shareUrl;
+            textarea.style.position = 'fixed';
+            textarea.style.opacity = '0';
+            document.body.appendChild(textarea);
+            textarea.select();
+            try {
+                document.execCommand('copy');
+                showToast('✅ تم نسخ رابط التسجيل!', 'success');
+            } catch (e) {
+                showToast('⚠️ فشل النسخ - الرابط: ' + shareUrl, 'error');
+            }
+            document.body.removeChild(textarea);
+        }
+    }
+
     // ============================================================
     //  🔐 تسجيل الدخول
     // ============================================================
@@ -1017,17 +1183,24 @@
         sessionStorage.removeItem('eux_user');
         document.getElementById('loginPage').classList.remove('hidden');
         document.getElementById('dashboard').classList.add('hidden');
+        document.getElementById('publicOrderPage').classList.add('hidden');
         document.getElementById('phoneInput').value = '';
         document.getElementById('passwordInput').value = '';
         document.getElementById('loginError').classList.add('hidden');
+        // إزالة معلمات الرابط من المتصفح
+        if (window.history && window.history.pushState) {
+            window.history.pushState({}, '', window.location.pathname);
+        }
         showToast('🚪 تم تسجيل الخروج', '');
     }
 
     function showDashboard() {
         document.getElementById('loginPage').classList.add('hidden');
         document.getElementById('dashboard').classList.remove('hidden');
+        document.getElementById('publicOrderPage').classList.add('hidden');
         const isAdmin = currentUser.role === 'admin';
         
+        document.getElementById('shareLinkBtn').classList.toggle('hidden', isAdmin);
         document.getElementById('addShipmentBtn').classList.toggle('hidden', isAdmin);
         document.getElementById('clientsBtn').classList.toggle('hidden', !isAdmin);
         document.getElementById('allShipmentsBtn').classList.toggle('hidden', !isAdmin);
@@ -1053,7 +1226,6 @@
                 let finalStatus = data.data[0].status || null;
                 const details = data.data[0].details || [];
                 
-                // البحث عن "تم التسليم" في كل التفاصيل
                 for (const d of details) {
                     const desc = d.desc || '';
                     if (desc.includes('تم التسليم')) {
@@ -1062,7 +1234,6 @@
                     }
                 }
                 
-                // إذا لم نجد "تم التسليم" في التفاصيل، نبحث في الحالة العامة
                 if (!finalStatus || !finalStatus.includes('تم التسليم')) {
                     if (finalStatus && finalStatus.includes('تم التسليم')) {
                         finalStatus = '✅ تم التسليم';
@@ -1444,7 +1615,7 @@
     //  🚚 تتبع الشحنة
     // ============================================================
     async function trackShipment(billCode) {
-        const isAdmin = currentUser.role === 'admin';
+        const isAdmin = currentUser && currentUser.role === 'admin';
         
         document.getElementById('modal').classList.remove('hidden');
         document.getElementById('modalBody').innerHTML = '<div class="loading"><div class="spinner"></div>جاري تتبع الشحنة...</div>';
@@ -1463,7 +1634,6 @@
                 const currentStatus = data.data[0].status || '';
                 const details = data.data[0].details || [];
                 
-                // البحث عن "تم التسليم" في كل التفاصيل
                 let foundDelivered = false;
                 for (const d of details) {
                     const desc = d.desc || '';
