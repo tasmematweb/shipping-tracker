@@ -99,72 +99,17 @@
             z-index: 2;
         }
 
-        /* تأثير وميض السرعة */
         @keyframes logoFloatCenter {
-            0% { 
-                top: 50%; 
-                left: 50%; 
-                transform: translate(-50%, -50%) scale(1); 
-                opacity: 1; 
-            }
-            20% { 
-                top: 35%; 
-                left: 50%; 
-                transform: translate(-50%, -50%) scale(1.15); 
-                opacity: 1; 
-            }
-            40% { 
-                top: 50%; 
-                left: 50%; 
-                transform: translate(-50%, -50%) scale(1); 
-                opacity: 1; 
-            }
-            45% { 
-                top: 50%; 
-                left: 20%; 
-                transform: translate(-50%, -50%) scale(0.9); 
-                opacity: 1; 
-            }
-            46% { 
-                top: 50%; 
-                left: 20%; 
-                transform: translate(-50%, -50%) scale(0.9); 
-                opacity: 0; 
-            }
-            47% { 
-                top: 50%; 
-                left: 20%; 
-                transform: translate(-50%, -50%) scale(0.8); 
-                opacity: 0; 
-                box-shadow: 0 0 80px rgba(255, 255, 255, 1), 0 0 120px rgba(0, 118, 255, 0.9); 
-            }
-            60% { 
-                top: 50%; 
-                left: 80%; 
-                transform: translate(-50%, -50%) scale(1.05); 
-                opacity: 1; 
-                box-shadow: 0 0 0px rgba(255, 255, 255, 0), 0 0 20px rgba(0, 118, 255, 0.3); 
-            }
-            75% { 
-                top: 50%; 
-                left: 50%; 
-                transform: translate(-50%, -50%) scale(1); 
-                opacity: 1; 
-                box-shadow: 0 0 40px rgba(0, 118, 255, 0.25); 
-            }
-            85% { 
-                top: 50%; 
-                left: 50%; 
-                transform: translate(-50%, -50%) scale(1.05); 
-                opacity: 1; 
-            }
-            100% { 
-                top: 50%; 
-                left: 50%; 
-                transform: translate(-50%, -50%) scale(1); 
-                opacity: 1; 
-                box-shadow: 0 0 40px rgba(0, 118, 255, 0.25); 
-            }
+            0% { top: 50%; left: 50%; transform: translate(-50%, -50%) scale(1); opacity: 1; }
+            20% { top: 35%; left: 50%; transform: translate(-50%, -50%) scale(1.15); opacity: 1; }
+            40% { top: 50%; left: 50%; transform: translate(-50%, -50%) scale(1); opacity: 1; }
+            45% { top: 50%; left: 20%; transform: translate(-50%, -50%) scale(0.9); opacity: 1; }
+            46% { top: 50%; left: 20%; transform: translate(-50%, -50%) scale(0.9); opacity: 0; }
+            47% { top: 50%; left: 20%; transform: translate(-50%, -50%) scale(0.8); opacity: 0; box-shadow: 0 0 80px rgba(255, 255, 255, 1), 0 0 120px rgba(0, 118, 255, 0.9); }
+            60% { top: 50%; left: 80%; transform: translate(-50%, -50%) scale(1.05); opacity: 1; box-shadow: 0 0 0px rgba(255, 255, 255, 0), 0 0 20px rgba(0, 118, 255, 0.3); }
+            75% { top: 50%; left: 50%; transform: translate(-50%, -50%) scale(1); opacity: 1; box-shadow: 0 0 40px rgba(0, 118, 255, 0.25); }
+            85% { top: 50%; left: 50%; transform: translate(-50%, -50%) scale(1.05); opacity: 1; }
+            100% { top: 50%; left: 50%; transform: translate(-50%, -50%) scale(1); opacity: 1; box-shadow: 0 0 40px rgba(0, 118, 255, 0.25); }
         }
 
         @keyframes speedTrail1 {
@@ -1142,16 +1087,15 @@
                 isError = true;
                 displayStatus = '❌ ' + status.replace(/❌️?/g, '').replace(/خطأ/g, '').trim();
                 if (!displayStatus || displayStatus === '❌') displayStatus = '❌ خطأ في التوصيل';
-            } else if (status.includes('تم الاستلام بواسطة')) {
-                isInfo = true;
-                displayStatus = '📦 تم استلام الشحنة';
-            } else if (status.includes('تم الاستلام')) {
+            } else if (status.includes('تم التسليم')) {
                 isSuccess = true;
                 displayStatus = '✅ تم التسليم';
-            } else if (status.includes('تم التسليم') || status.includes('تم التوصيل') || status.includes('Delivered') || status.includes('✅')) {
+            } else if (status.includes('تم الاستلام')) {
+                isInfo = true;
+                displayStatus = '📦 تم استلام الشحنة';
+            } else if (status.includes('Delivered') || status.includes('✅')) {
                 isSuccess = true;
-                displayStatus = '✅ ' + status.replace(/✅️?/g, '').trim();
-                if (!displayStatus || displayStatus === '✅') displayStatus = '✅ تم التسليم';
+                displayStatus = '✅ تم التسليم';
             }
             
             statusValue.textContent = displayStatus;
@@ -1511,16 +1455,15 @@
                     statusBgColor = '#ffeaea';
                     statusBorderColor = '#dc3545';
                     statusTextColor = '#dc3545';
-                } else if (currentStatus.includes('تم الاستلام بواسطة')) {
+                } else if (currentStatus.includes('تم التسليم')) {
+                    displayStatus = '✅ تم التسليم';
+                } else if (currentStatus.includes('تم الاستلام')) {
                     displayStatus = '📦 تم استلام الشحنة';
                     statusBgColor = '#e3f2fd';
                     statusBorderColor = '#0d47a1';
                     statusTextColor = '#0d47a1';
-                } else if (currentStatus.includes('تم الاستلام')) {
+                } else if (currentStatus.includes('Delivered') || currentStatus.includes('✅')) {
                     displayStatus = '✅ تم التسليم';
-                } else if (currentStatus.includes('تم التسليم') || currentStatus.includes('تم التوصيل') || currentStatus.includes('Delivered') || currentStatus.includes('✅')) {
-                    displayStatus = '✅ ' + currentStatus.replace(/✅️?/g, '').trim();
-                    if (!displayStatus || displayStatus === '✅') displayStatus = '✅ تم التسليم';
                 } else if (!currentStatus) {
                     displayStatus = 'قيد المعالجة';
                     statusBgColor = '#e3f2fd';
