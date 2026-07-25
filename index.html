@@ -64,20 +64,18 @@
         }
 
         /* ============================================================
-            هليكوبتر مدنية - تصميم EUX
+            هليكوبتر مدنية - تصميم EUX (تم تصغير الدوار العلوي)
            ============================================================ */
         .civil-helo {
             position: relative;
             width: 200px;
             height: 150px;
             animation: hoverCivil 3s ease-in-out infinite;
-            margin-top: 5px;
-            top: 45%;
-            transform: translateY(-50%);
+            margin-top: 20px;
         }
         @keyframes hoverCivil {
-            0%, 100% { transform: translateY(-50%) translateY(0px); }
-            50% { transform: translateY(-50%) translateY(-8px); }
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-8px); }
         }
 
         .civil-helo .body {
@@ -171,7 +169,7 @@
             top: -22px;
             left: 50%;
             transform: translateX(-50%);
-            width: 150px;
+            width: 120px;
             height: 6px;
             background: rgba(200,200,200,0.25);
             border-radius: 10px;
@@ -196,7 +194,7 @@
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%) rotate(72deg);
-            width: 150px;
+            width: 120px;
             height: 6px;
             background: rgba(200,200,200,0.15);
             border-radius: 10px;
@@ -1062,13 +1060,16 @@
     // ============================================================
     function saveUserSession(userData) {
         try {
+            // حفظ بيانات المستخدم
             sessionStorage.setItem('eux_user', JSON.stringify(userData));
             
+            // حفظ عدد مرات الدخول (للتذكر لمدة 10 مرات)
             let loginCount = parseInt(localStorage.getItem('eux_login_count') || '0');
             loginCount++;
             localStorage.setItem('eux_login_count', loginCount.toString());
             localStorage.setItem('eux_user_data', JSON.stringify(userData));
             
+            // إذا تجاوز 10 مرات، نعيد العد من الصفر ونحتفظ بالبيانات
             if (loginCount > 10) {
                 localStorage.setItem('eux_login_count', '1');
             }
@@ -1084,14 +1085,18 @@
                 return JSON.parse(savedUser);
             }
             
+            // إذا لم يكن في session، نبحث في localStorage (للحالات التي تم فيها إغلاق المتصفح)
             const localUser = localStorage.getItem('eux_user_data');
             if (localUser) {
                 const user = JSON.parse(localUser);
+                // التحقق من أن عدد مرات الدخول لم يتجاوز 10
                 const loginCount = parseInt(localStorage.getItem('eux_login_count') || '0');
                 if (loginCount <= 10) {
+                    // إعادة حفظ الجلسة في sessionStorage
                     sessionStorage.setItem('eux_user', JSON.stringify(user));
                     return user;
                 } else {
+                    // تجاوز 10 مرات، نطلب تسجيل دخول جديد
                     localStorage.removeItem('eux_user_data');
                     localStorage.removeItem('eux_login_count');
                     return null;
@@ -1105,6 +1110,8 @@
 
     function clearUserSession() {
         sessionStorage.removeItem('eux_user');
+        // لا نمسح localStorage حتى لا نفقد التذكر لمدة 10 مرات
+        // ولكن نمسحها عند تسجيل الخروج بشكل صريح
         localStorage.removeItem('eux_user_data');
         localStorage.removeItem('eux_login_count');
     }
@@ -1121,6 +1128,7 @@
             return true;
         }
         
+        // استخدام نظام الحفظ الجديد
         const savedUser = getSavedUser();
         if (savedUser && savedUser.phone && savedUser.password) {
             currentUser = savedUser;
@@ -1351,6 +1359,7 @@
             const data = await res.json();
             if (data.success) { 
                 currentUser = { phone, password, name: data.name, role: data.role };
+                // حفظ الجلسة مع التذكر لمدة 10 مرات
                 saveUserSession(currentUser);
                 errorDiv.classList.add('hidden');
                 showDashboard(); 
@@ -1367,7 +1376,7 @@
     function logout() {
         currentUser = null;
         trackingCache = {};
-        clearUserSession();
+        clearUserSession(); // حذف الجلسة بالكامل عند تسجيل الخروج
         document.getElementById('loginPage').classList.remove('hidden');
         document.getElementById('dashboard').classList.add('hidden');
         document.getElementById('publicOrderPage').classList.add('hidden');
