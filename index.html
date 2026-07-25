@@ -1,3 +1,4 @@
+```html
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
@@ -60,7 +61,7 @@
             justify-content: center;
             margin-bottom: 25px;
             position: relative;
-            height: 200px;
+            height: 220px;
         }
 
         /* ============================================================
@@ -71,7 +72,7 @@
             width: 200px;
             height: 150px;
             animation: hoverCivil 3s ease-in-out infinite;
-            margin-top: 20px;
+            margin-top: 40px;
         }
         @keyframes hoverCivil {
             0%, 100% { transform: translateY(0px); }
@@ -952,6 +953,723 @@
         .mt-10 { margin-top: 10px; }
         .mb-10 { margin-bottom: 10px; }
         .glow-text { color: #0076ff; }
+
+        /* ===== زر EUX المخصص ===== */
+        .btn-eux {
+            --h-button: 48px;
+            --w-button: auto;
+            --round: 0.75rem;
+            cursor: pointer;
+            position: relative;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            transition: all 0.25s ease;
+            background: radial-gradient(
+                65.28% 65.28% at 50% 100%,
+                rgba(0, 118, 255, 0.6) 0%,
+                rgba(0, 118, 255, 0) 100%
+              ),
+              linear-gradient(0deg, #0076ff, #0076ff);
+            border-radius: var(--round);
+            border: none;
+            outline: none;
+            padding: 12px 18px;
+            font-family: 'Cairo', sans-serif;
+            font-weight: 600;
+            font-size: 14px;
+            color: white;
+            box-shadow: 0 4px 15px rgba(0, 118, 255, 0.25);
+        }
+        .btn-eux::before,
+        .btn-eux::after {
+            content: "";
+            position: absolute;
+            inset: var(--space);
+            transition: all 0.5s ease-in-out;
+            border-radius: calc(var(--round) - var(--space));
+            z-index: 0;
+        }
+        .btn-eux::before {
+            --space: 1px;
+            background: linear-gradient(
+                177.95deg,
+                rgba(255, 255, 255, 0.19) 0%,
+                rgba(255, 255, 255, 0) 100%
+            );
+        }
+        .btn-eux::after {
+            --space: 2px;
+            background: radial-gradient(
+                65.28% 65.28% at 50% 100%,
+                rgba(0, 118, 255, 0.6) 0%,
+                rgba(0, 118, 255, 0) 100%
+              ),
+              linear-gradient(0deg, #0076ff, #0076ff);
+        }
+        .btn-eux:active {
+            transform: scale(0.95);
+        }
+        .btn-eux .fold {
+            z-index: 1;
+            position: absolute;
+            top: 0;
+            right: 0;
+            height: 1rem;
+            width: 1rem;
+            display: inline-block;
+            transition: all 0.5s ease-in-out;
+            background: radial-gradient(
+                100% 75% at 55%,
+                rgba(0, 118, 255, 0.6) 0%,
+                rgba(0, 118, 255, 0) 100%
+            );
+            box-shadow: 0 0 3px rgba(0, 0, 0, 0.2);
+            border-bottom-left-radius: 0.5rem;
+            border-top-right-radius: var(--round);
+        }
+        .btn-eux .fold::after {
+            content: "";
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 150%;
+            height: 150%;
+            transform: rotate(45deg) translateX(0%) translateY(-18px);
+            background-color: #e8e8e8;
+            pointer-events: none;
+        }
+        .btn-eux:hover .fold {
+            margin-top: -1rem;
+            margin-right: -1rem;
+        }
+        .btn-eux .points_wrapper {
+            overflow: hidden;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            position: absolute;
+            z-index: 1;
+        }
+        .btn-eux .points_wrapper .point {
+            bottom: -10px;
+            position: absolute;
+            animation: floating-points infinite ease-in-out;
+            pointer-events: none;
+            width: 2px;
+            height: 2px;
+            background-color: #fff;
+            border-radius: 9999px;
+        }
+        @keyframes floating-points {
+            0% { transform: translateY(0); }
+            85% { opacity: 0; }
+            100% { transform: translateY(-55px); opacity: 0; }
+        }
+        .btn-eux .points_wrapper .point:nth-child(1) { left: 10%; opacity: 1; animation-duration: 2.35s; animation-delay: 0.2s; }
+        .btn-eux .points_wrapper .point:nth-child(2) { left: 30%; opacity: 0.7; animation-duration: 2.5s; animation-delay: 0.5s; }
+        .btn-eux .points_wrapper .point:nth-child(3) { left: 25%; opacity: 0.8; animation-duration: 2.2s; animation-delay: 0.1s; }
+        .btn-eux .points_wrapper .point:nth-child(4) { left: 44%; opacity: 0.6; animation-duration: 2.05s; }
+        .btn-eux .points_wrapper .point:nth-child(5) { left: 50%; opacity: 1; animation-duration: 1.9s; }
+        .btn-eux .points_wrapper .point:nth-child(6) { left: 75%; opacity: 0.5; animation-duration: 1.5s; animation-delay: 1.5s; }
+        .btn-eux .points_wrapper .point:nth-child(7) { left: 88%; opacity: 0.9; animation-duration: 2.2s; animation-delay: 0.2s; }
+        .btn-eux .points_wrapper .point:nth-child(8) { left: 58%; opacity: 0.8; animation-duration: 2.25s; animation-delay: 0.2s; }
+        .btn-eux .points_wrapper .point:nth-child(9) { left: 98%; opacity: 0.6; animation-duration: 2.6s; animation-delay: 0.1s; }
+        .btn-eux .points_wrapper .point:nth-child(10) { left: 65%; opacity: 1; animation-duration: 2.5s; animation-delay: 0.2s; }
+        .btn-eux .inner {
+            z-index: 2;
+            gap: 6px;
+            position: relative;
+            width: 100%;
+            color: white;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+            font-weight: 500;
+            line-height: 1.5;
+            transition: color 0.2s ease-in-out;
+        }
+        .btn-eux .inner svg.icon {
+            width: 18px;
+            height: 18px;
+            transition: fill 0.1s linear;
+        }
+        .btn-eux:focus svg.icon { fill: white; }
+        .btn-eux:hover svg.icon {
+            fill: transparent;
+            animation: dasharray 1s linear forwards, filled 0.1s linear forwards 0.95s;
+        }
+        @keyframes dasharray {
+            from { stroke-dasharray: 0 0 0 0; }
+            to { stroke-dasharray: 68 68 0 0; }
+        }
+        @keyframes filled {
+            to { fill: white; }
+        }
+
+        /* ===== زر EUX الأخضر ===== */
+        .btn-eux-green {
+            --h-button: 48px;
+            --w-button: auto;
+            --round: 0.75rem;
+            cursor: pointer;
+            position: relative;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            transition: all 0.25s ease;
+            background: radial-gradient(
+                65.28% 65.28% at 50% 100%,
+                rgba(40, 167, 69, 0.6) 0%,
+                rgba(40, 167, 69, 0) 100%
+              ),
+              linear-gradient(0deg, #28a745, #28a745);
+            border-radius: var(--round);
+            border: none;
+            outline: none;
+            padding: 12px 18px;
+            font-family: 'Cairo', sans-serif;
+            font-weight: 600;
+            font-size: 14px;
+            color: white;
+            box-shadow: 0 4px 15px rgba(40, 167, 69, 0.25);
+        }
+        .btn-eux-green::before,
+        .btn-eux-green::after {
+            content: "";
+            position: absolute;
+            inset: var(--space);
+            transition: all 0.5s ease-in-out;
+            border-radius: calc(var(--round) - var(--space));
+            z-index: 0;
+        }
+        .btn-eux-green::before {
+            --space: 1px;
+            background: linear-gradient(
+                177.95deg,
+                rgba(255, 255, 255, 0.19) 0%,
+                rgba(255, 255, 255, 0) 100%
+            );
+        }
+        .btn-eux-green::after {
+            --space: 2px;
+            background: radial-gradient(
+                65.28% 65.28% at 50% 100%,
+                rgba(40, 167, 69, 0.6) 0%,
+                rgba(40, 167, 69, 0) 100%
+              ),
+              linear-gradient(0deg, #28a745, #28a745);
+        }
+        .btn-eux-green:active { transform: scale(0.95); }
+        .btn-eux-green .fold {
+            z-index: 1;
+            position: absolute;
+            top: 0;
+            right: 0;
+            height: 1rem;
+            width: 1rem;
+            display: inline-block;
+            transition: all 0.5s ease-in-out;
+            background: radial-gradient(
+                100% 75% at 55%,
+                rgba(40, 167, 69, 0.6) 0%,
+                rgba(40, 167, 69, 0) 100%
+            );
+            box-shadow: 0 0 3px rgba(0, 0, 0, 0.2);
+            border-bottom-left-radius: 0.5rem;
+            border-top-right-radius: var(--round);
+        }
+        .btn-eux-green .fold::after {
+            content: "";
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 150%;
+            height: 150%;
+            transform: rotate(45deg) translateX(0%) translateY(-18px);
+            background-color: #e8e8e8;
+            pointer-events: none;
+        }
+        .btn-eux-green:hover .fold {
+            margin-top: -1rem;
+            margin-right: -1rem;
+        }
+        .btn-eux-green .points_wrapper {
+            overflow: hidden;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            position: absolute;
+            z-index: 1;
+        }
+        .btn-eux-green .points_wrapper .point {
+            bottom: -10px;
+            position: absolute;
+            animation: floating-points infinite ease-in-out;
+            pointer-events: none;
+            width: 2px;
+            height: 2px;
+            background-color: #fff;
+            border-radius: 9999px;
+        }
+        .btn-eux-green .points_wrapper .point:nth-child(1) { left: 10%; opacity: 1; animation-duration: 2.35s; animation-delay: 0.2s; }
+        .btn-eux-green .points_wrapper .point:nth-child(2) { left: 30%; opacity: 0.7; animation-duration: 2.5s; animation-delay: 0.5s; }
+        .btn-eux-green .points_wrapper .point:nth-child(3) { left: 25%; opacity: 0.8; animation-duration: 2.2s; animation-delay: 0.1s; }
+        .btn-eux-green .points_wrapper .point:nth-child(4) { left: 44%; opacity: 0.6; animation-duration: 2.05s; }
+        .btn-eux-green .points_wrapper .point:nth-child(5) { left: 50%; opacity: 1; animation-duration: 1.9s; }
+        .btn-eux-green .points_wrapper .point:nth-child(6) { left: 75%; opacity: 0.5; animation-duration: 1.5s; animation-delay: 1.5s; }
+        .btn-eux-green .points_wrapper .point:nth-child(7) { left: 88%; opacity: 0.9; animation-duration: 2.2s; animation-delay: 0.2s; }
+        .btn-eux-green .points_wrapper .point:nth-child(8) { left: 58%; opacity: 0.8; animation-duration: 2.25s; animation-delay: 0.2s; }
+        .btn-eux-green .points_wrapper .point:nth-child(9) { left: 98%; opacity: 0.6; animation-duration: 2.6s; animation-delay: 0.1s; }
+        .btn-eux-green .points_wrapper .point:nth-child(10) { left: 65%; opacity: 1; animation-duration: 2.5s; animation-delay: 0.2s; }
+        .btn-eux-green .inner {
+            z-index: 2;
+            gap: 6px;
+            position: relative;
+            width: 100%;
+            color: white;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+            font-weight: 500;
+            line-height: 1.5;
+            transition: color 0.2s ease-in-out;
+        }
+        .btn-eux-green .inner svg.icon {
+            width: 18px;
+            height: 18px;
+            transition: fill 0.1s linear;
+        }
+        .btn-eux-green:focus svg.icon { fill: white; }
+        .btn-eux-green:hover svg.icon {
+            fill: transparent;
+            animation: dasharray 1s linear forwards, filled 0.1s linear forwards 0.95s;
+        }
+
+        /* ===== زر EUX البرتقالي ===== */
+        .btn-eux-orange {
+            --h-button: 48px;
+            --w-button: auto;
+            --round: 0.75rem;
+            cursor: pointer;
+            position: relative;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            transition: all 0.25s ease;
+            background: radial-gradient(
+                65.28% 65.28% at 50% 100%,
+                rgba(255, 152, 0, 0.6) 0%,
+                rgba(255, 152, 0, 0) 100%
+              ),
+              linear-gradient(0deg, #ff9800, #ff9800);
+            border-radius: var(--round);
+            border: none;
+            outline: none;
+            padding: 12px 18px;
+            font-family: 'Cairo', sans-serif;
+            font-weight: 600;
+            font-size: 14px;
+            color: white;
+            box-shadow: 0 4px 15px rgba(255, 152, 0, 0.25);
+        }
+        .btn-eux-orange::before,
+        .btn-eux-orange::after {
+            content: "";
+            position: absolute;
+            inset: var(--space);
+            transition: all 0.5s ease-in-out;
+            border-radius: calc(var(--round) - var(--space));
+            z-index: 0;
+        }
+        .btn-eux-orange::before {
+            --space: 1px;
+            background: linear-gradient(
+                177.95deg,
+                rgba(255, 255, 255, 0.19) 0%,
+                rgba(255, 255, 255, 0) 100%
+            );
+        }
+        .btn-eux-orange::after {
+            --space: 2px;
+            background: radial-gradient(
+                65.28% 65.28% at 50% 100%,
+                rgba(255, 152, 0, 0.6) 0%,
+                rgba(255, 152, 0, 0) 100%
+              ),
+              linear-gradient(0deg, #ff9800, #ff9800);
+        }
+        .btn-eux-orange:active { transform: scale(0.95); }
+        .btn-eux-orange .fold {
+            z-index: 1;
+            position: absolute;
+            top: 0;
+            right: 0;
+            height: 1rem;
+            width: 1rem;
+            display: inline-block;
+            transition: all 0.5s ease-in-out;
+            background: radial-gradient(
+                100% 75% at 55%,
+                rgba(255, 152, 0, 0.6) 0%,
+                rgba(255, 152, 0, 0) 100%
+            );
+            box-shadow: 0 0 3px rgba(0, 0, 0, 0.2);
+            border-bottom-left-radius: 0.5rem;
+            border-top-right-radius: var(--round);
+        }
+        .btn-eux-orange .fold::after {
+            content: "";
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 150%;
+            height: 150%;
+            transform: rotate(45deg) translateX(0%) translateY(-18px);
+            background-color: #e8e8e8;
+            pointer-events: none;
+        }
+        .btn-eux-orange:hover .fold {
+            margin-top: -1rem;
+            margin-right: -1rem;
+        }
+        .btn-eux-orange .points_wrapper {
+            overflow: hidden;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            position: absolute;
+            z-index: 1;
+        }
+        .btn-eux-orange .points_wrapper .point {
+            bottom: -10px;
+            position: absolute;
+            animation: floating-points infinite ease-in-out;
+            pointer-events: none;
+            width: 2px;
+            height: 2px;
+            background-color: #fff;
+            border-radius: 9999px;
+        }
+        .btn-eux-orange .points_wrapper .point:nth-child(1) { left: 10%; opacity: 1; animation-duration: 2.35s; animation-delay: 0.2s; }
+        .btn-eux-orange .points_wrapper .point:nth-child(2) { left: 30%; opacity: 0.7; animation-duration: 2.5s; animation-delay: 0.5s; }
+        .btn-eux-orange .points_wrapper .point:nth-child(3) { left: 25%; opacity: 0.8; animation-duration: 2.2s; animation-delay: 0.1s; }
+        .btn-eux-orange .points_wrapper .point:nth-child(4) { left: 44%; opacity: 0.6; animation-duration: 2.05s; }
+        .btn-eux-orange .points_wrapper .point:nth-child(5) { left: 50%; opacity: 1; animation-duration: 1.9s; }
+        .btn-eux-orange .points_wrapper .point:nth-child(6) { left: 75%; opacity: 0.5; animation-duration: 1.5s; animation-delay: 1.5s; }
+        .btn-eux-orange .points_wrapper .point:nth-child(7) { left: 88%; opacity: 0.9; animation-duration: 2.2s; animation-delay: 0.2s; }
+        .btn-eux-orange .points_wrapper .point:nth-child(8) { left: 58%; opacity: 0.8; animation-duration: 2.25s; animation-delay: 0.2s; }
+        .btn-eux-orange .points_wrapper .point:nth-child(9) { left: 98%; opacity: 0.6; animation-duration: 2.6s; animation-delay: 0.1s; }
+        .btn-eux-orange .points_wrapper .point:nth-child(10) { left: 65%; opacity: 1; animation-duration: 2.5s; animation-delay: 0.2s; }
+        .btn-eux-orange .inner {
+            z-index: 2;
+            gap: 6px;
+            position: relative;
+            width: 100%;
+            color: white;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+            font-weight: 500;
+            line-height: 1.5;
+            transition: color 0.2s ease-in-out;
+        }
+        .btn-eux-orange .inner svg.icon {
+            width: 18px;
+            height: 18px;
+            transition: fill 0.1s linear;
+        }
+        .btn-eux-orange:focus svg.icon { fill: white; }
+        .btn-eux-orange:hover svg.icon {
+            fill: transparent;
+            animation: dasharray 1s linear forwards, filled 0.1s linear forwards 0.95s;
+        }
+
+        /* ===== زر EUX أحمر ===== */
+        .btn-eux-red {
+            --h-button: 48px;
+            --w-button: auto;
+            --round: 0.75rem;
+            cursor: pointer;
+            position: relative;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            transition: all 0.25s ease;
+            background: radial-gradient(
+                65.28% 65.28% at 50% 100%,
+                rgba(220, 53, 69, 0.6) 0%,
+                rgba(220, 53, 69, 0) 100%
+              ),
+              linear-gradient(0deg, #dc3545, #dc3545);
+            border-radius: var(--round);
+            border: none;
+            outline: none;
+            padding: 12px 18px;
+            font-family: 'Cairo', sans-serif;
+            font-weight: 600;
+            font-size: 14px;
+            color: white;
+            box-shadow: 0 4px 15px rgba(220, 53, 69, 0.25);
+        }
+        .btn-eux-red::before,
+        .btn-eux-red::after {
+            content: "";
+            position: absolute;
+            inset: var(--space);
+            transition: all 0.5s ease-in-out;
+            border-radius: calc(var(--round) - var(--space));
+            z-index: 0;
+        }
+        .btn-eux-red::before {
+            --space: 1px;
+            background: linear-gradient(
+                177.95deg,
+                rgba(255, 255, 255, 0.19) 0%,
+                rgba(255, 255, 255, 0) 100%
+            );
+        }
+        .btn-eux-red::after {
+            --space: 2px;
+            background: radial-gradient(
+                65.28% 65.28% at 50% 100%,
+                rgba(220, 53, 69, 0.6) 0%,
+                rgba(220, 53, 69, 0) 100%
+              ),
+              linear-gradient(0deg, #dc3545, #dc3545);
+        }
+        .btn-eux-red:active { transform: scale(0.95); }
+        .btn-eux-red .fold {
+            z-index: 1;
+            position: absolute;
+            top: 0;
+            right: 0;
+            height: 1rem;
+            width: 1rem;
+            display: inline-block;
+            transition: all 0.5s ease-in-out;
+            background: radial-gradient(
+                100% 75% at 55%,
+                rgba(220, 53, 69, 0.6) 0%,
+                rgba(220, 53, 69, 0) 100%
+            );
+            box-shadow: 0 0 3px rgba(0, 0, 0, 0.2);
+            border-bottom-left-radius: 0.5rem;
+            border-top-right-radius: var(--round);
+        }
+        .btn-eux-red .fold::after {
+            content: "";
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 150%;
+            height: 150%;
+            transform: rotate(45deg) translateX(0%) translateY(-18px);
+            background-color: #e8e8e8;
+            pointer-events: none;
+        }
+        .btn-eux-red:hover .fold {
+            margin-top: -1rem;
+            margin-right: -1rem;
+        }
+        .btn-eux-red .points_wrapper {
+            overflow: hidden;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            position: absolute;
+            z-index: 1;
+        }
+        .btn-eux-red .points_wrapper .point {
+            bottom: -10px;
+            position: absolute;
+            animation: floating-points infinite ease-in-out;
+            pointer-events: none;
+            width: 2px;
+            height: 2px;
+            background-color: #fff;
+            border-radius: 9999px;
+        }
+        .btn-eux-red .points_wrapper .point:nth-child(1) { left: 10%; opacity: 1; animation-duration: 2.35s; animation-delay: 0.2s; }
+        .btn-eux-red .points_wrapper .point:nth-child(2) { left: 30%; opacity: 0.7; animation-duration: 2.5s; animation-delay: 0.5s; }
+        .btn-eux-red .points_wrapper .point:nth-child(3) { left: 25%; opacity: 0.8; animation-duration: 2.2s; animation-delay: 0.1s; }
+        .btn-eux-red .points_wrapper .point:nth-child(4) { left: 44%; opacity: 0.6; animation-duration: 2.05s; }
+        .btn-eux-red .points_wrapper .point:nth-child(5) { left: 50%; opacity: 1; animation-duration: 1.9s; }
+        .btn-eux-red .points_wrapper .point:nth-child(6) { left: 75%; opacity: 0.5; animation-duration: 1.5s; animation-delay: 1.5s; }
+        .btn-eux-red .points_wrapper .point:nth-child(7) { left: 88%; opacity: 0.9; animation-duration: 2.2s; animation-delay: 0.2s; }
+        .btn-eux-red .points_wrapper .point:nth-child(8) { left: 58%; opacity: 0.8; animation-duration: 2.25s; animation-delay: 0.2s; }
+        .btn-eux-red .points_wrapper .point:nth-child(9) { left: 98%; opacity: 0.6; animation-duration: 2.6s; animation-delay: 0.1s; }
+        .btn-eux-red .points_wrapper .point:nth-child(10) { left: 65%; opacity: 1; animation-duration: 2.5s; animation-delay: 0.2s; }
+        .btn-eux-red .inner {
+            z-index: 2;
+            gap: 6px;
+            position: relative;
+            width: 100%;
+            color: white;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+            font-weight: 500;
+            line-height: 1.5;
+            transition: color 0.2s ease-in-out;
+        }
+        .btn-eux-red .inner svg.icon {
+            width: 18px;
+            height: 18px;
+            transition: fill 0.1s linear;
+        }
+        .btn-eux-red:focus svg.icon { fill: white; }
+        .btn-eux-red:hover svg.icon {
+            fill: transparent;
+            animation: dasharray 1s linear forwards, filled 0.1s linear forwards 0.95s;
+        }
+
+        /* ===== زر EUX شفاف ===== */
+        .btn-eux-outline {
+            --h-button: 48px;
+            --w-button: auto;
+            --round: 0.75rem;
+            cursor: pointer;
+            position: relative;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            transition: all 0.25s ease;
+            background: radial-gradient(
+                65.28% 65.28% at 50% 100%,
+                rgba(13, 33, 55, 0.1) 0%,
+                rgba(13, 33, 55, 0) 100%
+              ),
+              linear-gradient(0deg, transparent, transparent);
+            border-radius: var(--round);
+            border: 1.5px solid #ddd;
+            outline: none;
+            padding: 12px 18px;
+            font-family: 'Cairo', sans-serif;
+            font-weight: 600;
+            font-size: 14px;
+            color: #0d2137;
+            box-shadow: none;
+        }
+        .btn-eux-outline::before,
+        .btn-eux-outline::after {
+            content: "";
+            position: absolute;
+            inset: var(--space);
+            transition: all 0.5s ease-in-out;
+            border-radius: calc(var(--round) - var(--space));
+            z-index: 0;
+        }
+        .btn-eux-outline::before {
+            --space: 1px;
+            background: linear-gradient(
+                177.95deg,
+                rgba(255, 255, 255, 0.19) 0%,
+                rgba(255, 255, 255, 0) 100%
+            );
+        }
+        .btn-eux-outline::after {
+            --space: 2px;
+            background: radial-gradient(
+                65.28% 65.28% at 50% 100%,
+                rgba(13, 33, 55, 0.05) 0%,
+                rgba(13, 33, 55, 0) 100%
+              ),
+              linear-gradient(0deg, transparent, transparent);
+        }
+        .btn-eux-outline:active { transform: scale(0.95); }
+        .btn-eux-outline .fold {
+            z-index: 1;
+            position: absolute;
+            top: 0;
+            right: 0;
+            height: 1rem;
+            width: 1rem;
+            display: inline-block;
+            transition: all 0.5s ease-in-out;
+            background: radial-gradient(
+                100% 75% at 55%,
+                rgba(13, 33, 55, 0.1) 0%,
+                rgba(13, 33, 55, 0) 100%
+            );
+            box-shadow: 0 0 3px rgba(0, 0, 0, 0.1);
+            border-bottom-left-radius: 0.5rem;
+            border-top-right-radius: var(--round);
+        }
+        .btn-eux-outline .fold::after {
+            content: "";
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 150%;
+            height: 150%;
+            transform: rotate(45deg) translateX(0%) translateY(-18px);
+            background-color: #f5f5f5;
+            pointer-events: none;
+        }
+        .btn-eux-outline:hover .fold {
+            margin-top: -1rem;
+            margin-right: -1rem;
+        }
+        .btn-eux-outline:hover {
+            background: #f5f5f5;
+        }
+        .btn-eux-outline .points_wrapper {
+            overflow: hidden;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            position: absolute;
+            z-index: 1;
+        }
+        .btn-eux-outline .points_wrapper .point {
+            bottom: -10px;
+            position: absolute;
+            animation: floating-points infinite ease-in-out;
+            pointer-events: none;
+            width: 2px;
+            height: 2px;
+            background-color: #0d2137;
+            border-radius: 9999px;
+        }
+        .btn-eux-outline .points_wrapper .point:nth-child(1) { left: 10%; opacity: 1; animation-duration: 2.35s; animation-delay: 0.2s; }
+        .btn-eux-outline .points_wrapper .point:nth-child(2) { left: 30%; opacity: 0.7; animation-duration: 2.5s; animation-delay: 0.5s; }
+        .btn-eux-outline .points_wrapper .point:nth-child(3) { left: 25%; opacity: 0.8; animation-duration: 2.2s; animation-delay: 0.1s; }
+        .btn-eux-outline .points_wrapper .point:nth-child(4) { left: 44%; opacity: 0.6; animation-duration: 2.05s; }
+        .btn-eux-outline .points_wrapper .point:nth-child(5) { left: 50%; opacity: 1; animation-duration: 1.9s; }
+        .btn-eux-outline .points_wrapper .point:nth-child(6) { left: 75%; opacity: 0.5; animation-duration: 1.5s; animation-delay: 1.5s; }
+        .btn-eux-outline .points_wrapper .point:nth-child(7) { left: 88%; opacity: 0.9; animation-duration: 2.2s; animation-delay: 0.2s; }
+        .btn-eux-outline .points_wrapper .point:nth-child(8) { left: 58%; opacity: 0.8; animation-duration: 2.25s; animation-delay: 0.2s; }
+        .btn-eux-outline .points_wrapper .point:nth-child(9) { left: 98%; opacity: 0.6; animation-duration: 2.6s; animation-delay: 0.1s; }
+        .btn-eux-outline .points_wrapper .point:nth-child(10) { left: 65%; opacity: 1; animation-duration: 2.5s; animation-delay: 0.2s; }
+        .btn-eux-outline .inner {
+            z-index: 2;
+            gap: 6px;
+            position: relative;
+            width: 100%;
+            color: #0d2137;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+            font-weight: 500;
+            line-height: 1.5;
+            transition: color 0.2s ease-in-out;
+        }
+        .btn-eux-outline .inner svg.icon {
+            width: 18px;
+            height: 18px;
+            transition: fill 0.1s linear;
+        }
     </style>
 </head>
 <body oncontextmenu="return false;">
@@ -987,8 +1705,23 @@
             <input type="password" id="passwordInput" placeholder="كلمة المرور" dir="ltr">
         </div>
         
-        <button class="login-btn" onclick="doLogin()">
-            <i class="fas fa-sign-in-alt"></i> دخول
+        <button class="btn-eux" onclick="doLogin()" style="width:100%;padding:16px;font-size:18px;border-radius:14px;">
+            <span class="inner">
+                <i class="fas fa-sign-in-alt"></i> دخول
+            </span>
+            <span class="fold"></span>
+            <div class="points_wrapper">
+                <span class="point"></span>
+                <span class="point"></span>
+                <span class="point"></span>
+                <span class="point"></span>
+                <span class="point"></span>
+                <span class="point"></span>
+                <span class="point"></span>
+                <span class="point"></span>
+                <span class="point"></span>
+                <span class="point"></span>
+            </div>
         </button>
         <p class="error-msg" id="loginError"></p>
     </div>
@@ -1001,11 +1734,56 @@
                 <span class="total-small">📦 إجمالي الشحنات: <span class="count" id="totalCountSmall">0</span></span>
             </div>
             <div class="header-actions">
-                <button id="shareLinkBtn" class="green hidden share-btn-text" onclick="copyShareLink()" style="background:#ff9800;box-shadow: 0 2px 10px rgba(255, 152, 0, 0.2);">📤 يمكنك ارسال هاذا الرابط للراسل ليقوم بتسجيل الشحنه بنفسه</button>
-                <button id="addShipmentBtn" class="green hidden" onclick="showAddShipmentForm()">➕ إضافة شحنة</button>
-                <button id="clientsBtn" class="blue hidden" onclick="showClients()">👥 عملاء</button>
-                <button id="allShipmentsBtn" class="orange hidden" onclick="loadAllShipments()">📋 الكل</button>
-                <button class="outline" onclick="logout()">🚪 خروج</button>
+                <button id="shareLinkBtn" class="btn-eux-orange hidden share-btn-text" onclick="copyShareLink()" style="font-size:12px;padding:8px 12px;border-radius:10px;">
+                    <span class="inner">📤 يمكنك ارسال هاذا الرابط للراسل ليقوم بتسجيل الشحنه بنفسه</span>
+                    <span class="fold"></span>
+                    <div class="points_wrapper">
+                        <span class="point"></span><span class="point"></span><span class="point"></span>
+                        <span class="point"></span><span class="point"></span><span class="point"></span>
+                        <span class="point"></span><span class="point"></span><span class="point"></span>
+                        <span class="point"></span>
+                    </div>
+                </button>
+                <button id="addShipmentBtn" class="btn-eux-green hidden" onclick="showAddShipmentForm()" style="padding:10px 16px;border-radius:10px;font-size:13px;">
+                    <span class="inner">➕ إضافة شحنة</span>
+                    <span class="fold"></span>
+                    <div class="points_wrapper">
+                        <span class="point"></span><span class="point"></span><span class="point"></span>
+                        <span class="point"></span><span class="point"></span><span class="point"></span>
+                        <span class="point"></span><span class="point"></span><span class="point"></span>
+                        <span class="point"></span>
+                    </div>
+                </button>
+                <button id="clientsBtn" class="btn-eux hidden" onclick="showClients()" style="padding:10px 16px;border-radius:10px;font-size:13px;">
+                    <span class="inner">👥 عملاء</span>
+                    <span class="fold"></span>
+                    <div class="points_wrapper">
+                        <span class="point"></span><span class="point"></span><span class="point"></span>
+                        <span class="point"></span><span class="point"></span><span class="point"></span>
+                        <span class="point"></span><span class="point"></span><span class="point"></span>
+                        <span class="point"></span>
+                    </div>
+                </button>
+                <button id="allShipmentsBtn" class="btn-eux-orange hidden" onclick="loadAllShipments()" style="padding:10px 16px;border-radius:10px;font-size:13px;">
+                    <span class="inner">📋 الكل</span>
+                    <span class="fold"></span>
+                    <div class="points_wrapper">
+                        <span class="point"></span><span class="point"></span><span class="point"></span>
+                        <span class="point"></span><span class="point"></span><span class="point"></span>
+                        <span class="point"></span><span class="point"></span><span class="point"></span>
+                        <span class="point"></span>
+                    </div>
+                </button>
+                <button class="btn-eux-outline" onclick="logout()" style="padding:10px 16px;border-radius:10px;font-size:13px;">
+                    <span class="inner">🚪 خروج</span>
+                    <span class="fold"></span>
+                    <div class="points_wrapper">
+                        <span class="point"></span><span class="point"></span><span class="point"></span>
+                        <span class="point"></span><span class="point"></span><span class="point"></span>
+                        <span class="point"></span><span class="point"></span><span class="point"></span>
+                        <span class="point"></span>
+                    </div>
+                </button>
             </div>
         </div>
 
@@ -1031,7 +1809,16 @@
         <div class="form-group"><label>💰 المبلغ المطلوب تحصيله شامل الشحن *</label><input id="pf_amount" type="number" placeholder="المبلغ بالجنيه" dir="ltr"></div>
         <div class="form-group"><label>⚖️ وزن الشحنة *</label><input id="pf_weight" type="number" placeholder="الوزن بالكيلو" dir="ltr" value="1"></div>
         <div class="form-group"><label>📝 ملاحظات</label><textarea id="pf_notes" placeholder="ملاحظات إضافية"></textarea></div>
-        <button class="submit-btn" onclick="submitPublicOrder()" style="width:100%;padding:14px;background:#0076ff;color:white;border:none;border-radius:12px;font-size:16px;font-weight:700;cursor:pointer;font-family:'Cairo',sans-serif;box-shadow:0 4px 16px rgba(0,118,255,0.3);">✅ تسجيل الشحنة</button>
+        <button class="btn-eux" onclick="submitPublicOrder()" style="width:100%;padding:14px;border-radius:12px;font-size:16px;">
+            <span class="inner">✅ تسجيل الشحنة</span>
+            <span class="fold"></span>
+            <div class="points_wrapper">
+                <span class="point"></span><span class="point"></span><span class="point"></span>
+                <span class="point"></span><span class="point"></span><span class="point"></span>
+                <span class="point"></span><span class="point"></span><span class="point"></span>
+                <span class="point"></span>
+            </div>
+        </button>
         <p id="publicError" style="color:red;margin-top:10px;text-align:center;"></p>
     </div>
 </div>
@@ -1340,8 +2127,16 @@
             <h3><i class="fas fa-link"></i> رابط التسجيل</h3>
             <p style="margin-bottom:12px;color:#666;font-size:13px;">انسخ الرابط يدوياً:</p>
             <div style="background:#f0f6fe;padding:14px;border-radius:10px;word-break:break-all;direction:ltr;text-align:left;margin-bottom:14px;font-size:13px;border:1px solid #dce8f5;">${url}</div>
-            <button class="submit-btn" onclick="navigator.clipboard.writeText('${url.replace(/'/g, "\\'")}').then(()=>showToast('✅ تم النسخ!','success')).catch(()=>showToast('⚠️ فشل النسخ','error'))">📋 نسخ الرابط</button>
-            <button class="submit-btn gray" onclick="closeModal()" style="margin-top:8px;">إغلاق</button>
+            <button class="btn-eux" onclick="navigator.clipboard.writeText('${url.replace(/'/g, "\\'")}').then(()=>showToast('✅ تم النسخ!','success')).catch(()=>showToast('⚠️ فشل النسخ','error'))" style="width:100%;">
+                <span class="inner">📋 نسخ الرابط</span>
+                <span class="fold"></span>
+                <div class="points_wrapper"><span class="point"></span><span class="point"></span><span class="point"></span><span class="point"></span><span class="point"></span><span class="point"></span><span class="point"></span><span class="point"></span><span class="point"></span><span class="point"></span></div>
+            </button>
+            <button class="btn-eux-outline" onclick="closeModal()" style="width:100%;margin-top:8px;">
+                <span class="inner">إغلاق</span>
+                <span class="fold"></span>
+                <div class="points_wrapper"><span class="point"></span><span class="point"></span><span class="point"></span><span class="point"></span><span class="point"></span><span class="point"></span><span class="point"></span><span class="point"></span><span class="point"></span><span class="point"></span></div>
+            </button>
         `;
     }
 
@@ -1584,13 +2379,25 @@
         let actions = '';
         const trackingNum = s.trackingNumber || '';
         if (trackingNum && trackingNum.length > 3) {
-            actions += `<button class="btn-track" onclick="event.stopPropagation(); trackShipment('${trackingNum}')">📍 تتبع</button>`;
+            actions += `<button class="btn-eux" onclick="event.stopPropagation(); trackShipment('${trackingNum}')" style="padding:6px 16px;border-radius:8px;font-size:13px;">
+                <span class="inner">📍 تتبع</span>
+                <span class="fold"></span>
+                <div class="points_wrapper"><span class="point"></span><span class="point"></span><span class="point"></span><span class="point"></span><span class="point"></span><span class="point"></span><span class="point"></span><span class="point"></span><span class="point"></span><span class="point"></span></div>
+            </button>`;
         }
         if (isAdmin) {
             if (!trackingNum || trackingNum.length < 3) {
-                actions += `<button class="btn-add-tracking" onclick="event.stopPropagation(); showAddTracking('${s.id}')">🔢 إضافة تتبع</button>`;
+                actions += `<button class="btn-eux-green" onclick="event.stopPropagation(); showAddTracking('${s.id}')" style="padding:6px 16px;border-radius:8px;font-size:13px;">
+                    <span class="inner">🔢 إضافة تتبع</span>
+                    <span class="fold"></span>
+                    <div class="points_wrapper"><span class="point"></span><span class="point"></span><span class="point"></span><span class="point"></span><span class="point"></span><span class="point"></span><span class="point"></span><span class="point"></span><span class="point"></span><span class="point"></span></div>
+                </button>`;
             }
-            actions += `<button class="btn-delete" onclick="event.stopPropagation(); deleteShipment('${s.id}')">🗑️ حذف</button>`;
+            actions += `<button class="btn-eux-red" onclick="event.stopPropagation(); deleteShipment('${s.id}')" style="padding:6px 16px;border-radius:8px;font-size:13px;">
+                <span class="inner">🗑️ حذف</span>
+                <span class="fold"></span>
+                <div class="points_wrapper"><span class="point"></span><span class="point"></span><span class="point"></span><span class="point"></span><span class="point"></span><span class="point"></span><span class="point"></span><span class="point"></span><span class="point"></span><span class="point"></span></div>
+            </button>`;
             var adminDetails = `
                 <div class="info"><strong>🔢 رقم الشحنة:</strong> ${s.id}</div>
                 ${trackingNum ? `<div class="info"><strong>🚚 رقم التتبع:</strong> ${trackingNum}</div>` : ''}
@@ -1666,7 +2473,11 @@
             <div class="form-group"><label>💰 المبلغ المطلوب تحصيله شامل الشحن *</label><input id="f_amount" type="number" placeholder="المبلغ بالجنيه" dir="ltr"></div>
             <div class="form-group"><label>⚖️ وزن الشحنة *</label><input id="f_weight" type="number" placeholder="الوزن بالكيلو" dir="ltr" value="1"></div>
             <div class="form-group"><label>📝 ملاحظات</label><textarea id="f_notes" placeholder="ملاحظات إضافية"></textarea></div>
-            <button class="submit-btn" onclick="submitShipment()">✅ إضافة الشحنة</button>
+            <button class="btn-eux" onclick="submitShipment()" style="width:100%;">
+                <span class="inner">✅ إضافة الشحنة</span>
+                <span class="fold"></span>
+                <div class="points_wrapper"><span class="point"></span><span class="point"></span><span class="point"></span><span class="point"></span><span class="point"></span><span class="point"></span><span class="point"></span><span class="point"></span><span class="point"></span><span class="point"></span></div>
+            </button>
             <p id="shipError" style="color:red;margin-top:10px;"></p>
         `;
     }
@@ -1738,7 +2549,11 @@
             <h3><i class="fas fa-qrcode"></i> إضافة رقم تتبع</h3>
             <p style="margin-bottom:12px;color:#666;">رقم الشحنة: <strong>${shipmentId}</strong></p>
             <div class="form-group"><label>🚚 رقم التتبع</label><input id="trackingNum" dir="ltr" placeholder="مثال: JEG000470355620"></div>
-            <button class="submit-btn green" onclick="submitTracking('${shipmentId}')">💾 حفظ</button>
+            <button class="btn-eux-green" onclick="submitTracking('${shipmentId}')" style="width:100%;">
+                <span class="inner">💾 حفظ</span>
+                <span class="fold"></span>
+                <div class="points_wrapper"><span class="point"></span><span class="point"></span><span class="point"></span><span class="point"></span><span class="point"></span><span class="point"></span><span class="point"></span><span class="point"></span><span class="point"></span><span class="point"></span></div>
+            </button>
             <p id="trackError" style="color:red;margin-top:10px;"></p>
         `;
     }
@@ -1941,7 +2756,11 @@
             
             if (data.success) {
                 let html = `<h3><i class="fas fa-users"></i> إدارة العملاء</h3>
-                    <button class="submit-btn green" onclick="showAddClientForm()" style="margin-bottom:14px;">➕ إنشاء حساب عميل جديد</button>
+                    <button class="btn-eux-green" onclick="showAddClientForm()" style="width:100%;margin-bottom:14px;">
+                        <span class="inner">➕ إنشاء حساب عميل جديد</span>
+                        <span class="fold"></span>
+                        <div class="points_wrapper"><span class="point"></span><span class="point"></span><span class="point"></span><span class="point"></span><span class="point"></span><span class="point"></span><span class="point"></span><span class="point"></span><span class="point"></span><span class="point"></span></div>
+                    </button>
                     <div id="clientList"></div>`;
                 document.getElementById('modalBody').innerHTML = html;
                 
@@ -1952,7 +2771,11 @@
                     data.clients.forEach(c => {
                         listDiv.innerHTML += `<div class="client-card">
                             <div class="client-info"><strong>${c.name}</strong><br><span class="phone">📱 ${c.phone}</span><br><span class="created">📅 ${c.created}</span></div>
-                            <div class="client-actions"><button onclick="deleteClient('${c.phone}')">🗑️ حذف</button></div>
+                            <div class="client-actions"><button class="btn-eux-red" onclick="deleteClient('${c.phone}')" style="padding:6px 16px;border-radius:8px;font-size:13px;">
+                                <span class="inner">🗑️ حذف</span>
+                                <span class="fold"></span>
+                                <div class="points_wrapper"><span class="point"></span><span class="point"></span><span class="point"></span><span class="point"></span><span class="point"></span><span class="point"></span><span class="point"></span><span class="point"></span><span class="point"></span><span class="point"></span></div>
+                            </button></div>
                         </div>`;
                     });
                 }
@@ -1970,8 +2793,16 @@
             <div class="form-group"><label>👤 اسم العميل *</label><input id="newClientName" placeholder="الاسم الكامل"></div>
             <div class="form-group"><label>📱 رقم الهاتف *</label><input id="newClientPhone" dir="ltr" placeholder="مثال: 011xxxxxxxx" maxlength="11" oninput="this.value=this.value.replace(/[^0-9]/g,'')"></div>
             <div class="form-group"><label>🔒 كلمة المرور *</label><input id="newClientPassword" type="password" dir="ltr" placeholder="كلمة المرور للدخول"></div>
-            <button class="submit-btn green" onclick="createClient()">✅ إنشاء الحساب</button>
-            <button class="submit-btn gray" onclick="showClients()" style="margin-top:8px;">↩️ رجوع</button>
+            <button class="btn-eux-green" onclick="createClient()" style="width:100%;">
+                <span class="inner">✅ إنشاء الحساب</span>
+                <span class="fold"></span>
+                <div class="points_wrapper"><span class="point"></span><span class="point"></span><span class="point"></span><span class="point"></span><span class="point"></span><span class="point"></span><span class="point"></span><span class="point"></span><span class="point"></span><span class="point"></span></div>
+            </button>
+            <button class="btn-eux-outline" onclick="showClients()" style="width:100%;margin-top:8px;">
+                <span class="inner">↩️ رجوع</span>
+                <span class="fold"></span>
+                <div class="points_wrapper"><span class="point"></span><span class="point"></span><span class="point"></span><span class="point"></span><span class="point"></span><span class="point"></span><span class="point"></span><span class="point"></span><span class="point"></span><span class="point"></span></div>
+            </button>
             <p id="clientError" style="color:red;margin-top:10px;text-align:center;"></p>
         `;
     }
@@ -2064,3 +2895,4 @@
 
 </body>
 </html>
+```
