@@ -936,9 +936,10 @@
 
 <script>
     // ============================================================
-    //  🔗 الرابط
+    //  🔗 الروابط
     // ============================================================
     const API_URL = "https://script.google.com/macros/s/AKfycbyZYhdpkYQH-ZxM8te39VoEnoKJjx2vY5VzvgHg18y6FadPRMdpbZyTW2YuHByyI-ha/exec";
+    const BASE_URL = "https://script.google.com/macros/s/AKfycbyZYhdpkYQH-ZxM8te39VoEnoKJjx2vY5VzvgHg18y6FadPRMdpbZyTW2YuHByyI-ha/exec";
     let currentUser = null;
     let trackingCache = {};
     let publicClientPhone = null;
@@ -1117,8 +1118,7 @@
     //  نسخ رابط التسجيل
     // ============================================================
     function copyShareLink() {
-        const baseUrl = window.location.origin + window.location.pathname;
-        const shareUrl = `${baseUrl}?ref=${currentUser.phone}`;
+        const shareUrl = `${BASE_URL}?ref=${currentUser.phone}`;
         
         if (navigator.clipboard && navigator.clipboard.writeText) {
             navigator.clipboard.writeText(shareUrl).then(() => {
