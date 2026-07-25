@@ -1,3 +1,4 @@
+```html
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
@@ -59,49 +60,157 @@
             display: flex;
             justify-content: center;
             margin-bottom: 25px;
+            position: relative;
+            height: 140px;
         }
         .login-page .logo-node {
-            width: 130px;
-            height: 130px;
+            width: 100px;
+            height: 100px;
             background: linear-gradient(135deg, #1a3a6b, #0d2137);
-            border: 3px solid rgba(0, 118, 255, 0.3);
-            border-radius: 30px;
+            border: 3px solid rgba(0, 118, 255, 0.4);
+            border-radius: 22px;
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
-            position: relative;
-            animation: nodeFloat 2.6s ease-in-out infinite;
-            box-shadow: 0 0 60px rgba(0, 118, 255, 0.12);
-        }
-        .login-page .logo-node::after {
-            content: '';
             position: absolute;
-            inset: -10px;
-            border: 2px dashed #0076ff;
-            border-radius: 34px;
-            opacity: 0.3;
-            animation: rotateDashed 15s linear infinite;
-        }
-        @keyframes nodeFloat {
-            0%, 100% { transform: translateY(0); box-shadow: 0 0 30px rgba(0, 118, 255, 0.12); }
-            50% { transform: translateY(-15px); box-shadow: 0 0 60px rgba(0, 118, 255, 0.25); }
-        }
-        @keyframes rotateDashed {
-            100% { transform: rotate(360deg); }
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            box-shadow: 0 0 40px rgba(0, 118, 255, 0.25);
+            transition: none;
+            z-index: 10;
         }
         .login-page .logo-node .logo-icon {
-            font-size: 42px;
+            font-size: 38px;
+            position: relative;
+            z-index: 2;
         }
         .login-page .logo-node .logo-text {
-            font-size: 18px;
+            font-size: 16px;
             font-weight: 900;
             color: #0076ff;
             background: rgba(0, 118, 255, 0.12);
-            padding: 2px 16px;
-            border-radius: 8px;
-            margin-top: 4px;
+            padding: 1px 14px;
+            border-radius: 6px;
+            margin-top: 2px;
             letter-spacing: 1px;
+            position: relative;
+            z-index: 2;
+        }
+
+        /* تأثير وميض السرعة */
+        @keyframes logoFloatCenter {
+            0% { 
+                top: 50%; 
+                left: 50%; 
+                transform: translate(-50%, -50%) scale(1); 
+                opacity: 1; 
+            }
+            20% { 
+                top: 35%; 
+                left: 50%; 
+                transform: translate(-50%, -50%) scale(1.15); 
+                opacity: 1; 
+            }
+            40% { 
+                top: 50%; 
+                left: 50%; 
+                transform: translate(-50%, -50%) scale(1); 
+                opacity: 1; 
+            }
+            45% { 
+                top: 50%; 
+                left: 20%; 
+                transform: translate(-50%, -50%) scale(0.9); 
+                opacity: 1; 
+            }
+            46% { 
+                top: 50%; 
+                left: 20%; 
+                transform: translate(-50%, -50%) scale(0.9); 
+                opacity: 0; 
+            }
+            47% { 
+                top: 50%; 
+                left: 20%; 
+                transform: translate(-50%, -50%) scale(0.8); 
+                opacity: 0; 
+                box-shadow: 0 0 80px rgba(255, 255, 255, 1), 0 0 120px rgba(0, 118, 255, 0.9); 
+            }
+            60% { 
+                top: 50%; 
+                left: 80%; 
+                transform: translate(-50%, -50%) scale(1.05); 
+                opacity: 1; 
+                box-shadow: 0 0 0px rgba(255, 255, 255, 0), 0 0 20px rgba(0, 118, 255, 0.3); 
+            }
+            75% { 
+                top: 50%; 
+                left: 50%; 
+                transform: translate(-50%, -50%) scale(1); 
+                opacity: 1; 
+                box-shadow: 0 0 40px rgba(0, 118, 255, 0.25); 
+            }
+            85% { 
+                top: 50%; 
+                left: 50%; 
+                transform: translate(-50%, -50%) scale(1.05); 
+                opacity: 1; 
+            }
+            100% { 
+                top: 50%; 
+                left: 50%; 
+                transform: translate(-50%, -50%) scale(1); 
+                opacity: 1; 
+                box-shadow: 0 0 40px rgba(0, 118, 255, 0.25); 
+            }
+        }
+
+        @keyframes speedTrail1 {
+            0%, 44% { opacity: 0; transform: scaleX(0); right: 50%; }
+            45% { opacity: 1; transform: scaleX(1); right: 20%; }
+            55% { opacity: 0.6; transform: scaleX(2.5); right: 60%; }
+            65% { opacity: 0; transform: scaleX(4); right: 80%; }
+            100% { opacity: 0; transform: scaleX(0); right: 50%; }
+        }
+
+        @keyframes speedTrail2 {
+            0%, 44% { opacity: 0; transform: scaleX(0); right: 50%; }
+            46% { opacity: 0.9; transform: scaleX(1.2); right: 22%; }
+            58% { opacity: 0.4; transform: scaleX(3); right: 65%; }
+            68% { opacity: 0; transform: scaleX(4.5); right: 80%; }
+            100% { opacity: 0; transform: scaleX(0); right: 50%; }
+        }
+
+        .logo-node {
+            animation: logoFloatCenter 4s ease-in-out infinite;
+        }
+
+        .logo-wrapper .speed-trail {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            height: 4px;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.9), rgba(0, 118, 255, 0.6), transparent);
+            border-radius: 2px;
+            z-index: 5;
+            pointer-events: none;
+        }
+
+        .logo-wrapper .speed-trail.trail1 {
+            width: 300px;
+            right: 50%;
+            animation: speedTrail1 4s ease-in-out infinite;
+        }
+
+        .logo-wrapper .speed-trail.trail2 {
+            width: 250px;
+            right: 50%;
+            animation: speedTrail2 4s ease-in-out infinite;
+            top: calc(50% - 8px);
+            height: 2px;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.7), rgba(0, 150, 255, 0.4), transparent);
         }
 
         .login-page .brand {
@@ -803,6 +912,8 @@
     <!-- ===== صفحة تسجيل الدخول ===== -->
     <div id="loginPage" class="login-page">
         <div class="logo-wrapper">
+            <div class="speed-trail trail1"></div>
+            <div class="speed-trail trail2"></div>
             <div class="logo-node">
                 <span class="logo-icon">📦</span>
                 <span class="logo-text">EUX</span>
@@ -1031,15 +1142,16 @@
                 isError = true;
                 displayStatus = '❌ ' + status.replace(/❌️?/g, '').replace(/خطأ/g, '').trim();
                 if (!displayStatus || displayStatus === '❌') displayStatus = '❌ خطأ في التوصيل';
-            } else if (status.includes('تم التسليم') || status.includes('تم التوصيل') || status.includes('تم الاستلام بواسطة') || status.includes('Delivered') || status.includes('✅')) {
-                isSuccess = true;
-                displayStatus = status.replace(/✅️?/g, '').trim();
-                displayStatus = displayStatus.replace(/تم الاستلام بواسطة/g, 'تم التسليم');
-                displayStatus = '✅ ' + displayStatus;
-                if (!displayStatus || displayStatus === '✅') displayStatus = '✅ تم التسليم';
-            } else if (status.includes('تم الاستلام')) {
+            } else if (status.includes('تم الاستلام بواسطة')) {
                 isInfo = true;
                 displayStatus = '📦 تم استلام الشحنة';
+            } else if (status.includes('تم الاستلام')) {
+                isSuccess = true;
+                displayStatus = '✅ تم التسليم';
+            } else if (status.includes('تم التسليم') || status.includes('تم التوصيل') || status.includes('Delivered') || status.includes('✅')) {
+                isSuccess = true;
+                displayStatus = '✅ ' + status.replace(/✅️?/g, '').trim();
+                if (!displayStatus || displayStatus === '✅') displayStatus = '✅ تم التسليم';
             }
             
             statusValue.textContent = displayStatus;
@@ -1399,16 +1511,16 @@
                     statusBgColor = '#ffeaea';
                     statusBorderColor = '#dc3545';
                     statusTextColor = '#dc3545';
-                } else if (currentStatus.includes('تم التسليم') || currentStatus.includes('تم التوصيل') || currentStatus.includes('تم الاستلام بواسطة') || currentStatus.includes('Delivered') || currentStatus.includes('✅')) {
-                    displayStatus = currentStatus.replace(/✅️?/g, '').trim();
-                    displayStatus = displayStatus.replace(/تم الاستلام بواسطة/g, 'تم التسليم');
-                    displayStatus = '✅ ' + displayStatus;
-                    if (!displayStatus || displayStatus === '✅') displayStatus = '✅ تم التسليم';
-                } else if (currentStatus.includes('تم الاستلام')) {
+                } else if (currentStatus.includes('تم الاستلام بواسطة')) {
                     displayStatus = '📦 تم استلام الشحنة';
                     statusBgColor = '#e3f2fd';
                     statusBorderColor = '#0d47a1';
                     statusTextColor = '#0d47a1';
+                } else if (currentStatus.includes('تم الاستلام')) {
+                    displayStatus = '✅ تم التسليم';
+                } else if (currentStatus.includes('تم التسليم') || currentStatus.includes('تم التوصيل') || currentStatus.includes('Delivered') || currentStatus.includes('✅')) {
+                    displayStatus = '✅ ' + currentStatus.replace(/✅️?/g, '').trim();
+                    if (!displayStatus || displayStatus === '✅') displayStatus = '✅ تم التسليم';
                 } else if (!currentStatus) {
                     displayStatus = 'قيد المعالجة';
                     statusBgColor = '#e3f2fd';
@@ -1616,3 +1728,4 @@
 
 </body>
 </html>
+```
