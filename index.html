@@ -1,16 +1,14 @@
-```html
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     
-    <!-- === إضافات SEO الجديدة === -->
+    <!-- === إضافات SEO === -->
     <meta name="description" content="شركة EUX للشحن تقدم خدمات الشحن السريع من مدينة العبور إلى جميع محافظات مصر بأسعار تنافسية وخدمة احترافية.">
     <meta name="keywords" content="EUX, EUX Express, شركة شحن, شحن مصر, شحن سريع, شحن العبور">
     <meta name="robots" content="index, follow">
     <link rel="canonical" href="https://euxexpress.com/">
-    <!-- ============================ -->
     
     <title>شركة EUX للشحن | الريادة في سرعة وحلول الشحن</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -19,14 +17,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <style>
-        /* إضافة حماية منع تحديد النصوص */
-        body {
-            -webkit-user-select: none; /* Chrome, Safari, Opera */
-            -moz-user-select: none;    /* Firefox */
-            -ms-user-select: none;     /* Internet Explorer/Edge */
-            user-select: none;         /* Non-prefixed version, currently supported by Chrome, Edge, Opera and Firefox */
-        }
-
+        /* ============ الأساسيات ============ */
         :root {
             --primary-color: #0076ff;
             --secondary-color: #1a1a1a;
@@ -50,6 +41,19 @@
             line-height: 1.8;
             background-color: var(--white);
             overflow-x: hidden;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        /* ============ صفحة الهبوط ============ */
+        #landingPage {
+            display: block;
         }
 
         header {
@@ -75,6 +79,31 @@
             letter-spacing: 2px;
         }
 
+        .login-btn {
+            display: inline-block;
+            background-color: transparent;
+            color: var(--white);
+            padding: 8px 22px;
+            border: 2px solid var(--primary-color);
+            border-radius: 30px;
+            font-size: 0.95rem;
+            font-weight: 600;
+            cursor: pointer;
+            text-decoration: none;
+            transition: 0.3s ease;
+            margin-right: 25px;
+            font-family: 'Cairo', sans-serif;
+        }
+        .login-btn:hover {
+            background-color: var(--primary-color);
+            color: var(--white);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(0, 118, 255, 0.3);
+        }
+        .login-btn i {
+            margin-left: 6px;
+        }
+
         .hero {
             background: linear-gradient(rgba(26, 26, 26, 0.88), rgba(26, 26, 26, 0.88)), url('https://images.unsplash.com/photo-1524661135-423995f22d0b?ixlib=rb-4.0.3') no-repeat center center/cover;
             min-height: 85vh;
@@ -97,14 +126,12 @@
             line-height: 0;
             z-index: 5;
         }
-
         .sea-wave-divider svg {
             position: relative;
             display: block;
             width: calc(100% + 1.3px);
             height: 110px;
         }
-
         .sea-wave-divider .wave-fill-white { fill: var(--white); }
         .sea-wave-divider .wave-fill-light { fill: var(--light-bg); }
 
@@ -171,36 +198,6 @@
         }
         .btn:hover { transform: translateY(-3px); box-shadow: 0 6px 20px rgba(0, 118, 255, 0.6); }
 
-        /* زر تسجيل الدخول الجديد */
-        .btn-login {
-            display: inline-block; 
-            background-color: transparent; 
-            color: var(--white); 
-            padding: 12px 35px; 
-            border: 2px solid var(--white); 
-            border-radius: 30px; 
-            font-size: 1.1rem; 
-            font-weight: 700; 
-            cursor: pointer; 
-            text-decoration: none; 
-            transition: 0.3s ease; 
-            margin-right: 15px;
-        }
-        .btn-login:hover { 
-            background-color: var(--white); 
-            color: var(--secondary-color); 
-            transform: translateY(-3px); 
-            box-shadow: 0 6px 20px rgba(255, 255, 255, 0.2);
-        }
-
-        .hero-buttons {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
-            align-items: center;
-            gap: 10px;
-        }
-
         .popup-overlay {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.75); display: flex; justify-content: center; align-items: center; z-index: 2000; opacity: 0; pointer-events: none; transition: 0.4s ease; backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
         }
@@ -247,241 +244,13 @@
         .footer-social a { color: var(--white); font-size: 1.8rem; transition: 0.3s; }
         .footer-social a:hover { color: #1877f2; }
 
-        @media (max-width: 768px) {
-            header { padding: 20px 5%; }
-            .logo { font-size: 24px; }
-            .hero h1 { font-size: 2rem; }
-            .hero p { font-size: 1rem; }
-            .cyber-node { width: 120px; height: 120px; font-size: 28px; }
-            .cube-container { width: 130px; height: 120px; }
-            .iso-cube { width: 90px; height: 90px; }
-            .iso-face { width: 90px; height: 90px; font-size: 24px; }
-            .iso-front  { transform: rotateY(0deg) translateZ(45px); }
-            .iso-right  { transform: rotateY(90deg) translateZ(45px); }
-            .iso-top    { transform: rotateX(90deg) translateZ(45px); }
-            .quantum-box { width: 120px; height: 120px; }
-            .btn-login {
-                padding: 10px 20px;
-                font-size: 1rem;
-            }
-        }
-    </style>
-</head>
-<body oncontextmenu="return false;"> <header>
-        <a href="#" class="logo">EUX EXPRESS</a>
-    </header>
-
-    <section class="hero">
-        <div class="showcase-wrapper">
-            <div class="cyber-node">EUX</div>
-            <div class="glow-floor"></div>
-        </div>
-
-        <h1>شركة <span>EUX</span> للشحن</h1>
-        <p>الريادة في سرعة وحلول الشحن نقدم خدماتنا الاحترافية من مدينة العبور (11828) وإلى جميع محافظات جمهورية مصر العربية بأفضل الأسعار وأعلى كفاءة.</p>
-        
-        <div class="hero-buttons">
-            <button onclick="togglePopup(true)" class="btn"><i class="fas fa-user-plus"></i> افتح حساب الآن</button>
-            <button onclick="openLoginSystem()" class="btn-login"><i class="fas fa-sign-in-alt"></i> تسجيل الدخول</button>
-        </div>
-
-        <div class="sea-wave-divider">
-            <svg viewBox="0 0 1200 120" preserveAspectRatio="none">
-                <path d="M321.39,56.44c58-10.79,114.16-30.13,172-41.86,82.39-16.72,168.19-17.73,250.45-.39C823.78,31,906.67,72,985.66,92.83c70.05,18.48,146.53,26.09,214.34,3V120H0V0C26.9,4.75,55.05,16.33,81.11,25.09,151,48.56,224.4,74.48,321.39,56.44Z" class="wave-fill-white"></path>
-            </svg>
-        </div>
-    </section>
-
-    <div class="popup-overlay" id="accountPopup" onclick="closePopupOutside(event)">
-        <div class="popup-box">
-            <span class="popup-close" onclick="togglePopup(false)">&times;</span>
-            <div class="popup-title"><i class="far fa-clock"></i> سيتم التواصل خلال 5 ساعات لتفعيل الحساب</div>
-            
-            <form id="excelForm" onsubmit="submitToExcel(event)">
-                <div class="popup-form-group">
-                    <label for="userName">الاسم</label>
-                    <input type="text" id="userName" name="name" placeholder="أدخل ألإسم " required>
-                </div>
-                <div class="popup-form-group">
-                    <label for="userPhone">رقم الهاتف</label>
-                    <input type="tel" id="userPhone" name="phone" placeholder="أدخل رقم الهاتف" required>
-                </div>
-                <button type="submit" class="popup-submit-btn">إرسال</button>
-            </form>
-        </div>
-    </div>
-
-    <section id="about" class="about">
-        <div class="showcase-wrapper" style="margin-bottom: 50px; margin-top: 20px;">
-            <div class="cube-container">
-                <div class="iso-cube">
-                    <div class="iso-face iso-front">EUX</div>
-                    <div class="iso-face iso-right"></div>
-                    <div class="iso-face iso-top"></div>
-                </div>
-            </div>
-            <div class="glow-floor" style="margin-top: 25px;"></div>
-        </div>
-
-        <h2 class="section-title">لماذا شركة EUX؟</h2>
-        <p style="max-width: 800px; margin: 0 auto 30px; color: #666;">نعمل في مجال الشحن منذ 3 أعوام متتالية حققنا فيها نجاحاً باهراً، وقدمنا حلولاً مبتكرة لجميع مشاكل الشحن التي تواجه التجار لأننا ندرك تماماً ما يهمك:</p>
-        
-        <div class="about-container">
-            <div class="about-card">
-                <i class="fas fa-shipping-fast"></i>
-                <h3>سرعة التسليم والاستلام</h3>
-                <p>الأفضل والأسرع في استلام الشحنات من مدينة العبور وتسليم الشحنات لجميع المحافظات </p>
-            </div>
-            <div class="about-card">
-                <i class="fas fa-shield-alt"></i>
-                <h3>الحفاظ على الشحنات</h3>
-                <p>أمان كامل لمنتجاتك وضمان وصولها بحالتها الأصلية للعميل</p>
-            </div>
-            <div class="about-card">
-                <i class="fas fa-hand-holding-usd"></i>
-                <h3>سعر اقتصادي مميز</h3>
-                <p>نقدم أفضل معادلة بين السعر الاقتصادي والجودة العالية لدعم تجارتك </p>
-            </div>
-        </div>
-
-        <div class="sea-wave-divider">
-            <svg viewBox="0 0 1200 120" preserveAspectRatio="none">
-                <path d="M321.39,56.44c58-10.79,114.16-30.13,172-41.86,82.39-16.72,168.19-17.73,250.45-.39C823.78,31,906.67,72,985.66,92.83c70.05,18.48,146.53,26.09,214.34,3V120H0V0C26.9,4.75,55.05,16.33,81.11,25.09,151,48.56,224.4,74.48,321.39,56.44Z" class="wave-fill-white"></path>
-            </svg>
-        </div>
-    </section>
-
-    <section id="services" class="services">
-        <h2 class="section-title">خدماتنا المميزة</h2>
-        <div class="services-grid">
-            <div class="service-box"><i class="fas fa-mobile-alt"></i><h4>تطبيق متابعة خاص</h4><p>تابع شحناتك خطوة بخطوة أولاً بأول من خلال تطبيقنا الذكي</p></div>
-            <div class="service-box"><i class="fas fa-users"></i><h4>جروب للمتابعة والدعم</h4><p>فريق دعم فني متكامل متواجد لخدمتك ومتابعة طلباتك بمرونة</p></div>
-            <div class="service-box"><i class="fas fa-truck-loading"></i><h4>خدمة بيكب مجاني</h4><p>نقوم باستلام الشحنات من باب مخزنك أو مقر عملك مجاناً</p></div>
-            <div class="service-box"><i class="fas fa-money-bill-wave"></i><h4>تحصيل 3 أيام أسبوعياً</h4><p>دورة رأس مال سريعة مع نظام تحصيل مرن وموثوق 3 مرات في الأسبوع</p></div>
-            <div class="service-box"><i class="fas fa-search-plus"></i><h4>خدمة معاينة واستبدال</h4><p>نمنح عملائك ميزة المعاينة والاستبدال في مكان التسليم لزيادة الثقة</p></div>
-            <div class="service-box"><i class="fas fa-redo-alt"></i><h4>3 محاولات تسليم</h4><p>نحاول تسليم الشحنة حتى 3 مرات قبل تصنيفها كمرتجع لضمان أعلى نسبة نجاح</p></div>
-            <div class="service-box"><i class="fas fa-chart-line"></i><h4>نسبة تسليم عالية جداً</h4><p>بفضل خبرتنا الممتدة لـ 3 سنوات، نحقق أعلى معدلات نجاح تسليم بمصر</p></div>
-        </div>
-
-        <div class="sea-wave-divider">
-            <svg viewBox="0 0 1200 120" preserveAspectRatio="none">
-                <path d="M321.39,56.44c58-10.79,114.16-30.13,172-41.86,82.39-16.72,168.19-17.73,250.45-.39C823.78,31,906.67,72,985.66,92.83c70.05,18.48,146.53,26.09,214.34,3V120H0V0C26.9,4.75,55.05,16.33,81.11,25.09,151,48.56,224.4,74.48,321.39,56.44Z" class="wave-fill-light"></path>
-            </svg>
-        </div>
-    </section>
-
-    <section id="contact" class="contact">
-        <div class="showcase-wrapper" style="margin-bottom: 50px; margin-top: 10px;">
-            <div class="quantum-box">
-                <span style="color: #0076ff; font-weight: 900; font-size: 32px; z-index: 5; letter-spacing: 1px;">EUX</span>
-            </div>
-            <div class="glow-floor" style="background: radial-gradient(var(--gold-accent), transparent 70%); margin-top: 25px;"></div>
-        </div>
-
-        <h2 class="section-title">كن أحد عملائنا المميزين اليوم!</h2>
-        <p style="margin-bottom: 30px; font-size: 1.1rem;">لا تتردد في التواصل معنا لمعرفة المزيد من التفاصيل والبدء في شحن منتجاتك</p>
-        
-        <div class="contact-info">
-            <div class="info-item">
-                <i class="fas fa-map-marker-alt"></i>
-                <span>مدينة العبور 11828، الشباب، بجوار كشري الوالي</span>
-            </div>
-        </div>
-    </section>
-
-    <footer>
-        <p>&copy; 2026 جميع الحقوق محفوظة لشركة EUX  للشحن |   </p>
-        <div class="footer-social">
-            <a href="https://www.facebook.com/share/1JBqQgjooM/" target="_blank"><i class="fab fa-facebook"></i></a>
-        </div>
-    </footer>
-
-    <script>
-        // سكريبت لمنع اختصارات الكيبورد الشائعة للنسخ أو عرض المصدر
-        document.addEventListener('keydown', function(event) {
-            if (event.ctrlKey && (event.key === 'u' || event.key === 's' || event.key === 'c' || event.key === 'a')) {
-                event.preventDefault();
-            }
-        });
-
-        function togglePopup(show) {
-            const popup = document.getElementById('accountPopup');
-            if(show) { popup.classList.add('active'); } else { popup.classList.remove('active'); }
-        }
-
-        function closePopupOutside(event) {
-            const overlay = document.getElementById('accountPopup');
-            if (event.target === overlay) { togglePopup(false); }
-        }
-
-        function submitToExcel(event) {
-            event.preventDefault();
-            
-            const submitBtn = event.target.querySelector('.popup-submit-btn');
-            const originalBtnText = submitBtn.innerText;
-            submitBtn.innerText = "جاري الإرسال...";
-            submitBtn.disabled = true;
-
-            const formData = new FormData(event.target);
-            const params = new URLSearchParams(formData).toString();
-            
-            const excelWebhookUrl = 'https://script.google.com/macros/s/AKfycbw4UjaHv4Vn0iHDsBI_Wx5AbrqGOfIxDJ5K-PRjJGtrSzCwbufVQR7QVkG1NTaeyINX/exec'; 
-
-            fetch(`${excelWebhookUrl}?${params}`, {
-                method: 'POST'
-            })
-            .then(response => {
-                alert('تم إرسال طلبك بنجاح! سيتم التواصل معك خلال 5 ساعات لتفعيل الحساب.');
-                event.target.reset();
-                togglePopup(false);
-            })
-            .catch(error => {
-                alert('تم إرسال طلبك بنجاح! سيتم التواصل معك خلال 5 ساعات لتفعيل الحساب.');
-                event.target.reset();
-                togglePopup(false);
-            })
-            .finally(() => {
-                submitBtn.innerText = originalBtnText;
-                submitBtn.disabled = false;
-            });
-        }
-
-        // ============================================================
-        // دالة فتح نظام تسجيل الدخول (الكود المطلوب إضافته)
-        // ============================================================
-        function openLoginSystem() {
-            // فتح نافذة جديدة بنظام تسجيل الدخول
-            const loginWindow = window.open('', '_blank', 'width=500,height=700,scrollbars=yes');
-            
-            // كتابة كود HTML الخاص بنظام تسجيل الدخول داخل النافذة الجديدة
-            loginWindow.document.write(`
-<!DOCTYPE html>
-<html lang="ar" dir="rtl">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>نظام تتبع وإدارة شحنات EUX Express</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;900&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-        body {
-            font-family: 'Cairo', sans-serif;
+        /* ============ نظام التتبع ============ */
+        #trackingApp {
             background: linear-gradient(135deg, #e8f0fe, #d4e4f7);
             min-height: 100vh;
             padding: 20px;
-            -webkit-user-select: none;
-            -moz-user-select: none;
-            -ms-user-select: none;
-            user-select: none;
         }
-        .container {
+        .tracking-container {
             max-width: 900px;
             margin: 0 auto;
             background: white;
@@ -491,7 +260,7 @@
             position: relative;
             overflow: hidden;
         }
-        .container::before {
+        .tracking-container::before {
             content: '';
             position: absolute;
             top: -50%;
@@ -501,11 +270,8 @@
             background: radial-gradient(circle at 30% 20%, rgba(0, 118, 255, 0.04), transparent 70%);
             pointer-events: none;
         }
-        .hidden {
-            display: none !important;
-        }
 
-        /* ===== صفحة تسجيل الدخول ===== */
+        /* صفحة تسجيل الدخول */
         .login-page {
             text-align: center;
             position: relative;
@@ -520,9 +286,7 @@
             height: 220px;
         }
 
-        /* ============================================================
-            هليكوبتر مدنية - تصميم EUX (مصغرة)
-           ============================================================ */
+        /* الهليكوبتر */
         .civil-helo {
             position: relative;
             width: 180px;
@@ -536,7 +300,6 @@
             0%, 100% { transform: scale(0.85) translateY(0px); }
             50% { transform: scale(0.85) translateY(-8px); }
         }
-
         .civil-helo .body {
             position: absolute;
             width: 120px;
@@ -727,9 +490,7 @@
             font-weight: 900;
             margin-bottom: 4px;
         }
-        .login-page .brand span {
-            color: #0076ff;
-        }
+        .login-page .brand span { color: #0076ff; }
         .login-page .input-group {
             position: relative;
             margin-bottom: 16px;
@@ -758,28 +519,6 @@
             color: #999;
             font-size: 18px;
         }
-        .login-page .login-btn {
-            width: 100%;
-            padding: 16px;
-            background: #0076ff;
-            color: white;
-            border: none;
-            border-radius: 14px;
-            font-size: 18px;
-            font-weight: 700;
-            cursor: pointer;
-            font-family: 'Cairo', sans-serif;
-            transition: 0.3s;
-            box-shadow: 0 4px 25px rgba(0, 118, 255, 0.3);
-            margin-top: 8px;
-        }
-        .login-page .login-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 35px rgba(0, 118, 255, 0.4);
-        }
-        .login-page .login-btn:active {
-            transform: scale(0.97);
-        }
         .login-page .error-msg {
             color: #dc3545;
             font-size: 14px;
@@ -789,8 +528,8 @@
             border-radius: 8px;
         }
 
-        /* ===== الهيدر ===== */
-        .header {
+        /* هيدر لوحة التحكم */
+        .tracking-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -802,75 +541,18 @@
             position: relative;
             z-index: 1;
         }
-        .header h2 {
+        .tracking-header h2 {
             color: #0d2137;
             font-weight: 700;
             font-size: 18px;
         }
-        .header h2 i {
-            color: #0076ff;
-            margin-left: 8px;
-        }
-        .header .header-actions {
+        .tracking-header h2 i { color: #0076ff; margin-left: 8px; }
+        .header-actions {
             display: flex;
             gap: 6px;
             flex-wrap: wrap;
             align-items: center;
         }
-        .header .header-actions button {
-            padding: 10px 16px;
-            background: #0076ff;
-            color: white;
-            border: none;
-            border-radius: 10px;
-            cursor: pointer;
-            font-size: 13px;
-            font-weight: 600;
-            font-family: 'Cairo', sans-serif;
-            transition: 0.2s;
-            box-shadow: 0 2px 10px rgba(0, 118, 255, 0.2);
-        }
-        .header .header-actions button:active {
-            transform: scale(0.95);
-        }
-        .header .header-actions button.green {
-            background: #28a745;
-            box-shadow: 0 2px 10px rgba(40, 167, 69, 0.2);
-        }
-        .header .header-actions button.blue {
-            background: #0066cc;
-            box-shadow: 0 2px 10px rgba(0, 102, 204, 0.2);
-        }
-        .header .header-actions button.orange {
-            background: #ff9800;
-            box-shadow: 0 2px 10px rgba(255, 152, 0, 0.2);
-        }
-        .header .header-actions button.outline {
-            background: transparent;
-            color: #0d2137;
-            border: 1.5px solid #ddd;
-            box-shadow: none;
-        }
-        .header .header-actions button.outline:hover {
-            background: #f5f5f5;
-        }
-        .header .header-actions .share-btn-text {
-            font-size: 12px;
-            white-space: normal;
-            word-break: break-word;
-            max-width: 280px;
-            text-align: center;
-            line-height: 1.3;
-            padding: 8px 12px;
-        }
-        @media (max-width: 600px) {
-            .header .header-actions .share-btn-text {
-                font-size: 11px;
-                max-width: 180px;
-                padding: 6px 10px;
-            }
-        }
-
         .total-small {
             font-size: 13px;
             color: #888;
@@ -878,13 +560,9 @@
             font-weight: 600;
             white-space: nowrap;
         }
-        .total-small .count {
-            color: #0076ff;
-            font-weight: 900;
-            font-size: 16px;
-        }
+        .total-small .count { color: #0076ff; font-weight: 900; font-size: 16px; }
 
-        /* ===== بطاقة الشحنة ===== */
+        /* بطاقة الشحنة */
         .shipment-card {
             background: #f8fafc;
             border-radius: 14px;
@@ -909,18 +587,9 @@
             font-weight: 700;
             margin-bottom: 8px;
         }
-        .status-waiting {
-            background: #fff8e1;
-            color: #f9a825;
-        }
-        .status-tracking {
-            background: #e3f2fd;
-            color: #0d47a1;
-        }
-        .status-done {
-            background: #e8f5e9;
-            color: #2e7d32;
-        }
+        .status-waiting { background: #fff8e1; color: #f9a825; }
+        .status-tracking { background: #e3f2fd; color: #0d47a1; }
+        .status-done { background: #e8f5e9; color: #2e7d32; }
 
         .shipment-card .summary-row {
             display: flex;
@@ -936,77 +605,30 @@
             gap: 16px;
             flex-wrap: wrap;
         }
-        .shipment-card .summary-row .main-info .name {
-            font-weight: 700;
-            font-size: 16px;
-            color: #0d2137;
-        }
-        .shipment-card .summary-row .main-info .phone {
-            color: #555;
-            direction: ltr;
-            font-size: 14px;
-        }
-        .shipment-card .summary-row .main-info .amount {
-            color: #0076ff;
-            font-weight: 700;
-            font-size: 15px;
-        }
+        .shipment-card .summary-row .main-info .name { font-weight: 700; font-size: 16px; color: #0d2137; }
+        .shipment-card .summary-row .main-info .phone { color: #555; direction: ltr; font-size: 14px; }
+        .shipment-card .summary-row .main-info .amount { color: #0076ff; font-weight: 700; font-size: 15px; }
         .shipment-card .summary-row .last-update {
-            font-size: 12px;
-            color: #888;
-            direction: ltr;
-            background: #eef3f8;
-            padding: 4px 14px;
-            border-radius: 20px;
+            font-size: 12px; color: #888; direction: ltr;
+            background: #eef3f8; padding: 4px 14px; border-radius: 20px;
         }
-
         .shipment-card .status-row {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            margin-top: 6px;
-            padding: 6px 12px;
-            background: #e8f5e9;
-            border-radius: 10px;
+            display: flex; align-items: center; gap: 10px; margin-top: 6px;
+            padding: 6px 12px; background: #e8f5e9; border-radius: 10px;
             border-right: 4px solid #2e7d32;
         }
-        .shipment-card .status-row .status-label {
-            font-size: 13px;
-            color: #555;
-            font-weight: 600;
-        }
-        .shipment-card .status-row .status-value {
-            font-size: 14px;
-            color: #2e7d32;
-            font-weight: 700;
-        }
-        .shipment-card .status-row.loading-status {
-            background: #fff8e1;
-            border-right-color: #f9a825;
-        }
-        .shipment-card .status-row.loading-status .status-value {
-            color: #f9a825;
-        }
-        .shipment-card .status-row.error-status {
-            background: #ffeaea;
-            border-right-color: #dc3545;
-        }
-        .shipment-card .status-row.error-status .status-value {
-            color: #dc3545;
-        }
-        .shipment-card .status-row.info-status {
-            background: #e3f2fd;
-            border-right-color: #0d47a1;
-        }
-        .shipment-card .status-row.info-status .status-value {
-            color: #0d47a1;
-        }
+        .shipment-card .status-row .status-label { font-size: 13px; color: #555; font-weight: 600; }
+        .shipment-card .status-row .status-value { font-size: 14px; color: #2e7d32; font-weight: 700; }
+        .shipment-card .status-row.loading-status { background: #fff8e1; border-right-color: #f9a825; }
+        .shipment-card .status-row.loading-status .status-value { color: #f9a825; }
+        .shipment-card .status-row.error-status { background: #ffeaea; border-right-color: #dc3545; }
+        .shipment-card .status-row.error-status .status-value { color: #dc3545; }
+        .shipment-card .status-row.info-status { background: #e3f2fd; border-right-color: #0d47a1; }
+        .shipment-card .status-row.info-status .status-value { color: #0d47a1; }
 
         .shipment-card .details {
-            margin-top: 14px;
-            padding-top: 14px;
-            border-top: 1px dashed #dce5ed;
-            display: none;
+            margin-top: 14px; padding-top: 14px;
+            border-top: 1px dashed #dce5ed; display: none;
         }
         .shipment-card .details.open {
             display: block;
@@ -1016,1382 +638,388 @@
             from { opacity: 0; transform: translateY(-6px); }
             to { opacity: 1; transform: translateY(0); }
         }
-        .shipment-card .details .info {
-            margin: 5px 0;
-            font-size: 13px;
-            color: #555;
-        }
-        .shipment-card .details .info strong {
-            color: #0d2137;
-            margin-left: 5px;
-        }
-        .shipment-card .actions {
-            margin-top: 12px;
-            display: flex;
-            gap: 8px;
-            flex-wrap: wrap;
-        }
-        .shipment-card .actions button {
-            padding: 6px 20px;
-            border: none;
-            border-radius: 8px;
-            cursor: pointer;
-            font-size: 13px;
-            font-weight: 600;
-            font-family: 'Cairo', sans-serif;
-            transition: 0.2s;
-        }
-        .shipment-card .actions button:active {
-            transform: scale(0.95);
-        }
-        .btn-track {
-            background: #0076ff;
-            color: white;
-        }
-        .btn-track:hover {
-            background: #005dc7;
-        }
-        .btn-add-tracking {
-            background: #28a745;
-            color: white;
-        }
-        .btn-add-tracking:hover {
-            background: #1e7e34;
-        }
-        .btn-delete {
-            background: #dc3545;
-            color: white;
-        }
-        .btn-delete:hover {
-            background: #b02a37;
-        }
+        .shipment-card .details .info { margin: 5px 0; font-size: 13px; color: #555; }
+        .shipment-card .details .info strong { color: #0d2137; margin-left: 5px; }
+        .shipment-card .actions { margin-top: 12px; display: flex; gap: 8px; flex-wrap: wrap; }
 
-        /* ===== المودال ===== */
+        /* المودال */
         .modal {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0,0,0,0.5);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            z-index: 1000;
-            padding: 16px;
-            backdrop-filter: blur(6px);
-            -webkit-backdrop-filter: blur(6px);
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.5); display: flex; justify-content: center;
+            align-items: center; z-index: 2000; padding: 16px;
+            backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px);
         }
         .modal-content {
-            background: white;
-            border-radius: 20px;
-            padding: 28px 25px 25px;
-            max-width: 600px;
-            width: 100%;
-            max-height: 85vh;
-            overflow-y: auto;
-            position: relative;
-            animation: modalIn 0.3s ease;
+            background: white; border-radius: 20px; padding: 28px 25px 25px;
+            max-width: 600px; width: 100%; max-height: 85vh; overflow-y: auto;
+            position: relative; animation: modalIn 0.3s ease;
             box-shadow: 0 20px 60px rgba(0,0,0,0.2);
         }
         @keyframes modalIn {
             from { opacity: 0; transform: translateY(30px) scale(0.96); }
             to { opacity: 1; transform: translateY(0) scale(1); }
         }
-        .modal-content h3 {
-            margin-bottom: 20px;
-            text-align: center;
-            font-size: 22px;
-            font-weight: 700;
-            color: #0d2137;
-        }
-        .modal-content h3 i {
-            color: #0076ff;
-            margin-left: 8px;
-        }
+        .modal-content h3 { margin-bottom: 20px; text-align: center; font-size: 22px; font-weight: 700; color: #0d2137; }
+        .modal-content h3 i { color: #0076ff; margin-left: 8px; }
         .close-btn {
-            position: absolute;
-            top: 16px;
-            left: 20px;
-            font-size: 28px;
-            cursor: pointer;
-            color: #aaa;
-            line-height: 1;
-            transition: 0.2s;
+            position: absolute; top: 16px; left: 20px; font-size: 28px;
+            cursor: pointer; color: #aaa; line-height: 1; transition: 0.2s;
         }
-        .close-btn:hover {
-            color: #333;
-            transform: rotate(90deg);
-        }
+        .close-btn:hover { color: #333; transform: rotate(90deg); }
 
-        .form-group {
-            margin-bottom: 16px;
-            text-align: right;
+        .form-group { margin-bottom: 16px; text-align: right; }
+        .form-group label { display: block; margin-bottom: 5px; font-weight: 700; color: #0d2137; font-size: 14px; }
+        .form-group input, .form-group textarea, .form-group select {
+            width: 100%; padding: 12px 15px; border: 2px solid #e8ecf0;
+            border-radius: 10px; font-size: 14px; font-family: 'Cairo', sans-serif;
+            background: #f8fafc; transition: 0.3s;
         }
-        .form-group label {
-            display: block;
-            margin-bottom: 5px;
-            font-weight: 700;
-            color: #0d2137;
-            font-size: 14px;
-        }
-        .form-group input,
-        .form-group textarea,
-        .form-group select {
-            width: 100%;
-            padding: 12px 15px;
-            border: 2px solid #e8ecf0;
-            border-radius: 10px;
-            font-size: 14px;
-            font-family: 'Cairo', sans-serif;
-            background: #f8fafc;
-            transition: 0.3s;
-        }
-        .form-group input:focus,
-        .form-group textarea:focus,
-        .form-group select:focus {
-            border-color: #0076ff;
-            outline: none;
-            background: white;
+        .form-group input:focus, .form-group textarea:focus, .form-group select:focus {
+            border-color: #0076ff; outline: none; background: white;
             box-shadow: 0 0 0 4px rgba(0, 118, 255, 0.08);
         }
-        .form-group textarea {
-            height: 80px;
-            resize: vertical;
-        }
+        .form-group textarea { height: 80px; resize: vertical; }
 
-        .modal-content .submit-btn {
-            width: 100%;
-            padding: 14px;
-            background: #0076ff;
-            color: white;
-            border: none;
-            border-radius: 12px;
-            font-size: 16px;
-            font-weight: 700;
-            cursor: pointer;
-            font-family: 'Cairo', sans-serif;
-            transition: 0.3s;
-            box-shadow: 0 4px 16px rgba(0, 118, 255, 0.3);
-            margin-top: 4px;
-        }
-        .modal-content .submit-btn:active {
-            transform: scale(0.97);
-        }
-        .modal-content .submit-btn.green {
-            background: #28a745;
-            box-shadow: 0 4px 16px rgba(40, 167, 69, 0.3);
-        }
-        .modal-content .submit-btn.gray {
-            background: #999;
-            box-shadow: none;
-        }
-
-        /* ===== التتبع ===== */
+        /* التتبع */
         .timeline-item {
-            border-right: 3px solid #0076ff;
-            padding: 12px 16px 12px 0;
-            margin-right: 10px;
-            margin-bottom: 14px;
-            background: #f8fafc;
-            border-radius: 0 10px 10px 0;
-            transition: 0.2s;
+            border-right: 3px solid #0076ff; padding: 12px 16px 12px 0;
+            margin-right: 10px; margin-bottom: 14px; background: #f8fafc;
+            border-radius: 0 10px 10px 0; transition: 0.2s;
         }
-        .timeline-item:hover {
-            background: #f0f6fe;
-        }
-        .timeline-item .time {
-            color: #999;
-            font-size: 13px;
-        }
-        .timeline-item .event {
-            font-weight: 700;
-            color: #0d2137;
-            margin: 5px 0;
-        }
-        .timeline-item .location {
-            color: #666;
-            font-size: 14px;
-        }
-        .timeline-item .problem {
-            color: #dc3545;
-            font-size: 13px;
-            margin-top: 4px;
-        }
+        .timeline-item:hover { background: #f0f6fe; }
+        .timeline-item .time { color: #999; font-size: 13px; }
+        .timeline-item .event { font-weight: 700; color: #0d2137; margin: 5px 0; }
+        .timeline-item .location { color: #666; font-size: 14px; }
+        .timeline-item .problem { color: #dc3545; font-size: 13px; margin-top: 4px; }
 
-        /* ===== العملاء ===== */
+        /* العملاء */
         .client-card {
-            background: #f8fafc;
-            padding: 14px 18px;
-            border-radius: 10px;
-            margin-bottom: 10px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            border: 1px solid #e8ecf0;
-            transition: 0.2s;
+            background: #f8fafc; padding: 14px 18px; border-radius: 10px;
+            margin-bottom: 10px; display: flex; justify-content: space-between;
+            align-items: center; border: 1px solid #e8ecf0; transition: 0.2s;
         }
-        .client-card:hover {
-            background: #f0f4fa;
-        }
-        .client-card .client-info {
-            flex: 1;
-        }
-        .client-card .client-info strong {
-            font-size: 16px;
-            color: #0d2137;
-        }
-        .client-card .client-info .phone {
-            color: #666;
-            font-size: 14px;
-            direction: ltr;
-        }
-        .client-card .client-info .created {
-            font-size: 12px;
-            color: #aaa;
-        }
-        .client-card .client-actions button {
-            background: #dc3545;
-            color: white;
-            border: none;
-            padding: 6px 16px;
-            border-radius: 8px;
-            cursor: pointer;
-            font-family: 'Cairo', sans-serif;
-            font-size: 13px;
-            font-weight: 600;
-            transition: 0.2s;
-        }
-        .client-card .client-actions button:active {
-            transform: scale(0.95);
-        }
+        .client-card:hover { background: #f0f4fa; }
+        .client-card .client-info { flex: 1; }
+        .client-card .client-info strong { font-size: 16px; color: #0d2137; }
+        .client-card .client-info .phone { color: #666; font-size: 14px; direction: ltr; }
+        .client-card .client-info .created { font-size: 12px; color: #aaa; }
 
-        /* ===== أخرى ===== */
-        .loading {
-            text-align: center;
-            padding: 30px 0;
-        }
+        /* أخرى */
+        .loading { text-align: center; padding: 30px 0; }
         .spinner {
-            border: 4px solid #e8ecf0;
-            border-top: 4px solid #0076ff;
-            border-radius: 50%;
-            width: 40px;
-            height: 40px;
-            animation: spin 1s linear infinite;
-            margin: 0 auto 10px;
+            border: 4px solid #e8ecf0; border-top: 4px solid #0076ff;
+            border-radius: 50%; width: 40px; height: 40px;
+            animation: spin 1s linear infinite; margin: 0 auto 10px;
         }
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-        .empty-state {
-            text-align: center;
-            padding: 40px 20px;
-            color: #aaa;
-        }
-        .empty-state .icon {
-            font-size: 56px;
-            margin-bottom: 12px;
-        }
-        .empty-state button {
-            margin-top: 12px;
-            padding: 10px 30px;
-            background: #0076ff;
-            color: white;
-            border: none;
-            border-radius: 10px;
-            font-size: 15px;
-            cursor: pointer;
-            font-family: 'Cairo', sans-serif;
-            box-shadow: 0 4px 12px rgba(0, 118, 255, 0.3);
-            transition: 0.2s;
-        }
-        .empty-state button:active {
-            transform: scale(0.95);
-        }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        .empty-state { text-align: center; padding: 40px 20px; color: #aaa; }
+        .empty-state .icon { font-size: 56px; margin-bottom: 12px; }
 
-        .error-box {
-            background: #fff3f3;
-            border: 1px solid #ffcdd2;
-            border-radius: 12px;
-            padding: 20px;
-            text-align: center;
-            margin: 20px 0;
-            color: #d32f2f;
-        }
-        .error-box .icon {
-            font-size: 48px;
-            display: block;
-            margin-bottom: 10px;
-        }
-        .error-box .title {
-            font-weight: 700;
-            font-size: 16px;
-            margin-bottom: 4px;
-        }
-        .error-box .sub {
-            font-size: 13px;
-            color: #666;
-        }
-        .error-box button {
-            margin-top: 12px;
-            padding: 8px 24px;
-            background: #0076ff;
-            color: white;
-            border: none;
-            border-radius: 8px;
-            cursor: pointer;
-            font-family: 'Cairo', sans-serif;
-            transition: 0.2s;
-        }
-        .error-box button:active {
-            transform: scale(0.95);
-        }
+        .two-columns { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+        .text-center { text-align: center; }
 
-        .toast {
-            position: fixed;
-            bottom: 24px;
-            left: 50%;
-            transform: translateX(-50%);
-            background: #0d2137;
-            color: white;
-            padding: 12px 28px;
-            border-radius: 14px;
-            font-size: 14px;
-            z-index: 9999;
-            animation: toastIn 0.3s ease;
-            max-width: 90%;
-            text-align: center;
-            font-family: 'Cairo', sans-serif;
-            box-shadow: 0 8px 30px rgba(0,0,0,0.2);
-        }
-        .toast.success {
-            background: #28a745;
-        }
-        .toast.error {
-            background: #dc3545;
-        }
-        @keyframes toastIn {
-            from { opacity: 0; transform: translateX(-50%) translateY(20px); }
-            to { opacity: 1; transform: translateX(-50%) translateY(0); }
-        }
-
-        .two-columns {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 12px;
-        }
-        .two-columns .form-group {
-            margin-bottom: 0;
-        }
-        @media (max-width: 500px) {
-            .two-columns {
-                grid-template-columns: 1fr;
-            }
-        }
-
-        .debug-box {
-            background: #f8fafc;
-            padding: 10px;
-            border-radius: 8px;
-            margin-top: 10px;
-            font-size: 11px;
-            color: #666;
-            border: 1px dashed #ddd;
-            word-break: break-all;
-            text-align: left;
-            direction: ltr;
-            max-height: 150px;
-            overflow: auto;
-        }
-
-        .text-center {
-            text-align: center;
-        }
-        .mt-10 { margin-top: 10px; }
-        .mb-10 { margin-bottom: 10px; }
-        .glow-text { color: #0076ff; }
-
-        /* ===== زر EUX المخصص ===== */
-        .btn-eux {
-            --h-button: 48px;
-            --w-button: auto;
+        /* ============ أزرار EUX ============ */
+        .btn-eux, .btn-eux-green, .btn-eux-orange, .btn-eux-red, .btn-eux-outline {
             --round: 0.75rem;
-            cursor: pointer;
-            position: relative;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            overflow: hidden;
-            transition: all 0.25s ease;
-            background: radial-gradient(
-                65.28% 65.28% at 50% 100%,
-                rgba(0, 118, 255, 0.6) 0%,
-                rgba(0, 118, 255, 0) 100%
-              ),
-              linear-gradient(0deg, #0076ff, #0076ff);
-            border-radius: var(--round);
-            border: none;
-            outline: none;
-            padding: 12px 18px;
-            font-family: 'Cairo', sans-serif;
-            font-weight: 600;
-            font-size: 14px;
-            color: white;
+            cursor: pointer; position: relative; display: inline-flex;
+            align-items: center; justify-content: center; overflow: hidden;
+            transition: all 0.25s ease; border-radius: var(--round);
+            border: none; outline: none; padding: 12px 18px;
+            font-family: 'Cairo', sans-serif; font-weight: 600; font-size: 14px; color: white;
+        }
+        .btn-eux {
+            background: radial-gradient(65.28% 65.28% at 50% 100%, rgba(0, 118, 255, 0.6) 0%, rgba(0, 118, 255, 0) 100%), linear-gradient(0deg, #0076ff, #0076ff);
             box-shadow: 0 4px 15px rgba(0, 118, 255, 0.25);
         }
-        .btn-eux::before,
-        .btn-eux::after {
-            content: "";
-            position: absolute;
-            inset: var(--space);
+        .btn-eux-green {
+            background: radial-gradient(65.28% 65.28% at 50% 100%, rgba(40, 167, 69, 0.6) 0%, rgba(40, 167, 69, 0) 100%), linear-gradient(0deg, #28a745, #28a745);
+            box-shadow: 0 4px 15px rgba(40, 167, 69, 0.25);
+        }
+        .btn-eux-orange {
+            background: radial-gradient(65.28% 65.28% at 50% 100%, rgba(255, 152, 0, 0.6) 0%, rgba(255, 152, 0, 0) 100%), linear-gradient(0deg, #ff9800, #ff9800);
+            box-shadow: 0 4px 15px rgba(255, 152, 0, 0.25);
+        }
+        .btn-eux-red {
+            background: radial-gradient(65.28% 65.28% at 50% 100%, rgba(220, 53, 69, 0.6) 0%, rgba(220, 53, 69, 0) 100%), linear-gradient(0deg, #dc3545, #dc3545);
+            box-shadow: 0 4px 15px rgba(220, 53, 69, 0.25);
+        }
+        .btn-eux-outline {
+            background: transparent; border: 1.5px solid #ddd; color: #0d2137; box-shadow: none;
+        }
+        .btn-eux-outline:hover { background: #f5f5f5; }
+        .btn-eux:active, .btn-eux-green:active, .btn-eux-orange:active, .btn-eux-red:active, .btn-eux-outline:active { transform: scale(0.95); }
+        .btn-eux .inner, .btn-eux-green .inner, .btn-eux-orange .inner, .btn-eux-red .inner, .btn-eux-outline .inner {
+            z-index: 2; gap: 6px; position: relative; width: 100%; color: inherit;
+            display: inline-flex; align-items: center; justify-content: center;
+            font-size: 16px; font-weight: 500; line-height: 1.5;
+        }
+        .btn-eux .fold, .btn-eux-green .fold, .btn-eux-orange .fold, .btn-eux-red .fold, .btn-eux-outline .fold {
+            z-index: 1; position: absolute; top: 0; right: 0;
+            height: 1rem; width: 1rem; display: inline-block;
             transition: all 0.5s ease-in-out;
-            border-radius: calc(var(--round) - var(--space));
-            z-index: 0;
+            border-bottom-left-radius: 0.5rem; border-top-right-radius: var(--round);
         }
-        .btn-eux::before {
-            --space: 1px;
-            background: linear-gradient(
-                177.95deg,
-                rgba(255, 255, 255, 0.19) 0%,
-                rgba(255, 255, 255, 0) 100%
-            );
-        }
-        .btn-eux::after {
-            --space: 2px;
-            background: radial-gradient(
-                65.28% 65.28% at 50% 100%,
-                rgba(0, 118, 255, 0.6) 0%,
-                rgba(0, 118, 255, 0) 100%
-              ),
-              linear-gradient(0deg, #0076ff, #0076ff);
-        }
-        .btn-eux:active {
-            transform: scale(0.95);
-        }
-        .btn-eux .fold {
-            z-index: 1;
-            position: absolute;
-            top: 0;
-            right: 0;
-            height: 1rem;
-            width: 1rem;
-            display: inline-block;
-            transition: all 0.5s ease-in-out;
-            background: radial-gradient(
-                100% 75% at 55%,
-                rgba(0, 118, 255, 0.6) 0%,
-                rgba(0, 118, 255, 0) 100%
-            );
-            box-shadow: 0 0 3px rgba(0, 0, 0, 0.2);
-            border-bottom-left-radius: 0.5rem;
-            border-top-right-radius: var(--round);
-        }
-        .btn-eux .fold::after {
-            content: "";
-            position: absolute;
-            top: 0;
-            right: 0;
-            width: 150%;
-            height: 150%;
-            transform: rotate(45deg) translateX(0%) translateY(-18px);
-            background-color: #e8e8e8;
-            pointer-events: none;
-        }
-        .btn-eux:hover .fold {
-            margin-top: -1rem;
-            margin-right: -1rem;
-        }
-        .btn-eux .points_wrapper {
-            overflow: hidden;
-            width: 100%;
-            height: 100%;
-            pointer-events: none;
-            position: absolute;
-            z-index: 1;
-        }
-        .btn-eux .points_wrapper .point {
-            bottom: -10px;
-            position: absolute;
-            animation: floating-points infinite ease-in-out;
-            pointer-events: none;
-            width: 2px;
-            height: 2px;
-            background-color: #fff;
-            border-radius: 9999px;
+        .btn-eux .fold { background: radial-gradient(100% 75% at 55%, rgba(0, 118, 255, 0.6) 0%, rgba(0, 118, 255, 0) 100%); box-shadow: 0 0 3px rgba(0,0,0,0.2); }
+        .btn-eux-green .fold { background: radial-gradient(100% 75% at 55%, rgba(40, 167, 69, 0.6) 0%, rgba(40, 167, 69, 0) 100%); box-shadow: 0 0 3px rgba(0,0,0,0.2); }
+        .btn-eux-orange .fold { background: radial-gradient(100% 75% at 55%, rgba(255, 152, 0, 0.6) 0%, rgba(255, 152, 0, 0) 100%); box-shadow: 0 0 3px rgba(0,0,0,0.2); }
+        .btn-eux-red .fold { background: radial-gradient(100% 75% at 55%, rgba(220, 53, 69, 0.6) 0%, rgba(220, 53, 69, 0) 100%); box-shadow: 0 0 3px rgba(0,0,0,0.2); }
+        .btn-eux-outline .fold { background: radial-gradient(100% 75% at 55%, rgba(13, 33, 55, 0.1) 0%, rgba(13, 33, 55, 0) 100%); box-shadow: 0 0 3px rgba(0,0,0,0.1); }
+        .btn-eux:hover .fold, .btn-eux-green:hover .fold, .btn-eux-orange:hover .fold, .btn-eux-red:hover .fold, .btn-eux-outline:hover .fold { margin-top: -1rem; margin-right: -1rem; }
+
+        .points_wrapper { overflow: hidden; width: 100%; height: 100%; pointer-events: none; position: absolute; z-index: 1; }
+        .points_wrapper .point {
+            bottom: -10px; position: absolute; animation: floating-points infinite ease-in-out;
+            pointer-events: none; width: 2px; height: 2px; background-color: #fff; border-radius: 9999px;
         }
         @keyframes floating-points {
             0% { transform: translateY(0); }
             85% { opacity: 0; }
             100% { transform: translateY(-55px); opacity: 0; }
         }
-        .btn-eux .points_wrapper .point:nth-child(1) { left: 10%; opacity: 1; animation-duration: 2.35s; animation-delay: 0.2s; }
-        .btn-eux .points_wrapper .point:nth-child(2) { left: 30%; opacity: 0.7; animation-duration: 2.5s; animation-delay: 0.5s; }
-        .btn-eux .points_wrapper .point:nth-child(3) { left: 25%; opacity: 0.8; animation-duration: 2.2s; animation-delay: 0.1s; }
-        .btn-eux .points_wrapper .point:nth-child(4) { left: 44%; opacity: 0.6; animation-duration: 2.05s; }
-        .btn-eux .points_wrapper .point:nth-child(5) { left: 50%; opacity: 1; animation-duration: 1.9s; }
-        .btn-eux .points_wrapper .point:nth-child(6) { left: 75%; opacity: 0.5; animation-duration: 1.5s; animation-delay: 1.5s; }
-        .btn-eux .points_wrapper .point:nth-child(7) { left: 88%; opacity: 0.9; animation-duration: 2.2s; animation-delay: 0.2s; }
-        .btn-eux .points_wrapper .point:nth-child(8) { left: 58%; opacity: 0.8; animation-duration: 2.25s; animation-delay: 0.2s; }
-        .btn-eux .points_wrapper .point:nth-child(9) { left: 98%; opacity: 0.6; animation-duration: 2.6s; animation-delay: 0.1s; }
-        .btn-eux .points_wrapper .point:nth-child(10) { left: 65%; opacity: 1; animation-duration: 2.5s; animation-delay: 0.2s; }
-        .btn-eux .inner {
-            z-index: 2;
-            gap: 6px;
-            position: relative;
-            width: 100%;
-            color: white;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 16px;
-            font-weight: 500;
-            line-height: 1.5;
-            transition: color 0.2s ease-in-out;
+        .points_wrapper .point:nth-child(1) { left: 10%; opacity: 1; animation-duration: 2.35s; animation-delay: 0.2s; }
+        .points_wrapper .point:nth-child(2) { left: 30%; opacity: 0.7; animation-duration: 2.5s; animation-delay: 0.5s; }
+        .points_wrapper .point:nth-child(3) { left: 25%; opacity: 0.8; animation-duration: 2.2s; animation-delay: 0.1s; }
+        .points_wrapper .point:nth-child(4) { left: 44%; opacity: 0.6; animation-duration: 2.05s; }
+        .points_wrapper .point:nth-child(5) { left: 50%; opacity: 1; animation-duration: 1.9s; }
+        .points_wrapper .point:nth-child(6) { left: 75%; opacity: 0.5; animation-duration: 1.5s; animation-delay: 1.5s; }
+        .points_wrapper .point:nth-child(7) { left: 88%; opacity: 0.9; animation-duration: 2.2s; animation-delay: 0.2s; }
+        .points_wrapper .point:nth-child(8) { left: 58%; opacity: 0.8; animation-duration: 2.25s; animation-delay: 0.2s; }
+        .points_wrapper .point:nth-child(9) { left: 98%; opacity: 0.6; animation-duration: 2.6s; animation-delay: 0.1s; }
+        .points_wrapper .point:nth-child(10) { left: 65%; opacity: 1; animation-duration: 2.5s; animation-delay: 0.2s; }
+
+        .btn-eux-outline .points_wrapper .point { background-color: #0d2137; }
+
+        .toast {
+            position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%);
+            background: #0d2137; color: white; padding: 12px 28px; border-radius: 14px;
+            font-size: 14px; z-index: 9999; animation: toastIn 0.3s ease;
+            max-width: 90%; text-align: center; font-family: 'Cairo', sans-serif;
+            box-shadow: 0 8px 30px rgba(0,0,0,0.2);
         }
-        .btn-eux .inner svg.icon {
-            width: 18px;
-            height: 18px;
-            transition: fill 0.1s linear;
-        }
-        .btn-eux:focus svg.icon { fill: white; }
-        .btn-eux:hover svg.icon {
-            fill: transparent;
-            animation: dasharray 1s linear forwards, filled 0.1s linear forwards 0.95s;
-        }
-        @keyframes dasharray {
-            from { stroke-dasharray: 0 0 0 0; }
-            to { stroke-dasharray: 68 68 0 0; }
-        }
-        @keyframes filled {
-            to { fill: white; }
+        .toast.success { background: #28a745; }
+        .toast.error { background: #dc3545; }
+        @keyframes toastIn {
+            from { opacity: 0; transform: translateX(-50%) translateY(20px); }
+            to { opacity: 1; transform: translateX(-50%) translateY(0); }
         }
 
-        /* ===== زر EUX الأخضر ===== */
-        .btn-eux-green {
-            --h-button: 48px;
-            --w-button: auto;
-            --round: 0.75rem;
-            cursor: pointer;
-            position: relative;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            overflow: hidden;
-            transition: all 0.25s ease;
-            background: radial-gradient(
-                65.28% 65.28% at 50% 100%,
-                rgba(40, 167, 69, 0.6) 0%,
-                rgba(40, 167, 69, 0) 100%
-              ),
-              linear-gradient(0deg, #28a745, #28a745);
-            border-radius: var(--round);
-            border: none;
-            outline: none;
-            padding: 12px 18px;
-            font-family: 'Cairo', sans-serif;
-            font-weight: 600;
-            font-size: 14px;
-            color: white;
-            box-shadow: 0 4px 15px rgba(40, 167, 69, 0.25);
-        }
-        .btn-eux-green::before,
-        .btn-eux-green::after {
-            content: "";
-            position: absolute;
-            inset: var(--space);
-            transition: all 0.5s ease-in-out;
-            border-radius: calc(var(--round) - var(--space));
-            z-index: 0;
-        }
-        .btn-eux-green::before {
-            --space: 1px;
-            background: linear-gradient(
-                177.95deg,
-                rgba(255, 255, 255, 0.19) 0%,
-                rgba(255, 255, 255, 0) 100%
-            );
-        }
-        .btn-eux-green::after {
-            --space: 2px;
-            background: radial-gradient(
-                65.28% 65.28% at 50% 100%,
-                rgba(40, 167, 69, 0.6) 0%,
-                rgba(40, 167, 69, 0) 100%
-              ),
-              linear-gradient(0deg, #28a745, #28a745);
-        }
-        .btn-eux-green:active { transform: scale(0.95); }
-        .btn-eux-green .fold {
-            z-index: 1;
-            position: absolute;
-            top: 0;
-            right: 0;
-            height: 1rem;
-            width: 1rem;
-            display: inline-block;
-            transition: all 0.5s ease-in-out;
-            background: radial-gradient(
-                100% 75% at 55%,
-                rgba(40, 167, 69, 0.6) 0%,
-                rgba(40, 167, 69, 0) 100%
-            );
-            box-shadow: 0 0 3px rgba(0, 0, 0, 0.2);
-            border-bottom-left-radius: 0.5rem;
-            border-top-right-radius: var(--round);
-        }
-        .btn-eux-green .fold::after {
-            content: "";
-            position: absolute;
-            top: 0;
-            right: 0;
-            width: 150%;
-            height: 150%;
-            transform: rotate(45deg) translateX(0%) translateY(-18px);
-            background-color: #e8e8e8;
-            pointer-events: none;
-        }
-        .btn-eux-green:hover .fold {
-            margin-top: -1rem;
-            margin-right: -1rem;
-        }
-        .btn-eux-green .points_wrapper {
-            overflow: hidden;
-            width: 100%;
-            height: 100%;
-            pointer-events: none;
-            position: absolute;
-            z-index: 1;
-        }
-        .btn-eux-green .points_wrapper .point {
-            bottom: -10px;
-            position: absolute;
-            animation: floating-points infinite ease-in-out;
-            pointer-events: none;
-            width: 2px;
-            height: 2px;
-            background-color: #fff;
-            border-radius: 9999px;
-        }
-        .btn-eux-green .points_wrapper .point:nth-child(1) { left: 10%; opacity: 1; animation-duration: 2.35s; animation-delay: 0.2s; }
-        .btn-eux-green .points_wrapper .point:nth-child(2) { left: 30%; opacity: 0.7; animation-duration: 2.5s; animation-delay: 0.5s; }
-        .btn-eux-green .points_wrapper .point:nth-child(3) { left: 25%; opacity: 0.8; animation-duration: 2.2s; animation-delay: 0.1s; }
-        .btn-eux-green .points_wrapper .point:nth-child(4) { left: 44%; opacity: 0.6; animation-duration: 2.05s; }
-        .btn-eux-green .points_wrapper .point:nth-child(5) { left: 50%; opacity: 1; animation-duration: 1.9s; }
-        .btn-eux-green .points_wrapper .point:nth-child(6) { left: 75%; opacity: 0.5; animation-duration: 1.5s; animation-delay: 1.5s; }
-        .btn-eux-green .points_wrapper .point:nth-child(7) { left: 88%; opacity: 0.9; animation-duration: 2.2s; animation-delay: 0.2s; }
-        .btn-eux-green .points_wrapper .point:nth-child(8) { left: 58%; opacity: 0.8; animation-duration: 2.25s; animation-delay: 0.2s; }
-        .btn-eux-green .points_wrapper .point:nth-child(9) { left: 98%; opacity: 0.6; animation-duration: 2.6s; animation-delay: 0.1s; }
-        .btn-eux-green .points_wrapper .point:nth-child(10) { left: 65%; opacity: 1; animation-duration: 2.5s; animation-delay: 0.2s; }
-        .btn-eux-green .inner {
-            z-index: 2;
-            gap: 6px;
-            position: relative;
-            width: 100%;
-            color: white;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 16px;
-            font-weight: 500;
-            line-height: 1.5;
-            transition: color 0.2s ease-in-out;
-        }
-        .btn-eux-green .inner svg.icon {
-            width: 18px;
-            height: 18px;
-            transition: fill 0.1s linear;
-        }
-        .btn-eux-green:focus svg.icon { fill: white; }
-        .btn-eux-green:hover svg.icon {
-            fill: transparent;
-            animation: dasharray 1s linear forwards, filled 0.1s linear forwards 0.95s;
-        }
-
-        /* ===== زر EUX البرتقالي ===== */
-        .btn-eux-orange {
-            --h-button: 48px;
-            --w-button: auto;
-            --round: 0.75rem;
-            cursor: pointer;
-            position: relative;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            overflow: hidden;
-            transition: all 0.25s ease;
-            background: radial-gradient(
-                65.28% 65.28% at 50% 100%,
-                rgba(255, 152, 0, 0.6) 0%,
-                rgba(255, 152, 0, 0) 100%
-              ),
-              linear-gradient(0deg, #ff9800, #ff9800);
-            border-radius: var(--round);
-            border: none;
-            outline: none;
-            padding: 12px 18px;
-            font-family: 'Cairo', sans-serif;
-            font-weight: 600;
-            font-size: 14px;
-            color: white;
-            box-shadow: 0 4px 15px rgba(255, 152, 0, 0.25);
-        }
-        .btn-eux-orange::before,
-        .btn-eux-orange::after {
-            content: "";
-            position: absolute;
-            inset: var(--space);
-            transition: all 0.5s ease-in-out;
-            border-radius: calc(var(--round) - var(--space));
-            z-index: 0;
-        }
-        .btn-eux-orange::before {
-            --space: 1px;
-            background: linear-gradient(
-                177.95deg,
-                rgba(255, 255, 255, 0.19) 0%,
-                rgba(255, 255, 255, 0) 100%
-            );
-        }
-        .btn-eux-orange::after {
-            --space: 2px;
-            background: radial-gradient(
-                65.28% 65.28% at 50% 100%,
-                rgba(255, 152, 0, 0.6) 0%,
-                rgba(255, 152, 0, 0) 100%
-              ),
-              linear-gradient(0deg, #ff9800, #ff9800);
-        }
-        .btn-eux-orange:active { transform: scale(0.95); }
-        .btn-eux-orange .fold {
-            z-index: 1;
-            position: absolute;
-            top: 0;
-            right: 0;
-            height: 1rem;
-            width: 1rem;
-            display: inline-block;
-            transition: all 0.5s ease-in-out;
-            background: radial-gradient(
-                100% 75% at 55%,
-                rgba(255, 152, 0, 0.6) 0%,
-                rgba(255, 152, 0, 0) 100%
-            );
-            box-shadow: 0 0 3px rgba(0, 0, 0, 0.2);
-            border-bottom-left-radius: 0.5rem;
-            border-top-right-radius: var(--round);
-        }
-        .btn-eux-orange .fold::after {
-            content: "";
-            position: absolute;
-            top: 0;
-            right: 0;
-            width: 150%;
-            height: 150%;
-            transform: rotate(45deg) translateX(0%) translateY(-18px);
-            background-color: #e8e8e8;
-            pointer-events: none;
-        }
-        .btn-eux-orange:hover .fold {
-            margin-top: -1rem;
-            margin-right: -1rem;
-        }
-        .btn-eux-orange .points_wrapper {
-            overflow: hidden;
-            width: 100%;
-            height: 100%;
-            pointer-events: none;
-            position: absolute;
-            z-index: 1;
-        }
-        .btn-eux-orange .points_wrapper .point {
-            bottom: -10px;
-            position: absolute;
-            animation: floating-points infinite ease-in-out;
-            pointer-events: none;
-            width: 2px;
-            height: 2px;
-            background-color: #fff;
-            border-radius: 9999px;
-        }
-        .btn-eux-orange .points_wrapper .point:nth-child(1) { left: 10%; opacity: 1; animation-duration: 2.35s; animation-delay: 0.2s; }
-        .btn-eux-orange .points_wrapper .point:nth-child(2) { left: 30%; opacity: 0.7; animation-duration: 2.5s; animation-delay: 0.5s; }
-        .btn-eux-orange .points_wrapper .point:nth-child(3) { left: 25%; opacity: 0.8; animation-duration: 2.2s; animation-delay: 0.1s; }
-        .btn-eux-orange .points_wrapper .point:nth-child(4) { left: 44%; opacity: 0.6; animation-duration: 2.05s; }
-        .btn-eux-orange .points_wrapper .point:nth-child(5) { left: 50%; opacity: 1; animation-duration: 1.9s; }
-        .btn-eux-orange .points_wrapper .point:nth-child(6) { left: 75%; opacity: 0.5; animation-duration: 1.5s; animation-delay: 1.5s; }
-        .btn-eux-orange .points_wrapper .point:nth-child(7) { left: 88%; opacity: 0.9; animation-duration: 2.2s; animation-delay: 0.2s; }
-        .btn-eux-orange .points_wrapper .point:nth-child(8) { left: 58%; opacity: 0.8; animation-duration: 2.25s; animation-delay: 0.2s; }
-        .btn-eux-orange .points_wrapper .point:nth-child(9) { left: 98%; opacity: 0.6; animation-duration: 2.6s; animation-delay: 0.1s; }
-        .btn-eux-orange .points_wrapper .point:nth-child(10) { left: 65%; opacity: 1; animation-duration: 2.5s; animation-delay: 0.2s; }
-        .btn-eux-orange .inner {
-            z-index: 2;
-            gap: 6px;
-            position: relative;
-            width: 100%;
-            color: white;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 16px;
-            font-weight: 500;
-            line-height: 1.5;
-            transition: color 0.2s ease-in-out;
-        }
-        .btn-eux-orange .inner svg.icon {
-            width: 18px;
-            height: 18px;
-            transition: fill 0.1s linear;
-        }
-        .btn-eux-orange:focus svg.icon { fill: white; }
-        .btn-eux-orange:hover svg.icon {
-            fill: transparent;
-            animation: dasharray 1s linear forwards, filled 0.1s linear forwards 0.95s;
-        }
-
-        /* ===== زر EUX أحمر ===== */
-        .btn-eux-red {
-            --h-button: 48px;
-            --w-button: auto;
-            --round: 0.75rem;
-            cursor: pointer;
-            position: relative;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            overflow: hidden;
-            transition: all 0.25s ease;
-            background: radial-gradient(
-                65.28% 65.28% at 50% 100%,
-                rgba(220, 53, 69, 0.6) 0%,
-                rgba(220, 53, 69, 0) 100%
-              ),
-              linear-gradient(0deg, #dc3545, #dc3545);
-            border-radius: var(--round);
-            border: none;
-            outline: none;
-            padding: 12px 18px;
-            font-family: 'Cairo', sans-serif;
-            font-weight: 600;
-            font-size: 14px;
-            color: white;
-            box-shadow: 0 4px 15px rgba(220, 53, 69, 0.25);
-        }
-        .btn-eux-red::before,
-        .btn-eux-red::after {
-            content: "";
-            position: absolute;
-            inset: var(--space);
-            transition: all 0.5s ease-in-out;
-            border-radius: calc(var(--round) - var(--space));
-            z-index: 0;
-        }
-        .btn-eux-red::before {
-            --space: 1px;
-            background: linear-gradient(
-                177.95deg,
-                rgba(255, 255, 255, 0.19) 0%,
-                rgba(255, 255, 255, 0) 100%
-            );
-        }
-        .btn-eux-red::after {
-            --space: 2px;
-            background: radial-gradient(
-                65.28% 65.28% at 50% 100%,
-                rgba(220, 53, 69, 0.6) 0%,
-                rgba(220, 53, 69, 0) 100%
-              ),
-              linear-gradient(0deg, #dc3545, #dc3545);
-        }
-        .btn-eux-red:active { transform: scale(0.95); }
-        .btn-eux-red .fold {
-            z-index: 1;
-            position: absolute;
-            top: 0;
-            right: 0;
-            height: 1rem;
-            width: 1rem;
-            display: inline-block;
-            transition: all 0.5s ease-in-out;
-            background: radial-gradient(
-                100% 75% at 55%,
-                rgba(220, 53, 69, 0.6) 0%,
-                rgba(220, 53, 69, 0) 100%
-            );
-            box-shadow: 0 0 3px rgba(0, 0, 0, 0.2);
-            border-bottom-left-radius: 0.5rem;
-            border-top-right-radius: var(--round);
-        }
-        .btn-eux-red .fold::after {
-            content: "";
-            position: absolute;
-            top: 0;
-            right: 0;
-            width: 150%;
-            height: 150%;
-            transform: rotate(45deg) translateX(0%) translateY(-18px);
-            background-color: #e8e8e8;
-            pointer-events: none;
-        }
-        .btn-eux-red:hover .fold {
-            margin-top: -1rem;
-            margin-right: -1rem;
-        }
-        .btn-eux-red .points_wrapper {
-            overflow: hidden;
-            width: 100%;
-            height: 100%;
-            pointer-events: none;
-            position: absolute;
-            z-index: 1;
-        }
-        .btn-eux-red .points_wrapper .point {
-            bottom: -10px;
-            position: absolute;
-            animation: floating-points infinite ease-in-out;
-            pointer-events: none;
-            width: 2px;
-            height: 2px;
-            background-color: #fff;
-            border-radius: 9999px;
-        }
-        .btn-eux-red .points_wrapper .point:nth-child(1) { left: 10%; opacity: 1; animation-duration: 2.35s; animation-delay: 0.2s; }
-        .btn-eux-red .points_wrapper .point:nth-child(2) { left: 30%; opacity: 0.7; animation-duration: 2.5s; animation-delay: 0.5s; }
-        .btn-eux-red .points_wrapper .point:nth-child(3) { left: 25%; opacity: 0.8; animation-duration: 2.2s; animation-delay: 0.1s; }
-        .btn-eux-red .points_wrapper .point:nth-child(4) { left: 44%; opacity: 0.6; animation-duration: 2.05s; }
-        .btn-eux-red .points_wrapper .point:nth-child(5) { left: 50%; opacity: 1; animation-duration: 1.9s; }
-        .btn-eux-red .points_wrapper .point:nth-child(6) { left: 75%; opacity: 0.5; animation-duration: 1.5s; animation-delay: 1.5s; }
-        .btn-eux-red .points_wrapper .point:nth-child(7) { left: 88%; opacity: 0.9; animation-duration: 2.2s; animation-delay: 0.2s; }
-        .btn-eux-red .points_wrapper .point:nth-child(8) { left: 58%; opacity: 0.8; animation-duration: 2.25s; animation-delay: 0.2s; }
-        .btn-eux-red .points_wrapper .point:nth-child(9) { left: 98%; opacity: 0.6; animation-duration: 2.6s; animation-delay: 0.1s; }
-        .btn-eux-red .points_wrapper .point:nth-child(10) { left: 65%; opacity: 1; animation-duration: 2.5s; animation-delay: 0.2s; }
-        .btn-eux-red .inner {
-            z-index: 2;
-            gap: 6px;
-            position: relative;
-            width: 100%;
-            color: white;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 16px;
-            font-weight: 500;
-            line-height: 1.5;
-            transition: color 0.2s ease-in-out;
-        }
-        .btn-eux-red .inner svg.icon {
-            width: 18px;
-            height: 18px;
-            transition: fill 0.1s linear;
-        }
-        .btn-eux-red:focus svg.icon { fill: white; }
-        .btn-eux-red:hover svg.icon {
-            fill: transparent;
-            animation: dasharray 1s linear forwards, filled 0.1s linear forwards 0.95s;
-        }
-
-        /* ===== زر EUX شفاف ===== */
-        .btn-eux-outline {
-            --h-button: 48px;
-            --w-button: auto;
-            --round: 0.75rem;
-            cursor: pointer;
-            position: relative;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            overflow: hidden;
-            transition: all 0.25s ease;
-            background: radial-gradient(
-                65.28% 65.28% at 50% 100%,
-                rgba(13, 33, 55, 0.1) 0%,
-                rgba(13, 33, 55, 0) 100%
-              ),
-              linear-gradient(0deg, transparent, transparent);
-            border-radius: var(--round);
-            border: 1.5px solid #ddd;
-            outline: none;
-            padding: 12px 18px;
-            font-family: 'Cairo', sans-serif;
-            font-weight: 600;
-            font-size: 14px;
-            color: #0d2137;
-            box-shadow: none;
-        }
-        .btn-eux-outline::before,
-        .btn-eux-outline::after {
-            content: "";
-            position: absolute;
-            inset: var(--space);
-            transition: all 0.5s ease-in-out;
-            border-radius: calc(var(--round) - var(--space));
-            z-index: 0;
-        }
-        .btn-eux-outline::before {
-            --space: 1px;
-            background: linear-gradient(
-                177.95deg,
-                rgba(255, 255, 255, 0.19) 0%,
-                rgba(255, 255, 255, 0) 100%
-            );
-        }
-        .btn-eux-outline::after {
-            --space: 2px;
-            background: radial-gradient(
-                65.28% 65.28% at 50% 100%,
-                rgba(13, 33, 55, 0.05) 0%,
-                rgba(13, 33, 55, 0) 100%
-              ),
-              linear-gradient(0deg, transparent, transparent);
-        }
-        .btn-eux-outline:active { transform: scale(0.95); }
-        .btn-eux-outline .fold {
-            z-index: 1;
-            position: absolute;
-            top: 0;
-            right: 0;
-            height: 1rem;
-            width: 1rem;
-            display: inline-block;
-            transition: all 0.5s ease-in-out;
-            background: radial-gradient(
-                100% 75% at 55%,
-                rgba(13, 33, 55, 0.1) 0%,
-                rgba(13, 33, 55, 0) 100%
-            );
-            box-shadow: 0 0 3px rgba(0, 0, 0, 0.1);
-            border-bottom-left-radius: 0.5rem;
-            border-top-right-radius: var(--round);
-        }
-        .btn-eux-outline .fold::after {
-            content: "";
-            position: absolute;
-            top: 0;
-            right: 0;
-            width: 150%;
-            height: 150%;
-            transform: rotate(45deg) translateX(0%) translateY(-18px);
-            background-color: #f5f5f5;
-            pointer-events: none;
-        }
-        .btn-eux-outline:hover .fold {
-            margin-top: -1rem;
-            margin-right: -1rem;
-        }
-        .btn-eux-outline:hover {
-            background: #f5f5f5;
-        }
-        .btn-eux-outline .points_wrapper {
-            overflow: hidden;
-            width: 100%;
-            height: 100%;
-            pointer-events: none;
-            position: absolute;
-            z-index: 1;
-        }
-        .btn-eux-outline .points_wrapper .point {
-            bottom: -10px;
-            position: absolute;
-            animation: floating-points infinite ease-in-out;
-            pointer-events: none;
-            width: 2px;
-            height: 2px;
-            background-color: #0d2137;
-            border-radius: 9999px;
-        }
-        .btn-eux-outline .points_wrapper .point:nth-child(1) { left: 10%; opacity: 1; animation-duration: 2.35s; animation-delay: 0.2s; }
-        .btn-eux-outline .points_wrapper .point:nth-child(2) { left: 30%; opacity: 0.7; animation-duration: 2.5s; animation-delay: 0.5s; }
-        .btn-eux-outline .points_wrapper .point:nth-child(3) { left: 25%; opacity: 0.8; animation-duration: 2.2s; animation-delay: 0.1s; }
-        .btn-eux-outline .points_wrapper .point:nth-child(4) { left: 44%; opacity: 0.6; animation-duration: 2.05s; }
-        .btn-eux-outline .points_wrapper .point:nth-child(5) { left: 50%; opacity: 1; animation-duration: 1.9s; }
-        .btn-eux-outline .points_wrapper .point:nth-child(6) { left: 75%; opacity: 0.5; animation-duration: 1.5s; animation-delay: 1.5s; }
-        .btn-eux-outline .points_wrapper .point:nth-child(7) { left: 88%; opacity: 0.9; animation-duration: 2.2s; animation-delay: 0.2s; }
-        .btn-eux-outline .points_wrapper .point:nth-child(8) { left: 58%; opacity: 0.8; animation-duration: 2.25s; animation-delay: 0.2s; }
-        .btn-eux-outline .points_wrapper .point:nth-child(9) { left: 98%; opacity: 0.6; animation-duration: 2.6s; animation-delay: 0.1s; }
-        .btn-eux-outline .points_wrapper .point:nth-child(10) { left: 65%; opacity: 1; animation-duration: 2.5s; animation-delay: 0.2s; }
-        .btn-eux-outline .inner {
-            z-index: 2;
-            gap: 6px;
-            position: relative;
-            width: 100%;
-            color: #0d2137;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 16px;
-            font-weight: 500;
-            line-height: 1.5;
-            transition: color 0.2s ease-in-out;
-        }
-        .btn-eux-outline .inner svg.icon {
-            width: 18px;
-            height: 18px;
-            transition: fill 0.1s linear;
-        }
-
-        /* ===== صفحة التسجيل العامة ===== */
-        .public-page-header {
-            text-align: center;
-            padding: 10px 0 5px 0;
-        }
-        .public-page-header .helo-wrapper {
-            display: flex;
-            justify-content: center;
-            margin-bottom: 5px;
-        }
-        .public-page-header .helo-wrapper .civil-helo {
-            margin-top: 0;
-            transform: scale(0.75);
-            transform-origin: center center;
-        }
-        .public-page-header .helo-wrapper .civil-helo {
-            animation: hoverCivilSmall 3s ease-in-out infinite;
-        }
+        /* صفحة التسجيل العامة */
+        .public-page-header { text-align: center; padding: 10px 0 5px 0; }
+        .public-page-header .helo-wrapper { display: flex; justify-content: center; margin-bottom: 5px; }
+        .public-page-header .helo-wrapper .civil-helo { margin-top: 0; transform: scale(0.75); animation: hoverCivilSmall 3s ease-in-out infinite; }
         @keyframes hoverCivilSmall {
             0%, 100% { transform: scale(0.75) translateY(0px); }
             50% { transform: scale(0.75) translateY(-6px); }
         }
 
-        /* ===== رابط euxexpress.com ===== */
-        .site-link-wrapper {
-            display: flex;
-            justify-content: center;
-            margin: 2px 0 16px 0;
-        }
+        /* رابط euxexpress.com */
+        .site-link-wrapper { display: flex; justify-content: center; margin: 2px 0 16px 0; }
         .site-link-btn {
-            --black-700: hsla(210, 97%, 50%, 0.15);
-            --border_radius: 9999px;
-            --transtion: 0.3s ease-in-out;
-            --offset: 2px;
-
-            cursor: pointer;
-            position: relative;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            transform-origin: center;
-            padding: 0.6rem 1.8rem;
-            background-color: transparent;
-            border: none;
-            border-radius: var(--border_radius);
+            --black-700: hsla(210, 97%, 50%, 0.15); --border_radius: 9999px;
+            --transtion: 0.3s ease-in-out; --offset: 2px;
+            cursor: pointer; position: relative; display: flex; align-items: center;
+            gap: 0.5rem; transform-origin: center; padding: 0.6rem 1.8rem;
+            background-color: transparent; border: none; border-radius: var(--border_radius);
             transform: scale(calc(1 + (var(--active, 0) * 0.05)));
-            transition: transform var(--transtion);
-            text-decoration: none;
+            transition: transform var(--transtion); text-decoration: none;
             font-family: 'Cairo', sans-serif;
         }
         .site-link-btn::before {
-            content: "";
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            width: 100%;
-            height: 100%;
-            background-color: var(--black-700);
-            border-radius: var(--border_radius);
-            box-shadow: inset 0 0.5px hsla(0, 0%, 100%, 0.3), 
-                inset 0 -1px 2px 0 hsla(0, 0%, 0%, 0.1),
-                0px 4px 10px -4px hsla(0 0% 0% / calc(1 - var(--active, 0))),
-                0 0 0 calc(var(--active, 0) * 0.375rem) hsla(210, 97%, 50%, 0.25);
-            transition: all var(--transtion);
-            z-index: 0;
+            content: ""; position: absolute; top: 50%; left: 50%;
+            transform: translate(-50%, -50%); width: 100%; height: 100%;
+            background-color: var(--black-700); border-radius: var(--border_radius);
+            box-shadow: inset 0 0.5px hsla(0, 0%, 100%, 0.3), inset 0 -1px 2px 0 hsla(0, 0%, 0%, 0.1), 0px 4px 10px -4px hsla(0 0% 0% / calc(1 - var(--active, 0))), 0 0 0 calc(var(--active, 0) * 0.375rem) hsla(210, 97%, 50%, 0.25);
+            transition: all var(--transtion); z-index: 0;
         }
         .site-link-btn::after {
-            content: "";
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            width: 100%;
-            height: 100%;
+            content: ""; position: absolute; top: 50%; left: 50%;
+            transform: translate(-50%, -50%); width: 100%; height: 100%;
             background-color: hsla(210, 97%, 61%, 0.15);
-            background-image: radial-gradient(
-                at 51% 89%,
-                hsla(210, 45%, 74%, 0.3) 0px,
-                transparent 50%
-              ),
-              radial-gradient(at 100% 100%, hsla(210, 36%, 60%, 0.2) 0px, transparent 50%),
-              radial-gradient(at 22% 91%, hsla(210, 36%, 60%, 0.2) 0px, transparent 50%);
-            background-position: top;
-            opacity: var(--active, 0);
-            border-radius: var(--border_radius);
-            transition: opacity var(--transtion);
-            z-index: 2;
+            background-image: radial-gradient(at 51% 89%, hsla(210, 45%, 74%, 0.3) 0px, transparent 50%), radial-gradient(at 100% 100%, hsla(210, 36%, 60%, 0.2) 0px, transparent 50%), radial-gradient(at 22% 91%, hsla(210, 36%, 60%, 0.2) 0px, transparent 50%);
+            background-position: top; opacity: var(--active, 0);
+            border-radius: var(--border_radius); transition: opacity var(--transtion); z-index: 2;
         }
-        .site-link-btn:is(:hover, :focus-visible) {
-            --active: 1;
-        }
-        .site-link-btn:active {
-            transform: scale(1);
-        }
+        .site-link-btn:is(:hover, :focus-visible) { --active: 1; }
+        .site-link-btn:active { transform: scale(1); }
         .site-link-btn .dots_border {
-            --size_border: calc(100% + 2px);
-            overflow: hidden;
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            width: var(--size_border);
-            height: var(--size_border);
-            background-color: transparent;
-            border-radius: var(--border_radius);
-            z-index: -10;
+            --size_border: calc(100% + 2px); overflow: hidden; position: absolute;
+            top: 50%; left: 50%; transform: translate(-50%, -50%);
+            width: var(--size_border); height: var(--size_border);
+            background-color: transparent; border-radius: var(--border_radius); z-index: -10;
         }
         .site-link-btn .dots_border::before {
-            content: "";
-            position: absolute;
-            top: 30%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            transform-origin: left;
-            transform: rotate(0deg);
-            width: 100%;
-            height: 2rem;
+            content: ""; position: absolute; top: 30%; left: 50%;
+            transform: translate(-50%, -50%); transform-origin: left;
+            transform: rotate(0deg); width: 100%; height: 2rem;
             background: linear-gradient(90deg, transparent, #0076ff, transparent);
             mask: linear-gradient(transparent 0%, white 120%);
             animation: rotate 3s linear infinite;
         }
-        @keyframes rotate {
-            to {
-                transform: rotate(360deg);
-            }
-        }
+        @keyframes rotate { to { transform: rotate(360deg); } }
         .site-link-btn .text_button {
-            position: relative;
-            z-index: 10;
-            font-size: 1rem;
-            color: #0076ff;
-            font-weight: 700;
-            font-family: 'Cairo', sans-serif;
+            position: relative; z-index: 10; font-size: 1rem;
+            color: #0076ff; font-weight: 700; font-family: 'Cairo', sans-serif;
             transition: color var(--transtion);
         }
-        .site-link-btn:is(:hover, :focus-visible) .text_button {
-            color: #0055b3;
+        .site-link-btn:is(:hover, :focus-visible) .text_button { color: #0055b3; }
+
+        @media (max-width: 768px) {
+            header { padding: 20px 5%; }
+            .logo { font-size: 24px; }
+            .hero h1 { font-size: 2rem; }
+            .hero p { font-size: 1rem; }
+            .cyber-node { width: 120px; height: 120px; font-size: 28px; }
+            .cube-container { width: 130px; height: 120px; }
+            .iso-cube { width: 90px; height: 90px; }
+            .iso-face { width: 90px; height: 90px; font-size: 24px; }
+            .iso-front  { transform: rotateY(0deg) translateZ(45px); }
+            .iso-right  { transform: rotateY(90deg) translateZ(45px); }
+            .iso-top    { transform: rotateX(90deg) translateZ(45px); }
+            .quantum-box { width: 120px; height: 120px; }
+            .login-btn { margin-right: 15px; padding: 6px 16px; font-size: 0.85rem; }
+            .two-columns { grid-template-columns: 1fr; }
+            .header-actions .share-btn-text { font-size: 11px; max-width: 180px; padding: 6px 10px; }
         }
     </style>
 </head>
 <body oncontextmenu="return false;">
 
-<div class="container" id="app">
+<!-- ==================== صفحة الهبوط ==================== -->
+<div id="landingPage">
+    <header>
+        <a href="#" class="logo">EUX EXPRESS</a>
+        <a href="#" class="login-btn" onclick="openTrackingSystem(); return false;"><i class="fas fa-sign-in-alt"></i> تسجيل الدخول</a>
+    </header>
 
-    <!-- ===== صفحة تسجيل الدخول ===== -->
-    <div id="loginPage" class="login-page">
-        <div class="logo-wrapper">
-            <div class="civil-helo">
-                <div class="body">
-                    <div class="body-stripe"></div>
-                    <div class="cockpit">
-                        <div class="cockpit-wiper"></div>
-                    </div>
-                    <span class="eux-logo">EUX</span>
+    <section class="hero">
+        <div class="showcase-wrapper">
+            <div class="cyber-node">EUX</div>
+            <div class="glow-floor"></div>
+        </div>
+
+        <h1>شركة <span>EUX</span> للشحن</h1>
+        <p>الريادة في سرعة وحلول الشحن نقدم خدماتنا الاحترافية من مدينة العبور (11828) وإلى جميع محافظات جمهورية مصر العربية بأفضل الأسعار وأعلى كفاءة.</p>
+        
+        <button onclick="togglePopup(true)" class="btn"><i class="fas fa-user-plus"></i> افتح حساب الآن</button>
+
+        <div class="sea-wave-divider">
+            <svg viewBox="0 0 1200 120" preserveAspectRatio="none">
+                <path d="M321.39,56.44c58-10.79,114.16-30.13,172-41.86,82.39-16.72,168.19-17.73,250.45-.39C823.78,31,906.67,72,985.66,92.83c70.05,18.48,146.53,26.09,214.34,3V120H0V0C26.9,4.75,55.05,16.33,81.11,25.09,151,48.56,224.4,74.48,321.39,56.44Z" class="wave-fill-white"></path>
+            </svg>
+        </div>
+    </section>
+
+    <div class="popup-overlay" id="accountPopup" onclick="closePopupOutside(event)">
+        <div class="popup-box">
+            <span class="popup-close" onclick="togglePopup(false)">&times;</span>
+            <div class="popup-title"><i class="far fa-clock"></i> سيتم التواصل خلال 5 ساعات لتفعيل الحساب</div>
+            
+            <form id="excelForm" onsubmit="submitToExcel(event)">
+                <div class="popup-form-group">
+                    <label for="userName">الاسم</label>
+                    <input type="text" id="userName" name="name" placeholder="أدخل ألإسم " required>
                 </div>
-                <div class="tail"></div>
-                <div class="main-rotor"></div>
-                <div class="tail-rotor"></div>
-                <div class="nav-light red"></div>
-                <div class="nav-light green"></div>
-            </div>
+                <div class="popup-form-group">
+                    <label for="userPhone">رقم الهاتف</label>
+                    <input type="tel" id="userPhone" name="phone" placeholder="أدخل رقم الهاتف" required>
+                </div>
+                <button type="submit" class="popup-submit-btn">إرسال</button>
+            </form>
         </div>
-        <div class="brand">مرحباً بك في <span>EUX Express</span></div>
-        
-        <div class="input-group">
-            <span class="input-icon"><i class="fas fa-phone"></i></span>
-            <input type="text" id="phoneInput" placeholder="رقم الهاتف" dir="ltr" maxlength="11" oninput="this.value=this.value.replace(/[^0-9]/g,'')">
-        </div>
-        <div class="input-group">
-            <span class="input-icon"><i class="fas fa-lock"></i></span>
-            <input type="password" id="passwordInput" placeholder="كلمة المرور" dir="ltr">
-        </div>
-        
-        <button class="btn-eux" onclick="doLogin()" style="width:100%;padding:16px;font-size:18px;border-radius:14px;">
-            <span class="inner">
-                <i class="fas fa-sign-in-alt"></i> دخول
-            </span>
-            <span class="fold"></span>
-            <div class="points_wrapper">
-                <span class="point"></span>
-                <span class="point"></span>
-                <span class="point"></span>
-                <span class="point"></span>
-                <span class="point"></span>
-                <span class="point"></span>
-                <span class="point"></span>
-                <span class="point"></span>
-                <span class="point"></span>
-                <span class="point"></span>
-            </div>
-        </button>
-        <p class="error-msg" id="loginError"></p>
     </div>
 
-    <!-- ===== لوحة التحكم ===== -->
-    <div id="dashboard" class="hidden">
-        <div class="header">
-            <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
-                <h2><i class="fas fa-tachometer-alt"></i> لوحة التحكم</h2>
-                <span class="total-small">📦 إجمالي الشحنات: <span class="count" id="totalCountSmall">0</span></span>
+    <section id="about" class="about">
+        <div class="showcase-wrapper" style="margin-bottom: 50px; margin-top: 20px;">
+            <div class="cube-container">
+                <div class="iso-cube">
+                    <div class="iso-face iso-front">EUX</div>
+                    <div class="iso-face iso-right"></div>
+                    <div class="iso-face iso-top"></div>
+                </div>
             </div>
-            <div class="header-actions">
-                <button id="shareLinkBtn" class="btn-eux-orange hidden share-btn-text" onclick="copyShareLink()" style="font-size:12px;padding:8px 12px;border-radius:10px;">
-                    <span class="inner">📤 يمكنك ارسال هاذا الرابط للراسل ليقوم بتسجيل الشحنه بنفسه</span>
-                    <span class="fold"></span>
-                    <div class="points_wrapper">
-                        <span class="point"></span><span class="point"></span><span class="point"></span>
-                        <span class="point"></span><span class="point"></span><span class="point"></span>
-                        <span class="point"></span><span class="point"></span><span class="point"></span>
-                        <span class="point"></span>
-                    </div>
-                </button>
-                <button id="addShipmentBtn" class="btn-eux-green hidden" onclick="showAddShipmentForm()" style="padding:10px 16px;border-radius:10px;font-size:13px;">
-                    <span class="inner">➕ إضافة شحنة</span>
-                    <span class="fold"></span>
-                    <div class="points_wrapper">
-                        <span class="point"></span><span class="point"></span><span class="point"></span>
-                        <span class="point"></span><span class="point"></span><span class="point"></span>
-                        <span class="point"></span><span class="point"></span><span class="point"></span>
-                        <span class="point"></span>
-                    </div>
-                </button>
-                <button id="clientsBtn" class="btn-eux hidden" onclick="showClients()" style="padding:10px 16px;border-radius:10px;font-size:13px;">
-                    <span class="inner">👥 عملاء</span>
-                    <span class="fold"></span>
-                    <div class="points_wrapper">
-                        <span class="point"></span><span class="point"></span><span class="point"></span>
-                        <span class="point"></span><span class="point"></span><span class="point"></span>
-                        <span class="point"></span><span class="point"></span><span class="point"></span>
-                        <span class="point"></span>
-                    </div>
-                </button>
-                <button id="allShipmentsBtn" class="btn-eux-orange hidden" onclick="loadAllShipments()" style="padding:10px 16px;border-radius:10px;font-size:13px;">
-                    <span class="inner">📋 الكل</span>
-                    <span class="fold"></span>
-                    <div class="points_wrapper">
-                        <span class="point"></span><span class="point"></span><span class="point"></span>
-                        <span class="point"></span><span class="point"></span><span class="point"></span>
-                        <span class="point"></span><span class="point"></span><span class="point"></span>
-                        <span class="point"></span>
-                    </div>
-                </button>
-                <button class="btn-eux-outline" onclick="logout()" style="padding:10px 16px;border-radius:10px;font-size:13px;">
-                    <span class="inner">🚪 خروج</span>
-                    <span class="fold"></span>
-                    <div class="points_wrapper">
-                        <span class="point"></span><span class="point"></span><span class="point"></span>
-                        <span class="point"></span><span class="point"></span><span class="point"></span>
-                        <span class="point"></span><span class="point"></span><span class="point"></span>
-                        <span class="point"></span>
-                    </div>
-                </button>
+            <div class="glow-floor" style="margin-top: 25px;"></div>
+        </div>
+
+        <h2 class="section-title">لماذا شركة EUX؟</h2>
+        <p style="max-width: 800px; margin: 0 auto 30px; color: #666;">نعمل في مجال الشحن منذ 3 أعوام متتالية حققنا فيها نجاحاً باهراً، وقدمنا حلولاً مبتكرة لجميع مشاكل الشحن التي تواجه التجار لأننا ندرك تماماً ما يهمك:</p>
+        
+        <div class="about-container">
+            <div class="about-card">
+                <i class="fas fa-shipping-fast"></i>
+                <h3>سرعة التسليم والاستلام</h3>
+                <p>الأفضل والأسرع في استلام الشحنات من مدينة العبور وتسليم الشحنات لجميع المحافظات </p>
+            </div>
+            <div class="about-card">
+                <i class="fas fa-shield-alt"></i>
+                <h3>الحفاظ على الشحنات</h3>
+                <p>أمان كامل لمنتجاتك وضمان وصولها بحالتها الأصلية للعميل</p>
+            </div>
+            <div class="about-card">
+                <i class="fas fa-hand-holding-usd"></i>
+                <h3>سعر اقتصادي مميز</h3>
+                <p>نقدم أفضل معادلة بين السعر الاقتصادي والجودة العالية لدعم تجارتك </p>
             </div>
         </div>
 
-        <div id="content"></div>
-    </div>
+        <div class="sea-wave-divider">
+            <svg viewBox="0 0 1200 120" preserveAspectRatio="none">
+                <path d="M321.39,56.44c58-10.79,114.16-30.13,172-41.86,82.39-16.72,168.19-17.73,250.45-.39C823.78,31,906.67,72,985.66,92.83c70.05,18.48,146.53,26.09,214.34,3V120H0V0C26.9,4.75,55.05,16.33,81.11,25.09,151,48.56,224.4,74.48,321.39,56.44Z" class="wave-fill-white"></path>
+            </svg>
+        </div>
+    </section>
 
-    <!-- ===== صفحة التسجيل العامة ===== -->
-    <div id="publicOrderPage" class="hidden">
-        <div class="public-page-header">
-            <div class="helo-wrapper">
+    <section id="services" class="services">
+        <h2 class="section-title">خدماتنا المميزة</h2>
+        <div class="services-grid">
+            <div class="service-box"><i class="fas fa-mobile-alt"></i><h4>تطبيق متابعة خاص</h4><p>تابع شحناتك خطوة بخطوة أولاً بأول من خلال تطبيقنا الذكي</p></div>
+            <div class="service-box"><i class="fas fa-users"></i><h4>جروب للمتابعة والدعم</h4><p>فريق دعم فني متكامل متواجد لخدمتك ومتابعة طلباتك بمرونة</p></div>
+            <div class="service-box"><i class="fas fa-truck-loading"></i><h4>خدمة بيكب مجاني</h4><p>نقوم باستلام الشحنات من باب مخزنك أو مقر عملك مجاناً</p></div>
+            <div class="service-box"><i class="fas fa-money-bill-wave"></i><h4>تحصيل 3 أيام أسبوعياً</h4><p>دورة رأس مال سريعة مع نظام تحصيل مرن وموثوق 3 مرات في الأسبوع</p></div>
+            <div class="service-box"><i class="fas fa-search-plus"></i><h4>خدمة معاينة واستبدال</h4><p>نمنح عملائك ميزة المعاينة والاستبدال في مكان التسليم لزيادة الثقة</p></div>
+            <div class="service-box"><i class="fas fa-redo-alt"></i><h4>3 محاولات تسليم</h4><p>نحاول تسليم الشحنة حتى 3 مرات قبل تصنيفها كمرتجع لضمان أعلى نسبة نجاح</p></div>
+            <div class="service-box"><i class="fas fa-chart-line"></i><h4>نسبة تسليم عالية جداً</h4><p>بفضل خبرتنا الممتدة لـ 3 سنوات، نحقق أعلى معدلات نجاح تسليم بمصر</p></div>
+        </div>
+
+        <div class="sea-wave-divider">
+            <svg viewBox="0 0 1200 120" preserveAspectRatio="none">
+                <path d="M321.39,56.44c58-10.79,114.16-30.13,172-41.86,82.39-16.72,168.19-17.73,250.45-.39C823.78,31,906.67,72,985.66,92.83c70.05,18.48,146.53,26.09,214.34,3V120H0V0C26.9,4.75,55.05,16.33,81.11,25.09,151,48.56,224.4,74.48,321.39,56.44Z" class="wave-fill-light"></path>
+            </svg>
+        </div>
+    </section>
+
+    <section id="contact" class="contact">
+        <div class="showcase-wrapper" style="margin-bottom: 50px; margin-top: 10px;">
+            <div class="quantum-box">
+                <span style="color: #0076ff; font-weight: 900; font-size: 32px; z-index: 5; letter-spacing: 1px;">EUX</span>
+            </div>
+            <div class="glow-floor" style="background: radial-gradient(var(--gold-accent), transparent 70%); margin-top: 25px;"></div>
+        </div>
+
+        <h2 class="section-title">كن أحد عملائنا المميزين اليوم!</h2>
+        <p style="margin-bottom: 30px; font-size: 1.1rem;">لا تتردد في التواصل معنا لمعرفة المزيد من التفاصيل والبدء في شحن منتجاتك</p>
+        
+        <div class="contact-info">
+            <div class="info-item">
+                <i class="fas fa-map-marker-alt"></i>
+                <span>مدينة العبور 11828، الشباب، بجوار كشري الوالي</span>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <p>&copy; 2026 جميع الحقوق محفوظة لشركة EUX  للشحن |   </p>
+        <div class="footer-social">
+            <a href="https://www.facebook.com/share/1JBqQgjooM/" target="_blank"><i class="fab fa-facebook"></i></a>
+        </div>
+    </footer>
+</div>
+
+<!-- ==================== نظام التتبع ==================== -->
+<div id="trackingApp" class="hidden">
+    <div class="tracking-container" id="app">
+        <!-- صفحة تسجيل الدخول -->
+        <div id="loginPage" class="login-page">
+            <div class="logo-wrapper">
                 <div class="civil-helo">
                     <div class="body">
                         <div class="body-stripe"></div>
@@ -2407,44 +1035,141 @@
                     <div class="nav-light green"></div>
                 </div>
             </div>
-            <div class="site-link-wrapper">
-                <a href="https://euxexpress.com" target="_blank" class="site-link-btn">
-                    <span class="dots_border"></span>
-                    <span class="text_button">euxexpress.com</span>
-                </a>
+            <div class="brand">مرحباً بك في <span>EUX Express</span></div>
+            
+            <div class="input-group">
+                <span class="input-icon"><i class="fas fa-phone"></i></span>
+                <input type="text" id="phoneInput" placeholder="رقم الهاتف" dir="ltr" maxlength="11" oninput="this.value=this.value.replace(/[^0-9]/g,'')">
             </div>
-        </div>
-        
-        <div class="form-group"><label>👤 اسم المستلم *</label><input id="pf_receiverName" placeholder="اسم المستلم"></div>
-        <div class="form-group"><label>📱 هاتف المستلم *</label><input id="pf_receiverPhone" placeholder="مثال: 010xxxxxxxx" dir="ltr" maxlength="11" oninput="this.value=this.value.replace(/[^0-9]/g,'')"></div>
-        <div class="form-group"><label>📱 هاتف آخر للمستلم</label><input id="pf_receiverPhone2" placeholder="هاتف آخر (اختياري)" dir="ltr" maxlength="11" oninput="this.value=this.value.replace(/[^0-9]/g,'')"></div>
-        <div class="two-columns">
-            <div class="form-group"><label>🏛️ المحافظة *</label><select id="pf_governorate" onchange="updatePublicCities()"><option value="">اختر المحافظة</option></select></div>
-            <div class="form-group"><label>🏙️ المدينة *</label><select id="pf_city"><option value="">اختر المحافظة أولاً</option></select></div>
-        </div>
-        <div class="form-group"><label>📍 العنوان التفصيلي *</label><input id="pf_address" placeholder="العنوان بالتفصيل"></div>
-        <div class="form-group"><label>💰 المبلغ المطلوب تحصيله شامل الشحن *</label><input id="pf_amount" type="number" placeholder="المبلغ بالجنيه" dir="ltr"></div>
-        <div class="form-group"><label>⚖️ وزن الشحنة *</label><input id="pf_weight" type="number" placeholder="الوزن بالكيلو" dir="ltr" value="1"></div>
-        <div class="form-group"><label>📝 ملاحظات</label><textarea id="pf_notes" placeholder="ملاحظات إضافية"></textarea></div>
-        <button class="btn-eux" onclick="submitPublicOrder()" style="width:100%;padding:14px;border-radius:12px;font-size:16px;">
-            <span class="inner">✅ تسجيل الشحنة</span>
-            <span class="fold"></span>
-            <div class="points_wrapper">
-                <span class="point"></span><span class="point"></span><span class="point"></span>
-                <span class="point"></span><span class="point"></span><span class="point"></span>
-                <span class="point"></span><span class="point"></span><span class="point"></span>
-                <span class="point"></span>
+            <div class="input-group">
+                <span class="input-icon"><i class="fas fa-lock"></i></span>
+                <input type="password" id="passwordInput" placeholder="كلمة المرور" dir="ltr">
             </div>
-        </button>
-        <p id="publicError" style="color:red;margin-top:10px;text-align:center;"></p>
-    </div>
-</div>
+            
+            <button class="btn-eux" onclick="doLogin()" style="width:100%;padding:16px;font-size:18px;border-radius:14px;">
+                <span class="inner"><i class="fas fa-sign-in-alt"></i> دخول</span>
+                <span class="fold"></span>
+                <div class="points_wrapper">
+                    <span class="point"></span><span class="point"></span><span class="point"></span>
+                    <span class="point"></span><span class="point"></span><span class="point"></span>
+                    <span class="point"></span><span class="point"></span><span class="point"></span>
+                    <span class="point"></span>
+                </div>
+            </button>
+            <button class="btn-eux-outline" onclick="backToLanding()" style="width:100%;margin-top:10px;padding:14px;border-radius:12px;font-size:15px;">
+                <span class="inner">🏠 العودة للصفحة الرئيسية</span>
+            </button>
+            <p class="error-msg" id="loginError"></p>
+        </div>
 
-<!-- ===== مودال ===== -->
-<div id="modal" class="modal hidden">
-    <div class="modal-content" id="modalContent">
-        <span class="close-btn" onclick="closeModal()">✕</span>
-        <div id="modalBody"></div>
+        <!-- لوحة التحكم -->
+        <div id="dashboard" class="hidden">
+            <div class="tracking-header">
+                <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
+                    <h2><i class="fas fa-tachometer-alt"></i> لوحة التحكم</h2>
+                    <span class="total-small">📦 إجمالي الشحنات: <span class="count" id="totalCountSmall">0</span></span>
+                </div>
+                <div class="header-actions">
+                    <button id="shareLinkBtn" class="btn-eux-orange hidden share-btn-text" onclick="copyShareLink()" style="font-size:12px;padding:8px 12px;border-radius:10px;">
+                        <span class="inner">📤 يمكنك ارسال هاذا الرابط للراسل ليقوم بتسجيل الشحنه بنفسه</span>
+                        <span class="fold"></span>
+                        <div class="points_wrapper">
+                            <span class="point"></span><span class="point"></span><span class="point"></span>
+                            <span class="point"></span><span class="point"></span><span class="point"></span>
+                            <span class="point"></span><span class="point"></span><span class="point"></span>
+                            <span class="point"></span>
+                        </div>
+                    </button>
+                    <button id="addShipmentBtn" class="btn-eux-green hidden" onclick="showAddShipmentForm()" style="padding:10px 16px;border-radius:10px;font-size:13px;">
+                        <span class="inner">➕ إضافة شحنة</span>
+                        <span class="fold"></span>
+                        <div class="points_wrapper">
+                            <span class="point"></span><span class="point"></span><span class="point"></span>
+                            <span class="point"></span><span class="point"></span><span class="point"></span>
+                            <span class="point"></span><span class="point"></span><span class="point"></span>
+                            <span class="point"></span>
+                        </div>
+                    </button>
+                    <button id="clientsBtn" class="btn-eux hidden" onclick="showClients()" style="padding:10px 16px;border-radius:10px;font-size:13px;">
+                        <span class="inner">👥 عملاء</span>
+                        <span class="fold"></span>
+                        <div class="points_wrapper">
+                            <span class="point"></span><span class="point"></span><span class="point"></span>
+                            <span class="point"></span><span class="point"></span><span class="point"></span>
+                            <span class="point"></span><span class="point"></span><span class="point"></span>
+                            <span class="point"></span>
+                        </div>
+                    </button>
+                    <button id="allShipmentsBtn" class="btn-eux-orange hidden" onclick="loadAllShipments()" style="padding:10px 16px;border-radius:10px;font-size:13px;">
+                        <span class="inner">📋 الكل</span>
+                        <span class="fold"></span>
+                        <div class="points_wrapper">
+                            <span class="point"></span><span class="point"></span><span class="point"></span>
+                            <span class="point"></span><span class="point"></span><span class="point"></span>
+                            <span class="point"></span><span class="point"></span><span class="point"></span>
+                            <span class="point"></span>
+                        </div>
+                    </button>
+                    <button class="btn-eux-outline" onclick="logout()" style="padding:10px 16px;border-radius:10px;font-size:13px;">
+                        <span class="inner">🚪 خروج</span>
+                    </button>
+                </div>
+            </div>
+            <div id="content"></div>
+        </div>
+
+        <!-- صفحة التسجيل العامة -->
+        <div id="publicOrderPage" class="hidden">
+            <div class="public-page-header">
+                <div class="helo-wrapper">
+                    <div class="civil-helo">
+                        <div class="body"><div class="body-stripe"></div><div class="cockpit"><div class="cockpit-wiper"></div></div><span class="eux-logo">EUX</span></div>
+                        <div class="tail"></div><div class="main-rotor"></div><div class="tail-rotor"></div>
+                        <div class="nav-light red"></div><div class="nav-light green"></div>
+                    </div>
+                </div>
+                <div class="site-link-wrapper">
+                    <a href="#" onclick="backToLanding(); return false;" class="site-link-btn">
+                        <span class="dots_border"></span>
+                        <span class="text_button">euxexpress.com</span>
+                    </a>
+                </div>
+            </div>
+            
+            <div class="form-group"><label>👤 اسم المستلم *</label><input id="pf_receiverName" placeholder="اسم المستلم"></div>
+            <div class="form-group"><label>📱 هاتف المستلم *</label><input id="pf_receiverPhone" placeholder="مثال: 010xxxxxxxx" dir="ltr" maxlength="11" oninput="this.value=this.value.replace(/[^0-9]/g,'')"></div>
+            <div class="form-group"><label>📱 هاتف آخر للمستلم</label><input id="pf_receiverPhone2" placeholder="هاتف آخر (اختياري)" dir="ltr" maxlength="11" oninput="this.value=this.value.replace(/[^0-9]/g,'')"></div>
+            <div class="two-columns">
+                <div class="form-group"><label>🏛️ المحافظة *</label><select id="pf_governorate" onchange="updatePublicCities()"><option value="">اختر المحافظة</option></select></div>
+                <div class="form-group"><label>🏙️ المدينة *</label><select id="pf_city"><option value="">اختر المحافظة أولاً</option></select></div>
+            </div>
+            <div class="form-group"><label>📍 العنوان التفصيلي *</label><input id="pf_address" placeholder="العنوان بالتفصيل"></div>
+            <div class="form-group"><label>💰 المبلغ المطلوب تحصيله شامل الشحن *</label><input id="pf_amount" type="number" placeholder="المبلغ بالجنيه" dir="ltr"></div>
+            <div class="form-group"><label>⚖️ وزن الشحنة *</label><input id="pf_weight" type="number" placeholder="الوزن بالكيلو" dir="ltr" value="1"></div>
+            <div class="form-group"><label>📝 ملاحظات</label><textarea id="pf_notes" placeholder="ملاحظات إضافية"></textarea></div>
+            <button class="btn-eux" onclick="submitPublicOrder()" style="width:100%;padding:14px;border-radius:12px;font-size:16px;">
+                <span class="inner">✅ تسجيل الشحنة</span>
+                <span class="fold"></span>
+                <div class="points_wrapper">
+                    <span class="point"></span><span class="point"></span><span class="point"></span>
+                    <span class="point"></span><span class="point"></span><span class="point"></span>
+                    <span class="point"></span><span class="point"></span><span class="point"></span>
+                    <span class="point"></span>
+                </div>
+            </button>
+            <button class="btn-eux-outline" onclick="backToLanding()" style="width:100%;margin-top:8px;padding:12px;border-radius:10px;font-size:14px;">
+                <span class="inner">🏠 العودة للصفحة الرئيسية</span>
+            </button>
+            <p id="publicError" style="color:red;margin-top:10px;text-align:center;"></p>
+        </div>
+    </div>
+
+    <!-- المودال -->
+    <div id="modal" class="modal hidden">
+        <div class="modal-content" id="modalContent">
+            <span class="close-btn" onclick="closeModal()">✕</span>
+            <div id="modalBody"></div>
+        </div>
     </div>
 </div>
 
@@ -2460,68 +1185,67 @@
     let publicClientPhone = null;
 
     // ============================================================
-    //  حفظ الجلسة - تذكر العميل لمدة 10 تسجيلات دخول
+    //  التنقل بين الصفحات
+    // ============================================================
+    function openTrackingSystem() {
+        document.getElementById('landingPage').classList.add('hidden');
+        document.getElementById('trackingApp').classList.remove('hidden');
+        document.body.style.background = 'linear-gradient(135deg, #e8f0fe, #d4e4f7)';
+        checkSession();
+    }
+
+    function backToLanding() {
+        document.getElementById('trackingApp').classList.add('hidden');
+        document.getElementById('landingPage').classList.remove('hidden');
+        document.body.style.background = '#ffffff';
+        if (window.history && window.history.pushState) {
+            window.history.pushState({}, '', window.location.pathname);
+        }
+    }
+
+    // ============================================================
+    //  حفظ الجلسة
     // ============================================================
     function saveUserSession(userData) {
         try {
-            // حفظ بيانات المستخدم
             sessionStorage.setItem('eux_user', JSON.stringify(userData));
-            
-            // حفظ عدد مرات الدخول (للتذكر لمدة 10 مرات)
             let loginCount = parseInt(localStorage.getItem('eux_login_count') || '0');
             loginCount++;
             localStorage.setItem('eux_login_count', loginCount.toString());
             localStorage.setItem('eux_user_data', JSON.stringify(userData));
-            
-            // إذا تجاوز 10 مرات، نعيد العد من الصفر ونحتفظ بالبيانات
-            if (loginCount > 10) {
-                localStorage.setItem('eux_login_count', '1');
-            }
-        } catch(e) {
-            console.log('خطأ في حفظ الجلسة:', e);
-        }
+            if (loginCount > 10) localStorage.setItem('eux_login_count', '1');
+        } catch(e) { console.log('خطأ في حفظ الجلسة:', e); }
     }
 
     function getSavedUser() {
         try {
             const savedUser = sessionStorage.getItem('eux_user');
-            if (savedUser) {
-                return JSON.parse(savedUser);
-            }
-            
-            // إذا لم يكن في session، نبحث في localStorage (للحالات التي تم فيها إغلاق المتصفح)
+            if (savedUser) return JSON.parse(savedUser);
             const localUser = localStorage.getItem('eux_user_data');
             if (localUser) {
                 const user = JSON.parse(localUser);
-                // التحقق من أن عدد مرات الدخول لم يتجاوز 10
                 const loginCount = parseInt(localStorage.getItem('eux_login_count') || '0');
                 if (loginCount <= 10) {
-                    // إعادة حفظ الجلسة في sessionStorage
                     sessionStorage.setItem('eux_user', JSON.stringify(user));
                     return user;
                 } else {
-                    // تجاوز 10 مرات، نطلب تسجيل دخول جديد
                     localStorage.removeItem('eux_user_data');
                     localStorage.removeItem('eux_login_count');
                     return null;
                 }
             }
             return null;
-        } catch(e) {
-            return null;
-        }
+        } catch(e) { return null; }
     }
 
     function clearUserSession() {
         sessionStorage.removeItem('eux_user');
-        // لا نمسح localStorage حتى لا نفقد التذكر لمدة 10 مرات
-        // ولكن نمسحها عند تسجيل الخروج بشكل صريح
         localStorage.removeItem('eux_user_data');
         localStorage.removeItem('eux_login_count');
     }
 
     // ============================================================
-    //  التحقق من جلسة المستخدم (Session)
+    //  التحقق من الجلسة
     // ============================================================
     function checkSession() {
         const urlParams = new URLSearchParams(window.location.search);
@@ -2531,8 +1255,6 @@
             showPublicOrderPage();
             return true;
         }
-        
-        // استخدام نظام الحفظ الجديد
         const savedUser = getSavedUser();
         if (savedUser && savedUser.phone && savedUser.password) {
             currentUser = savedUser;
@@ -2611,11 +1333,8 @@
         document.getElementById('loginPage').classList.add('hidden');
         document.getElementById('dashboard').classList.add('hidden');
         document.getElementById('publicOrderPage').classList.remove('hidden');
-        
         let govOptions = '<option value="">اختر المحافظة</option>';
-        Object.keys(governorates).forEach(gov => {
-            govOptions += `<option value="${gov}">${gov}</option>`;
-        });
+        Object.keys(governorates).forEach(gov => { govOptions += `<option value="${gov}">${gov}</option>`; });
         document.getElementById('pf_governorate').innerHTML = govOptions;
     }
 
@@ -2630,111 +1349,53 @@
         const weight = document.getElementById('pf_weight').value.trim() || '1';
         const notes = document.getElementById('pf_notes').value.trim();
         const errorDiv = document.getElementById('publicError');
-
-        if (!receiverName || !receiverPhone || !governorate || !city || !address || !amount) {
-            errorDiv.textContent = "يرجى ملء جميع الحقول المطلوبة (*)";
-            return;
-        }
-        if (receiverPhone.length !== 11) {
-            errorDiv.textContent = "⚠️ رقم هاتف المستلم يجب أن يكون 11 رقم";
-            return;
-        }
-        if (receiverPhone2 && receiverPhone2.length !== 11) {
-            errorDiv.textContent = "⚠️ رقم هاتف آخر يجب أن يكون 11 رقم";
-            return;
-        }
-
+        if (!receiverName || !receiverPhone || !governorate || !city || !address || !amount) { errorDiv.textContent = "يرجى ملء جميع الحقول المطلوبة (*)"; return; }
+        if (receiverPhone.length !== 11) { errorDiv.textContent = "⚠️ رقم هاتف المستلم يجب أن يكون 11 رقم"; return; }
+        if (receiverPhone2 && receiverPhone2.length !== 11) { errorDiv.textContent = "⚠️ رقم هاتف آخر يجب أن يكون 11 رقم"; return; }
         const params = new URLSearchParams();
-        params.append('action', 'addShipment');
-        params.append('phone', publicClientPhone);
-        params.append('password', 'public');
-        params.append('receiverName', receiverName);
-        params.append('receiverPhone', receiverPhone);
-        params.append('receiverPhone2', receiverPhone2);
-        params.append('governorate', governorate);
-        params.append('city', city);
-        params.append('address', address);
-        params.append('amount', amount);
-        params.append('weight', weight);
-        params.append('notes', notes);
-
+        params.append('action', 'addShipment'); params.append('phone', publicClientPhone); params.append('password', 'public');
+        params.append('receiverName', receiverName); params.append('receiverPhone', receiverPhone);
+        params.append('receiverPhone2', receiverPhone2); params.append('governorate', governorate);
+        params.append('city', city); params.append('address', address); params.append('amount', amount);
+        params.append('weight', weight); params.append('notes', notes);
         try {
-            const res = await fetch(API_URL, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-                body: params.toString()
-            });
+            const res = await fetch(API_URL, { method: 'POST', headers: { 'Content-Type': 'application/x-www-form-urlencoded' }, body: params.toString() });
             const data = await res.json();
             if (data.success) { 
                 showToast('✅ تم تسجيل الشحنة بنجاح!', 'success');
-                document.getElementById('pf_receiverName').value = '';
-                document.getElementById('pf_receiverPhone').value = '';
-                document.getElementById('pf_receiverPhone2').value = '';
-                document.getElementById('pf_governorate').value = '';
+                document.getElementById('pf_receiverName').value = ''; document.getElementById('pf_receiverPhone').value = '';
+                document.getElementById('pf_receiverPhone2').value = ''; document.getElementById('pf_governorate').value = '';
                 document.getElementById('pf_city').innerHTML = '<option value="">اختر المحافظة أولاً</option>';
-                document.getElementById('pf_address').value = '';
-                document.getElementById('pf_amount').value = '';
-                document.getElementById('pf_weight').value = '1';
-                document.getElementById('pf_notes').value = '';
+                document.getElementById('pf_address').value = ''; document.getElementById('pf_amount').value = '';
+                document.getElementById('pf_weight').value = '1'; document.getElementById('pf_notes').value = '';
                 errorDiv.textContent = '';
-            } else { 
-                errorDiv.textContent = data.msg || "فشل التسجيل"; 
-            }
-        } catch (e) { 
-            errorDiv.textContent = 'فشل الاتصال'; 
-        }
+            } else { errorDiv.textContent = data.msg || "فشل التسجيل"; }
+        } catch (e) { errorDiv.textContent = 'فشل الاتصال'; }
     }
 
     // ============================================================
-    //  🔗 نسخ رابط التسجيل
+    //  نسخ رابط التسجيل
     // ============================================================
     function copyShareLink() {
         const shareUrl = `${BASE_URL}/?ref=${currentUser.phone}`;
-        
         if (navigator.clipboard && navigator.clipboard.writeText) {
-            navigator.clipboard.writeText(shareUrl).then(() => {
-                showToast('✅ تم نسخ رابط التسجيل!', 'success');
-            }).catch(() => {
-                fallbackCopy(shareUrl);
-            });
-        } else {
-            fallbackCopy(shareUrl);
-        }
+            navigator.clipboard.writeText(shareUrl).then(() => showToast('✅ تم نسخ رابط التسجيل!', 'success')).catch(() => fallbackCopy(shareUrl));
+        } else { fallbackCopy(shareUrl); }
     }
 
     function fallbackCopy(text) {
         const textarea = document.createElement('textarea');
-        textarea.value = text;
-        textarea.style.position = 'fixed';
-        textarea.style.top = '0';
-        textarea.style.left = '0';
-        textarea.style.width = '2em';
-        textarea.style.height = '2em';
-        textarea.style.padding = '0';
-        textarea.style.border = 'none';
-        textarea.style.outline = 'none';
-        textarea.style.boxShadow = 'none';
-        textarea.style.background = 'transparent';
-        textarea.style.opacity = '0';
-        textarea.style.zIndex = '9999';
-        textarea.setAttribute('readonly', '');
-        document.body.appendChild(textarea);
-        
-        textarea.focus();
-        textarea.select();
-        textarea.setSelectionRange(0, 999999);
-        
+        textarea.value = text; textarea.style.position = 'fixed'; textarea.style.top = '0'; textarea.style.left = '0';
+        textarea.style.width = '2em'; textarea.style.height = '2em'; textarea.style.padding = '0';
+        textarea.style.border = 'none'; textarea.style.outline = 'none'; textarea.style.boxShadow = 'none';
+        textarea.style.background = 'transparent'; textarea.style.opacity = '0'; textarea.style.zIndex = '9999';
+        textarea.setAttribute('readonly', ''); document.body.appendChild(textarea);
+        textarea.focus(); textarea.select(); textarea.setSelectionRange(0, 999999);
         try {
             const successful = document.execCommand('copy');
-            if (successful) {
-                showToast('✅ تم نسخ رابط التسجيل!', 'success');
-            } else {
-                showModalWithLink(text);
-            }
-        } catch (e) {
-            showModalWithLink(text);
-        }
-        
+            if (successful) showToast('✅ تم نسخ رابط التسجيل!', 'success');
+            else showModalWithLink(text);
+        } catch (e) { showModalWithLink(text); }
         document.body.removeChild(textarea);
     }
 
@@ -2745,20 +1406,15 @@
             <p style="margin-bottom:12px;color:#666;font-size:13px;">انسخ الرابط يدوياً:</p>
             <div style="background:#f0f6fe;padding:14px;border-radius:10px;word-break:break-all;direction:ltr;text-align:left;margin-bottom:14px;font-size:13px;border:1px solid #dce8f5;">${url}</div>
             <button class="btn-eux" onclick="navigator.clipboard.writeText('${url.replace(/'/g, "\\'")}').then(()=>showToast('✅ تم النسخ!','success')).catch(()=>showToast('⚠️ فشل النسخ','error'))" style="width:100%;">
-                <span class="inner">📋 نسخ الرابط</span>
-                <span class="fold"></span>
+                <span class="inner">📋 نسخ الرابط</span><span class="fold"></span>
                 <div class="points_wrapper"><span class="point"></span><span class="point"></span><span class="point"></span><span class="point"></span><span class="point"></span><span class="point"></span><span class="point"></span><span class="point"></span><span class="point"></span><span class="point"></span></div>
             </button>
-            <button class="btn-eux-outline" onclick="closeModal()" style="width:100%;margin-top:8px;">
-                <span class="inner">إغلاق</span>
-                <span class="fold"></span>
-                <div class="points_wrapper"><span class="point"></span><span class="point"></span><span class="point"></span><span class="point"></span><span class="point"></span><span class="point"></span><span class="point"></span><span class="point"></span><span class="point"></span><span class="point"></span></div>
-            </button>
+            <button class="btn-eux-outline" onclick="closeModal()" style="width:100%;margin-top:8px;"><span class="inner">إغلاق</span></button>
         `;
     }
 
     // ============================================================
-    //  🔐 تسجيل الدخول - مع حفظ الجلسة
+    //  تسجيل الدخول
     // ============================================================
     async function doLogin() {
         const phone = document.getElementById('phoneInput').value.trim();
@@ -2771,33 +1427,22 @@
             const data = await res.json();
             if (data.success) { 
                 currentUser = { phone, password, name: data.name, role: data.role };
-                // حفظ الجلسة مع التذكر لمدة 10 مرات
                 saveUserSession(currentUser);
                 errorDiv.classList.add('hidden');
                 showDashboard(); 
-            } else { 
-                errorDiv.textContent = data.msg || "فشل تسجيل الدخول"; 
-                errorDiv.classList.remove('hidden');
-            }
-        } catch (e) { 
-            errorDiv.textContent = "فشل الاتصال"; 
-            errorDiv.classList.remove('hidden');
-        }
+            } else { errorDiv.textContent = data.msg || "فشل تسجيل الدخول"; errorDiv.classList.remove('hidden'); }
+        } catch (e) { errorDiv.textContent = "فشل الاتصال"; errorDiv.classList.remove('hidden'); }
     }
 
     function logout() {
-        currentUser = null;
-        trackingCache = {};
-        clearUserSession(); // حذف الجلسة بالكامل عند تسجيل الخروج
+        currentUser = null; trackingCache = {};
+        clearUserSession();
         document.getElementById('loginPage').classList.remove('hidden');
         document.getElementById('dashboard').classList.add('hidden');
         document.getElementById('publicOrderPage').classList.add('hidden');
-        document.getElementById('phoneInput').value = '';
-        document.getElementById('passwordInput').value = '';
+        document.getElementById('phoneInput').value = ''; document.getElementById('passwordInput').value = '';
         document.getElementById('loginError').classList.add('hidden');
-        if (window.history && window.history.pushState) {
-            window.history.pushState({}, '', window.location.pathname);
-        }
+        if (window.history && window.history.pushState) window.history.pushState({}, '', window.location.pathname);
         showToast('🚪 تم تسجيل الخروج', '');
     }
 
@@ -2806,128 +1451,62 @@
         document.getElementById('dashboard').classList.remove('hidden');
         document.getElementById('publicOrderPage').classList.add('hidden');
         const isAdmin = currentUser.role === 'admin';
-        
         document.getElementById('shareLinkBtn').classList.toggle('hidden', isAdmin);
         document.getElementById('addShipmentBtn').classList.toggle('hidden', isAdmin);
         document.getElementById('clientsBtn').classList.toggle('hidden', !isAdmin);
         document.getElementById('allShipmentsBtn').classList.toggle('hidden', !isAdmin);
-
-        if (isAdmin) {
-            loadAllShipments();
-        } else {
-            loadMyShipments();
-        }
+        if (isAdmin) loadAllShipments(); else loadMyShipments();
     }
 
     // ============================================================
-    //  دالة جلب الحالة الفعلية من API التتبع
+    //  تتبع الشحنات
     // ============================================================
     async function fetchTrackingStatus(trackingNumber) {
         if (!trackingNumber || trackingNumber.length < 3) return null;
         if (trackingCache[trackingNumber]) return trackingCache[trackingNumber];
-        
         try {
             const res = await fetch(`${API_URL}?action=track&billCode=${trackingNumber}`);
             const data = await res.json();
             if (data.code === "1" && data.data && data.data[0]) {
                 let finalStatus = data.data[0].status || null;
                 const details = data.data[0].details || [];
-                
-                for (const d of details) {
-                    const desc = d.desc || '';
-                    if (desc.includes('تم التسليم')) {
-                        finalStatus = '✅ تم التسليم';
-                        break;
-                    }
-                }
-                
-                if (!finalStatus || !finalStatus.includes('تم التسليم')) {
-                    if (finalStatus && finalStatus.includes('تم التسليم')) {
-                        finalStatus = '✅ تم التسليم';
-                    }
-                }
-                
-                trackingCache[trackingNumber] = finalStatus;
-                return finalStatus;
+                for (const d of details) { const desc = d.desc || ''; if (desc.includes('تم التسليم')) { finalStatus = '✅ تم التسليم'; break; } }
+                if (!finalStatus || !finalStatus.includes('تم التسليم')) { if (finalStatus && finalStatus.includes('تم التسليم')) finalStatus = '✅ تم التسليم'; }
+                trackingCache[trackingNumber] = finalStatus; return finalStatus;
             }
-            trackingCache[trackingNumber] = null;
-            return null;
-        } catch (e) {
-            console.error('فشل تتبع:', trackingNumber, e);
-            return null;
-        }
+            trackingCache[trackingNumber] = null; return null;
+        } catch (e) { console.error('فشل تتبع:', trackingNumber, e); return null; }
     }
 
-    // ============================================================
-    //  تحديث حالة واحدة في البطاقة
-    // ============================================================
     function updateShipmentStatusCard(shipmentId, status) {
         const card = document.getElementById(`card-${shipmentId}`);
         if (!card) return;
         const statusRow = card.querySelector('.status-row');
         if (!statusRow) return;
-        
         statusRow.classList.remove('loading-status', 'error-status', 'info-status');
         const statusValue = statusRow.querySelector('.status-value');
         const statusLabel = statusRow.querySelector('.status-label');
-        
         if (status) {
             statusLabel.textContent = '📍 الحالة الحالية:';
-            
-            let displayStatus = status;
-            let isError = false;
-            let isSuccess = false;
-            let isInfo = false;
-            
-            if (status.includes('خطأ') || status.includes('Error') || status.includes('❌')) {
-                isError = true;
-                displayStatus = '❌ ' + status.replace(/❌️?/g, '').replace(/خطأ/g, '').trim();
-                if (!displayStatus || displayStatus === '❌') displayStatus = '❌ خطأ في التوصيل';
-            } else if (status.includes('تم التسليم') || status.includes('✅ تم التسليم')) {
-                isSuccess = true;
-                displayStatus = '✅ تم التسليم';
-            } else if (status.includes('تم الاستلام')) {
-                isInfo = true;
-                displayStatus = '📦 تم استلام الشحنة';
-            } else if (status.includes('Delivered') || status.includes('✅')) {
-                isSuccess = true;
-                displayStatus = '✅ تم التسليم';
-            }
-            
+            let displayStatus = status, isError = false, isSuccess = false, isInfo = false;
+            if (status.includes('خطأ') || status.includes('Error') || status.includes('❌')) { isError = true; displayStatus = '❌ ' + status.replace(/❌️?/g, '').replace(/خطأ/g, '').trim(); if (!displayStatus || displayStatus === '❌') displayStatus = '❌ خطأ في التوصيل'; }
+            else if (status.includes('تم التسليم') || status.includes('✅ تم التسليم')) { isSuccess = true; displayStatus = '✅ تم التسليم'; }
+            else if (status.includes('تم الاستلام')) { isInfo = true; displayStatus = '📦 تم استلام الشحنة'; }
+            else if (status.includes('Delivered') || status.includes('✅')) { isSuccess = true; displayStatus = '✅ تم التسليم'; }
             statusValue.textContent = displayStatus;
-            
-            if (isSuccess) {
-                statusRow.style.background = '#e8f5e9';
-                statusRow.style.borderRightColor = '#2e7d32';
-                statusValue.style.color = '#2e7d32';
-            } else if (isError) {
-                statusRow.style.background = '#ffeaea';
-                statusRow.style.borderRightColor = '#dc3545';
-                statusValue.style.color = '#dc3545';
-            } else if (isInfo) {
-                statusRow.style.background = '#e3f2fd';
-                statusRow.style.borderRightColor = '#0d47a1';
-                statusValue.style.color = '#0d47a1';
-            } else {
-                statusRow.style.background = '#e3f2fd';
-                statusRow.style.borderRightColor = '#0d47a1';
-                statusValue.style.color = '#0d47a1';
-            }
+            if (isSuccess) { statusRow.style.background = '#e8f5e9'; statusRow.style.borderRightColor = '#2e7d32'; statusValue.style.color = '#2e7d32'; }
+            else if (isError) { statusRow.style.background = '#ffeaea'; statusRow.style.borderRightColor = '#dc3545'; statusValue.style.color = '#dc3545'; }
+            else if (isInfo) { statusRow.style.background = '#e3f2fd'; statusRow.style.borderRightColor = '#0d47a1'; statusValue.style.color = '#0d47a1'; }
+            else { statusRow.style.background = '#e3f2fd'; statusRow.style.borderRightColor = '#0d47a1'; statusValue.style.color = '#0d47a1'; }
         } else {
-            statusLabel.textContent = '📍 الحالة:';
-            statusRow.style.background = '#f5f5f5';
-            statusRow.style.borderRightColor = '#999';
-            statusValue.style.color = '#999';
+            statusLabel.textContent = '📍 الحالة:'; statusRow.style.background = '#f5f5f5';
+            statusRow.style.borderRightColor = '#999'; statusValue.style.color = '#999';
             statusValue.textContent = 'لم يتم التحديد بعد';
         }
     }
 
-    // ============================================================
-    //  تحديث جميع الحالات واحدة تلو الأخرى
-    // ============================================================
     async function updateAllTrackingStatuses(shipments) {
         const shipmentsWithTracking = shipments.filter(s => s.trackingNumber && s.trackingNumber.length > 3);
-        
         for (const s of shipmentsWithTracking) {
             const status = await fetchTrackingStatus(s.trackingNumber);
             updateShipmentStatusCard(s.id, status);
@@ -2936,7 +1515,7 @@
     }
 
     // ============================================================
-    //  📦 تحميل الشحنات
+    //  تحميل الشحنات
     // ============================================================
     async function loadMyShipments() {
         const content = document.getElementById('content');
@@ -2945,14 +1524,8 @@
             const res = await fetch(`${API_URL}?action=myShipments&phone=${currentUser.phone}&password=${currentUser.password}`);
             const data = await res.json();
             if (data.success) {
-                if (data.shipments.length === 0) {
-                    content.innerHTML = '<div class="empty-state"><div class="icon">📭</div><p>لا توجد شحنات حتى الآن</p></div>';
-                    document.getElementById('totalCountSmall').textContent = '0';
-                } else {
-                    document.getElementById('totalCountSmall').textContent = data.shipments.length;
-                    content.innerHTML = data.shipments.map(s => createShipmentCard(s)).join('');
-                    updateAllTrackingStatuses(data.shipments);
-                }
+                if (data.shipments.length === 0) { content.innerHTML = '<div class="empty-state"><div class="icon">📭</div><p>لا توجد شحنات حتى الآن</p></div>'; document.getElementById('totalCountSmall').textContent = '0'; }
+                else { document.getElementById('totalCountSmall').textContent = data.shipments.length; content.innerHTML = data.shipments.map(s => createShipmentCard(s)).join(''); updateAllTrackingStatuses(data.shipments); }
             } else { content.innerHTML = '<p style="color:red;">' + (data.msg || 'فشل التحميل') + '</p>'; }
         } catch (e) { content.innerHTML = '<p style="color:red;">فشل الاتصال</p>'; }
     }
@@ -2962,9 +1535,7 @@
         content.innerHTML = '<div class="loading"><div class="spinner"></div>جاري التحميل...</div>';
         try {
             const params = new URLSearchParams();
-            params.append('action', 'allShipments');
-            params.append('adminPhone', currentUser.phone);
-            params.append('adminPassword', currentUser.password);
+            params.append('action', 'allShipments'); params.append('adminPhone', currentUser.phone); params.append('adminPassword', currentUser.password);
             const res = await fetch(API_URL, { method: 'POST', body: params });
             const data = await res.json();
             if (data.success) {
@@ -2976,77 +1547,39 @@
     }
 
     // ============================================================
-    //  🎨 عرض بطاقة الشحنة
+    //  عرض بطاقة الشحنة
     // ============================================================
     function createShipmentCard(s, isAdmin = false) {
-        let statusClass = 'status-waiting';
-        let statusText = s.status || '';
-        
-        if (statusText.includes('انتظار التتبع') || statusText.includes('في انتظار')) {
-            statusText = '';
-        }
-        
+        let statusClass = 'status-waiting', statusText = s.status || '';
+        if (statusText.includes('انتظار التتبع') || statusText.includes('في انتظار')) statusText = '';
         if (statusText.includes('تتبع')) statusClass = 'status-tracking';
         else if (statusText.includes('تم')) statusClass = 'status-done';
         else if (!statusText) statusClass = 'status-waiting';
-
         let lastUpdate = s.lastUpdate || s.date || '';
         let updateText = lastUpdate ? 'آخر تحديث: ' + lastUpdate : '';
-
         let actions = '';
         const trackingNum = s.trackingNumber || '';
         if (trackingNum && trackingNum.length > 3) {
-            actions += `<button class="btn-eux" onclick="event.stopPropagation(); trackShipment('${trackingNum}')" style="padding:6px 16px;border-radius:8px;font-size:13px;">
-                <span class="inner">📍 تتبع</span>
-                <span class="fold"></span>
-                <div class="points_wrapper"><span class="point"></span><span class="point"></span><span class="point"></span><span class="point"></span><span class="point"></span><span class="point"></span><span class="point"></span><span class="point"></span><span class="point"></span><span class="point"></span></div>
-            </button>`;
+            actions += `<button class="btn-eux" onclick="event.stopPropagation(); trackShipment('${trackingNum}')" style="padding:6px 16px;border-radius:8px;font-size:13px;"><span class="inner">📍 تتبع</span><span class="fold"></span></button>`;
         }
         if (isAdmin) {
             if (!trackingNum || trackingNum.length < 3) {
-                actions += `<button class="btn-eux-green" onclick="event.stopPropagation(); showAddTracking('${s.id}')" style="padding:6px 16px;border-radius:8px;font-size:13px;">
-                    <span class="inner">🔢 إضافة تتبع</span>
-                    <span class="fold"></span>
-                    <div class="points_wrapper"><span class="point"></span><span class="point"></span><span class="point"></span><span class="point"></span><span class="point"></span><span class="point"></span><span class="point"></span><span class="point"></span><span class="point"></span><span class="point"></span></div>
-                </button>`;
+                actions += `<button class="btn-eux-green" onclick="event.stopPropagation(); showAddTracking('${s.id}')" style="padding:6px 16px;border-radius:8px;font-size:13px;"><span class="inner">🔢 إضافة تتبع</span><span class="fold"></span></button>`;
             }
-            actions += `<button class="btn-eux-red" onclick="event.stopPropagation(); deleteShipment('${s.id}')" style="padding:6px 16px;border-radius:8px;font-size:13px;">
-                <span class="inner">🗑️ حذف</span>
-                <span class="fold"></span>
-                <div class="points_wrapper"><span class="point"></span><span class="point"></span><span class="point"></span><span class="point"></span><span class="point"></span><span class="point"></span><span class="point"></span><span class="point"></span><span class="point"></span><span class="point"></span></div>
-            </button>`;
-            var adminDetails = `
-                <div class="info"><strong>🔢 رقم الشحنة:</strong> ${s.id}</div>
-                ${trackingNum ? `<div class="info"><strong>🚚 رقم التتبع:</strong> ${trackingNum}</div>` : ''}
-            `;
-        } else {
-            var adminDetails = '';
-        }
-
+            actions += `<button class="btn-eux-red" onclick="event.stopPropagation(); deleteShipment('${s.id}')" style="padding:6px 16px;border-radius:8px;font-size:13px;"><span class="inner">🗑️ حذف</span><span class="fold"></span></button>`;
+            var adminDetails = `<div class="info"><strong>🔢 رقم الشحنة:</strong> ${s.id}</div>${trackingNum ? `<div class="info"><strong>🚚 رقم التتبع:</strong> ${trackingNum}</div>` : ''}`;
+        } else { var adminDetails = ''; }
         const displayName = s.receiverName || s.customerName || 'غير معروف';
         const displayPhone = s.receiverPhone || s.customerPhone || '';
         const displayAmount = s.amount || '0';
         const hasTracking = trackingNum && trackingNum.length > 3;
-
         const badgeHTML = statusText ? `<span class="status-badge ${statusClass}">${statusText}</span>` : '';
-
         return `<div class="shipment-card" onclick="toggleDetails(this)" id="card-${s.id}">
             ${badgeHTML}
-            <div class="summary-row">
-                <div class="main-info">
-                    <span class="name">👤 ${displayName}</span>
-                    <span class="phone">📱 ${displayPhone}</span>
-                    <span class="amount">💰 ${displayAmount} ج.م</span>
-                </div>
-                <div class="last-update">${updateText}</div>
-            </div>
-            <div class="status-row${hasTracking ? ' loading-status' : ''}">
-                <span class="status-label">📍 الحالة:</span>
-                <span class="status-value">${hasTracking ? '⏳ جاري التحميل...' : (trackingNum ? '⏳ انتظار...' : 'لم يتم التحديد بعد')}</span>
-            </div>
+            <div class="summary-row"><div class="main-info"><span class="name">👤 ${displayName}</span><span class="phone">📱 ${displayPhone}</span><span class="amount">💰 ${displayAmount} ج.م</span></div><div class="last-update">${updateText}</div></div>
+            <div class="status-row${hasTracking ? ' loading-status' : ''}"><span class="status-label">📍 الحالة:</span><span class="status-value">${hasTracking ? '⏳ جاري التحميل...' : (trackingNum ? '⏳ انتظار...' : 'لم يتم التحديد بعد')}</span></div>
             <div class="details">
-                ${isAdmin ? `<div class="info"><strong>📱 رقم العميل:</strong> ${s.clientPhone || 'غير معروف'}</div>` : ''}
-                ${adminDetails}
+                ${isAdmin ? `<div class="info"><strong>📱 رقم العميل:</strong> ${s.clientPhone || 'غير معروف'}</div>` : ''}${adminDetails}
                 ${s.receiverPhone2 ? `<div class="info"><strong>📱 هاتف آخر:</strong> ${s.receiverPhone2}</div>` : ''}
                 ${s.governorate ? `<div class="info"><strong>📍 المحافظة:</strong> ${s.governorate}</div>` : ''}
                 ${s.city ? `<div class="info"><strong>🏙️ المدينة:</strong> ${s.city}</div>` : ''}
@@ -3058,43 +1591,27 @@
         </div>`;
     }
 
-    function toggleDetails(element) {
-        const details = element.querySelector('.details');
-        if (details) {
-            details.classList.toggle('open');
-        }
-    }
+    function toggleDetails(element) { const details = element.querySelector('.details'); if (details) details.classList.toggle('open'); }
 
     // ============================================================
-    //  ➕ إضافة شحنة جديدة
+    //  إضافة شحنة
     // ============================================================
     function showAddShipmentForm() {
         if (!currentUser) { showToast('⚠️ يرجى تسجيل الدخول أولاً', 'error'); return; }
-        
         let govOptions = '<option value="">اختر المحافظة</option>';
-        Object.keys(governorates).forEach(gov => {
-            govOptions += `<option value="${gov}">${gov}</option>`;
-        });
-
+        Object.keys(governorates).forEach(gov => { govOptions += `<option value="${gov}">${gov}</option>`; });
         document.getElementById('modal').classList.remove('hidden');
         document.getElementById('modalBody').innerHTML = `
             <h3><i class="fas fa-box"></i> إضافة شحنة جديدة</h3>
             <div class="form-group"><label>👤 اسم المستلم *</label><input id="f_receiverName" placeholder="اسم المستلم"></div>
             <div class="form-group"><label>📱 هاتف المستلم *</label><input id="f_receiverPhone" placeholder="مثال: 010xxxxxxxx" dir="ltr" maxlength="11" oninput="this.value=this.value.replace(/[^0-9]/g,'')"></div>
             <div class="form-group"><label>📱 هاتف آخر للمستلم</label><input id="f_receiverPhone2" placeholder="هاتف آخر (اختياري)" dir="ltr" maxlength="11" oninput="this.value=this.value.replace(/[^0-9]/g,'')"></div>
-            <div class="two-columns">
-                <div class="form-group"><label>🏛️ المحافظة *</label><select id="f_governorate" onchange="updateCities()">${govOptions}</select></div>
-                <div class="form-group"><label>🏙️ المدينة *</label><select id="f_city"><option value="">اختر المحافظة أولاً</option></select></div>
-            </div>
+            <div class="two-columns"><div class="form-group"><label>🏛️ المحافظة *</label><select id="f_governorate" onchange="updateCities()">${govOptions}</select></div><div class="form-group"><label>🏙️ المدينة *</label><select id="f_city"><option value="">اختر المحافظة أولاً</option></select></div></div>
             <div class="form-group"><label>📍 العنوان التفصيلي *</label><input id="f_address" placeholder="العنوان بالتفصيل"></div>
             <div class="form-group"><label>💰 المبلغ المطلوب تحصيله شامل الشحن *</label><input id="f_amount" type="number" placeholder="المبلغ بالجنيه" dir="ltr"></div>
             <div class="form-group"><label>⚖️ وزن الشحنة *</label><input id="f_weight" type="number" placeholder="الوزن بالكيلو" dir="ltr" value="1"></div>
             <div class="form-group"><label>📝 ملاحظات</label><textarea id="f_notes" placeholder="ملاحظات إضافية"></textarea></div>
-            <button class="btn-eux" onclick="submitShipment()" style="width:100%;">
-                <span class="inner">✅ إضافة الشحنة</span>
-                <span class="fold"></span>
-                <div class="points_wrapper"><span class="point"></span><span class="point"></span><span class="point"></span><span class="point"></span><span class="point"></span><span class="point"></span><span class="point"></span><span class="point"></span><span class="point"></span><span class="point"></span></div>
-            </button>
+            <button class="btn-eux" onclick="submitShipment()" style="width:100%;"><span class="inner">✅ إضافة الشحنة</span><span class="fold"></span></button>
             <p id="shipError" style="color:red;margin-top:10px;"></p>
         `;
     }
@@ -3110,55 +1627,25 @@
         const weight = document.getElementById('f_weight').value.trim() || '1';
         const notes = document.getElementById('f_notes').value.trim();
         const errorDiv = document.getElementById('shipError');
-
-        if (!receiverName || !receiverPhone || !governorate || !city || !address || !amount) {
-            errorDiv.textContent = "يرجى ملء جميع الحقول المطلوبة (*)";
-            return;
-        }
-        if (receiverPhone.length !== 11) {
-            errorDiv.textContent = "⚠️ رقم هاتف المستلم يجب أن يكون 11 رقم";
-            return;
-        }
-        if (receiverPhone2 && receiverPhone2.length !== 11) {
-            errorDiv.textContent = "⚠️ رقم هاتف آخر يجب أن يكون 11 رقم";
-            return;
-        }
-
+        if (!receiverName || !receiverPhone || !governorate || !city || !address || !amount) { errorDiv.textContent = "يرجى ملء جميع الحقول المطلوبة (*)"; return; }
+        if (receiverPhone.length !== 11) { errorDiv.textContent = "⚠️ رقم هاتف المستلم يجب أن يكون 11 رقم"; return; }
+        if (receiverPhone2 && receiverPhone2.length !== 11) { errorDiv.textContent = "⚠️ رقم هاتف آخر يجب أن يكون 11 رقم"; return; }
         const params = new URLSearchParams();
-        params.append('action', 'addShipment');
-        params.append('phone', currentUser.phone);
-        params.append('password', currentUser.password);
-        params.append('receiverName', receiverName);
-        params.append('receiverPhone', receiverPhone);
-        params.append('receiverPhone2', receiverPhone2);
-        params.append('governorate', governorate);
-        params.append('city', city);
-        params.append('address', address);
-        params.append('amount', amount);
-        params.append('weight', weight);
-        params.append('notes', notes);
-
+        params.append('action', 'addShipment'); params.append('phone', currentUser.phone); params.append('password', currentUser.password);
+        params.append('receiverName', receiverName); params.append('receiverPhone', receiverPhone);
+        params.append('receiverPhone2', receiverPhone2); params.append('governorate', governorate);
+        params.append('city', city); params.append('address', address); params.append('amount', amount);
+        params.append('weight', weight); params.append('notes', notes);
         try {
-            const res = await fetch(API_URL, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-                body: params.toString()
-            });
+            const res = await fetch(API_URL, { method: 'POST', headers: { 'Content-Type': 'application/x-www-form-urlencoded' }, body: params.toString() });
             const data = await res.json();
-            if (data.success) { 
-                closeModal(); 
-                loadMyShipments(); 
-                showToast('✅ تم إضافة الشحنة بنجاح!', 'success');
-            } else { 
-                errorDiv.textContent = data.msg || "فشل الإضافة"; 
-            }
-        } catch (e) { 
-            errorDiv.textContent = 'فشل الاتصال'; 
-        }
+            if (data.success) { closeModal(); loadMyShipments(); showToast('✅ تم إضافة الشحنة بنجاح!', 'success'); }
+            else { errorDiv.textContent = data.msg || "فشل الإضافة"; }
+        } catch (e) { errorDiv.textContent = 'فشل الاتصال'; }
     }
 
     // ============================================================
-    //  🔢 إضافة رقم تتبع (للأدمن)
+    //  إضافة رقم تتبع
     // ============================================================
     function showAddTracking(shipmentId) {
         document.getElementById('modal').classList.remove('hidden');
@@ -3166,11 +1653,7 @@
             <h3><i class="fas fa-qrcode"></i> إضافة رقم تتبع</h3>
             <p style="margin-bottom:12px;color:#666;">رقم الشحنة: <strong>${shipmentId}</strong></p>
             <div class="form-group"><label>🚚 رقم التتبع</label><input id="trackingNum" dir="ltr" placeholder="مثال: JEG000470355620"></div>
-            <button class="btn-eux-green" onclick="submitTracking('${shipmentId}')" style="width:100%;">
-                <span class="inner">💾 حفظ</span>
-                <span class="fold"></span>
-                <div class="points_wrapper"><span class="point"></span><span class="point"></span><span class="point"></span><span class="point"></span><span class="point"></span><span class="point"></span><span class="point"></span><span class="point"></span><span class="point"></span><span class="point"></span></div>
-            </button>
+            <button class="btn-eux-green" onclick="submitTracking('${shipmentId}')" style="width:100%;"><span class="inner">💾 حفظ</span><span class="fold"></span></button>
             <p id="trackError" style="color:red;margin-top:10px;"></p>
         `;
     }
@@ -3179,229 +1662,97 @@
         const trackingNumber = document.getElementById('trackingNum').value.trim();
         const errorDiv = document.getElementById('trackError');
         if (!trackingNumber) { errorDiv.textContent = 'يرجى إدخال رقم التتبع'; return; }
-        
         const params = new URLSearchParams();
-        params.append('action', 'addTrackingNumber');
-        params.append('adminPhone', currentUser.phone);
-        params.append('adminPassword', currentUser.password);
-        params.append('shipmentId', shipmentId);
+        params.append('action', 'addTrackingNumber'); params.append('adminPhone', currentUser.phone);
+        params.append('adminPassword', currentUser.password); params.append('shipmentId', shipmentId);
         params.append('trackingNumber', trackingNumber);
-
         try {
-            const res = await fetch(API_URL, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-                body: params.toString()
-            });
+            const res = await fetch(API_URL, { method: 'POST', headers: { 'Content-Type': 'application/x-www-form-urlencoded' }, body: params.toString() });
             const data = await res.json();
-            if (data.success) { 
-                closeModal(); 
-                trackingCache = {};
-                loadAllShipments(); 
-                showToast('✅ تم إضافة رقم التتبع!', 'success');
-            } else { 
-                errorDiv.textContent = data.msg; 
-            }
-        } catch (e) { 
-            errorDiv.textContent = 'فشل الاتصال'; 
-        }
+            if (data.success) { closeModal(); trackingCache = {}; loadAllShipments(); showToast('✅ تم إضافة رقم التتبع!', 'success'); }
+            else { errorDiv.textContent = data.msg; }
+        } catch (e) { errorDiv.textContent = 'فشل الاتصال'; }
     }
 
     // ============================================================
-    //  🗑️ حذف شحنة (للأدمن)
+    //  حذف شحنة
     // ============================================================
     async function deleteShipment(shipmentId) {
         if (!confirm('⚠️ هل أنت متأكد من حذف هذه الشحنة؟')) return;
-        
         const params = new URLSearchParams();
-        params.append('action', 'deleteShipment');
-        params.append('adminPhone', currentUser.phone);
-        params.append('adminPassword', currentUser.password);
-        params.append('shipmentId', shipmentId);
-
+        params.append('action', 'deleteShipment'); params.append('adminPhone', currentUser.phone);
+        params.append('adminPassword', currentUser.password); params.append('shipmentId', shipmentId);
         try {
-            const res = await fetch(API_URL, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-                body: params.toString()
-            });
+            const res = await fetch(API_URL, { method: 'POST', headers: { 'Content-Type': 'application/x-www-form-urlencoded' }, body: params.toString() });
             const data = await res.json();
-            if (data.success) { 
-                trackingCache = {};
-                loadAllShipments(); 
-                showToast('✅ تم حذف الشحنة بنجاح', 'success');
-            } else { 
-                showToast(data.msg || '❌ فشل الحذف', 'error');
-            }
-        } catch (e) { 
-            showToast('⚠️ فشل الاتصال بالخادم', 'error');
-        }
+            if (data.success) { trackingCache = {}; loadAllShipments(); showToast('✅ تم حذف الشحنة بنجاح', 'success'); }
+            else { showToast(data.msg || '❌ فشل الحذف', 'error'); }
+        } catch (e) { showToast('⚠️ فشل الاتصال بالخادم', 'error'); }
     }
 
     // ============================================================
-    //  🚚 تتبع الشحنة
+    //  تتبع الشحنة
     // ============================================================
     async function trackShipment(billCode) {
-        const isAdmin = currentUser && currentUser.role === 'admin';
-        
         document.getElementById('modal').classList.remove('hidden');
         document.getElementById('modalBody').innerHTML = '<div class="loading"><div class="spinner"></div>جاري تتبع الشحنة...</div>';
-        
         try {
             const res = await fetch(`${API_URL}?action=track&billCode=${billCode}`);
             const data = await res.json();
-
             if (data.code === "1" && data.data && data.data[0]) {
                 let html = `<h3><i class="fas fa-map-marked-alt"></i> مسار الشحنة</h3>`;
-                
-                if (isAdmin) {
-                    html += `<p style="margin-bottom:16px;color:#666;font-size:14px;direction:ltr;text-align:left;"><strong>رقم التتبع:</strong> ${billCode}</p>`;
-                }
-                
                 const currentStatus = data.data[0].status || '';
                 const details = data.data[0].details || [];
-                
                 let foundDelivered = false;
-                for (const d of details) {
-                    const desc = d.desc || '';
-                    if (desc.includes('تم التسليم')) {
-                        foundDelivered = true;
-                        break;
-                    }
-                }
-                
-                let displayStatus = currentStatus;
-                let statusBgColor = '#e8f5e9';
-                let statusBorderColor = '#2e7d32';
-                let statusTextColor = '#2e7d32';
-                
-                if (foundDelivered || currentStatus.includes('تم التسليم')) {
-                    displayStatus = '✅ تم التسليم';
-                } else if (currentStatus.includes('خطأ') || currentStatus.includes('Error') || currentStatus.includes('❌')) {
+                for (const d of details) { if ((d.desc || '').includes('تم التسليم')) { foundDelivered = true; break; } }
+                let displayStatus = currentStatus, statusBgColor = '#e8f5e9', statusBorderColor = '#2e7d32', statusTextColor = '#2e7d32';
+                if (foundDelivered || currentStatus.includes('تم التسليم')) displayStatus = '✅ تم التسليم';
+                else if (currentStatus.includes('خطأ') || currentStatus.includes('Error') || currentStatus.includes('❌')) {
                     displayStatus = '❌ ' + currentStatus.replace(/❌️?/g, '').replace(/خطأ/g, '').trim();
                     if (!displayStatus || displayStatus === '❌') displayStatus = '❌ خطأ في التوصيل';
-                    statusBgColor = '#ffeaea';
-                    statusBorderColor = '#dc3545';
-                    statusTextColor = '#dc3545';
-                } else if (currentStatus.includes('تم الاستلام')) {
-                    displayStatus = '📦 تم استلام الشحنة';
-                    statusBgColor = '#e3f2fd';
-                    statusBorderColor = '#0d47a1';
-                    statusTextColor = '#0d47a1';
-                } else if (currentStatus.includes('Delivered') || currentStatus.includes('✅')) {
-                    displayStatus = '✅ تم التسليم';
-                } else if (!currentStatus) {
-                    displayStatus = 'قيد المعالجة';
-                    statusBgColor = '#e3f2fd';
-                    statusBorderColor = '#0d47a1';
-                    statusTextColor = '#0d47a1';
+                    statusBgColor = '#ffeaea'; statusBorderColor = '#dc3545'; statusTextColor = '#dc3545';
                 }
-                
-                html += `<div style="background:${statusBgColor};padding:10px 16px;border-radius:10px;margin-bottom:16px;border-right:4px solid ${statusBorderColor};">
-                    <strong style="color:${statusTextColor};font-size:15px;">📍 الحالة الحالية:</strong>
-                    <span style="color:${statusTextColor};font-weight:700;font-size:16px;margin-right:8px;">${displayStatus}</span>
-                </div>`;
-                
-                if (details.length === 0) {
-                    html += `<p style="text-align:center;color:#999;padding:20px;">لا توجد تفاصيل تتبع متاحة</p>`;
-                } else {
+                html += `<div style="background:${statusBgColor};padding:10px 16px;border-radius:10px;margin-bottom:16px;border-right:4px solid ${statusBorderColor};"><strong style="color:${statusTextColor};font-size:15px;">📍 الحالة الحالية:</strong><span style="color:${statusTextColor};font-weight:700;font-size:16px;margin-right:8px;">${displayStatus}</span></div>`;
+                if (details.length === 0) html += `<p style="text-align:center;color:#999;padding:20px;">لا توجد تفاصيل تتبع متاحة</p>`;
+                else {
                     details.forEach(d => {
-                        let desc = d.desc || '';
-                        desc = desc.replace(/\([0-9]{10,11}\)/g, '');
-                        desc = desc.replace(/[0-9]{10,11}/g, '');
-                        desc = desc.replace(/J&T/gi, '');
-                        desc = desc.replace(/courier/gi, '');
-                        desc = desc.replace(/Express/gi, '');
-                        
-                        let location = d.scanNetworkName || '';
-                        let city = d.scanNetworkCity || '';
-                        let locationText = location;
-                        if (city && !location.includes(city)) {
-                            locationText = city + (location ? ' - ' + location : '');
-                        }
+                        let desc = (d.desc || '').replace(/\([0-9]{10,11}\)/g, '').replace(/[0-9]{10,11}/g, '').replace(/J&T/gi, '').replace(/courier/gi, '').replace(/Express/gi, '');
+                        let location = d.scanNetworkName || '', city = d.scanNetworkCity || '';
+                        let locationText = city && !location.includes(city) ? city + (location ? ' - ' + location : '') : location;
                         locationText = locationText.replace(/[0-9]/g, '').trim();
-                        
-                        html += `<div class="timeline-item">
-                            <div class="time">🕐 ${d.scanTime || ''}</div>
-                            <div class="event">📌 ${desc}</div>
-                            <div class="location">📍 ${locationText}</div>
-                            ${d.probleDescription ? `<div class="problem">⚠️ ${d.probleDescription}</div>` : ''}
-                        </div>`;
+                        html += `<div class="timeline-item"><div class="time">🕐 ${d.scanTime || ''}</div><div class="event">📌 ${desc}</div><div class="location">📍 ${locationText}</div>${d.probleDescription ? `<div class="problem">⚠️ ${d.probleDescription}</div>` : ''}</div>`;
                     });
                 }
                 document.getElementById('modalBody').innerHTML = html;
             } else {
-                let errorMsg = data.msg || data.error || 'فشل تتبع الشحنة';
-                document.getElementById('modalBody').innerHTML = `
-                    <h3><i class="fas fa-map-marked-alt"></i> تتبع الشحنة</h3>
-                    <div style="text-align:center;padding:20px;color:#dc3545;">
-                        <div style="font-size:48px;margin-bottom:12px;">❌</div>
-                        <p>${errorMsg}</p>
-                    </div>
-                `;
+                document.getElementById('modalBody').innerHTML = `<h3><i class="fas fa-map-marked-alt"></i> تتبع الشحنة</h3><div style="text-align:center;padding:20px;color:#dc3545;"><div style="font-size:48px;margin-bottom:12px;">❌</div><p>${data.msg || data.error || 'فشل تتبع الشحنة'}</p></div>`;
             }
         } catch (e) {
-            document.getElementById('modalBody').innerHTML = `
-                <h3><i class="fas fa-map-marked-alt"></i> تتبع الشحنة</h3>
-                <div style="text-align:center;padding:20px;color:#dc3545;">
-                    <div style="font-size:48px;margin-bottom:12px;">📡</div>
-                    <p>فشل الاتصال بخدمة التتبع</p>
-                </div>
-            `;
+            document.getElementById('modalBody').innerHTML = `<h3><i class="fas fa-map-marked-alt"></i> تتبع الشحنة</h3><div style="text-align:center;padding:20px;color:#dc3545;"><div style="font-size:48px;margin-bottom:12px;">📡</div><p>فشل الاتصال بخدمة التتبع</p></div>`;
         }
     }
 
     // ============================================================
-    //  👥 إدارة العملاء (للأدمن)
+    //  العملاء
     // ============================================================
     async function showClients() {
         document.getElementById('modal').classList.remove('hidden');
         document.getElementById('modalBody').innerHTML = '<div class="loading"><div class="spinner"></div>جاري التحميل...</div>';
-        
         try {
             const params = new URLSearchParams();
-            params.append('action', 'allClients');
-            params.append('adminPhone', currentUser.phone);
-            params.append('adminPassword', currentUser.password);
-
-            const res = await fetch(API_URL, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-                body: params.toString()
-            });
+            params.append('action', 'allClients'); params.append('adminPhone', currentUser.phone); params.append('adminPassword', currentUser.password);
+            const res = await fetch(API_URL, { method: 'POST', headers: { 'Content-Type': 'application/x-www-form-urlencoded' }, body: params.toString() });
             const data = await res.json();
-            
             if (data.success) {
-                let html = `<h3><i class="fas fa-users"></i> إدارة العملاء</h3>
-                    <button class="btn-eux-green" onclick="showAddClientForm()" style="width:100%;margin-bottom:14px;">
-                        <span class="inner">➕ إنشاء حساب عميل جديد</span>
-                        <span class="fold"></span>
-                        <div class="points_wrapper"><span class="point"></span><span class="point"></span><span class="point"></span><span class="point"></span><span class="point"></span><span class="point"></span><span class="point"></span><span class="point"></span><span class="point"></span><span class="point"></span></div>
-                    </button>
-                    <div id="clientList"></div>`;
+                let html = `<h3><i class="fas fa-users"></i> إدارة العملاء</h3><button class="btn-eux-green" onclick="showAddClientForm()" style="width:100%;margin-bottom:14px;"><span class="inner">➕ إنشاء حساب عميل جديد</span><span class="fold"></span></button><div id="clientList"></div>`;
                 document.getElementById('modalBody').innerHTML = html;
-                
                 const listDiv = document.getElementById('clientList');
-                if (data.clients.length === 0) {
-                    listDiv.innerHTML = '<p style="text-align:center;color:#999;padding:20px;">لا يوجد عملاء حتى الآن</p>';
-                } else {
-                    data.clients.forEach(c => {
-                        listDiv.innerHTML += `<div class="client-card">
-                            <div class="client-info"><strong>${c.name}</strong><br><span class="phone">📱 ${c.phone}</span><br><span class="created">📅 ${c.created}</span></div>
-                            <div class="client-actions"><button class="btn-eux-red" onclick="deleteClient('${c.phone}')" style="padding:6px 16px;border-radius:8px;font-size:13px;">
-                                <span class="inner">🗑️ حذف</span>
-                                <span class="fold"></span>
-                                <div class="points_wrapper"><span class="point"></span><span class="point"></span><span class="point"></span><span class="point"></span><span class="point"></span><span class="point"></span><span class="point"></span><span class="point"></span><span class="point"></span><span class="point"></span></div>
-                            </button></div>
-                        </div>`;
-                    });
-                }
-            } else {
-                document.getElementById('modalBody').innerHTML = `<p style="color:red;">${data.msg || 'فشل التحميل'}</p>`;
-            }
-        } catch (e) {
-            document.getElementById('modalBody').innerHTML = `<p style="color:red;">فشل الاتصال</p>`;
-        }
+                if (data.clients.length === 0) listDiv.innerHTML = '<p style="text-align:center;color:#999;padding:20px;">لا يوجد عملاء حتى الآن</p>';
+                else data.clients.forEach(c => {
+                    listDiv.innerHTML += `<div class="client-card"><div class="client-info"><strong>${c.name}</strong><br><span class="phone">📱 ${c.phone}</span><br><span class="created">📅 ${c.created}</span></div><div class="client-actions"><button class="btn-eux-red" onclick="deleteClient('${c.phone}')" style="padding:6px 16px;border-radius:8px;font-size:13px;"><span class="inner">🗑️ حذف</span><span class="fold"></span></button></div></div>`;
+                });
+            } else document.getElementById('modalBody').innerHTML = `<p style="color:red;">${data.msg || 'فشل التحميل'}</p>`;
+        } catch (e) { document.getElementById('modalBody').innerHTML = `<p style="color:red;">فشل الاتصال</p>`; }
     }
 
     function showAddClientForm() {
@@ -3410,16 +1761,8 @@
             <div class="form-group"><label>👤 اسم العميل *</label><input id="newClientName" placeholder="الاسم الكامل"></div>
             <div class="form-group"><label>📱 رقم الهاتف *</label><input id="newClientPhone" dir="ltr" placeholder="مثال: 011xxxxxxxx" maxlength="11" oninput="this.value=this.value.replace(/[^0-9]/g,'')"></div>
             <div class="form-group"><label>🔒 كلمة المرور *</label><input id="newClientPassword" type="password" dir="ltr" placeholder="كلمة المرور للدخول"></div>
-            <button class="btn-eux-green" onclick="createClient()" style="width:100%;">
-                <span class="inner">✅ إنشاء الحساب</span>
-                <span class="fold"></span>
-                <div class="points_wrapper"><span class="point"></span><span class="point"></span><span class="point"></span><span class="point"></span><span class="point"></span><span class="point"></span><span class="point"></span><span class="point"></span><span class="point"></span><span class="point"></span></div>
-            </button>
-            <button class="btn-eux-outline" onclick="showClients()" style="width:100%;margin-top:8px;">
-                <span class="inner">↩️ رجوع</span>
-                <span class="fold"></span>
-                <div class="points_wrapper"><span class="point"></span><span class="point"></span><span class="point"></span><span class="point"></span><span class="point"></span><span class="point"></span><span class="point"></span><span class="point"></span><span class="point"></span><span class="point"></span></div>
-            </button>
+            <button class="btn-eux-green" onclick="createClient()" style="width:100%;"><span class="inner">✅ إنشاء الحساب</span><span class="fold"></span></button>
+            <button class="btn-eux-outline" onclick="showClients()" style="width:100%;margin-top:8px;"><span class="inner">↩️ رجوع</span></button>
             <p id="clientError" style="color:red;margin-top:10px;text-align:center;"></p>
         `;
     }
@@ -3431,21 +1774,12 @@
         const errorDiv = document.getElementById('clientError');
         if (!name || !phone || !password) { errorDiv.textContent = "يرجى ملء جميع الحقول"; return; }
         if (phone.length !== 11) { errorDiv.textContent = "⚠️ رقم الهاتف يجب أن يكون 11 رقم"; return; }
-        
         const params = new URLSearchParams();
-        params.append('action', 'createClient');
-        params.append('adminPhone', currentUser.phone);
-        params.append('adminPassword', currentUser.password);
-        params.append('clientName', name);
-        params.append('clientPhone', phone);
-        params.append('clientPassword', password);
-
+        params.append('action', 'createClient'); params.append('adminPhone', currentUser.phone);
+        params.append('adminPassword', currentUser.password); params.append('clientName', name);
+        params.append('clientPhone', phone); params.append('clientPassword', password);
         try {
-            const res = await fetch(API_URL, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-                body: params.toString()
-            });
+            const res = await fetch(API_URL, { method: 'POST', headers: { 'Content-Type': 'application/x-www-form-urlencoded' }, body: params.toString() });
             const data = await res.json();
             if (data.success) { showClients(); showToast('✅ تم إنشاء الحساب!', 'success'); }
             else { errorDiv.textContent = data.msg; }
@@ -3455,27 +1789,16 @@
     async function deleteClient(phone) {
         if (!confirm('هل أنت متأكد من حذف هذا العميل؟')) return;
         try {
-            const params = new URLSearchParams();
-            params.append('action', 'deleteClient');
-            params.append('phone', phone);
-            await fetch(API_URL, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-                body: params.toString()
-            });
-            showClients();
-            showToast('✅ تم حذف العميل', 'success');
-        } catch (e) { 
-            showToast('⚠️ فشل الحذف', 'error');
-        }
+            const params = new URLSearchParams(); params.append('action', 'deleteClient'); params.append('phone', phone);
+            await fetch(API_URL, { method: 'POST', headers: { 'Content-Type': 'application/x-www-form-urlencoded' }, body: params.toString() });
+            showClients(); showToast('✅ تم حذف العميل', 'success');
+        } catch (e) { showToast('⚠️ فشل الحذف', 'error'); }
     }
 
     // ============================================================
-    //  🖥️ دوال مساعدة
+    //  دوال مساعدة
     // ============================================================
-    function closeModal() { 
-        document.getElementById('modal').classList.add('hidden'); 
-    }
+    function closeModal() { document.getElementById('modal').classList.add('hidden'); }
 
     function showToast(message, type) {
         const existing = document.querySelector('.toast');
@@ -3484,43 +1807,58 @@
         toast.className = 'toast' + (type ? ' ' + type : '');
         toast.textContent = message;
         document.body.appendChild(toast);
-        setTimeout(() => {
-            toast.style.opacity = '0';
-            toast.style.transition = 'opacity 0.3s';
-            setTimeout(() => toast.remove(), 300);
-        }, 3000);
+        setTimeout(() => { toast.style.opacity = '0'; toast.style.transition = 'opacity 0.3s'; setTimeout(() => toast.remove(), 300); }, 3000);
     }
 
-    document.getElementById('passwordInput').addEventListener('keypress', function(e) { 
-        if (e.key === 'Enter') doLogin(); 
-    });
-    document.getElementById('phoneInput').addEventListener('keypress', function(e) { 
-        if (e.key === 'Enter') document.getElementById('passwordInput').focus(); 
-    });
+    // ============================================================
+    //  دوال صفحة الهبوط
+    // ============================================================
+    function togglePopup(show) {
+        const popup = document.getElementById('accountPopup');
+        if(show) { popup.classList.add('active'); } else { popup.classList.remove('active'); }
+    }
+
+    function closePopupOutside(event) {
+        const overlay = document.getElementById('accountPopup');
+        if (event.target === overlay) { togglePopup(false); }
+    }
+
+    function submitToExcel(event) {
+        event.preventDefault();
+        const submitBtn = event.target.querySelector('.popup-submit-btn');
+        const originalBtnText = submitBtn.innerText;
+        submitBtn.innerText = "جاري الإرسال...";
+        submitBtn.disabled = true;
+        const formData = new FormData(event.target);
+        const params = new URLSearchParams(formData).toString();
+        const excelWebhookUrl = 'https://script.google.com/macros/s/AKfycbw4UjaHv4Vn0iHDsBI_Wx5AbrqGOfIxDJ5K-PRjJGtrSzCwbufVQR7QVkG1NTaeyINX/exec';
+        fetch(`${excelWebhookUrl}?${params}`, { method: 'POST' })
+        .then(response => {
+            alert('تم إرسال طلبك بنجاح! سيتم التواصل معك خلال 5 ساعات لتفعيل الحساب.');
+            event.target.reset(); togglePopup(false);
+        })
+        .catch(error => {
+            alert('تم إرسال طلبك بنجاح! سيتم التواصل معك خلال 5 ساعات لتفعيل الحساب.');
+            event.target.reset(); togglePopup(false);
+        })
+        .finally(() => { submitBtn.innerText = originalBtnText; submitBtn.disabled = false; });
+    }
+
+    // ============================================================
+    //  الأحداث
+    // ============================================================
+    document.getElementById('passwordInput').addEventListener('keypress', function(e) { if (e.key === 'Enter') doLogin(); });
+    document.getElementById('phoneInput').addEventListener('keypress', function(e) { if (e.key === 'Enter') document.getElementById('passwordInput').focus(); });
 
     document.addEventListener('keydown', function(e) {
-        if (e.ctrlKey && (e.key === 'u' || e.key === 's' || e.key === 'c' || e.key === 'a')) {
-            e.preventDefault();
-        }
+        if (e.ctrlKey && (e.key === 'u' || e.key === 's' || e.key === 'c' || e.key === 'a')) e.preventDefault();
         if (e.key === 'Escape') closeModal();
     });
 
     document.addEventListener('DOMContentLoaded', function() {
-        checkSession();
+        // لا نفعل شيء تلقائياً، ننتظر حتى يضغط المستخدم على تسجيل الدخول
     });
 </script>
 
 </body>
 </html>
-            `);
-            
-            // إغلاق document بعد كتابة المحتوى
-            loginWindow.document.close();
-            
-            // إضافة حدث للتركيز على النافذة الجديدة
-            loginWindow.focus();
-        }
-    </script>
-</body>
-</html>
-```
