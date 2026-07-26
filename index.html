@@ -1,3 +1,4 @@
+```html
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
@@ -1484,7 +1485,7 @@
     }
 
     // ============================================================
-    //  تتبع الشحنات
+    //  تتبع الشحنات - جلب الحالات دفعة واحدة
     // ============================================================
     async function fetchTrackingStatus(trackingNumber) {
         if (!trackingNumber || trackingNumber.length < 3) return null;
@@ -1530,12 +1531,33 @@
         }
     }
 
+    // ============================================================
+    //  تحديث حالات التتبع - 15 شحنة كل دفعة
+    // ============================================================
     async function updateAllTrackingStatuses(shipments) {
         const shipmentsWithTracking = shipments.filter(s => s.trackingNumber && s.trackingNumber.length > 3);
-        for (const s of shipmentsWithTracking) {
-            const status = await fetchTrackingStatus(s.trackingNumber);
-            updateShipmentStatusCard(s.id, status);
-            await new Promise(resolve => setTimeout(resolve, 500));
+        
+        if (shipmentsWithTracking.length === 0) return;
+        
+        // تقسيم الشحنات إلى مجموعات كل منها 15
+        const chunkSize = 15;
+        const chunks = [];
+        for (let i = 0; i < shipmentsWithTracking.length; i += chunkSize) {
+            chunks.push(shipmentsWithTracking.slice(i, i + chunkSize));
+        }
+        
+        // معالجة كل مجموعة على حدة
+        for (const chunk of chunks) {
+            const promises = chunk.map(async (s) => {
+                const status = await fetchTrackingStatus(s.trackingNumber);
+                return { id: s.id, status };
+            });
+            
+            const results = await Promise.all(promises);
+            
+            results.forEach(({ id, status }) => {
+                updateShipmentStatusCard(id, status);
+            });
         }
     }
 
@@ -1893,13 +1915,24 @@
             document.body.style.background = 'linear-gradient(135deg, #e8f0fe, #d4e4f7)';
             showPublicOrderPage();
         } else {
-            // لا يوجد ref، ابق على صفحة الهبوط
-            document.getElementById('landingPage').classList.remove('hidden');
-            document.getElementById('trackingApp').classList.add('hidden');
-            document.body.style.background = '#ffffff';
+            // التحقق من وجود جلسة مستخدم
+            const savedUser = getSavedUser();
+            if (savedUser && savedUser.phone && savedUser.password) {
+                currentUser = savedUser;
+                document.getElementById('landingPage').classList.add('hidden');
+                document.getElementById('trackingApp').classList.remove('hidden');
+                document.body.style.background = 'linear-gradient(135deg, #e8f0fe, #d4e4f7)';
+                showDashboard();
+            } else {
+                // لا يوجد ref ولا جلسة، ابق على صفحة الهبوط
+                document.getElementById('landingPage').classList.remove('hidden');
+                document.getElementById('trackingApp').classList.add('hidden');
+                document.body.style.background = '#ffffff';
+            }
         }
     });
 </script>
 
 </body>
 </html>
+```
