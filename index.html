@@ -1869,7 +1869,7 @@
         if (!text) return text;
         
         // إذا كان النص عربياً بالفعل، لا نترجمه
-        if (/[\u0600-\u06FF]/.test(text)) return text;
+        if (/[\u0600-\u06FF]/.test(text) && !/[a-zA-Z]/.test(text)) return text;
         
         try {
             // استخدام Google Translate API للترجمة
@@ -1883,21 +1883,26 @@
                 translated = translated.replace(/،\s*،/g, '،');
                 translated = translated.replace(/\s{2,}/g, ' ');
                 translated = translated.replace(/،\s*$/, '');
+                // إزالة الأرقام الزائدة (ثلاثة أرقام أو أكثر)
+                translated = translated.replace(/\b\d{3,}\b/g, '');
                 return translated.trim() || text;
             }
             return text;
         } catch (error) {
             console.error('فشل الترجمة:', error);
-            // في حالة فشل الترجمة، نستخدم الترجمة اليدوية كحل احتياطي
             return fallbackTranslate(text);
         }
     }
 
     // حل احتياطي في حالة فشل الترجمة
     function fallbackTranslate(text) {
+        // تنظيف النص من الأرقام الزائدة
+        let cleanText = text.replace(/\b\d{3,}\b/g, '').trim();
+        
         const translations = {
             'Abnormal Parcel Registration': 'تسجيل طرد غير طبيعي',
             'Customer refuse by call': 'رفض العميل استلام الطرد عبر الهاتف',
+            'Customer refuse by': 'رفض العميل استلام الطرد عبر',
             'Change The Delivery Address': 'تغيير عنوان التسليم',
             'address': 'العنوان',
             'adres': 'العنوان',
@@ -1908,18 +1913,24 @@
             'Address': 'العنوان',
             'Customer': 'العميل',
             'refuse': 'رفض',
-            'call': 'اتصال هاتفي'
+            'call': 'اتصال هاتفي',
+            'الغاء': 'إلغاء'
         };
         
-        let translated = text;
+        let translated = cleanText;
         for (const [eng, arb] of Object.entries(translations)) {
             const regex = new RegExp(eng.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'gi');
             translated = translated.replace(regex, arb);
         }
-        // تنظيف النص
+        
+        // تنظيف إضافي
         translated = translated.replace(/,\s*,/g, '،');
         translated = translated.replace(/,\s*$/, '');
         translated = translated.replace(/\s{2,}/g, ' ');
+        translated = translated.replace(/،\s*،/g, '،');
+        // إزالة الأرقام المتبقية
+        translated = translated.replace(/\b\d+\b/g, '');
+        
         return translated.trim() || text;
     }
 
