@@ -1,3 +1,4 @@
+```html
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
@@ -909,6 +910,30 @@
             font-size: 15px;
             white-space: nowrap;
         }
+        /* نتائج البحث المميزة */
+        .search-result-highlight {
+            border: 2px solid #0076ff !important;
+            background: #e8f4ff !important;
+            box-shadow: 0 4px 20px rgba(0, 118, 255, 0.15) !important;
+            animation: highlightPulse 1.5s ease-in-out;
+        }
+        @keyframes highlightPulse {
+            0% { box-shadow: 0 0 0 0 rgba(0, 118, 255, 0.4); }
+            50% { box-shadow: 0 0 20px 8px rgba(0, 118, 255, 0.15); }
+            100% { box-shadow: 0 4px 20px rgba(0, 118, 255, 0.15); }
+        }
+        .search-result-empty {
+            text-align: center;
+            padding: 30px 20px;
+            color: #888;
+            background: #f8fafc;
+            border-radius: 12px;
+            border: 1px dashed #ddd;
+        }
+        .search-result-empty .icon {
+            font-size: 48px;
+            margin-bottom: 10px;
+        }
     </style>
 </head>
 <body oncontextmenu="return false;">
@@ -1680,14 +1705,22 @@
     function toggleDetails(element) { const details = element.querySelector('.details'); if (details) details.classList.toggle('open'); }
 
     // ============================================================
-    //  البحث في الشحنات
+    //  البحث في الشحنات (يظهر النتيجة في الأعلى)
     // ============================================================
     function filterShipments() {
         const query = document.getElementById('searchInput').value.trim().toLowerCase();
+        const content = document.getElementById('content');
+        
+        // إزالة أي تمييز سابق
+        document.querySelectorAll('.search-result-highlight').forEach(el => {
+            el.classList.remove('search-result-highlight');
+        });
+        
         if (!query) {
             renderShipments(allShipmentsData);
             return;
         }
+        
         const filtered = allShipmentsData.filter(s => {
             const name = (s.receiverName || s.customerName || '').toLowerCase();
             const phone = (s.receiverPhone || s.customerPhone || '').toLowerCase();
@@ -1697,13 +1730,35 @@
             const city = (s.city || '').toLowerCase();
             return name.includes(query) || phone.includes(query) || id.includes(query) || tracking.includes(query) || gov.includes(query) || city.includes(query);
         });
-        renderShipments(filtered);
+        
+        if (filtered.length === 0) {
+            content.innerHTML = `
+                <div class="search-result-empty">
+                    <div class="icon">🔍</div>
+                    <p>لا توجد شحنات تطابق "<strong>${document.getElementById('searchInput').value}</strong>"</p>
+                </div>
+            `;
+            return;
+        }
+        
+        // عرض النتائج مع تمييز أول نتيجة
+        const isAdmin = currentUser && currentUser.role === 'admin';
+        content.innerHTML = filtered.map((s, index) => {
+            const cardHtml = createShipmentCard(s, isAdmin);
+            return index === 0 ? cardHtml.replace('shipment-card', 'shipment-card search-result-highlight') : cardHtml;
+        }).join('');
+        
+        // تمرير إلى أول نتيجة
+        const firstResult = document.querySelector('.search-result-highlight');
+        if (firstResult) {
+            firstResult.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
     }
 
     function renderShipments(shipments) {
         const content = document.getElementById('content');
         if (shipments.length === 0) {
-            content.innerHTML = '<div class="empty-state"><div class="icon">🔍</div><p>لا توجد شحنات تطابق البحث</p></div>';
+            content.innerHTML = '<div class="empty-state"><div class="icon">📦</div><p>لا توجد شحنات حتى الآن</p></div>';
             return;
         }
         const isAdmin = currentUser && currentUser.role === 'admin';
@@ -1808,91 +1863,68 @@
     }
 
     // ============================================================
-    //  دالة ترجمة النصوص الحمراء (probleDescription)
+    //  دالة ترجمة النصوص الحمراء باستخدام Google Translate
     // ============================================================
-    function translateProblemText(text) {
+    async function translateProblemText(text) {
         if (!text) return text;
         
-        // ترجمة النصوص الإنجليزية الشائعة
+        // إذا كان النص عربياً بالفعل، لا نترجمه
+        if (/[\u0600-\u06FF]/.test(text)) return text;
+        
+        try {
+            // استخدام Google Translate API للترجمة
+            const url = `https://translate.googleapis.com/translate_a/single?client=gtx&sl=en&tl=ar&dt=t&q=${encodeURIComponent(text)}`;
+            const response = await fetch(url);
+            const data = await response.json();
+            
+            if (data && data[0]) {
+                let translated = data[0].map(item => item[0]).join('');
+                // تنظيف النص المترجم
+                translated = translated.replace(/،\s*،/g, '،');
+                translated = translated.replace(/\s{2,}/g, ' ');
+                translated = translated.replace(/،\s*$/, '');
+                return translated.trim() || text;
+            }
+            return text;
+        } catch (error) {
+            console.error('فشل الترجمة:', error);
+            // في حالة فشل الترجمة، نستخدم الترجمة اليدوية كحل احتياطي
+            return fallbackTranslate(text);
+        }
+    }
+
+    // حل احتياطي في حالة فشل الترجمة
+    function fallbackTranslate(text) {
         const translations = {
-            'Abnormal parcelScan': 'فحص شذوذ في الشحنة',
+            'Abnormal Parcel Registration': 'تسجيل طرد غير طبيعي',
+            'Customer refuse by call': 'رفض العميل استلام الطرد عبر الهاتف',
             'Change The Delivery Address': 'تغيير عنوان التسليم',
-            'Change The Delivery': 'تغيير عنوان التسليم',
-            'Delivery Address': 'عنوان التسليم',
             'address': 'العنوان',
             'adres': 'العنوان',
             'parcelScan': 'فحص الشحنة',
-            'Abnormal': 'شذوذ',
+            'Abnormal': 'غير طبيعي',
             'Change': 'تغيير',
             'Delivery': 'تسليم',
             'Address': 'العنوان',
-            'parcel': 'شحنة',
-            'Scan': 'فحص',
-            'case of doubt': 'في حالة الشك',
-            'please contact the': 'يرجى الاتصال بـ',
-            'contact': 'اتصال',
-            'Receive': 'استلام',
-            'In': 'في',
-            'to': 'إلى',
-            'from': 'من',
-            'at': 'في',
-            'on': 'في',
-            'with': 'مع',
-            'for': 'لـ',
-            'of': 'من',
-            'and': 'و',
-            'the': '',
-            'The': '',
+            'Customer': 'العميل',
+            'refuse': 'رفض',
+            'call': 'اتصال هاتفي'
         };
         
         let translated = text;
-        
-        // استبدال الكلمات الإنجليزية بالعربية
         for (const [eng, arb] of Object.entries(translations)) {
-            const regex = new RegExp('\\b' + eng + '\\b', 'gi');
+            const regex = new RegExp(eng.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'gi');
             translated = translated.replace(regex, arb);
         }
-        
-        // تنظيف النص من الأرقام الزائدة (مثل 206) ولكن ن保留 الأرقام التي قد تكون مهمة
-        translated = translated.replace(/,\s*\d{3,}\s*,/g, '، ');
-        translated = translated.replace(/,\s*\d{3,}/g, '');
-        translated = translated.replace(/^\d{3,}\s*,/g, '');
-        
-        // إزالة المسافات الزائدة والفواصل المتكررة
-        translated = translated.replace(/\s{2,}/g, ' ');
-        translated = translated.replace(/،\s*،/g, '،');
+        // تنظيف النص
         translated = translated.replace(/,\s*,/g, '،');
-        
-        // إذا بقي النص بالإنجليزية، نحاول ترجمته بشكل أبسط
-        if (translated.match(/[a-zA-Z]/)) {
-            // محاولة ترجمة الجملة كاملة
-            const fullTranslations = {
-                'Abnormal parcelScan, Change The Delivery Address': 'فحص شذوذ في الشحنة، تغيير عنوان التسليم',
-                'Abnormal parcelScan, Change The Delivery': 'فحص شذوذ في الشحنة، تغيير عنوان التسليم',
-                'Change The Delivery Address, adres': 'تغيير عنوان التسليم، العنوان',
-                'Change The Delivery Address': 'تغيير عنوان التسليم',
-                'Abnormal parcelScan': 'فحص شذوذ في الشحنة',
-                'parcelScan, Change The Delivery Address': 'فحص الشحنة، تغيير عنوان التسليم',
-                'Receive, In case of doubt, please contact the': 'استلام، في حالة الشك يرجى الاتصال بـ',
-            };
-            for (const [eng, arb] of Object.entries(fullTranslations)) {
-                if (text.includes(eng)) {
-                    translated = arb;
-                    break;
-                }
-            }
-        }
-        
-        // إزالة الأرقام المتبقية
-        translated = translated.replace(/[0-9]/g, '').trim();
-        // إزالة الرموز الزائدة
-        translated = translated.replace(/[،,]\s*$/, '').trim();
-        
-        return translated || text;
+        translated = translated.replace(/,\s*$/, '');
+        translated = translated.replace(/\s{2,}/g, ' ');
+        return translated.trim() || text;
     }
 
     // ============================================================
-    //  تتبع الشحنة (معدل لترجمة النصوص الحمراء)
+    //  تتبع الشحنة (معدل للترجمة التلقائية)
     // ============================================================
     async function trackShipment(billCode) {
         document.getElementById('modal').classList.remove('hidden');
@@ -1916,7 +1948,7 @@
                 html += `<div style="background:${statusBgColor};padding:10px 16px;border-radius:10px;margin-bottom:16px;border-right:4px solid ${statusBorderColor};"><strong style="color:${statusTextColor};font-size:15px;">📍 الحالة الحالية:</strong><span style="color:${statusTextColor};font-weight:700;font-size:16px;margin-right:8px;">${displayStatus}</span></div>`;
                 if (details.length === 0) html += `<p style="text-align:center;color:#999;padding:20px;">لا توجد تفاصيل تتبع متاحة</p>`;
                 else {
-                    details.forEach(d => {
+                    for (const d of details) {
                         let desc = (d.desc || '').replace(/\([0-9]{10,11}\)/g, '').replace(/[0-9]{10,11}/g, '').replace(/J&T/gi, '').replace(/courier/gi, '').replace(/Express/gi, '');
                         let location = d.scanNetworkName || '', city = d.scanNetworkCity || '';
                         let locationText = city && !location.includes(city) ? city + (location ? ' - ' + location : '') : location;
@@ -1925,11 +1957,11 @@
                         // ترجمة نص المشكلة (اللون الأحمر) إذا وجد
                         let problemText = d.probleDescription || '';
                         if (problemText) {
-                            problemText = translateProblemText(problemText);
+                            problemText = await translateProblemText(problemText);
                         }
                         
                         html += `<div class="timeline-item"><div class="time">🕐 ${d.scanTime || ''}</div><div class="event">📌 ${desc}</div><div class="location">📍 ${locationText}</div>${problemText ? `<div class="problem">⚠️ ${problemText}</div>` : ''}</div>`;
-                    });
+                    }
                 }
                 document.getElementById('modalBody').innerHTML = html;
             } else {
@@ -2053,7 +2085,7 @@
     }
 
     // ============================================================
-    //  الأحداث - تعديل لجعل التطبيق يتحقق من الرابط عند التحميل
+    //  الأحداث
     // ============================================================
     document.getElementById('passwordInput').addEventListener('keypress', function(e) { if (e.key === 'Enter') doLogin(); });
     document.getElementById('phoneInput').addEventListener('keypress', function(e) { if (e.key === 'Enter') document.getElementById('passwordInput').focus(); });
@@ -2069,14 +2101,12 @@
         const refPhone = urlParams.get('ref');
         
         if (refPhone && refPhone.length === 11) {
-            // يوجد ref في الرابط، افتح صفحة تسجيل الشحنة مباشرة
             publicClientPhone = refPhone;
             document.getElementById('landingPage').classList.add('hidden');
             document.getElementById('trackingApp').classList.remove('hidden');
             document.body.style.background = 'linear-gradient(135deg, #e8f0fe, #d4e4f7)';
             showPublicOrderPage();
         } else {
-            // التحقق من وجود جلسة مستخدم
             const savedUser = getSavedUser();
             if (savedUser && savedUser.phone && savedUser.password) {
                 currentUser = savedUser;
@@ -2085,7 +2115,6 @@
                 document.body.style.background = 'linear-gradient(135deg, #e8f0fe, #d4e4f7)';
                 showDashboard();
             } else {
-                // لا يوجد ref ولا جلسة، ابق على صفحة الهبوط
                 document.getElementById('landingPage').classList.remove('hidden');
                 document.getElementById('trackingApp').classList.add('hidden');
                 document.body.style.background = '#ffffff';
@@ -2096,3 +2125,4 @@
 
 </body>
 </html>
+```
