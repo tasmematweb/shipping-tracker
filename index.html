@@ -881,6 +881,37 @@
             .two-columns { grid-template-columns: 1fr; }
             .header-actions .share-btn-text { font-size: 11px; max-width: 180px; padding: 6px 10px; }
         }
+
+        /* حقل البحث */
+        .search-section {
+            margin-bottom: 20px;
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+        .search-section input {
+            flex: 1;
+            padding: 12px 18px;
+            border: 2px solid #e8ecf0;
+            border-radius: 12px;
+            font-size: 15px;
+            font-family: 'Cairo', sans-serif;
+            background: #f8fafc;
+            transition: 0.3s;
+            min-width: 200px;
+        }
+        .search-section input:focus {
+            border-color: #0076ff;
+            outline: none;
+            background: white;
+            box-shadow: 0 0 0 4px rgba(0, 118, 255, 0.08);
+        }
+        .search-section button {
+            padding: 12px 24px;
+            border-radius: 12px;
+            font-size: 15px;
+            white-space: nowrap;
+        }
     </style>
 </head>
 <body oncontextmenu="return false;">
@@ -889,7 +920,7 @@
 <div id="landingPage">
     <header>
         <a href="#" class="logo">EUX EXPRESS</a>
-        <a href="#" class="login-btn" onclick="openTrackingSystem(); return false;"><i class="fas fa-sign-in-alt"></i> تسجيل الدخول</a>
+        <a href="#" class="login-btn" onclick="openTrackingSystem(); return false;"><i class="fas fa-user-plus"></i> فتح حساب</a>
     </header>
 
     <section class="hero">
@@ -1116,6 +1147,11 @@
                     </button>
                 </div>
             </div>
+            <!-- حقل البحث -->
+            <div class="search-section">
+                <input type="text" id="searchInput" placeholder="🔍 ابحث عن شحنة (اسم، هاتف، رقم شحنة، تتبع...)" oninput="filterShipments()">
+                <button class="btn-eux" onclick="filterShipments()" style="padding:12px 20px;"><span class="inner">بحث</span><span class="fold"></span></button>
+            </div>
             <div id="content"></div>
         </div>
 
@@ -1184,6 +1220,7 @@
     let currentUser = null;
     let trackingCache = {};
     let publicClientPhone = null;
+    let allShipmentsData = [];
 
     // ============================================================
     //  التنقل بين الصفحات
@@ -1571,8 +1608,9 @@
             const res = await fetch(`${API_URL}?action=myShipments&phone=${currentUser.phone}&password=${currentUser.password}`);
             const data = await res.json();
             if (data.success) {
-                if (data.shipments.length === 0) { content.innerHTML = '<div class="empty-state"><div class="icon">📭</div><p>لا توجد شحنات حتى الآن</p></div>'; document.getElementById('totalCountSmall').textContent = '0'; }
-                else { document.getElementById('totalCountSmall').textContent = data.shipments.length; content.innerHTML = data.shipments.map(s => createShipmentCard(s)).join(''); updateAllTrackingStatuses(data.shipments); }
+                allShipmentsData = data.shipments || [];
+                if (allShipmentsData.length === 0) { content.innerHTML = '<div class="empty-state"><div class="icon">📭</div><p>لا توجد شحنات حتى الآن</p></div>'; document.getElementById('totalCountSmall').textContent = '0'; }
+                else { document.getElementById('totalCountSmall').textContent = allShipmentsData.length; renderShipments(allShipmentsData); updateAllTrackingStatuses(allShipmentsData); }
             } else { content.innerHTML = '<p style="color:red;">' + (data.msg || 'فشل التحميل') + '</p>'; }
         } catch (e) { content.innerHTML = '<p style="color:red;">فشل الاتصال</p>'; }
     }
@@ -1586,9 +1624,10 @@
             const res = await fetch(API_URL, { method: 'POST', body: params });
             const data = await res.json();
             if (data.success) {
-                document.getElementById('totalCountSmall').textContent = data.shipments.length;
-                content.innerHTML = data.shipments.length === 0 ? '<div class="empty-state"><div class="icon">📭</div><p>لا توجد شحنات</p></div>' : data.shipments.map(s => createShipmentCard(s, true)).join('');
-                updateAllTrackingStatuses(data.shipments);
+                allShipmentsData = data.shipments || [];
+                document.getElementById('totalCountSmall').textContent = allShipmentsData.length;
+                renderShipments(allShipmentsData);
+                updateAllTrackingStatuses(allShipmentsData);
             } else { content.innerHTML = '<p style="color:red;">' + (data.msg || 'فشل التحميل') + '</p>'; }
         } catch (e) { content.innerHTML = '<p style="color:red;">فشل الاتصال</p>'; }
     }
@@ -1639,6 +1678,37 @@
     }
 
     function toggleDetails(element) { const details = element.querySelector('.details'); if (details) details.classList.toggle('open'); }
+
+    // ============================================================
+    //  البحث في الشحنات
+    // ============================================================
+    function filterShipments() {
+        const query = document.getElementById('searchInput').value.trim().toLowerCase();
+        if (!query) {
+            renderShipments(allShipmentsData);
+            return;
+        }
+        const filtered = allShipmentsData.filter(s => {
+            const name = (s.receiverName || s.customerName || '').toLowerCase();
+            const phone = (s.receiverPhone || s.customerPhone || '').toLowerCase();
+            const id = (s.id || '').toLowerCase();
+            const tracking = (s.trackingNumber || '').toLowerCase();
+            const gov = (s.governorate || '').toLowerCase();
+            const city = (s.city || '').toLowerCase();
+            return name.includes(query) || phone.includes(query) || id.includes(query) || tracking.includes(query) || gov.includes(query) || city.includes(query);
+        });
+        renderShipments(filtered);
+    }
+
+    function renderShipments(shipments) {
+        const content = document.getElementById('content');
+        if (shipments.length === 0) {
+            content.innerHTML = '<div class="empty-state"><div class="icon">🔍</div><p>لا توجد شحنات تطابق البحث</p></div>';
+            return;
+        }
+        const isAdmin = currentUser && currentUser.role === 'admin';
+        content.innerHTML = shipments.map(s => createShipmentCard(s, isAdmin)).join('');
+    }
 
     // ============================================================
     //  إضافة شحنة
