@@ -1762,7 +1762,7 @@
                     </div>
                 </button>
                 <button class="btn-eux-outline" onclick="backToLanding()" style="width:100%;margin-top:10px;padding:14px;border-radius:12px;font-size:15px;">
-                    <span class="inner">🏠 العودة للصفحة الرئيسية</span>
+                    <span class="inner"> العودة للصفحة الرئيسية</span>
                 </button>
                 <p class="error-msg" id="loginError"></p>
             </div>
@@ -1772,7 +1772,7 @@
                 <div class="tracking-header">
                     <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
                         <h2><i class="fas fa-tachometer-alt"></i> لوحة التحكم</h2>
-                        <span class="total-small">📦 إجمالي الشحنات: <span class="count" id="totalCountSmall">0</span></span>
+                        <span class="total-small"> إجمالي الشحنات: <span class="count" id="totalCountSmall">0</span></span>
                     </div>
                     <div class="header-actions">
                         <!-- START: Search Section -->
@@ -1794,7 +1794,7 @@
                             </div>
                         </button>
                         <button id="addShipmentBtn" class="btn-eux-green hidden" onclick="showAddShipmentForm()" style="padding:10px 16px;border-radius:10px;font-size:13px;">
-                            <span class="inner">➕ إضافة شحنة</span>
+                            <span class="inner"> إضافة شحنة</span>
                             <span class="fold"></span>
                             <div class="points_wrapper">
                                 <span class="point"></span><span class="point"></span><span class="point"></span>
@@ -1804,7 +1804,7 @@
                             </div>
                         </button>
                         <button id="clientsBtn" class="btn-eux hidden" onclick="showClients()" style="padding:10px 16px;border-radius:10px;font-size:13px;">
-                            <span class="inner">👥 عملاء</span>
+                            <span class="inner"> عملاء</span>
                             <span class="fold"></span>
                             <div class="points_wrapper">
                                 <span class="point"></span><span class="point"></span><span class="point"></span>
@@ -1814,7 +1814,7 @@
                             </div>
                         </button>
                         <button id="allShipmentsBtn" class="btn-eux-orange hidden" onclick="loadAllShipments()" style="padding:10px 16px;border-radius:10px;font-size:13px;">
-                            <span class="inner">📋 الكل</span>
+                            <span class="inner"> الكل</span>
                             <span class="fold"></span>
                             <div class="points_wrapper">
                                 <span class="point"></span><span class="point"></span><span class="point"></span>
@@ -1824,7 +1824,7 @@
                             </div>
                         </button>
                         <button class="btn-eux-outline" onclick="logout()" style="padding:10px 16px;border-radius:10px;font-size:13px;">
-                            <span class="inner">🚪 خروج</span>
+                            <span class="inner"> خروج</span>
                         </button>
                     </div>
                 </div>
@@ -1850,17 +1850,17 @@
                     </div>
                 </div>
 
-                <div class="form-group"><label>👤 اسم المستلم *</label><input id="pf_receiverName" placeholder="اسم المستلم"></div>
-                <div class="form-group"><label>📱 هاتف المستلم *</label><input id="pf_receiverPhone" placeholder="مثال: 010xxxxxxxx" dir="ltr" maxlength="11" oninput="this.value=this.value.replace(/[^0-9]/g,'')"></div>
-                <div class="form-group"><label>📱 هاتف آخر للمستلم</label><input id="pf_receiverPhone2" placeholder="هاتف آخر (اختياري)" dir="ltr" maxlength="11" oninput="this.value=this.value.replace(/[^0-9]/g,'')"></div>
+                <div class="form-group"><label> اسم المستلم *</label><input id="pf_receiverName" placeholder="اسم المستلم"></div>
+                <div class="form-group"><label> هاتف المستلم *</label><input id="pf_receiverPhone" placeholder="مثال: 010xxxxxxxx" dir="ltr" maxlength="11" oninput="this.value=this.value.replace(/[^0-9]/g,'')"></div>
+                <div class="form-group"><label> هاتف آخر للمستلم</label><input id="pf_receiverPhone2" placeholder="هاتف آخر (اختياري)" dir="ltr" maxlength="11" oninput="this.value=this.value.replace(/[^0-9]/g,'')"></div>
                 <div class="two-columns">
-                    <div class="form-group"><label>🏛️ المحافظة *</label><select id="pf_governorate" onchange="updatePublicCities()"><option value="">اختر المحافظة</option></select></div>
-                    <div class="form-group"><label>🏙️ المدينة *</label><select id="pf_city"><option value="">اختر المحافظة أولاً</option></select></div>
+                    <div class="form-group"><label> المحافظة *</label><select id="pf_governorate" onchange="updatePublicCities()"><option value="">اختر المحافظة</option></select></div>
+                    <div class="form-group"><label> المدينة *</label><select id="pf_city"><option value="">اختر المحافظة أولاً</option></select></div>
                 </div>
-                <div class="form-group"><label>📍 العنوان التفصيلي *</label><input id="pf_address" placeholder="العنوان بالتفصيل"></div>
-                <div class="form-group"><label>💰 المبلغ المطلوب تحصيله شامل الشحن *</label><input id="pf_amount" type="number" placeholder="المبلغ بالجنيه" dir="ltr"></div>
-                <div class="form-group"><label>⚖️ وزن الشحنة *</label><input id="pf_weight" type="number" placeholder="الوزن بالكيلو" dir="ltr" value="1"></div>
-                <div class="form-group"><label>📝 ملاحظات</label><textarea id="pf_notes" placeholder="ملاحظات إضافية"></textarea></div>
+                <div class="form-group"><label> العنوان التفصيلي *</label><input id="pf_address" placeholder="العنوان بالتفصيل"></div>
+                <div class="form-group"><label> المبلغ المطلوب تحصيله شامل الشحن *</label><input id="pf_amount" type="number" placeholder="المبلغ بالجنيه" dir="ltr"></div>
+                <div class="form-group"><label> وزن الشحنة *</label><input id="pf_weight" type="number" placeholder="الوزن بالكيلو" dir="ltr" value="1"></div>
+                <div class="form-group"><label> ملاحظات</label><textarea id="pf_notes" placeholder="ملاحظات إضافية"></textarea></div>
                 <button class="btn-eux" onclick="submitPublicOrder()" style="width:100%;padding:14px;border-radius:12px;font-size:16px;">
                     <span class="inner">✅ تسجيل الشحنة</span>
                     <span class="fold"></span>
@@ -1872,7 +1872,7 @@
                     </div>
                 </button>
                 <button class="btn-eux-outline" onclick="backToLanding()" style="width:100%;margin-top:8px;padding:12px;border-radius:10px;font-size:14px;">
-                    <span class="inner">🏠 العودة للصفحة الرئيسية</span>
+                    <span class="inner"> العودة للصفحة الرئيسية</span>
                 </button>
                 <p id="publicError" style="color:red;margin-top:10px;text-align:center;"></p>
             </div>
@@ -2475,14 +2475,14 @@
             document.getElementById('modal').classList.remove('hidden');
             document.getElementById('modalBody').innerHTML = `
                     <h3><i class="fas fa-box"></i> إضافة شحنة جديدة</h3>
-                    <div class="form-group"><label>👤 اسم المستلم *</label><input id="f_receiverName" placeholder="اسم المستلم"></div>
-                    <div class="form-group"><label>📱 هاتف المستلم *</label><input id="f_receiverPhone" placeholder="مثال: 010xxxxxxxx" dir="ltr" maxlength="11" oninput="this.value=this.value.replace(/[^0-9]/g,'')"></div>
-                    <div class="form-group"><label>📱 هاتف آخر للمستلم</label><input id="f_receiverPhone2" placeholder="هاتف آخر (اختياري)" dir="ltr" maxlength="11" oninput="this.value=this.value.replace(/[^0-9]/g,'')"></div>
-                    <div class="two-columns"><div class="form-group"><label>🏛️ المحافظة *</label><select id="f_governorate" onchange="updateCities()">${govOptions}</select></div><div class="form-group"><label>🏙️ المدينة *</label><select id="f_city"><option value="">اختر المحافظة أولاً</option></select></div></div>
-                    <div class="form-group"><label>📍 العنوان التفصيلي *</label><input id="f_address" placeholder="العنوان بالتفصيل"></div>
-                    <div class="form-group"><label>💰 المبلغ المطلوب تحصيله شامل الشحن *</label><input id="f_amount" type="number" placeholder="المبلغ بالجنيه" dir="ltr"></div>
-                    <div class="form-group"><label>⚖️ وزن الشحنة *</label><input id="f_weight" type="number" placeholder="الوزن بالكيلو" dir="ltr" value="1"></div>
-                    <div class="form-group"><label>📝 ملاحظات</label><textarea id="f_notes" placeholder="ملاحظات إضافية"></textarea></div>
+                    <div class="form-group"><label> اسم المستلم *</label><input id="f_receiverName" placeholder="اسم المستلم"></div>
+                    <div class="form-group"><label> هاتف المستلم *</label><input id="f_receiverPhone" placeholder="مثال: 010xxxxxxxx" dir="ltr" maxlength="11" oninput="this.value=this.value.replace(/[^0-9]/g,'')"></div>
+                    <div class="form-group"><label> هاتف آخر للمستلم</label><input id="f_receiverPhone2" placeholder="هاتف آخر (اختياري)" dir="ltr" maxlength="11" oninput="this.value=this.value.replace(/[^0-9]/g,'')"></div>
+                    <div class="two-columns"><div class="form-group"><label> المحافظة *</label><select id="f_governorate" onchange="updateCities()">${govOptions}</select></div><div class="form-group"><label>🏙️ المدينة *</label><select id="f_city"><option value="">اختر المحافظة أولاً</option></select></div></div>
+                    <div class="form-group"><label> العنوان التفصيلي *</label><input id="f_address" placeholder="العنوان بالتفصيل"></div>
+                    <div class="form-group"><label> المبلغ المطلوب تحصيله شامل الشحن *</label><input id="f_amount" type="number" placeholder="المبلغ بالجنيه" dir="ltr"></div>
+                    <div class="form-group"><label> وزن الشحنة *</label><input id="f_weight" type="number" placeholder="الوزن بالكيلو" dir="ltr" value="1"></div>
+                    <div class="form-group"><label> ملاحظات</label><textarea id="f_notes" placeholder="ملاحظات إضافية"></textarea></div>
                     <button class="btn-eux" onclick="submitShipment()" style="width:100%;"><span class="inner">✅ إضافة الشحنة</span><span class="fold"></span></button>
                     <p id="shipError" style="color:red;margin-top:10px;"></p>
                 `;
@@ -2713,9 +2713,9 @@
         function showAddClientForm() {
             document.getElementById('modalBody').innerHTML = `
                     <h3><i class="fas fa-user-plus"></i> إنشاء حساب عميل جديد</h3>
-                    <div class="form-group"><label>👤 اسم العميل *</label><input id="newClientName" placeholder="الاسم الكامل"></div>
-                    <div class="form-group"><label>📱 رقم الهاتف *</label><input id="newClientPhone" dir="ltr" placeholder="مثال: 011xxxxxxxx" maxlength="11" oninput="this.value=this.value.replace(/[^0-9]/g,'')"></div>
-                    <div class="form-group"><label>🔒 كلمة المرور *</label><input id="newClientPassword" type="password" dir="ltr" placeholder="كلمة المرور للدخول"></div>
+                    <div class="form-group"><label> اسم العميل *</label><input id="newClientName" placeholder="الاسم الكامل"></div>
+                    <div class="form-group"><label> رقم الهاتف *</label><input id="newClientPhone" dir="ltr" placeholder="مثال: 011xxxxxxxx" maxlength="11" oninput="this.value=this.value.replace(/[^0-9]/g,'')"></div>
+                    <div class="form-group"><label> كلمة المرور *</label><input id="newClientPassword" type="password" dir="ltr" placeholder="كلمة المرور للدخول"></div>
                     <button class="btn-eux-green" onclick="createClient()" style="width:100%;"><span class="inner">✅ إنشاء الحساب</span><span class="fold"></span></button>
                     <button class="btn-eux-outline" onclick="showClients()" style="width:100%;margin-top:8px;"><span class="inner">↩️ رجوع</span></button>
                     <p id="clientError" style="color:red;margin-top:10px;text-align:center;"></p>
