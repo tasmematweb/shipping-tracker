@@ -1,12 +1,16 @@
+```html
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    
+    <!-- === إضافات SEO === -->
     <meta name="description" content="شركة EUX للشحن تقدم خدمات الشحن السريع من مدينة العبور إلى جميع محافظات مصر بأسعار تنافسية وخدمة احترافية.">
     <meta name="keywords" content="EUX, EUX Express, شركة شحن, شحن مصر, شحن سريع, شحن العبور">
     <meta name="robots" content="index, follow">
     <link rel="canonical" href="https://euxexpress.com/">
+    
     <title>شركة EUX للشحن | الريادة في سرعة وحلول الشحن</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -876,6 +880,26 @@
             font-weight: 700;
             font-size: 15px;
         }
+        /* زر التتبع في الخارج بجوار رقم الهاتف */
+        .shipment-card .summary-row .main-info .track-btn {
+            background: #0076ff;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            padding: 4px 14px;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.3s;
+            font-family: 'Cairo', sans-serif;
+        }
+        .shipment-card .summary-row .main-info .track-btn:hover {
+            background: #005fcc;
+            transform: scale(1.05);
+        }
+        .shipment-card .summary-row .main-info .track-btn i {
+            margin-left: 4px;
+        }
         .shipment-card .summary-row .last-update {
             font-size: 12px;
             color: #888;
@@ -1474,105 +1498,10 @@
             .header-actions .share-btn-text { font-size: 11px;
                 max-width: 180px;
                 padding: 6px 10px; }
-        }
-
-        /* ============ حقل البحث المحسن - نفس النموذج الذي كان يعمل ============ */
-        .search-section {
-            margin-bottom: 20px;
-            display: flex;
-            gap: 10px;
-            flex-wrap: wrap;
-            position: sticky;
-            top: 0;
-            background: white;
-            padding: 10px 0;
-            z-index: 100;
-            border-bottom: 2px solid #eef3f8;
-        }
-        .search-section input {
-            flex: 1;
-            padding: 14px 18px;
-            border: 2px solid #e8ecf0;
-            border-radius: 12px;
-            font-size: 16px;
-            font-family: 'Cairo', sans-serif;
-            background: #f8fafc;
-            transition: 0.3s;
-            min-width: 200px;
-        }
-        .search-section input:focus {
-            border-color: #0076ff;
-            outline: none;
-            background: white;
-            box-shadow: 0 0 0 4px rgba(0, 118, 255, 0.08);
-        }
-        .search-section .btn-search {
-            padding: 14px 28px;
-            background: #0076ff;
-            color: white;
-            border: none;
-            border-radius: 12px;
-            font-size: 16px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: 0.3s;
-        }
-        .search-section .btn-search:hover {
-            background: #005fcc;
-            transform: translateY(-2px);
-        }
-        .search-section .btn-clear {
-            padding: 14px 28px;
-            background: #e74c3c;
-            color: white;
-            border: none;
-            border-radius: 12px;
-            font-size: 16px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: 0.3s;
-        }
-        .search-section .btn-clear:hover {
-            background: #c0392b;
-            transform: translateY(-2px);
-        }
-
-        .result-count {
-            background: #e3f2fd;
-            padding: 8px 16px;
-            border-radius: 8px;
-            margin-bottom: 15px;
-            font-weight: 700;
-            color: #0d47a1;
-            border-right: 4px solid #0076ff;
-            display: none;
-        }
-        .result-count.show {
-            display: block;
-        }
-
-        .search-result-highlight {
-            border: 2px solid #0076ff !important;
-            background: #e8f4ff !important;
-            box-shadow: 0 4px 20px rgba(0, 118, 255, 0.15) !important;
-            animation: highlightPulse 1.5s ease-in-out;
-        }
-        @keyframes highlightPulse {
-            0% { box-shadow: 0 0 0 0 rgba(0, 118, 255, 0.4); }
-            50% { box-shadow: 0 0 20px 8px rgba(0, 118, 255, 0.15); }
-            100% { box-shadow: 0 4px 20px rgba(0, 118, 255, 0.15); }
-        }
-        .search-result-empty {
-            text-align: center;
-            padding: 30px 20px;
-            color: #888;
-            background: #f8fafc;
-            border-radius: 12px;
-            border: 1px dashed #ddd;
-        }
-        .search-result-empty .icon {
-            font-size: 48px;
-            margin-bottom: 10px;
+            .shipment-card .summary-row .main-info .track-btn {
+                font-size: 11px;
+                padding: 2px 10px;
+            }
         }
     </style>
 </head>
@@ -1812,15 +1741,6 @@
                         </button>
                     </div>
                 </div>
-
-                <!-- ===== نموذج البحث - نفس النموذج الذي كان يعمل ===== -->
-                <div class="search-section">
-                    <input type="text" id="searchInput" placeholder="🔍 ابحث بالاسم، الهاتف، المدينة، رقم الشحنة..." oninput="filterShipments()">
-                    <button class="btn-search" onclick="filterShipments()">🔍 بحث</button>
-                    <button class="btn-clear" onclick="clearSearchAndReset()">✕ مسح</button>
-                </div>
-
-                <div id="resultCount" class="result-count"></div>
 
                 <div id="content"></div>
             </div>
@@ -2331,7 +2251,7 @@
         }
 
         // ============================================================
-        //  عرض بطاقة الشحنة
+        //  عرض بطاقة الشحنة - مع زر تتبع في الخارج بجوار رقم الهاتف
         // ============================================================
         function createShipmentCard(s, isAdmin = false) {
             let statusClass = 'status-waiting',
@@ -2344,9 +2264,14 @@
             let updateText = lastUpdate ? 'آخر تحديث: ' + lastUpdate : '';
             let actions = '';
             const trackingNum = s.trackingNumber || '';
+            
+            // زر التتبع في الخارج - يظهر بجوار رقم الهاتف
+            let trackButton = '';
             if (trackingNum && trackingNum.length > 3) {
-                actions += `<button class="btn-eux" onclick="event.stopPropagation(); trackShipment('${trackingNum}')" style="padding:6px 16px;border-radius:8px;font-size:13px;"><span class="inner">📍 تتبع</span><span class="fold"></span></button>`;
+                trackButton = `<button class="track-btn" onclick="event.stopPropagation(); trackShipment('${trackingNum}')"><i class="fas fa-map-pin"></i> تتبع</button>`;
             }
+
+            // الأزرار داخل التفاصيل (للمشرف فقط)
             if (isAdmin) {
                 if (!trackingNum || trackingNum.length < 3) {
                     actions += `<button class="btn-eux-green" onclick="event.stopPropagation(); showAddTracking('${s.id}')" style="padding:6px 16px;border-radius:8px;font-size:13px;"><span class="inner">🔢 إضافة تتبع</span><span class="fold"></span></button>`;
@@ -2354,15 +2279,28 @@
                 actions += `<button class="btn-eux-red" onclick="event.stopPropagation(); deleteShipment('${s.id}')" style="padding:6px 16px;border-radius:8px;font-size:13px;"><span class="inner">🗑️ حذف</span><span class="fold"></span></button>`;
                 var adminDetails = `<div class="info"><strong>🔢 رقم الشحنة:</strong> ${s.id}</div>${trackingNum ? `<div class="info"><strong>🚚 رقم التتبع:</strong> ${trackingNum}</div>` : ''}`;
             } else { var adminDetails = ''; }
+            
             const displayName = s.receiverName || s.customerName || 'غير معروف';
             const displayPhone = s.receiverPhone || s.customerPhone || '';
             const displayAmount = s.amount || '0';
             const hasTracking = trackingNum && trackingNum.length > 3;
             const badgeHTML = statusText ? `<span class="status-badge ${statusClass}">${statusText}</span>` : '';
+            
             return `<div class="shipment-card" onclick="toggleDetails(this)" id="card-${s.id}">
                 ${badgeHTML}
-                <div class="summary-row"><div class="main-info"><span class="name">👤 ${displayName}</span><span class="phone">📱 ${displayPhone}</span><span class="amount">💰 ${displayAmount} ج.م</span></div><div class="last-update">${updateText}</div></div>
-                <div class="status-row${hasTracking ? ' loading-status' : ''}"><span class="status-label">📍 الحالة:</span><span class="status-value">${hasTracking ? '⏳ جاري التحميل...' : (trackingNum ? '⏳ انتظار...' : 'لم يتم التحديد بعد')}</span></div>
+                <div class="summary-row">
+                    <div class="main-info">
+                        <span class="name">👤 ${displayName}</span>
+                        <span class="phone">📱 ${displayPhone}</span>
+                        ${trackButton}
+                        <span class="amount">💰 ${displayAmount} ج.م</span>
+                    </div>
+                    <div class="last-update">${updateText}</div>
+                </div>
+                <div class="status-row${hasTracking ? ' loading-status' : ''}">
+                    <span class="status-label">📍 الحالة:</span>
+                    <span class="status-value">${hasTracking ? '⏳ جاري التحميل...' : (trackingNum ? '⏳ انتظار...' : 'لم يتم التحديد بعد')}</span>
+                </div>
                 <div class="details">
                     ${isAdmin ? `<div class="info"><strong>📱 رقم العميل:</strong> ${s.clientPhone || 'غير معروف'}</div>` : ''}${adminDetails}
                     ${s.receiverPhone2 ? `<div class="info"><strong>📱 هاتف آخر:</strong> ${s.receiverPhone2}</div>` : ''}
@@ -2379,95 +2317,10 @@
         function toggleDetails(element) { const details = element.querySelector('.details'); if (details) details.classList.toggle('open'); }
 
         // ============================================================
-        //  مسح البحث وإعادة ضبطه - يعمل بنفس طريقة النموذج
+        //  عرض الشحنات
         // ============================================================
-        function clearSearchAndReset() {
-            document.getElementById('searchInput').value = '';
-            document.querySelectorAll('.search-result-highlight').forEach(el => {
-                el.classList.remove('search-result-highlight');
-            });
-            const countEl = document.getElementById('resultCount');
-            countEl.classList.remove('show');
-
-            const isAdmin = currentUser && currentUser.role === 'admin';
-            if (allShipmentsData.length === 0) {
-                document.getElementById('content').innerHTML = '<div class="empty-state"><div class="icon">📦</div><p>لا توجد شحنات</p></div>';
-            } else {
-                document.getElementById('content').innerHTML = allShipmentsData.map(s => createShipmentCard(s, isAdmin)).join('');
-            }
-            document.getElementById('searchInput').focus();
-        }
-
-        // ============================================================
-        //  البحث في الشحنات - نفس النموذج الذي كان يعمل تماماً
-        // ============================================================
-        function filterShipments() {
-            const query = document.getElementById('searchInput').value.trim().toLowerCase();
-            const content = document.getElementById('content');
-            const countEl = document.getElementById('resultCount');
-
-            document.querySelectorAll('.search-result-highlight').forEach(el => {
-                el.classList.remove('search-result-highlight');
-            });
-
-            if (!query) {
-                const isAdmin = currentUser && currentUser.role === 'admin';
-                if (allShipmentsData.length === 0) {
-                    content.innerHTML = '<div class="empty-state"><div class="icon">📦</div><p>لا توجد شحنات</p></div>';
-                } else {
-                    content.innerHTML = allShipmentsData.map(s => createShipmentCard(s, isAdmin)).join('');
-                }
-                countEl.classList.remove('show');
-                return;
-            }
-
-            const filtered = allShipmentsData.filter(s => {
-                const name = (s.receiverName || s.customerName || '').toLowerCase();
-                const phone = (s.receiverPhone || s.customerPhone || '').toLowerCase();
-                const id = (s.id || '').toLowerCase();
-                const tracking = (s.trackingNumber || '').toLowerCase();
-                const gov = (s.governorate || '').toLowerCase();
-                const city = (s.city || '').toLowerCase();
-                const amount = (s.amount || '').toString();
-                const status = (s.status || '').toLowerCase();
-                return name.includes(query) || phone.includes(query) || id.includes(query) ||
-                    tracking.includes(query) || gov.includes(query) || city.includes(query) ||
-                    amount.includes(query) || status.includes(query);
-            });
-
-            const isAdmin = currentUser && currentUser.role === 'admin';
-
-            if (filtered.length === 0) {
-                content.innerHTML = `
-                        <div class="search-result-empty">
-                            <div class="icon">🔍</div>
-                            <p>❌ لا توجد شحنات تطابق "<strong>${document.getElementById('searchInput').value}</strong>"</p>
-                            <button class="btn-search" onclick="clearSearchAndReset()" style="margin-top:12px;padding:8px 20px;background:#0076ff;color:white;border:none;border-radius:8px;cursor:pointer;">
-                                📋 عرض الكل
-                            </button>
-                        </div>
-                    `;
-                countEl.classList.remove('show');
-                content.scrollIntoView({ behavior: 'smooth', block: 'start' });
-                return;
-            }
-
-            content.innerHTML = filtered.map((s, index) => {
-                const cardHtml = createShipmentCard(s, isAdmin);
-                return index === 0 ? cardHtml.replace('shipment-card', 'shipment-card search-result-highlight') : cardHtml;
-            }).join('');
-
-            countEl.textContent = `✅ تم العثور على ${filtered.length} شحنة تطابق "${document.getElementById('searchInput').value}"`;
-            countEl.classList.add('show');
-
-            content.scrollIntoView({ behavior: 'smooth', block: 'start' });
-        }
-
         function renderShipments(shipments) {
             const content = document.getElementById('content');
-            const countEl = document.getElementById('resultCount');
-            countEl.classList.remove('show');
-
             if (shipments.length === 0) {
                 content.innerHTML = '<div class="empty-state"><div class="icon">📦</div><p>لا توجد شحنات حتى الآن</p></div>';
                 return;
@@ -2862,3 +2715,4 @@
 
 </body>
 </html>
+```
