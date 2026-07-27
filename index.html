@@ -910,27 +910,31 @@
             background: white;
             box-shadow: 0 0 0 4px rgba(0, 118, 255, 0.08);
         }
-        .search-section button {
+        .search-section .btn-search {
             padding: 14px 28px;
+            background: #0076ff;
+            color: white;
+            border: none;
             border-radius: 12px;
             font-size: 16px;
             font-weight: 600;
-            white-space: nowrap;
-            border: none;
             cursor: pointer;
             transition: 0.3s;
-        }
-        .search-section .btn-search {
-            background: #0076ff;
-            color: white;
         }
         .search-section .btn-search:hover {
             background: #005fcc;
             transform: translateY(-2px);
         }
         .search-section .btn-clear {
+            padding: 14px 28px;
             background: #e74c3c;
             color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.3s;
         }
         .search-section .btn-clear:hover {
             background: #c0392b;
@@ -1216,7 +1220,7 @@
             </div>
             
             <!-- ======================================== -->
-            <!-- قسم البحث المحسن - نفس نموذج التجربة -->
+            <!-- نموذج البحث الجديد - نفس النموذج الذي كان يعمل -->
             <!-- ======================================== -->
             <div class="search-section">
                 <input type="text" id="searchInput" placeholder="🔍 ابحث بالاسم، الهاتف، المدينة، رقم الشحنة..." oninput="filterShipments()">
@@ -1744,8 +1748,8 @@
         document.querySelectorAll('.search-result-highlight').forEach(el => {
             el.classList.remove('search-result-highlight');
         });
-        const oldResultMsg = document.querySelector('.result-count');
-        if (oldResultMsg) oldResultMsg.classList.remove('show');
+        const countEl = document.getElementById('resultCount');
+        countEl.classList.remove('show');
         
         // إعادة عرض كل الشحنات
         const isAdmin = currentUser && currentUser.role === 'admin';
@@ -1758,7 +1762,7 @@
     }
 
     // ============================================================
-    //  البحث في الشحنات - النسخة النهائية (مثل نموذج التجربة تماماً)
+    //  البحث في الشحنات - نفس النموذج الذي كان يعمل
     // ============================================================
     function filterShipments() {
         const query = document.getElementById('searchInput').value.trim().toLowerCase();
