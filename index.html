@@ -27,45 +27,31 @@
             min-height: 100vh;
             display: flex;
             justify-content: center;
-            align-items: center;
-            padding: 20px;
+            align-items: flex-start;
+            padding: 30px 20px;
         }
 
-        /* ===== تصميم البطاقة الرئيسية ===== */
-        .subscribe {
-            position: relative;
-            width: 100%;
+        .container {
             max-width: 900px;
-            height: auto;
-            min-height: 500px;
-            padding: 30px 25px 80px 25px;
-            background-color: #FFF;
-            border-radius: 16px;
-            color: #333;
-            box-shadow: 0px 10px 60px 8px rgba(0, 0, 0, 0.12);
-            border: 1px solid rgba(0, 118, 255, 0.1);
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
         }
 
-        .subscribe:after {
-            position: absolute;
-            content: "";
-            right: -8px;
-            bottom: 18px;
-            width: 0;
-            height: 0;
-            border-left: 0px solid transparent;
-            border-right: 10px solid transparent;
-            border-bottom: 10px solid #0076ff;
-        }
-
-        /* ===== حقل البحث في الأعلى ===== */
+        /* ===== حقل البحث ===== */
         .search-header {
             display: flex;
             gap: 10px;
-            margin-bottom: 25px;
             flex-wrap: wrap;
-            border-bottom: 2px solid #eef3f8;
-            padding-bottom: 18px;
+            background: white;
+            padding: 15px 20px;
+            border-radius: 16px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.06);
+            border: 1px solid #e8ecf0;
+            position: sticky;
+            top: 10px;
+            z-index: 100;
         }
 
         .search-header input {
@@ -77,7 +63,7 @@
             font-family: 'Cairo', sans-serif;
             background: #f8fafc;
             transition: 0.3s;
-            min-width: 200px;
+            min-width: 180px;
         }
 
         .search-header input:focus {
@@ -88,7 +74,7 @@
         }
 
         .search-header .search-btn {
-            padding: 12px 28px;
+            padding: 12px 24px;
             background: #0076ff;
             color: white;
             border: none;
@@ -125,122 +111,83 @@
             transform: translateY(-2px);
         }
 
-        /* ===== عداد النتائج ===== */
         .result-count {
             background: #e3f2fd;
             padding: 6px 16px;
             border-radius: 8px;
-            margin-bottom: 15px;
             font-weight: 700;
             color: #0d47a1;
             border-right: 4px solid #0076ff;
             display: none;
             font-size: 14px;
+            margin: 0 5px 5px 5px;
         }
 
         .result-count.show {
             display: block;
         }
 
-        /* ===== عنوان البطاقة ===== */
-        .subscribe p {
-            text-align: center;
-            font-size: 22px;
-            font-weight: 700;
-            letter-spacing: 2px;
-            line-height: 32px;
-            color: #0d2137;
-            margin-bottom: 20px;
-        }
-
-        .subscribe p span {
-            color: #0076ff;
-        }
-
-        /* ===== حاوية الشحنات ===== */
-        .shipments-container {
-            max-height: 450px;
-            overflow-y: auto;
-            padding-left: 5px;
-            margin-bottom: 10px;
-        }
-
-        .shipments-container::-webkit-scrollbar {
-            width: 6px;
-        }
-
-        .shipments-container::-webkit-scrollbar-track {
-            background: #f0f4f8;
-            border-radius: 10px;
-        }
-
-        .shipments-container::-webkit-scrollbar-thumb {
-            background: #0076ff;
-            border-radius: 10px;
-        }
-
-        /* ===== بطاقة الشحنة ===== */
-        .shipment-item {
-            background: #f8fafc;
-            border: 1px solid #e8ecf0;
-            border-radius: 12px;
-            padding: 14px 18px;
-            margin-bottom: 10px;
-            transition: 0.25s ease;
-            cursor: pointer;
+        /* ===== بطاقة الطلب - نفس تصميم subscribe ===== */
+        .subscribe {
             position: relative;
+            padding: 20px 22px 70px 22px;
+            background-color: #FFF;
+            border-radius: 14px;
+            color: #333;
+            box-shadow: 0px 6px 30px 4px rgba(0, 0, 0, 0.08);
+            border: 1px solid rgba(0, 118, 255, 0.06);
+            transition: 0.3s;
         }
 
-        .shipment-item:hover {
-            background: #f0f4fa;
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+        .subscribe:hover {
+            box-shadow: 0px 8px 40px 6px rgba(0, 0, 0, 0.12);
         }
 
-        .shipment-item.highlight {
-            border: 2px solid #0076ff !important;
-            background: #e8f4ff !important;
-            box-shadow: 0 4px 20px rgba(0, 118, 255, 0.15) !important;
-            animation: pulse 1.5s ease-in-out;
+        .subscribe:after {
+            position: absolute;
+            content: "";
+            right: -6px;
+            bottom: 14px;
+            width: 0;
+            height: 0;
+            border-left: 0px solid transparent;
+            border-right: 8px solid transparent;
+            border-bottom: 8px solid #0076ff;
         }
 
-        @keyframes pulse {
-            0% { box-shadow: 0 0 0 0 rgba(0, 118, 255, 0.4); }
-            50% { box-shadow: 0 0 20px 8px rgba(0, 118, 255, 0.15); }
-            100% { box-shadow: 0 4px 20px rgba(0, 118, 255, 0.15); }
-        }
-
-        .shipment-item .row {
+        .subscribe .header-row {
             display: flex;
             justify-content: space-between;
             align-items: center;
             flex-wrap: wrap;
-            gap: 6px;
+            gap: 8px;
+            margin-bottom: 8px;
         }
 
-        .shipment-item .name {
+        .subscribe .name {
+            font-size: 18px;
             font-weight: 700;
-            font-size: 16px;
             color: #0d2137;
         }
 
-        .shipment-item .phone {
+        .subscribe .phone {
             color: #555;
             direction: ltr;
-            font-size: 14px;
+            font-size: 15px;
+            font-weight: 600;
         }
 
-        .shipment-item .amount {
+        .subscribe .amount {
             color: #0076ff;
             font-weight: 700;
-            font-size: 15px;
+            font-size: 17px;
         }
 
-        .shipment-item .status-badge {
+        .subscribe .status-badge {
             display: inline-block;
-            padding: 2px 14px;
+            padding: 3px 16px;
             border-radius: 20px;
-            font-size: 11px;
+            font-size: 12px;
             font-weight: 700;
         }
 
@@ -248,84 +195,43 @@
         .status-tracking { background: #e3f2fd; color: #0d47a1; }
         .status-done { background: #e8f5e9; color: #2e7d32; }
 
-        .shipment-item .track-btn {
-            background: #0076ff;
-            color: white;
-            border: none;
-            border-radius: 8px;
-            padding: 4px 16px;
-            font-size: 13px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: 0.3s;
-            font-family: 'Cairo', sans-serif;
+        .subscribe .info-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px 20px;
+            margin: 6px 0 4px 0;
+            font-size: 14px;
+            color: #555;
         }
 
-        .shipment-item .track-btn:hover {
-            background: #005fcc;
-            transform: scale(1.05);
+        .subscribe .info-row span strong {
+            color: #0d2137;
+            margin-left: 4px;
         }
 
-        .shipment-item .status-row {
+        .subscribe .status-row {
             display: flex;
             align-items: center;
             gap: 8px;
-            margin-top: 6px;
+            margin-top: 8px;
             padding: 4px 12px;
+            background: #f8fafc;
             border-radius: 8px;
             font-size: 13px;
+            border-right: 3px solid #0076ff;
         }
 
-        .shipment-item .status-row .label {
+        .subscribe .status-row .label {
             font-weight: 600;
             color: #555;
         }
 
-        .shipment-item .status-row .value {
+        .subscribe .status-row .value {
             font-weight: 700;
             color: #2e7d32;
         }
 
-        .shipment-item .details {
-            margin-top: 12px;
-            padding-top: 12px;
-            border-top: 1px dashed #dce5ed;
-            display: none;
-            font-size: 13px;
-            color: #555;
-        }
-
-        .shipment-item .details.open {
-            display: block;
-            animation: fadeIn 0.25s ease;
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(-6px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        .shipment-item .details .info {
-            margin: 4px 0;
-        }
-
-        .shipment-item .details .info strong {
-            color: #0d2137;
-            margin-left: 5px;
-        }
-
-        .empty-state {
-            text-align: center;
-            padding: 40px 20px;
-            color: #999;
-        }
-
-        .empty-state .icon {
-            font-size: 48px;
-            margin-bottom: 10px;
-        }
-
-        /* ===== زر التتبع في الأسفل ===== */
+        /* ===== زر التتبع في أسفل كل بطاقة ===== */
         .subscribe .submit-btn {
             position: absolute;
             border-radius: 30px;
@@ -333,49 +239,39 @@
             border-top-right-radius: 0;
             background: linear-gradient(135deg, #0076ff, #0052cc);
             color: #FFF;
-            padding: 14px 35px;
+            padding: 10px 28px;
             display: inline-block;
-            font-size: 14px;
+            font-size: 13px;
             font-weight: 700;
-            letter-spacing: 3px;
-            left: -10px;
-            bottom: -20px;
+            letter-spacing: 2px;
+            left: -8px;
+            bottom: -16px;
             cursor: pointer;
             transition: all 0.25s ease;
-            box-shadow: -5px 6px 20px 0px rgba(0, 118, 255, 0.4);
+            box-shadow: -4px 5px 18px 0px rgba(0, 118, 255, 0.35);
             border: none;
             font-family: 'Cairo', sans-serif;
         }
 
         .subscribe .submit-btn:hover {
             background: linear-gradient(135deg, #0052cc, #003399);
-            box-shadow: -5px 6px 20px 0px rgba(0, 0, 0, 0.3);
-            transform: scale(1.02);
+            box-shadow: -4px 5px 18px 0px rgba(0, 0, 0, 0.3);
+            transform: scale(1.03);
         }
 
-        /* ===== رسائل ===== */
-        .toast {
-            position: fixed;
-            bottom: 24px;
-            left: 50%;
-            transform: translateX(-50%);
-            background: #0d2137;
-            color: white;
-            padding: 12px 28px;
-            border-radius: 14px;
-            font-size: 14px;
-            z-index: 9999;
-            animation: toastIn 0.3s ease;
-            max-width: 90%;
+        /* ===== حالة عدم وجود نتائج ===== */
+        .empty-state {
             text-align: center;
-            font-family: 'Cairo', sans-serif;
-            box-shadow: 0 8px 30px rgba(0,0,0,0.2);
+            padding: 50px 20px;
+            background: white;
+            border-radius: 14px;
+            color: #999;
+            border: 1px dashed #ddd;
         }
-        .toast.success { background: #28a745; }
-        .toast.error { background: #dc3545; }
-        @keyframes toastIn {
-            from { opacity: 0; transform: translateX(-50%) translateY(20px); }
-            to { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+        .empty-state .icon {
+            font-size: 56px;
+            margin-bottom: 12px;
         }
 
         /* ===== المودال ===== */
@@ -394,9 +290,7 @@
             backdrop-filter: blur(6px);
             -webkit-backdrop-filter: blur(6px);
         }
-        .modal.show {
-            display: flex;
-        }
+        .modal.show { display: flex; }
         .modal-content {
             background: white;
             border-radius: 20px;
@@ -420,10 +314,7 @@
             font-weight: 700;
             color: #0d2137;
         }
-        .modal-content h3 i {
-            color: #0076ff;
-            margin-left: 8px;
-        }
+        .modal-content h3 i { color: #0076ff; margin-left: 8px; }
         .close-btn {
             position: absolute;
             top: 16px;
@@ -450,41 +341,72 @@
         .timeline-item .location { color: #666; font-size: 14px; }
         .timeline-item .problem { color: #dc3545; font-size: 13px; margin-top: 4px; }
 
+        .toast {
+            position: fixed;
+            bottom: 24px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #0d2137;
+            color: white;
+            padding: 12px 28px;
+            border-radius: 14px;
+            font-size: 14px;
+            z-index: 9999;
+            animation: toastIn 0.3s ease;
+            max-width: 90%;
+            text-align: center;
+            font-family: 'Cairo', sans-serif;
+            box-shadow: 0 8px 30px rgba(0,0,0,0.2);
+        }
+        .toast.success { background: #28a745; }
+        .toast.error { background: #dc3545; }
+        @keyframes toastIn {
+            from { opacity: 0; transform: translateX(-50%) translateY(20px); }
+            to { opacity: 1; transform: translateX(-50%) translateY(0); }
+        }
+
         @media (max-width: 600px) {
-            .subscribe { padding: 20px 15px 70px 15px; }
-            .search-header input { min-width: 140px; font-size: 13px; }
-            .search-header .search-btn { padding: 10px 16px; font-size: 13px; }
-            .search-header .clear-btn { padding: 10px 14px; font-size: 13px; }
-            .subscribe .submit-btn { padding: 10px 22px; font-size: 12px; left: -6px; bottom: -16px; }
-            .shipment-item .row { gap: 4px; }
-            .shipment-item .name { font-size: 14px; }
-            .shipment-item .phone { font-size: 12px; }
+            .search-header { padding: 12px 14px; }
+            .search-header input { min-width: 120px; font-size: 13px; padding: 10px 14px; }
+            .search-header .search-btn { padding: 10px 14px; font-size: 13px; }
+            .search-header .clear-btn { padding: 10px 12px; font-size: 13px; }
+            .subscribe { padding: 16px 16px 60px 16px; }
+            .subscribe .submit-btn { padding: 8px 18px; font-size: 12px; left: -6px; bottom: -14px; }
+            .subscribe .name { font-size: 16px; }
+            .subscribe .phone { font-size: 13px; }
+        }
+
+        /* تأثير تمييز النتيجة */
+        .subscribe.highlight {
+            border: 2px solid #0076ff !important;
+            box-shadow: 0 4px 30px rgba(0, 118, 255, 0.2) !important;
+            animation: highlightPulse 1.5s ease-in-out;
+        }
+        @keyframes highlightPulse {
+            0% { box-shadow: 0 0 0 0 rgba(0, 118, 255, 0.3); }
+            50% { box-shadow: 0 0 30px 10px rgba(0, 118, 255, 0.1); }
+            100% { box-shadow: 0 4px 30px rgba(0, 118, 255, 0.2); }
         }
     </style>
 </head>
 <body>
 
-<!-- ===== البطاقة الرئيسية ===== -->
-<div class="subscribe">
-    <p>📦 <span>EUX</span> · شحناتي</p>
+<div class="container">
 
-    <!-- حقل البحث -->
+    <!-- ===== حقل البحث ===== -->
     <div class="search-header">
         <input type="text" id="searchInput" placeholder="🔍 ابحث باسم العميل أو رقم الهاتف..." oninput="filterShipments()">
         <button class="search-btn" onclick="filterShipments()">بحث</button>
         <button class="clear-btn" onclick="clearSearch()">مسح</button>
     </div>
 
-    <!-- عداد النتائج -->
     <div id="resultCount" class="result-count"></div>
 
-    <!-- حاوية الشحنات -->
-    <div class="shipments-container" id="shipmentsContainer">
+    <!-- ===== حاوية البطاقات ===== -->
+    <div id="cardsContainer">
         <!-- سيتم ملؤها بواسطة JavaScript -->
     </div>
 
-    <!-- زر تتبع في الأسفل -->
-    <button class="submit-btn" onclick="trackAll()">📍 تتبع الكل</button>
 </div>
 
 <!-- ===== المودال ===== -->
@@ -499,7 +421,7 @@
     // ============================================================
     //  بيانات وهمية للشحنات
     // ============================================================
-    let shipments = [
+    let allShipments = [
         { id: 'SH-001', name: 'أحمد محمد', phone: '01012345678', city: 'القاهرة', amount: '250', status: 'تم التسليم', tracking: 'JEG123456789', governorate: 'القاهرة', address: 'شارع النيل', notes: 'الرجاء الاتصال قبل التسليم' },
         { id: 'SH-002', name: 'سارة علي', phone: '01123456789', city: 'الإسكندرية', amount: '180', status: 'قيد التوصيل', tracking: 'JEG987654321', governorate: 'الإسكندرية', address: 'شارع البحر', notes: '' },
         { id: 'SH-003', name: 'محمد إبراهيم', phone: '01234567890', city: 'الجيزة', amount: '320', status: 'تم التسليم', tracking: '', governorate: 'الجيزة', address: 'شارع الهرم', notes: 'تسليم يد بيد' },
@@ -507,27 +429,21 @@
         { id: 'SH-005', name: 'خالد سعيد', phone: '01187654321', city: 'القاهرة', amount: '450', status: 'تم التسليم', tracking: 'JEG444444444', governorate: 'القاهرة', address: 'شارع المعادي', notes: 'شقة 3' },
         { id: 'SH-006', name: 'نورا يوسف', phone: '01234561234', city: 'الإسكندرية', amount: '210', status: 'قيد التوصيل', tracking: '', governorate: 'الإسكندرية', address: 'شارع سيدي جابر', notes: '' },
         { id: 'SH-007', name: 'عمر محمود', phone: '01056781234', city: 'الجيزة', amount: '380', status: 'تم التسليم', tracking: 'JEG333333333', governorate: 'الجيزة', address: 'شارع فيصل', notes: 'الدور الثاني' },
-        { id: 'SH-008', name: 'ليلى كريم', phone: '01123457890', city: 'القليوبية', amount: '120', status: 'قيد التوصيل', tracking: '', governorate: 'القليوبية', address: 'شارع بنها', notes: '' },
-        { id: 'SH-009', name: 'يوسف ناصر', phone: '01267890123', city: 'القاهرة', amount: '290', status: 'تم التسليم', tracking: 'JEG222222222', governorate: 'القاهرة', address: 'شارع العباسية', notes: 'الباب الخلفي' },
-        { id: 'SH-010', name: 'منى شريف', phone: '01034567890', city: 'الإسكندرية', amount: '175', status: 'قيد التوصيل', tracking: 'JEG111111111', governorate: 'الإسكندرية', address: 'شارع الرمل', notes: '' }
+        { id: 'SH-008', name: 'ليلى كريم', phone: '01123457890', city: 'القليوبية', amount: '120', status: 'قيد التوصيل', tracking: '', governorate: 'القليوبية', address: 'شارع بنها', notes: '' }
     ];
 
-    let trackingCache = {};
-    let allShipments = [...shipments];
-    let currentFiltered = [];
-
     // ============================================================
-    //  عرض الشحنات
+    //  عرض البطاقات - كل بطاقة عبارة عن نموذج subscribe
     // ============================================================
-    function renderShipments(data) {
-        const container = document.getElementById('shipmentsContainer');
+    function renderCards(data) {
+        const container = document.getElementById('cardsContainer');
         const countEl = document.getElementById('resultCount');
 
         if (!data || data.length === 0) {
             container.innerHTML = `
                 <div class="empty-state">
-                    <div class="icon">📭</div>
-                    <p>لا توجد شحنات مطابقة للبحث</p>
+                    <div class="icon">🔍</div>
+                    <p>❌ لا توجد شحنات تطابق بحثك</p>
                 </div>
             `;
             countEl.classList.remove('show');
@@ -546,38 +462,48 @@
             const highlight = index === 0 ? ' highlight' : '';
 
             return `
-                <div class="shipment-item${highlight}" onclick="toggleDetails(this)" data-id="${s.id}">
-                    <div class="row">
+                <div class="subscribe${highlight}" data-id="${s.id}">
+                    <!-- السطر العلوي: الاسم + رقم الهاتف -->
+                    <div class="header-row">
                         <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;">
-                            <span class="name">${s.name}</span>
-                            <span class="phone">${s.phone}</span>
-                            ${hasTracking ? `<button class="track-btn" onclick="event.stopPropagation(); trackShipment('${s.tracking}')">تتبع</button>` : ''}
+                            <span class="name">👤 ${s.name}</span>
+                            <span class="phone">📱 ${s.phone}</span>
                         </div>
                         <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
                             <span class="amount">${s.amount} ج.م</span>
                             <span class="status-badge ${statusClass}">${s.status}</span>
                         </div>
                     </div>
+
+                    <!-- معلومات إضافية -->
+                    <div class="info-row">
+                        <span><strong>رقم الشحنة:</strong> ${s.id}</span>
+                        <span><strong>المحافظة:</strong> ${s.governorate || ''}</span>
+                        <span><strong>المدينة:</strong> ${s.city || ''}</span>
+                        ${s.tracking ? `<span><strong>رقم التتبع:</strong> ${s.tracking}</span>` : ''}
+                    </div>
+
+                    <!-- حالة التتبع -->
                     <div class="status-row">
                         <span class="label">📍 الحالة:</span>
                         <span class="value">${hasTracking ? '⏳ جاري التحميل...' : 'لم يتم التحديد بعد'}</span>
                     </div>
-                    <div class="details">
-                        <div class="info"><strong>رقم الشحنة:</strong> ${s.id}</div>
-                        <div class="info"><strong>المحافظة:</strong> ${s.governorate || ''}</div>
-                        <div class="info"><strong>المدينة:</strong> ${s.city || ''}</div>
-                        <div class="info"><strong>العنوان:</strong> ${s.address || ''}</div>
-                        ${s.notes ? `<div class="info"><strong>ملاحظات:</strong> ${s.notes}</div>` : ''}
-                        ${s.tracking ? `<div class="info"><strong>رقم التتبع:</strong> ${s.tracking}</div>` : ''}
-                    </div>
+
+                    <!-- زر التتبع في الأسفل -->
+                    <button class="submit-btn" onclick="trackShipment('${s.tracking || ''}', '${s.id}')">
+                        📍 تتبع
+                    </button>
                 </div>
             `;
         }).join('');
-    }
 
-    function toggleDetails(element) {
-        const details = element.querySelector('.details');
-        if (details) details.classList.toggle('open');
+        // التمرير لأول نتيجة
+        const firstResult = document.querySelector('.subscribe.highlight');
+        if (firstResult) {
+            setTimeout(() => {
+                firstResult.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }, 100);
+        }
     }
 
     // ============================================================
@@ -587,7 +513,7 @@
         const query = document.getElementById('searchInput').value.trim().toLowerCase();
         
         if (!query) {
-            renderShipments(allShipments);
+            renderCards(allShipments);
             return;
         }
 
@@ -596,40 +522,41 @@
             const phone = s.phone.toLowerCase();
             const id = s.id.toLowerCase();
             const city = (s.city || '').toLowerCase();
-            return name.includes(query) || phone.includes(query) || id.includes(query) || city.includes(query);
+            const gov = (s.governorate || '').toLowerCase();
+            return name.includes(query) || phone.includes(query) || id.includes(query) || 
+                   city.includes(query) || gov.includes(query);
         });
 
-        currentFiltered = filtered;
-        renderShipments(filtered);
-        
-        // تمرير لأول نتيجة
-        const firstResult = document.querySelector('.shipment-item.highlight');
-        if (firstResult) {
-            firstResult.scrollIntoView({ behavior: 'smooth', block: 'center' });
-        }
+        renderCards(filtered);
     }
 
     function clearSearch() {
         document.getElementById('searchInput').value = '';
-        renderShipments(allShipments);
+        renderCards(allShipments);
         document.getElementById('searchInput').focus();
     }
 
     // ============================================================
-    //  تتبع شحنة فردية
+    //  تتبع شحنة
     // ============================================================
-    async function trackShipment(trackingNumber) {
+    async function trackShipment(trackingNumber, shipmentId) {
         if (!trackingNumber || trackingNumber.length < 3) {
-            showToast('⚠️ رقم التتبع غير صحيح', 'error');
+            showToast('⚠️ هذه الشحنة لا يوجد بها رقم تتبع', 'error');
             return;
         }
 
         document.getElementById('modal').classList.add('show');
-        document.getElementById('modalBody').innerHTML = '<div style="text-align:center;padding:30px;"><div style="border:4px solid #e8ecf0;border-top:4px solid #0076ff;border-radius:50%;width:40px;height:40px;animation:spin 1s linear infinite;margin:0 auto 10px;"></div><p>جاري تتبع الشحنة...</p></div>';
+        document.getElementById('modalBody').innerHTML = `
+            <div style="text-align:center;padding:30px;">
+                <div style="border:4px solid #e8ecf0;border-top:4px solid #0076ff;border-radius:50%;width:40px;height:40px;animation:spin 1s linear infinite;margin:0 auto 10px;"></div>
+                <p>جاري تتبع الشحنة...</p>
+            </div>
+            <style>@keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }</style>
+        `;
 
         try {
-            // محاكاة طلب التتبع (بدون API حقيقي)
-            await new Promise(resolve => setTimeout(resolve, 1000));
+            // محاكاة طلب التتبع
+            await new Promise(resolve => setTimeout(resolve, 1200));
             
             const details = [
                 { time: '2026-07-27 10:30', desc: 'تم استلام الشحنة من المرسل', location: 'مدينة العبور' },
@@ -637,21 +564,35 @@
                 { time: '2026-07-27 14:45', desc: 'الشحنة في طريقها للتوصيل', location: 'في الطريق' }
             ];
 
-            let html = `<h3><i class="fas fa-map-marked-alt"></i> مسار الشحنة</h3>
+            let html = `
+                <h3><i class="fas fa-map-marked-alt"></i> مسار الشحنة</h3>
                 <div style="background:#e8f5e9;padding:10px 16px;border-radius:10px;margin-bottom:16px;border-right:4px solid #2e7d32;">
                     <strong style="color:#2e7d32;">📍 الحالة الحالية:</strong>
                     <span style="color:#2e7d32;font-weight:700;">في الطريق للتوصيل</span>
-                </div>`;
+                </div>
+            `;
 
             details.forEach(d => {
-                html += `<div class="timeline-item">
-                    <div class="time">🕐 ${d.time}</div>
-                    <div class="event">📌 ${d.desc}</div>
-                    <div class="location">📍 ${d.location}</div>
-                </div>`;
+                html += `
+                    <div class="timeline-item">
+                        <div class="time">🕐 ${d.time}</div>
+                        <div class="event">📌 ${d.desc}</div>
+                        <div class="location">📍 ${d.location}</div>
+                    </div>
+                `;
             });
 
             document.getElementById('modalBody').innerHTML = html;
+
+            // تحديث حالة البطاقة
+            const card = document.querySelector(`.subscribe[data-id="${shipmentId}"]`);
+            if (card) {
+                const statusValue = card.querySelector('.status-row .value');
+                if (statusValue) {
+                    statusValue.textContent = '✅ في الطريق للتوصيل';
+                    statusValue.style.color = '#0d47a1';
+                }
+            }
 
         } catch (e) {
             document.getElementById('modalBody').innerHTML = `
@@ -662,32 +603,6 @@
                 </div>
             `;
         }
-    }
-
-    // ============================================================
-    //  تتبع جميع الشحنات (زر تتبع الكل)
-    // ============================================================
-    function trackAll() {
-        const hasTracking = allShipments.filter(s => s.tracking && s.tracking.length > 3);
-        if (hasTracking.length === 0) {
-            showToast('⚠️ لا توجد شحنات بها رقم تتبع', 'error');
-            return;
-        }
-        showToast(`📍 جاري تتبع ${hasTracking.length} شحنة...`, 'success');
-        
-        // محاكاة تحديث الحالات
-        hasTracking.forEach((s, index) => {
-            setTimeout(() => {
-                const card = document.querySelector(`.shipment-item[data-id="${s.id}"]`);
-                if (card) {
-                    const statusRow = card.querySelector('.status-row .value');
-                    if (statusRow) {
-                        statusRow.textContent = '✅ في الطريق';
-                        statusRow.style.color = '#0d47a1';
-                    }
-                }
-            }, index * 300);
-        });
     }
 
     // ============================================================
@@ -726,7 +641,7 @@
     //  تحميل الصفحة
     // ============================================================
     document.addEventListener('DOMContentLoaded', function() {
-        renderShipments(allShipments);
+        renderCards(allShipments);
     });
 </script>
 
