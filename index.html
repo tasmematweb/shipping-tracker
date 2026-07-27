@@ -4,328 +4,418 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <meta name="description" content="شركة EUX للشحن تقدم خدمات الشحن السريع من مدينة العبور إلى جميع محافظات مصر بأسعار تنافسية وخدمة احترافية.">
-    <meta name="keywords" content="EUX, EUX Express, شركة شحن, شحن مصر, شحن سريع, شحن العبور">
-    <meta name="robots" content="index, follow">
-    <link rel="canonical" href="https://euxexpress.com/">
-    <title>شركة EUX للشحن | الريادة في سرعة وحلول الشحن</title>
+    <title>لوحة تحكم EUX Express - تتبع الشحنات</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
     <style>
         * {
+            box-sizing: border-box;
             margin: 0;
             padding: 0;
-            box-sizing: border-box;
             font-family: 'Cairo', sans-serif;
         }
 
         body {
-            background: #f0f4f8;
+            background: linear-gradient(135deg, #e8f0fe, #d4e4f7);
             min-height: 100vh;
+            padding: 20px;
             display: flex;
             justify-content: center;
-            align-items: flex-start;
-            padding: 30px 20px;
+            align-items: center;
         }
 
-        .container {
-            max-width: 900px;
+        /* الحاوية الرئيسية - نفس تصميم الـ subscribe */
+        .tracking-subscribe {
+            position: relative;
             width: 100%;
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
+            max-width: 960px;
+            padding: 30px 25px 50px 25px;
+            background-color: #FFF;
+            border-radius: 16px;
+            color: #333;
+            box-shadow: 0px 0px 60px 5px rgba(0, 0, 0, 0.15);
+            transition: all 0.3s ease;
         }
 
-        /* ===== حقل البحث ===== */
-        .search-header {
+        /* رأس الصندوق */
+        .tracking-subscribe .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 25px;
+            border-bottom: 2px solid #f0f0f0;
+            padding-bottom: 15px;
+        }
+
+        .tracking-subscribe .header h2 {
+            font-size: 22px;
+            font-weight: 700;
+            color: #0d2137;
+        }
+
+        .tracking-subscribe .header h2 i {
+            color: #0076ff;
+            margin-left: 8px;
+        }
+
+        .total-badge {
+            background: #eef3f8;
+            padding: 6px 18px;
+            border-radius: 30px;
+            font-size: 14px;
+            font-weight: 600;
+            color: #0d2137;
+        }
+
+        .total-badge span {
+            color: #0076ff;
+            font-size: 18px;
+        }
+
+        /* حقل البحث */
+        .search-box {
+            position: relative;
+            margin-bottom: 25px;
             display: flex;
             gap: 10px;
             flex-wrap: wrap;
-            background: white;
-            padding: 15px 20px;
-            border-radius: 16px;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.06);
-            border: 1px solid #e8ecf0;
-            position: sticky;
-            top: 10px;
-            z-index: 100;
         }
 
-        .search-header input {
+        .search-box input {
             flex: 1;
-            padding: 12px 18px;
+            min-width: 200px;
+            padding: 12px 20px;
             border: 2px solid #e8ecf0;
-            border-radius: 10px;
+            border-radius: 12px;
             font-size: 15px;
-            font-family: 'Cairo', sans-serif;
             background: #f8fafc;
             transition: 0.3s;
-            min-width: 180px;
+            font-family: 'Cairo', sans-serif;
         }
 
-        .search-header input:focus {
+        .search-box input:focus {
             border-color: #0076ff;
             outline: none;
-            box-shadow: 0 0 0 4px rgba(0, 118, 255, 0.08);
             background: white;
+            box-shadow: 0 0 0 4px rgba(0, 118, 255, 0.08);
         }
 
-        .search-header .search-btn {
-            padding: 12px 24px;
+        .search-box .search-btn {
+            padding: 12px 28px;
             background: #0076ff;
             color: white;
             border: none;
-            border-radius: 10px;
+            border-radius: 12px;
             font-size: 15px;
-            font-weight: 600;
+            font-weight: 700;
             cursor: pointer;
             transition: 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
             font-family: 'Cairo', sans-serif;
-            white-space: nowrap;
         }
 
-        .search-header .search-btn:hover {
+        .search-box .search-btn:hover {
             background: #005fcc;
             transform: translateY(-2px);
         }
 
-        .search-header .clear-btn {
-            padding: 12px 20px;
-            background: #e74c3c;
-            color: white;
-            border: none;
+        /* حاوية الطلبات - قابلة للتمرير */
+        .orders-container {
+            max-height: 550px;
+            overflow-y: auto;
+            padding-left: 5px;
+            margin-top: 5px;
+        }
+
+        .orders-container::-webkit-scrollbar {
+            width: 6px;
+        }
+        .orders-container::-webkit-scrollbar-track {
+            background: #f0f0f0;
             border-radius: 10px;
-            font-size: 15px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: 0.3s;
-            font-family: 'Cairo', sans-serif;
-            white-space: nowrap;
+        }
+        .orders-container::-webkit-scrollbar-thumb {
+            background: #0076ff;
+            border-radius: 10px;
         }
 
-        .search-header .clear-btn:hover {
-            background: #c0392b;
-            transform: translateY(-2px);
-        }
-
-        .result-count {
-            background: #e3f2fd;
-            padding: 6px 16px;
-            border-radius: 8px;
-            font-weight: 700;
-            color: #0d47a1;
-            border-right: 4px solid #0076ff;
-            display: none;
-            font-size: 14px;
-            margin: 0 5px 5px 5px;
-        }
-
-        .result-count.show {
-            display: block;
-        }
-
-        /* ===== بطاقة الطلب - نفس تصميم subscribe ===== */
-        .subscribe {
+        /* بطاقة الطلب - نفس تنسيق الـ subscribe الداخلي */
+        .order-card {
             position: relative;
-            padding: 20px 22px 70px 22px;
-            background-color: #FFF;
+            background: #f9fafc;
+            border: 1px solid #e8ecf0;
             border-radius: 14px;
-            color: #333;
-            box-shadow: 0px 6px 30px 4px rgba(0, 0, 0, 0.08);
-            border: 1px solid rgba(0, 118, 255, 0.06);
-            transition: 0.3s;
+            padding: 18px 20px;
+            margin-bottom: 14px;
+            transition: 0.25s ease;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);
         }
 
-        .subscribe:hover {
-            box-shadow: 0px 8px 40px 6px rgba(0, 0, 0, 0.12);
+        .order-card:hover {
+            background: #f2f6fc;
+            border-color: #c8d8e8;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 18px rgba(0, 0, 0, 0.06);
         }
 
-        .subscribe:after {
-            position: absolute;
-            content: "";
-            right: -6px;
-            bottom: 14px;
-            width: 0;
-            height: 0;
-            border-left: 0px solid transparent;
-            border-right: 8px solid transparent;
-            border-bottom: 8px solid #0076ff;
-        }
-
-        .subscribe .header-row {
+        /* ترويسة البطاقة */
+        .order-card .card-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
             flex-wrap: wrap;
             gap: 8px;
-            margin-bottom: 8px;
+            margin-bottom: 6px;
         }
 
-        .subscribe .name {
-            font-size: 18px;
+        .order-card .card-header .name {
             font-weight: 700;
+            font-size: 17px;
             color: #0d2137;
         }
 
-        .subscribe .phone {
+        .order-card .card-header .phone {
             color: #555;
             direction: ltr;
             font-size: 15px;
             font-weight: 600;
+            background: #eef3f8;
+            padding: 2px 14px;
+            border-radius: 30px;
         }
 
-        .subscribe .amount {
+        .order-card .card-header .amount {
+            font-weight: 700;
             color: #0076ff;
-            font-weight: 700;
-            font-size: 17px;
+            background: #e3f2fd;
+            padding: 2px 16px;
+            border-radius: 30px;
+            font-size: 14px;
         }
 
-        .subscribe .status-badge {
-            display: inline-block;
-            padding: 3px 16px;
-            border-radius: 20px;
-            font-size: 12px;
-            font-weight: 700;
-        }
-
-        .status-waiting { background: #fff8e1; color: #f9a825; }
-        .status-tracking { background: #e3f2fd; color: #0d47a1; }
-        .status-done { background: #e8f5e9; color: #2e7d32; }
-
-        .subscribe .info-row {
+        /* تفاصيل الطلب */
+        .order-card .order-details {
             display: flex;
             flex-wrap: wrap;
-            gap: 12px 20px;
-            margin: 6px 0 4px 0;
+            gap: 8px 20px;
+            margin: 10px 0 6px 0;
             font-size: 14px;
             color: #555;
         }
 
-        .subscribe .info-row span strong {
-            color: #0d2137;
-            margin-left: 4px;
-        }
-
-        .subscribe .status-row {
+        .order-card .order-details .detail-item {
             display: flex;
             align-items: center;
-            gap: 8px;
-            margin-top: 8px;
-            padding: 4px 12px;
-            background: #f8fafc;
-            border-radius: 8px;
-            font-size: 13px;
-            border-right: 3px solid #0076ff;
+            gap: 5px;
         }
 
-        .subscribe .status-row .label {
+        .order-card .order-details .detail-item i {
+            color: #0076ff;
+            width: 18px;
+            font-size: 14px;
+        }
+
+        /* حالة الشحنة - نفس تصميم الـ status-row */
+        .order-card .status-row {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 8px 14px;
+            background: #e8f5e9;
+            border-radius: 10px;
+            border-right: 4px solid #2e7d32;
+            margin-top: 10px;
+        }
+
+        .order-card .status-row .status-label {
+            font-size: 13px;
             font-weight: 600;
             color: #555;
         }
 
-        .subscribe .status-row .value {
+        .order-card .status-row .status-value {
+            font-size: 14px;
             font-weight: 700;
             color: #2e7d32;
         }
 
-        /* ===== زر التتبع في أسفل كل بطاقة ===== */
-        .subscribe .submit-btn {
+        .order-card .status-row.loading {
+            background: #fff8e1;
+            border-right-color: #f9a825;
+        }
+        .order-card .status-row.loading .status-value {
+            color: #f9a825;
+        }
+        .order-card .status-row.error {
+            background: #ffeaea;
+            border-right-color: #dc3545;
+        }
+        .order-card .status-row.error .status-value {
+            color: #dc3545;
+        }
+        .order-card .status-row.info {
+            background: #e3f2fd;
+            border-right-color: #0d47a1;
+        }
+        .order-card .status-row.info .status-value {
+            color: #0d47a1;
+        }
+
+        /* زر التتبع - مثل submit-btn مع تعديل النص */
+        .order-card .track-btn {
             position: absolute;
+            left: 20px;
+            bottom: 20px;
             border-radius: 30px;
             border-bottom-right-radius: 0;
             border-top-right-radius: 0;
-            background: linear-gradient(135deg, #0076ff, #0052cc);
+            background-color: #0f0092;
             color: #FFF;
             padding: 10px 28px;
             display: inline-block;
-            font-size: 13px;
-            font-weight: 700;
+            font-size: 14px;
+            font-weight: bold;
             letter-spacing: 2px;
-            left: -8px;
-            bottom: -16px;
             cursor: pointer;
-            transition: all 0.25s ease;
-            box-shadow: -4px 5px 18px 0px rgba(0, 118, 255, 0.35);
+            transition: all .25s ease;
+            box-shadow: -5px 6px 20px 0px rgba(26, 26, 26, 0.25);
             border: none;
             font-family: 'Cairo', sans-serif;
         }
 
-        .subscribe .submit-btn:hover {
-            background: linear-gradient(135deg, #0052cc, #003399);
-            box-shadow: -4px 5px 18px 0px rgba(0, 0, 0, 0.3);
-            transform: scale(1.03);
+        .order-card .track-btn:hover {
+            background-color: #07013d;
+            box-shadow: -5px 6px 20px 0px rgba(88, 88, 88, 0.4);
+            transform: scale(1.02);
         }
 
-        /* ===== حالة عدم وجود نتائج ===== */
+        .order-card .track-btn i {
+            margin-left: 6px;
+        }
+
+        /* للهواتف */
+        @media (max-width: 700px) {
+            .tracking-subscribe {
+                padding: 20px 15px 40px 15px;
+            }
+            .tracking-subscribe .header {
+                flex-direction: column;
+                align-items: stretch;
+                gap: 6px;
+            }
+            .search-box {
+                flex-direction: column;
+            }
+            .search-box input {
+                min-width: unset;
+            }
+            .order-card .card-header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            .order-card .track-btn {
+                position: relative;
+                left: unset;
+                bottom: unset;
+                margin-top: 14px;
+                width: 100%;
+                text-align: center;
+                border-radius: 30px;
+                border-bottom-right-radius: 30px;
+                border-top-right-radius: 30px;
+            }
+            .order-card .order-details {
+                flex-direction: column;
+                gap: 4px;
+            }
+        }
+
+        /* حالة عدم وجود طلبات */
         .empty-state {
             text-align: center;
-            padding: 50px 20px;
-            background: white;
-            border-radius: 14px;
-            color: #999;
-            border: 1px dashed #ddd;
+            padding: 40px 20px;
+            color: #aaa;
         }
-
         .empty-state .icon {
-            font-size: 56px;
+            font-size: 48px;
             margin-bottom: 12px;
+            opacity: 0.6;
         }
 
-        /* ===== المودال ===== */
-        .modal {
+        /* المودال الخاص بالتتبع */
+        .modal-overlay {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0,0,0,0.5);
-            display: none;
+            background: rgba(0, 0, 0, 0.55);
+            display: flex;
             justify-content: center;
             align-items: center;
-            z-index: 2000;
+            z-index: 9999;
             padding: 16px;
-            backdrop-filter: blur(6px);
-            -webkit-backdrop-filter: blur(6px);
+            backdrop-filter: blur(4px);
+            -webkit-backdrop-filter: blur(4px);
+            animation: fadeIn 0.25s ease;
         }
-        .modal.show { display: flex; }
-        .modal-content {
+
+        .modal-overlay .modal-box {
             background: white;
             border-radius: 20px;
-            padding: 28px 25px 25px;
+            padding: 30px 25px 25px;
             max-width: 600px;
             width: 100%;
             max-height: 85vh;
             overflow-y: auto;
             position: relative;
-            animation: modalIn 0.3s ease;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.2);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.2);
+            animation: slideUp 0.3s ease;
         }
-        @keyframes modalIn {
-            from { opacity: 0; transform: translateY(30px) scale(0.96); }
-            to { opacity: 1; transform: translateY(0) scale(1); }
-        }
-        .modal-content h3 {
-            margin-bottom: 20px;
-            text-align: center;
-            font-size: 22px;
-            font-weight: 700;
-            color: #0d2137;
-        }
-        .modal-content h3 i { color: #0076ff; margin-left: 8px; }
-        .close-btn {
+
+        .modal-overlay .modal-box .close-modal {
             position: absolute;
             top: 16px;
             left: 20px;
             font-size: 28px;
             cursor: pointer;
             color: #aaa;
-            line-height: 1;
             transition: 0.2s;
+            background: none;
+            border: none;
         }
-        .close-btn:hover { color: #333; transform: rotate(90deg); }
+
+        .modal-overlay .modal-box .close-modal:hover {
+            color: #333;
+            transform: rotate(90deg);
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px) scale(0.96);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        /* تنسيق التتبع داخل المودال */
         .timeline-item {
             border-right: 3px solid #0076ff;
             padding: 12px 16px 12px 0;
@@ -335,315 +425,523 @@
             border-radius: 0 10px 10px 0;
             transition: 0.2s;
         }
-        .timeline-item:hover { background: #f0f6fe; }
-        .timeline-item .time { color: #999; font-size: 13px; }
-        .timeline-item .event { font-weight: 700; color: #0d2137; margin: 5px 0; }
-        .timeline-item .location { color: #666; font-size: 14px; }
-        .timeline-item .problem { color: #dc3545; font-size: 13px; margin-top: 4px; }
+        .timeline-item:hover {
+            background: #f0f6fe;
+        }
+        .timeline-item .time {
+            color: #999;
+            font-size: 13px;
+        }
+        .timeline-item .event {
+            font-weight: 700;
+            color: #0d2137;
+            margin: 5px 0;
+        }
+        .timeline-item .location {
+            color: #666;
+            font-size: 14px;
+        }
+        .timeline-item .problem {
+            color: #dc3545;
+            font-size: 13px;
+            margin-top: 4px;
+        }
+
+        .loading-spinner {
+            text-align: center;
+            padding: 30px 0;
+        }
+        .loading-spinner .spinner {
+            border: 4px solid #e8ecf0;
+            border-top: 4px solid #0076ff;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 10px;
+        }
+        @keyframes spin {
+            0% {
+                transform: rotate(0deg);
+            }
+            100% {
+                transform: rotate(360deg);
+            }
+        }
 
         .toast {
             position: fixed;
-            bottom: 24px;
+            bottom: 30px;
             left: 50%;
             transform: translateX(-50%);
             background: #0d2137;
             color: white;
-            padding: 12px 28px;
+            padding: 12px 30px;
             border-radius: 14px;
-            font-size: 14px;
-            z-index: 9999;
-            animation: toastIn 0.3s ease;
+            font-size: 15px;
+            z-index: 99999;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.2);
+            animation: toastAnim 0.3s ease;
+            font-family: 'Cairo', sans-serif;
             max-width: 90%;
             text-align: center;
-            font-family: 'Cairo', sans-serif;
-            box-shadow: 0 8px 30px rgba(0,0,0,0.2);
         }
-        .toast.success { background: #28a745; }
-        .toast.error { background: #dc3545; }
-        @keyframes toastIn {
-            from { opacity: 0; transform: translateX(-50%) translateY(20px); }
-            to { opacity: 1; transform: translateX(-50%) translateY(0); }
+        .toast.success {
+            background: #28a745;
         }
-
-        @media (max-width: 600px) {
-            .search-header { padding: 12px 14px; }
-            .search-header input { min-width: 120px; font-size: 13px; padding: 10px 14px; }
-            .search-header .search-btn { padding: 10px 14px; font-size: 13px; }
-            .search-header .clear-btn { padding: 10px 12px; font-size: 13px; }
-            .subscribe { padding: 16px 16px 60px 16px; }
-            .subscribe .submit-btn { padding: 8px 18px; font-size: 12px; left: -6px; bottom: -14px; }
-            .subscribe .name { font-size: 16px; }
-            .subscribe .phone { font-size: 13px; }
+        .toast.error {
+            background: #dc3545;
+        }
+        @keyframes toastAnim {
+            from {
+                opacity: 0;
+                transform: translateX(-50%) translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(-50%) translateY(0);
+            }
         }
 
-        /* تأثير تمييز النتيجة */
-        .subscribe.highlight {
-            border: 2px solid #0076ff !important;
-            box-shadow: 0 4px 30px rgba(0, 118, 255, 0.2) !important;
-            animation: highlightPulse 1.5s ease-in-out;
-        }
-        @keyframes highlightPulse {
-            0% { box-shadow: 0 0 0 0 rgba(0, 118, 255, 0.3); }
-            50% { box-shadow: 0 0 30px 10px rgba(0, 118, 255, 0.1); }
-            100% { box-shadow: 0 4px 30px rgba(0, 118, 255, 0.2); }
+        /* إخفاء العناصر */
+        .hidden {
+            display: none !important;
         }
     </style>
 </head>
 <body>
 
-<div class="container">
+    <div class="tracking-subscribe" id="trackingContainer">
+        <!-- رأس الصندوق -->
+        <div class="header">
+            <h2><i class="fas fa-boxes"></i> شحناتي</h2>
+            <div class="total-badge">📦 إجمالي: <span id="totalCount">0</span></div>
+        </div>
 
-    <!-- ===== حقل البحث ===== -->
-    <div class="search-header">
-        <input type="text" id="searchInput" placeholder="🔍 ابحث باسم العميل أو رقم الهاتف..." oninput="filterShipments()">
-        <button class="search-btn" onclick="filterShipments()">بحث</button>
-        <button class="clear-btn" onclick="clearSearch()">مسح</button>
-    </div>
+        <!-- حقل البحث -->
+        <div class="search-box">
+            <input type="text" id="searchInput" placeholder="🔍 ابحث باسم العميل أو رقم الهاتف..." oninput="performSearch()">
+            <button class="search-btn" onclick="performSearch()"><i class="fas fa-search"></i> بحث</button>
+        </div>
 
-    <div id="resultCount" class="result-count"></div>
-
-    <!-- ===== حاوية البطاقات ===== -->
-    <div id="cardsContainer">
-        <!-- سيتم ملؤها بواسطة JavaScript -->
-    </div>
-
-</div>
-
-<!-- ===== المودال ===== -->
-<div id="modal" class="modal">
-    <div class="modal-content">
-        <span class="close-btn" onclick="closeModal()">✕</span>
-        <div id="modalBody"></div>
-    </div>
-</div>
-
-<script>
-    // ============================================================
-    //  بيانات وهمية للشحنات
-    // ============================================================
-    let allShipments = [
-        { id: 'SH-001', name: 'أحمد محمد', phone: '01012345678', city: 'القاهرة', amount: '250', status: 'تم التسليم', tracking: 'JEG123456789', governorate: 'القاهرة', address: 'شارع النيل', notes: 'الرجاء الاتصال قبل التسليم' },
-        { id: 'SH-002', name: 'سارة علي', phone: '01123456789', city: 'الإسكندرية', amount: '180', status: 'قيد التوصيل', tracking: 'JEG987654321', governorate: 'الإسكندرية', address: 'شارع البحر', notes: '' },
-        { id: 'SH-003', name: 'محمد إبراهيم', phone: '01234567890', city: 'الجيزة', amount: '320', status: 'تم التسليم', tracking: '', governorate: 'الجيزة', address: 'شارع الهرم', notes: 'تسليم يد بيد' },
-        { id: 'SH-004', name: 'فاطمة حسن', phone: '01098765432', city: 'الشرقية', amount: '150', status: 'قيد التوصيل', tracking: 'JEG555555555', governorate: 'الشرقية', address: 'شارع الزراعة', notes: '' },
-        { id: 'SH-005', name: 'خالد سعيد', phone: '01187654321', city: 'القاهرة', amount: '450', status: 'تم التسليم', tracking: 'JEG444444444', governorate: 'القاهرة', address: 'شارع المعادي', notes: 'شقة 3' },
-        { id: 'SH-006', name: 'نورا يوسف', phone: '01234561234', city: 'الإسكندرية', amount: '210', status: 'قيد التوصيل', tracking: '', governorate: 'الإسكندرية', address: 'شارع سيدي جابر', notes: '' },
-        { id: 'SH-007', name: 'عمر محمود', phone: '01056781234', city: 'الجيزة', amount: '380', status: 'تم التسليم', tracking: 'JEG333333333', governorate: 'الجيزة', address: 'شارع فيصل', notes: 'الدور الثاني' },
-        { id: 'SH-008', name: 'ليلى كريم', phone: '01123457890', city: 'القليوبية', amount: '120', status: 'قيد التوصيل', tracking: '', governorate: 'القليوبية', address: 'شارع بنها', notes: '' }
-    ];
-
-    // ============================================================
-    //  عرض البطاقات - كل بطاقة عبارة عن نموذج subscribe
-    // ============================================================
-    function renderCards(data) {
-        const container = document.getElementById('cardsContainer');
-        const countEl = document.getElementById('resultCount');
-
-        if (!data || data.length === 0) {
-            container.innerHTML = `
-                <div class="empty-state">
-                    <div class="icon">🔍</div>
-                    <p>❌ لا توجد شحنات تطابق بحثك</p>
-                </div>
-            `;
-            countEl.classList.remove('show');
-            return;
-        }
-
-        countEl.textContent = `✅ تم العثور على ${data.length} شحنة`;
-        countEl.classList.add('show');
-
-        container.innerHTML = data.map((s, index) => {
-            let statusClass = 'status-waiting';
-            if (s.status === 'تم التسليم') statusClass = 'status-done';
-            else if (s.status === 'قيد التوصيل') statusClass = 'status-tracking';
-
-            const hasTracking = s.tracking && s.tracking.length > 3;
-            const highlight = index === 0 ? ' highlight' : '';
-
-            return `
-                <div class="subscribe${highlight}" data-id="${s.id}">
-                    <!-- السطر العلوي: الاسم + رقم الهاتف -->
-                    <div class="header-row">
-                        <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;">
-                            <span class="name">👤 ${s.name}</span>
-                            <span class="phone">📱 ${s.phone}</span>
-                        </div>
-                        <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
-                            <span class="amount">${s.amount} ج.م</span>
-                            <span class="status-badge ${statusClass}">${s.status}</span>
-                        </div>
-                    </div>
-
-                    <!-- معلومات إضافية -->
-                    <div class="info-row">
-                        <span><strong>رقم الشحنة:</strong> ${s.id}</span>
-                        <span><strong>المحافظة:</strong> ${s.governorate || ''}</span>
-                        <span><strong>المدينة:</strong> ${s.city || ''}</span>
-                        ${s.tracking ? `<span><strong>رقم التتبع:</strong> ${s.tracking}</span>` : ''}
-                    </div>
-
-                    <!-- حالة التتبع -->
-                    <div class="status-row">
-                        <span class="label">📍 الحالة:</span>
-                        <span class="value">${hasTracking ? '⏳ جاري التحميل...' : 'لم يتم التحديد بعد'}</span>
-                    </div>
-
-                    <!-- زر التتبع في الأسفل -->
-                    <button class="submit-btn" onclick="trackShipment('${s.tracking || ''}', '${s.id}')">
-                        📍 تتبع
-                    </button>
-                </div>
-            `;
-        }).join('');
-
-        // التمرير لأول نتيجة
-        const firstResult = document.querySelector('.subscribe.highlight');
-        if (firstResult) {
-            setTimeout(() => {
-                firstResult.scrollIntoView({ behavior: 'smooth', block: 'center' });
-            }, 100);
-        }
-    }
-
-    // ============================================================
-    //  البحث
-    // ============================================================
-    function filterShipments() {
-        const query = document.getElementById('searchInput').value.trim().toLowerCase();
-        
-        if (!query) {
-            renderCards(allShipments);
-            return;
-        }
-
-        const filtered = allShipments.filter(s => {
-            const name = s.name.toLowerCase();
-            const phone = s.phone.toLowerCase();
-            const id = s.id.toLowerCase();
-            const city = (s.city || '').toLowerCase();
-            const gov = (s.governorate || '').toLowerCase();
-            return name.includes(query) || phone.includes(query) || id.includes(query) || 
-                   city.includes(query) || gov.includes(query);
-        });
-
-        renderCards(filtered);
-    }
-
-    function clearSearch() {
-        document.getElementById('searchInput').value = '';
-        renderCards(allShipments);
-        document.getElementById('searchInput').focus();
-    }
-
-    // ============================================================
-    //  تتبع شحنة
-    // ============================================================
-    async function trackShipment(trackingNumber, shipmentId) {
-        if (!trackingNumber || trackingNumber.length < 3) {
-            showToast('⚠️ هذه الشحنة لا يوجد بها رقم تتبع', 'error');
-            return;
-        }
-
-        document.getElementById('modal').classList.add('show');
-        document.getElementById('modalBody').innerHTML = `
-            <div style="text-align:center;padding:30px;">
-                <div style="border:4px solid #e8ecf0;border-top:4px solid #0076ff;border-radius:50%;width:40px;height:40px;animation:spin 1s linear infinite;margin:0 auto 10px;"></div>
-                <p>جاري تتبع الشحنة...</p>
+        <!-- حاوية الطلبات -->
+        <div class="orders-container" id="ordersContainer">
+            <!-- سيتم ملؤها بواسطة JavaScript -->
+            <div class="empty-state">
+                <div class="icon">📭</div>
+                <p>لا توجد طلبات لعرضها</p>
             </div>
-            <style>@keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }</style>
-        `;
+        </div>
+    </div>
 
-        try {
-            // محاكاة طلب التتبع
-            await new Promise(resolve => setTimeout(resolve, 1200));
-            
-            const details = [
-                { time: '2026-07-27 10:30', desc: 'تم استلام الشحنة من المرسل', location: 'مدينة العبور' },
-                { time: '2026-07-27 12:00', desc: 'تم الفرز والتجهيز', location: 'مركز الفرز الرئيسي' },
-                { time: '2026-07-27 14:45', desc: 'الشحنة في طريقها للتوصيل', location: 'في الطريق' }
-            ];
-
-            let html = `
-                <h3><i class="fas fa-map-marked-alt"></i> مسار الشحنة</h3>
-                <div style="background:#e8f5e9;padding:10px 16px;border-radius:10px;margin-bottom:16px;border-right:4px solid #2e7d32;">
-                    <strong style="color:#2e7d32;">📍 الحالة الحالية:</strong>
-                    <span style="color:#2e7d32;font-weight:700;">في الطريق للتوصيل</span>
+    <!-- مودال التتبع -->
+    <div id="trackingModal" class="modal-overlay hidden">
+        <div class="modal-box">
+            <button class="close-modal" onclick="closeTrackingModal()">✕</button>
+            <div id="trackingContent">
+                <div class="loading-spinner">
+                    <div class="spinner"></div>
+                    <p>جاري تحميل مسار الشحنة...</p>
                 </div>
-            `;
+            </div>
+        </div>
+    </div>
 
-            details.forEach(d => {
+    <script>
+        // ============================================================
+        //  البيانات الوهمية للطلبات - تحاكي البيانات الحقيقية
+        // ============================================================
+        const API_URL = "https://script.google.com/macros/s/AKfycbyZYhdpkYQH-ZxM8te39VoEnoKJjx2vY5VzvgHg18y6FadPRMdpbZyTW2YuHByyI-ha/exec";
+
+        let allOrders = []; // سيتم تخزين كل الطلبات
+        let filteredOrders = [];
+
+        // ============================================================
+        //  جلب الطلبات من الـ API (محاكاة أو حقيقية)
+        // ============================================================
+        async function fetchOrders() {
+            try {
+                // نستخدم نفس الـ endpoint الخاص بجلب الطلبات
+                // لكننا سنمرر بيانات عميل وهمية أو نستخدم طلب عام
+                // هنا نستخدم طلب myShipments مع رقم هاتف افتراضي لتجربة العرض
+                // يمكنك تعديل الرقم حسب رغبتك
+                const testPhone = "01012345678"; // رقم تجريبي
+                const testPassword = "123456";
+
+                const res = await fetch(`${API_URL}?action=myShipments&phone=${testPhone}&password=${testPassword}`);
+                const data = await res.json();
+
+                if (data.success && data.shipments && data.shipments.length > 0) {
+                    allOrders = data.shipments;
+                } else {
+                    // إذا لم توجد بيانات حقيقية، نستخدم بيانات وهمية للعرض
+                    allOrders = getMockOrders();
+                }
+            } catch (e) {
+                console.warn("فشل جلب البيانات، استخدام بيانات وهمية", e);
+                allOrders = getMockOrders();
+            }
+
+            // نعرض الطلبات
+            filteredOrders = [...allOrders];
+            renderOrders(filteredOrders);
+            document.getElementById('totalCount').textContent = allOrders.length;
+        }
+
+        // ============================================================
+        //  بيانات وهمية للعرض في حالة عدم وجود اتصال
+        // ============================================================
+        function getMockOrders() {
+            return [{
+                id: "SH-1001",
+                receiverName: "أحمد محمد",
+                receiverPhone: "01012345678",
+                receiverPhone2: "",
+                governorate: "القاهرة",
+                city: "مدينة نصر",
+                address: "شارع عباس العقاد، بجوار مول سيتي ستارز",
+                amount: "450",
+                weight: "2.5",
+                notes: "التسليم بعد الساعة 6 مساءً",
+                trackingNumber: "JEG123456789",
+                status: "في الطريق",
+                lastUpdate: "2026-07-27 14:30"
+            }, {
+                id: "SH-1002",
+                receiverName: "سارة علي",
+                receiverPhone: "01198765432",
+                receiverPhone2: "01234567890",
+                governorate: "الجيزة",
+                city: "المهندسين",
+                address: "شارع لبنان، عمارة 12، شقة 5",
+                amount: "1200",
+                weight: "5.0",
+                notes: "يوجد جراج بجوار البناية",
+                trackingNumber: "JEG987654321",
+                status: "تم التسليم",
+                lastUpdate: "2026-07-26 18:15"
+            }, {
+                id: "SH-1003",
+                receiverName: "محمد إبراهيم",
+                receiverPhone: "01555555555",
+                receiverPhone2: "",
+                governorate: "الإسكندرية",
+                city: "سيدي جابر",
+                address: "شارع بورسعيد، بجوار مستشفى العامرية",
+                amount: "780",
+                weight: "3.2",
+                notes: "برجاء التواصل قبل التوصيل",
+                trackingNumber: "JEG555555555",
+                status: "جاري التجهيز",
+                lastUpdate: "2026-07-27 09:00"
+            }, {
+                id: "SH-1004",
+                receiverName: "نورا حسن",
+                receiverPhone: "01234567890",
+                receiverPhone2: "01111111111",
+                governorate: "الشرقية",
+                city: "العبور",
+                address: "مدينة العبور، الحي الثاني، بجوار كشري الوالي",
+                amount: "320",
+                weight: "1.0",
+                notes: "شحنة عاجلة",
+                trackingNumber: "",
+                status: "في انتظار التتبع",
+                lastUpdate: "2026-07-26 22:00"
+            }, {
+                id: "SH-1005",
+                receiverName: "خالد يوسف",
+                receiverPhone: "01099887766",
+                receiverPhone2: "",
+                governorate: "المنوفية",
+                city: "شبين الكوم",
+                address: "شارع الجمهورية، بجوار البنك الأهلي",
+                amount: "650",
+                weight: "4.5",
+                notes: "التسليم قبل الساعة 2 ظهراً",
+                trackingNumber: "JEG99887766",
+                status: "تعذر التوصيل",
+                lastUpdate: "2026-07-27 11:45"
+            }, {
+                id: "SH-1006",
+                receiverName: "فاطمة الزهراء",
+                receiverPhone: "01122334455",
+                receiverPhone2: "01066778899",
+                governorate: "القليوبية",
+                city: "بنها",
+                address: "شارع الجامعة، عمارة 8، الدور الثالث",
+                amount: "210",
+                weight: "0.8",
+                notes: "يوجد كود للدخول: 1234",
+                trackingNumber: "JEG22334455",
+                status: "تم الاستلام",
+                lastUpdate: "2026-07-25 16:20"
+            }];
+        }
+
+        // ============================================================
+        //  عرض الطلبات
+        // ============================================================
+        function renderOrders(orders) {
+            const container = document.getElementById('ordersContainer');
+
+            if (!orders || orders.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <div class="icon">🔍</div>
+                        <p>لا توجد طلبات تطابق بحثك</p>
+                    </div>
+                `;
+                return;
+            }
+
+            let html = '';
+            orders.forEach(order => {
+                // تحديد حالة التتبع
+                let statusClass = 'info';
+                let statusText = order.status || 'في انتظار التحديث';
+
+                if (statusText.includes('تم التسليم') || statusText.includes('Delivered')) {
+                    statusClass = '';
+                    statusText = '✅ تم التسليم';
+                } else if (statusText.includes('تعذر') || statusText.includes('خطأ') || statusText.includes('رفض')) {
+                    statusClass = 'error';
+                    statusText = '❌ ' + statusText;
+                } else if (statusText.includes('الطريق') || statusText.includes('تتبع')) {
+                    statusClass = 'loading';
+                    statusText = '🚚 ' + statusText;
+                } else if (statusText.includes('استلام') || statusText.includes('جاري التجهيز')) {
+                    statusClass = 'info';
+                    statusText = '📦 ' + statusText;
+                } else {
+                    statusClass = 'loading';
+                }
+
+                // التحقق من وجود رقم تتبع
+                const hasTracking = order.trackingNumber && order.trackingNumber.length > 3;
+
                 html += `
-                    <div class="timeline-item">
-                        <div class="time">🕐 ${d.time}</div>
-                        <div class="event">📌 ${d.desc}</div>
-                        <div class="location">📍 ${d.location}</div>
+                    <div class="order-card" id="card-${order.id}">
+                        <div class="card-header">
+                            <span class="name">👤 ${order.receiverName || 'غير معروف'}</span>
+                            <span class="phone">📱 ${order.receiverPhone || ''}</span>
+                            <span class="amount">💰 ${order.amount || '0'} ج.م</span>
+                        </div>
+                        <div class="order-details">
+                            <span class="detail-item"><i class="fas fa-map-marker-alt"></i> ${order.governorate || ''} - ${order.city || ''}</span>
+                            <span class="detail-item"><i class="fas fa-home"></i> ${order.address || ''}</span>
+                            ${order.weight ? `<span class="detail-item"><i class="fas fa-weight-hanging"></i> ${order.weight} كجم</span>` : ''}
+                            ${order.notes ? `<span class="detail-item"><i class="fas fa-pencil-alt"></i> ${order.notes}</span>` : ''}
+                            <span class="detail-item"><i class="fas fa-hashtag"></i> رقم الشحنة: ${order.id}</span>
+                        </div>
+                        <div class="status-row ${statusClass}">
+                            <span class="status-label">📍 الحالة:</span>
+                            <span class="status-value">${statusText}</span>
+                        </div>
+                        ${hasTracking ? `<button class="track-btn" onclick="trackShipment('${order.trackingNumber}')"><i class="fas fa-map-pin"></i> تتبع</button>` : 
+                        `<button class="track-btn" style="background:#888;cursor:not-allowed;box-shadow:none;" disabled><i class="fas fa-ban"></i> لا يوجد تتبع</button>`}
                     </div>
                 `;
             });
 
-            document.getElementById('modalBody').innerHTML = html;
+            container.innerHTML = html;
+        }
 
-            // تحديث حالة البطاقة
-            const card = document.querySelector(`.subscribe[data-id="${shipmentId}"]`);
-            if (card) {
-                const statusValue = card.querySelector('.status-row .value');
-                if (statusValue) {
-                    statusValue.textContent = '✅ في الطريق للتوصيل';
-                    statusValue.style.color = '#0d47a1';
-                }
+        // ============================================================
+        //  وظيفة البحث
+        // ============================================================
+        function performSearch() {
+            const query = document.getElementById('searchInput').value.trim().toLowerCase();
+
+            if (!query) {
+                filteredOrders = [...allOrders];
+                renderOrders(filteredOrders);
+                return;
             }
 
-        } catch (e) {
-            document.getElementById('modalBody').innerHTML = `
-                <h3><i class="fas fa-map-marked-alt"></i> تتبع الشحنة</h3>
-                <div style="text-align:center;padding:20px;color:#dc3545;">
-                    <div style="font-size:48px;margin-bottom:12px;">❌</div>
-                    <p>فشل تتبع الشحنة</p>
+            filteredOrders = allOrders.filter(order => {
+                const nameMatch = (order.receiverName || '').toLowerCase().includes(query);
+                const phoneMatch = (order.receiverPhone || '').includes(query);
+                const phone2Match = (order.receiverPhone2 || '').includes(query);
+                const idMatch = (order.id || '').toLowerCase().includes(query);
+                const cityMatch = (order.city || '').toLowerCase().includes(query);
+                const govMatch = (order.governorate || '').toLowerCase().includes(query);
+                return nameMatch || phoneMatch || phone2Match || idMatch || cityMatch || govMatch;
+            });
+
+            renderOrders(filteredOrders);
+        }
+
+        // ============================================================
+        //  دالة التتبع - تعرض المودال وتجلب التفاصيل
+        // ============================================================
+        async function trackShipment(billCode) {
+            const modal = document.getElementById('trackingModal');
+            const content = document.getElementById('trackingContent');
+            modal.classList.remove('hidden');
+
+            content.innerHTML = `
+                <div class="loading-spinner">
+                    <div class="spinner"></div>
+                    <p>جاري تتبع الشحنة ${billCode}...</p>
                 </div>
             `;
+
+            try {
+                const res = await fetch(`${API_URL}?action=track&billCode=${billCode}`);
+                const data = await res.json();
+
+                if (data.code === "1" && data.data && data.data[0]) {
+                    let html = `<h3 style="margin-bottom:16px;text-align:center;font-size:20px;"><i class="fas fa-map-marked-alt" style="color:#0076ff;"></i> مسار الشحنة: ${billCode}</h3>`;
+
+                    const currentStatus = data.data[0].status || '';
+                    const details = data.data[0].details || [];
+
+                    let foundDelivered = false;
+                    for (const d of details) {
+                        if ((d.desc || '').includes('تم التسليم')) { foundDelivered = true; break; }
+                    }
+
+                    let displayStatus = currentStatus,
+                        statusBg = '#e8f5e9',
+                        statusBorder = '#2e7d32',
+                        statusColor = '#2e7d32';
+
+                    if (foundDelivered || currentStatus.includes('تم التسليم')) {
+                        displayStatus = '✅ تم التسليم';
+                    } else if (currentStatus.includes('خطأ') || currentStatus.includes('Error') || currentStatus.includes('❌')) {
+                        displayStatus = '❌ ' + currentStatus.replace(/❌️?/g, '').replace(/خطأ/g, '').trim();
+                        if (!displayStatus || displayStatus === '❌') displayStatus = '❌ خطأ في التوصيل';
+                        statusBg = '#ffeaea';
+                        statusBorder = '#dc3545';
+                        statusColor = '#dc3545';
+                    }
+
+                    html += `
+                        <div style="background:${statusBg};padding:12px 16px;border-radius:12px;margin-bottom:18px;border-right:4px solid ${statusBorder};">
+                            <strong style="color:${statusColor};font-size:15px;">📍 الحالة الحالية:</strong>
+                            <span style="color:${statusColor};font-weight:700;font-size:16px;margin-right:8px;">${displayStatus}</span>
+                        </div>
+                    `;
+
+                    if (details.length === 0) {
+                        html += `<p style="text-align:center;color:#999;padding:20px;">لا توجد تفاصيل تتبع متاحة</p>`;
+                    } else {
+                        for (const d of details) {
+                            let desc = (d.desc || '').replace(/\([0-9]{10,11}\)/g, '').replace(/[0-9]{10,11}/g, '').replace(/J&T/gi, '').replace(/courier/gi, '').replace(/Express/gi, '');
+                            let location = d.scanNetworkName || '',
+                                city = d.scanNetworkCity || '';
+                            let locationText = city && !location.includes(city) ? city + (location ? ' - ' + location : '') : location;
+                            locationText = locationText.replace(/[0-9]/g, '').trim();
+
+                            let problemText = d.probleDescription || '';
+                            if (problemText) {
+                                // ترجمة بسيطة
+                                problemText = await translateText(problemText);
+                            }
+
+                            html += `
+                                <div class="timeline-item">
+                                    <div class="time">🕐 ${d.scanTime || ''}</div>
+                                    <div class="event">📌 ${desc}</div>
+                                    <div class="location">📍 ${locationText}</div>
+                                    ${problemText ? `<div class="problem">⚠️ ${problemText}</div>` : ''}
+                                </div>
+                            `;
+                        }
+                    }
+
+                    content.innerHTML = html;
+                } else {
+                    content.innerHTML = `
+                        <h3 style="margin-bottom:16px;text-align:center;font-size:20px;"><i class="fas fa-map-marked-alt" style="color:#0076ff;"></i> تتبع الشحنة</h3>
+                        <div style="text-align:center;padding:20px;color:#dc3545;">
+                            <div style="font-size:48px;margin-bottom:12px;">❌</div>
+                            <p>${data.msg || data.error || 'فشل تتبع الشحنة'}</p>
+                        </div>
+                    `;
+                }
+            } catch (e) {
+                content.innerHTML = `
+                    <h3 style="margin-bottom:16px;text-align:center;font-size:20px;"><i class="fas fa-map-marked-alt" style="color:#0076ff;"></i> تتبع الشحنة</h3>
+                    <div style="text-align:center;padding:20px;color:#dc3545;">
+                        <div style="font-size:48px;margin-bottom:12px;">📡</div>
+                        <p>فشل الاتصال بخدمة التتبع</p>
+                    </div>
+                `;
+            }
         }
-    }
 
-    // ============================================================
-    //  دوال مساعدة
-    // ============================================================
-    function closeModal() {
-        document.getElementById('modal').classList.remove('show');
-    }
+        // ============================================================
+        //  ترجمة النصوص (بسيطة)
+        // ============================================================
+        async function translateText(text) {
+            if (!text) return text;
+            try {
+                const url = `https://translate.googleapis.com/translate_a/single?client=gtx&sl=en&tl=ar&dt=t&q=${encodeURIComponent(text)}`;
+                const response = await fetch(url);
+                const data = await response.json();
+                if (data && data[0]) {
+                    let translated = data[0].map(item => item[0]).join('');
+                    translated = translated.replace(/،\s*،/g, '،');
+                    translated = translated.replace(/\s{2,}/g, ' ');
+                    translated = translated.replace(/،\s*$/, '');
+                    translated = translated.replace(/\b\d{3,}\b/g, '');
+                    return translated.trim() || text;
+                }
+                return text;
+            } catch (error) {
+                return text;
+            }
+        }
 
-    function showToast(message, type) {
-        const existing = document.querySelector('.toast');
-        if (existing) existing.remove();
-        const toast = document.createElement('div');
-        toast.className = 'toast' + (type ? ' ' + type : '');
-        toast.textContent = message;
-        document.body.appendChild(toast);
-        setTimeout(() => {
-            toast.style.opacity = '0';
-            toast.style.transition = 'opacity 0.3s';
-            setTimeout(() => toast.remove(), 300);
-        }, 3000);
-    }
+        // ============================================================
+        //  إغلاق المودال
+        // ============================================================
+        function closeTrackingModal() {
+            document.getElementById('trackingModal').classList.add('hidden');
+        }
 
-    // ============================================================
-    //  أحداث
-    // ============================================================
-    document.getElementById('searchInput').addEventListener('keypress', function(e) {
-        if (e.key === 'Enter') filterShipments();
-    });
+        // ============================================================
+        //  عرض رسائل (toast)
+        // ============================================================
+        function showToast(message, type) {
+            const existing = document.querySelector('.toast');
+            if (existing) existing.remove();
 
-    document.addEventListener('keydown', function(e) {
-        if (e.key === 'Escape') closeModal();
-    });
+            const toast = document.createElement('div');
+            toast.className = 'toast' + (type ? ' ' + type : '');
+            toast.textContent = message;
+            document.body.appendChild(toast);
 
-    // ============================================================
-    //  تحميل الصفحة
-    // ============================================================
-    document.addEventListener('DOMContentLoaded', function() {
-        renderCards(allShipments);
-    });
-</script>
+            setTimeout(() => {
+                toast.style.opacity = '0';
+                toast.style.transition = 'opacity 0.3s';
+                setTimeout(() => toast.remove(), 300);
+            }, 3000);
+        }
+
+        // ============================================================
+        //  تحميل الصفحة
+        // ============================================================
+        document.addEventListener('DOMContentLoaded', function() {
+            fetchOrders();
+        });
+
+        // إغلاق المودال عند الضغط على الخلفية
+        document.getElementById('trackingModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeTrackingModal();
+            }
+        });
+
+        // إغلاق المودال عند الضغط على ESC
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                closeTrackingModal();
+            }
+        });
+    </script>
 
 </body>
 </html>
