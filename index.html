@@ -881,7 +881,7 @@
             font-size: 15px;
         }
 
-        /* ===== زر التتبع المتطور (Spinner) ===== */
+        /* ===== زر التتبع المتطور (Spinner) - معدل ===== */
         .track-btn-spinner {
             position: relative;
             border-radius: 50%;
@@ -905,21 +905,21 @@
             animation: rotate_3922 1.2s linear infinite;
         }
         .track-btn-spinner .ring:nth-of-type(1) {
-            background: linear-gradient(135deg, #9b59b6, #84cdfa, #5ad1cd);
+            background: linear-gradient(135deg, #0076ff, #4fc3f7, #0076ff);
             filter: blur(2px);
         }
         .track-btn-spinner .ring:nth-of-type(2) {
-            background: linear-gradient(135deg, #9b59b6, #84cdfa, #5ad1cd);
+            background: linear-gradient(135deg, #0076ff, #4fc3f7, #0076ff);
             filter: blur(4px);
             animation-duration: 1.4s;
         }
         .track-btn-spinner .ring:nth-of-type(3) {
-            background: linear-gradient(135deg, #9b59b6, #84cdfa, #5ad1cd);
+            background: linear-gradient(135deg, #0076ff, #4fc3f7, #0076ff);
             filter: blur(10px);
             animation-duration: 1.6s;
         }
         .track-btn-spinner .ring:nth-of-type(4) {
-            background: linear-gradient(135deg, #9b59b6, #84cdfa, #5ad1cd);
+            background: linear-gradient(135deg, #0076ff, #4fc3f7, #0076ff);
             filter: blur(20px);
             animation-duration: 1.8s;
         }
@@ -936,21 +936,18 @@
             box-shadow: inset 0 2px 8px rgba(0,0,0,0.06);
         }
         .track-btn-spinner .track-text {
-            font-size: 11px;
+            font-size: 12px;
             font-weight: 800;
-            color: #0d2137;
+            color: #0076ff;
             font-family: 'Cairo', sans-serif;
-            letter-spacing: 0.3px;
+            letter-spacing: 0.5px;
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 3px;
             position: relative;
             z-index: 10;
-        }
-        .track-btn-spinner .track-text i {
-            font-size: 9px;
-            color: #9b59b6;
+            text-align: center;
+            line-height: 1.2;
         }
         @keyframes rotate_3922 {
             from { transform: rotate(0deg); }
@@ -1576,10 +1573,7 @@
                 width: 36px;
             }
             .track-btn-spinner .track-text {
-                font-size: 9px;
-            }
-            .track-btn-spinner .track-text i {
-                font-size: 7px;
+                font-size: 10px;
             }
         }
     </style>
@@ -1762,7 +1756,7 @@
                     </div>
                 </button>
                 <button class="btn-eux-outline" onclick="backToLanding()" style="width:100%;margin-top:10px;padding:14px;border-radius:12px;font-size:15px;">
-                    <span class="inner"> العودة للصفحة الرئيسية</span>
+                    <span class="inner">🏠 العودة للصفحة الرئيسية</span>
                 </button>
                 <p class="error-msg" id="loginError"></p>
             </div>
@@ -1772,7 +1766,7 @@
                 <div class="tracking-header">
                     <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
                         <h2><i class="fas fa-tachometer-alt"></i> لوحة التحكم</h2>
-                        <span class="total-small"> إجمالي الشحنات: <span class="count" id="totalCountSmall">0</span></span>
+                        <span class="total-small">إجمالي الشحنات: <span class="count" id="totalCountSmall">0</span></span>
                     </div>
                     <div class="header-actions">
                         <!-- START: Search Section -->
@@ -1794,7 +1788,7 @@
                             </div>
                         </button>
                         <button id="addShipmentBtn" class="btn-eux-green hidden" onclick="showAddShipmentForm()" style="padding:10px 16px;border-radius:10px;font-size:13px;">
-                            <span class="inner"> إضافة شحنة</span>
+                            <span class="inner">➕ إضافة شحنة</span>
                             <span class="fold"></span>
                             <div class="points_wrapper">
                                 <span class="point"></span><span class="point"></span><span class="point"></span>
@@ -1804,7 +1798,7 @@
                             </div>
                         </button>
                         <button id="clientsBtn" class="btn-eux hidden" onclick="showClients()" style="padding:10px 16px;border-radius:10px;font-size:13px;">
-                            <span class="inner"> عملاء</span>
+                            <span class="inner">👥 عملاء</span>
                             <span class="fold"></span>
                             <div class="points_wrapper">
                                 <span class="point"></span><span class="point"></span><span class="point"></span>
@@ -1814,7 +1808,7 @@
                             </div>
                         </button>
                         <button id="allShipmentsBtn" class="btn-eux-orange hidden" onclick="loadAllShipments()" style="padding:10px 16px;border-radius:10px;font-size:13px;">
-                            <span class="inner"> الكل</span>
+                            <span class="inner">📋 الكل</span>
                             <span class="fold"></span>
                             <div class="points_wrapper">
                                 <span class="point"></span><span class="point"></span><span class="point"></span>
@@ -1824,7 +1818,7 @@
                             </div>
                         </button>
                         <button class="btn-eux-outline" onclick="logout()" style="padding:10px 16px;border-radius:10px;font-size:13px;">
-                            <span class="inner"> خروج</span>
+                            <span class="inner">🚪 خروج</span>
                         </button>
                     </div>
                 </div>
@@ -1850,17 +1844,17 @@
                     </div>
                 </div>
 
-                <div class="form-group"><label> اسم المستلم *</label><input id="pf_receiverName" placeholder="اسم المستلم"></div>
-                <div class="form-group"><label> هاتف المستلم *</label><input id="pf_receiverPhone" placeholder="مثال: 010xxxxxxxx" dir="ltr" maxlength="11" oninput="this.value=this.value.replace(/[^0-9]/g,'')"></div>
-                <div class="form-group"><label> هاتف آخر للمستلم</label><input id="pf_receiverPhone2" placeholder="هاتف آخر (اختياري)" dir="ltr" maxlength="11" oninput="this.value=this.value.replace(/[^0-9]/g,'')"></div>
+                <div class="form-group"><label>👤 اسم المستلم *</label><input id="pf_receiverName" placeholder="اسم المستلم"></div>
+                <div class="form-group"><label>📱 هاتف المستلم *</label><input id="pf_receiverPhone" placeholder="مثال: 010xxxxxxxx" dir="ltr" maxlength="11" oninput="this.value=this.value.replace(/[^0-9]/g,'')"></div>
+                <div class="form-group"><label>📱 هاتف آخر للمستلم</label><input id="pf_receiverPhone2" placeholder="هاتف آخر (اختياري)" dir="ltr" maxlength="11" oninput="this.value=this.value.replace(/[^0-9]/g,'')"></div>
                 <div class="two-columns">
-                    <div class="form-group"><label> المحافظة *</label><select id="pf_governorate" onchange="updatePublicCities()"><option value="">اختر المحافظة</option></select></div>
-                    <div class="form-group"><label> المدينة *</label><select id="pf_city"><option value="">اختر المحافظة أولاً</option></select></div>
+                    <div class="form-group"><label>🏛️ المحافظة *</label><select id="pf_governorate" onchange="updatePublicCities()"><option value="">اختر المحافظة</option></select></div>
+                    <div class="form-group"><label>🏙️ المدينة *</label><select id="pf_city"><option value="">اختر المحافظة أولاً</option></select></div>
                 </div>
-                <div class="form-group"><label> العنوان التفصيلي *</label><input id="pf_address" placeholder="العنوان بالتفصيل"></div>
-                <div class="form-group"><label> المبلغ المطلوب تحصيله شامل الشحن *</label><input id="pf_amount" type="number" placeholder="المبلغ بالجنيه" dir="ltr"></div>
-                <div class="form-group"><label> وزن الشحنة *</label><input id="pf_weight" type="number" placeholder="الوزن بالكيلو" dir="ltr" value="1"></div>
-                <div class="form-group"><label> ملاحظات</label><textarea id="pf_notes" placeholder="ملاحظات إضافية"></textarea></div>
+                <div class="form-group"><label>📍 العنوان التفصيلي *</label><input id="pf_address" placeholder="العنوان بالتفصيل"></div>
+                <div class="form-group"><label>💰 المبلغ المطلوب تحصيله شامل الشحن *</label><input id="pf_amount" type="number" placeholder="المبلغ بالجنيه" dir="ltr"></div>
+                <div class="form-group"><label>⚖️ وزن الشحنة *</label><input id="pf_weight" type="number" placeholder="الوزن بالكيلو" dir="ltr" value="1"></div>
+                <div class="form-group"><label>📝 ملاحظات</label><textarea id="pf_notes" placeholder="ملاحظات إضافية"></textarea></div>
                 <button class="btn-eux" onclick="submitPublicOrder()" style="width:100%;padding:14px;border-radius:12px;font-size:16px;">
                     <span class="inner">✅ تسجيل الشحنة</span>
                     <span class="fold"></span>
@@ -1872,7 +1866,7 @@
                     </div>
                 </button>
                 <button class="btn-eux-outline" onclick="backToLanding()" style="width:100%;margin-top:8px;padding:12px;border-radius:10px;font-size:14px;">
-                    <span class="inner"> العودة للصفحة الرئيسية</span>
+                    <span class="inner">🏠 العودة للصفحة الرئيسية</span>
                 </button>
                 <p id="publicError" style="color:red;margin-top:10px;text-align:center;"></p>
             </div>
@@ -2338,7 +2332,7 @@
         }
 
         // ============================================================
-        //  عرض بطاقة الشحنة - مع زر تتبع متطور (Spinner)
+        //  عرض بطاقة الشحنة - مع زر تتبع متطور (Spinner) + أزرار تعديل وحذف للعميل
         // ============================================================
         function createShipmentCard(s, isAdmin = false) {
             let statusClass = 'status-waiting',
@@ -2362,8 +2356,20 @@
                         <span class="ring"></span>
                         <span class="ring"></span>
                         <span class="inner-circle">
-                            <span class="track-text"><i class="fas fa-location-dot"></i> تتبع</span>
+                            <span class="track-text">تتبع</span>
                         </span>
+                    </button>
+                `;
+            }
+
+            // أزرار التعديل والحذف للعميل (تظهر فقط قبل إضافة رقم التتبع)
+            if (!isAdmin && (!trackingNum || trackingNum.length < 3)) {
+                actions += `
+                    <button class="btn-eux-orange" onclick="event.stopPropagation(); showEditShipmentForm('${s.id}')" style="padding:6px 16px;border-radius:8px;font-size:13px;">
+                        <span class="inner">✏️ تعديل</span><span class="fold"></span>
+                    </button>
+                    <button class="btn-eux-red" onclick="event.stopPropagation(); deleteShipment('${s.id}')" style="padding:6px 16px;border-radius:8px;font-size:13px;">
+                        <span class="inner">🗑️ حذف</span><span class="fold"></span>
                     </button>
                 `;
             }
@@ -2475,14 +2481,14 @@
             document.getElementById('modal').classList.remove('hidden');
             document.getElementById('modalBody').innerHTML = `
                     <h3><i class="fas fa-box"></i> إضافة شحنة جديدة</h3>
-                    <div class="form-group"><label> اسم المستلم *</label><input id="f_receiverName" placeholder="اسم المستلم"></div>
-                    <div class="form-group"><label> هاتف المستلم *</label><input id="f_receiverPhone" placeholder="مثال: 010xxxxxxxx" dir="ltr" maxlength="11" oninput="this.value=this.value.replace(/[^0-9]/g,'')"></div>
-                    <div class="form-group"><label> هاتف آخر للمستلم</label><input id="f_receiverPhone2" placeholder="هاتف آخر (اختياري)" dir="ltr" maxlength="11" oninput="this.value=this.value.replace(/[^0-9]/g,'')"></div>
-                    <div class="two-columns"><div class="form-group"><label> المحافظة *</label><select id="f_governorate" onchange="updateCities()">${govOptions}</select></div><div class="form-group"><label>🏙️ المدينة *</label><select id="f_city"><option value="">اختر المحافظة أولاً</option></select></div></div>
-                    <div class="form-group"><label> العنوان التفصيلي *</label><input id="f_address" placeholder="العنوان بالتفصيل"></div>
-                    <div class="form-group"><label> المبلغ المطلوب تحصيله شامل الشحن *</label><input id="f_amount" type="number" placeholder="المبلغ بالجنيه" dir="ltr"></div>
-                    <div class="form-group"><label> وزن الشحنة *</label><input id="f_weight" type="number" placeholder="الوزن بالكيلو" dir="ltr" value="1"></div>
-                    <div class="form-group"><label> ملاحظات</label><textarea id="f_notes" placeholder="ملاحظات إضافية"></textarea></div>
+                    <div class="form-group"><label>👤 اسم المستلم *</label><input id="f_receiverName" placeholder="اسم المستلم"></div>
+                    <div class="form-group"><label>📱 هاتف المستلم *</label><input id="f_receiverPhone" placeholder="مثال: 010xxxxxxxx" dir="ltr" maxlength="11" oninput="this.value=this.value.replace(/[^0-9]/g,'')"></div>
+                    <div class="form-group"><label>📱 هاتف آخر للمستلم</label><input id="f_receiverPhone2" placeholder="هاتف آخر (اختياري)" dir="ltr" maxlength="11" oninput="this.value=this.value.replace(/[^0-9]/g,'')"></div>
+                    <div class="two-columns"><div class="form-group"><label>🏛️ المحافظة *</label><select id="f_governorate" onchange="updateCities()">${govOptions}</select></div><div class="form-group"><label>🏙️ المدينة *</label><select id="f_city"><option value="">اختر المحافظة أولاً</option></select></div></div>
+                    <div class="form-group"><label>📍 العنوان التفصيلي *</label><input id="f_address" placeholder="العنوان بالتفصيل"></div>
+                    <div class="form-group"><label>💰 المبلغ المطلوب تحصيله شامل الشحن *</label><input id="f_amount" type="number" placeholder="المبلغ بالجنيه" dir="ltr"></div>
+                    <div class="form-group"><label>⚖️ وزن الشحنة *</label><input id="f_weight" type="number" placeholder="الوزن بالكيلو" dir="ltr" value="1"></div>
+                    <div class="form-group"><label>📝 ملاحظات</label><textarea id="f_notes" placeholder="ملاحظات إضافية"></textarea></div>
                     <button class="btn-eux" onclick="submitShipment()" style="width:100%;"><span class="inner">✅ إضافة الشحنة</span><span class="fold"></span></button>
                     <p id="shipError" style="color:red;margin-top:10px;"></p>
                 `;
@@ -2522,6 +2528,103 @@
                     loadMyShipments();
                     showToast('✅ تم إضافة الشحنة بنجاح!', 'success'); } else { errorDiv.textContent = data.msg || "فشل الإضافة"; }
             } catch (e) { errorDiv.textContent = 'فشل الاتصال'; }
+        }
+
+        // ============================================================
+        //  تعديل شحنة (للعميل)
+        // ============================================================
+        function showEditShipmentForm(shipmentId) {
+            const shipment = allShipmentsData.find(s => s.id === shipmentId);
+            if (!shipment) { showToast('⚠️ لم يتم العثور على الشحنة', 'error'); return; }
+            
+            let govOptions = '<option value="">اختر المحافظة</option>';
+            Object.keys(governorates).forEach(gov => {
+                const selected = gov === shipment.governorate ? 'selected' : '';
+                govOptions += `<option value="${gov}" ${selected}>${gov}</option>`;
+            });
+
+            let cityOptions = '<option value="">اختر المدينة</option>';
+            if (shipment.governorate && governorates[shipment.governorate]) {
+                governorates[shipment.governorate].forEach(city => {
+                    const selected = city === shipment.city ? 'selected' : '';
+                    cityOptions += `<option value="${city}" ${selected}>${city}</option>`;
+                });
+            }
+
+            document.getElementById('modal').classList.remove('hidden');
+            document.getElementById('modalBody').innerHTML = `
+                    <h3><i class="fas fa-edit"></i> تعديل الشحنة</h3>
+                    <div class="form-group"><label>👤 اسم المستلم *</label><input id="e_receiverName" value="${shipment.receiverName || ''}" placeholder="اسم المستلم"></div>
+                    <div class="form-group"><label>📱 هاتف المستلم *</label><input id="e_receiverPhone" value="${shipment.receiverPhone || ''}" placeholder="مثال: 010xxxxxxxx" dir="ltr" maxlength="11" oninput="this.value=this.value.replace(/[^0-9]/g,'')"></div>
+                    <div class="form-group"><label>📱 هاتف آخر للمستلم</label><input id="e_receiverPhone2" value="${shipment.receiverPhone2 || ''}" placeholder="هاتف آخر (اختياري)" dir="ltr" maxlength="11" oninput="this.value=this.value.replace(/[^0-9]/g,'')"></div>
+                    <div class="two-columns"><div class="form-group"><label>🏛️ المحافظة *</label><select id="e_governorate" onchange="updateEditCities()">${govOptions}</select></div><div class="form-group"><label>🏙️ المدينة *</label><select id="e_city">${cityOptions}</select></div></div>
+                    <div class="form-group"><label>📍 العنوان التفصيلي *</label><input id="e_address" value="${shipment.address || ''}" placeholder="العنوان بالتفصيل"></div>
+                    <div class="form-group"><label>💰 المبلغ المطلوب تحصيله شامل الشحن *</label><input id="e_amount" type="number" value="${shipment.amount || ''}" placeholder="المبلغ بالجنيه" dir="ltr"></div>
+                    <div class="form-group"><label>⚖️ وزن الشحنة *</label><input id="e_weight" type="number" value="${shipment.weight || '1'}" placeholder="الوزن بالكيلو" dir="ltr"></div>
+                    <div class="form-group"><label>📝 ملاحظات</label><textarea id="e_notes" placeholder="ملاحظات إضافية">${shipment.notes || ''}</textarea></div>
+                    <button class="btn-eux-orange" onclick="updateShipment('${shipmentId}')" style="width:100%;"><span class="inner">💾 حفظ التعديلات</span><span class="fold"></span></button>
+                    <p id="editError" style="color:red;margin-top:10px;"></p>
+                `;
+        }
+
+        function updateEditCities() {
+            const govSelect = document.getElementById('e_governorate');
+            const citySelect = document.getElementById('e_city');
+            const selected = govSelect.value;
+            citySelect.innerHTML = '<option value="">اختر المدينة</option>';
+            if (selected && governorates[selected]) {
+                governorates[selected].forEach(city => {
+                    const option = document.createElement('option');
+                    option.value = city;
+                    option.textContent = city;
+                    citySelect.appendChild(option);
+                });
+            }
+        }
+
+        async function updateShipment(shipmentId) {
+            const receiverName = document.getElementById('e_receiverName').value.trim();
+            const receiverPhone = document.getElementById('e_receiverPhone').value.trim();
+            const receiverPhone2 = document.getElementById('e_receiverPhone2').value.trim();
+            const governorate = document.getElementById('e_governorate').value;
+            const city = document.getElementById('e_city').value;
+            const address = document.getElementById('e_address').value.trim();
+            const amount = document.getElementById('e_amount').value.trim();
+            const weight = document.getElementById('e_weight').value.trim() || '1';
+            const notes = document.getElementById('e_notes').value.trim();
+            const errorDiv = document.getElementById('editError');
+            if (!receiverName || !receiverPhone || !governorate || !city || !address || !amount) { errorDiv.textContent = "يرجى ملء جميع الحقول المطلوبة (*)"; return; }
+            if (receiverPhone.length !== 11) { errorDiv.textContent = "⚠️ رقم هاتف المستلم يجب أن يكون 11 رقم"; return; }
+            if (receiverPhone2 && receiverPhone2.length !== 11) { errorDiv.textContent = "⚠️ رقم هاتف آخر يجب أن يكون 11 رقم"; return; }
+            
+            const params = new URLSearchParams();
+            params.append('action', 'updateShipment');
+            params.append('phone', currentUser.phone);
+            params.append('password', currentUser.password);
+            params.append('shipmentId', shipmentId);
+            params.append('receiverName', receiverName);
+            params.append('receiverPhone', receiverPhone);
+            params.append('receiverPhone2', receiverPhone2);
+            params.append('governorate', governorate);
+            params.append('city', city);
+            params.append('address', address);
+            params.append('amount', amount);
+            params.append('weight', weight);
+            params.append('notes', notes);
+            
+            try {
+                const res = await fetch(API_URL, { method: 'POST', headers: { 'Content-Type': 'application/x-www-form-urlencoded' }, body: params.toString() });
+                const data = await res.json();
+                if (data.success) { 
+                    closeModal();
+                    loadMyShipments();
+                    showToast('✅ تم تحديث الشحنة بنجاح!', 'success'); 
+                } else { 
+                    errorDiv.textContent = data.msg || "فشل التحديث"; 
+                }
+            } catch (e) { 
+                errorDiv.textContent = 'فشل الاتصال'; 
+            }
         }
 
         // ============================================================
@@ -2565,15 +2668,23 @@
             if (!confirm('⚠️ هل أنت متأكد من حذف هذه الشحنة؟')) return;
             const params = new URLSearchParams();
             params.append('action', 'deleteShipment');
-            params.append('adminPhone', currentUser.phone);
-            params.append('adminPassword', currentUser.password);
+            params.append('phone', currentUser.phone);
+            params.append('password', currentUser.password);
             params.append('shipmentId', shipmentId);
             try {
                 const res = await fetch(API_URL, { method: 'POST', headers: { 'Content-Type': 'application/x-www-form-urlencoded' }, body: params.toString() });
                 const data = await res.json();
-                if (data.success) { trackingCache = {};
-                    loadAllShipments();
-                    showToast('✅ تم حذف الشحنة بنجاح', 'success'); } else { showToast(data.msg || '❌ فشل الحذف', 'error'); }
+                if (data.success) { 
+                    trackingCache = {};
+                    if (currentUser.role === 'admin') {
+                        loadAllShipments();
+                    } else {
+                        loadMyShipments();
+                    }
+                    showToast('✅ تم حذف الشحنة بنجاح', 'success'); 
+                } else { 
+                    showToast(data.msg || '❌ فشل الحذف', 'error'); 
+                }
             } catch (e) { showToast('⚠️ فشل الاتصال بالخادم', 'error'); }
         }
 
@@ -2713,9 +2824,9 @@
         function showAddClientForm() {
             document.getElementById('modalBody').innerHTML = `
                     <h3><i class="fas fa-user-plus"></i> إنشاء حساب عميل جديد</h3>
-                    <div class="form-group"><label> اسم العميل *</label><input id="newClientName" placeholder="الاسم الكامل"></div>
-                    <div class="form-group"><label> رقم الهاتف *</label><input id="newClientPhone" dir="ltr" placeholder="مثال: 011xxxxxxxx" maxlength="11" oninput="this.value=this.value.replace(/[^0-9]/g,'')"></div>
-                    <div class="form-group"><label> كلمة المرور *</label><input id="newClientPassword" type="password" dir="ltr" placeholder="كلمة المرور للدخول"></div>
+                    <div class="form-group"><label>👤 اسم العميل *</label><input id="newClientName" placeholder="الاسم الكامل"></div>
+                    <div class="form-group"><label>📱 رقم الهاتف *</label><input id="newClientPhone" dir="ltr" placeholder="مثال: 011xxxxxxxx" maxlength="11" oninput="this.value=this.value.replace(/[^0-9]/g,'')"></div>
+                    <div class="form-group"><label>🔒 كلمة المرور *</label><input id="newClientPassword" type="password" dir="ltr" placeholder="كلمة المرور للدخول"></div>
                     <button class="btn-eux-green" onclick="createClient()" style="width:100%;"><span class="inner">✅ إنشاء الحساب</span><span class="fold"></span></button>
                     <button class="btn-eux-outline" onclick="showClients()" style="width:100%;margin-top:8px;"><span class="inner">↩️ رجوع</span></button>
                     <p id="clientError" style="color:red;margin-top:10px;text-align:center;"></p>
