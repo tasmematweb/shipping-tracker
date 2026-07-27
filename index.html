@@ -886,6 +886,12 @@
             display: flex;
             gap: 10px;
             flex-wrap: wrap;
+            position: sticky;
+            top: 0;
+            background: white;
+            padding: 10px 0;
+            z-index: 100;
+            border-bottom: 2px solid #eef3f8;
         }
         .search-section input {
             flex: 1;
@@ -933,6 +939,15 @@
         .search-result-empty .icon {
             font-size: 48px;
             margin-bottom: 10px;
+        }
+        .search-result-msg {
+            background: #e3f2fd;
+            padding: 8px 16px;
+            border-radius: 8px;
+            margin-bottom: 12px;
+            font-weight: 700;
+            color: #0d47a1;
+            border-right: 4px solid #0076ff;
         }
     </style>
 </head>
@@ -1176,6 +1191,9 @@
             <div class="search-section">
                 <input type="text" id="searchInput" placeholder="🔍 ابحث عن شحنة (اسم، هاتف، رقم شحنة، تتبع...)" oninput="filterShipments()">
                 <button class="btn-eux" onclick="filterShipments()" style="padding:12px 20px;"><span class="inner">بحث</span><span class="fold"></span></button>
+                <button class="btn-eux-outline" onclick="document.getElementById('searchInput').value='';filterShipments();" style="padding:12px 20px;">
+                    <span class="inner">📋 عرض الكل</span>
+                </button>
             </div>
             <div id="content"></div>
         </div>
@@ -1711,16 +1729,21 @@
         const query = document.getElementById('searchInput').value.trim().toLowerCase();
         const content = document.getElementById('content');
         
-        // إزالة أي تمييز سابق
+        // إزالة أي تمييز سابق ورسائل نتائج
         document.querySelectorAll('.search-result-highlight').forEach(el => {
             el.classList.remove('search-result-highlight');
         });
+        const oldResultMsg = document.querySelector('.search-result-msg');
+        if (oldResultMsg) oldResultMsg.remove();
         
+        // إذا كان البحث فارغاً، أظهر كل الشحنات ولكن دون إعادة تحميل التتبع
         if (!query) {
-            renderShipments(allShipmentsData);
+            const isAdmin = currentUser && currentUser.role === 'admin';
+            content.innerHTML = allShipmentsData.map(s => createShipmentCard(s, isAdmin)).join('');
             return;
         }
         
+        // فلترة الشحنات
         const filtered = allShipmentsData.filter(s => {
             const name = (s.receiverName || s.customerName || '').toLowerCase();
             const phone = (s.receiverPhone || s.customerPhone || '').toLowerCase();
@@ -1728,31 +1751,39 @@
             const tracking = (s.trackingNumber || '').toLowerCase();
             const gov = (s.governorate || '').toLowerCase();
             const city = (s.city || '').toLowerCase();
-            return name.includes(query) || phone.includes(query) || id.includes(query) || tracking.includes(query) || gov.includes(query) || city.includes(query);
+            return name.includes(query) || phone.includes(query) || id.includes(query) || 
+                   tracking.includes(query) || gov.includes(query) || city.includes(query);
         });
+        
+        const isAdmin = currentUser && currentUser.role === 'admin';
         
         if (filtered.length === 0) {
             content.innerHTML = `
                 <div class="search-result-empty">
                     <div class="icon">🔍</div>
-                    <p>لا توجد شحنات تطابق "<strong>${document.getElementById('searchInput').value}</strong>"</p>
+                    <p>❌ لا توجد شحنات تطابق "<strong>${document.getElementById('searchInput').value}</strong>"</p>
+                    <button class="btn-eux-outline" onclick="document.getElementById('searchInput').value='';filterShipments();" style="margin-top:12px;padding:8px 20px;">
+                        <span class="inner">📋 عرض الكل</span>
+                    </button>
                 </div>
             `;
+            content.scrollIntoView({ behavior: 'smooth', block: 'start' });
             return;
         }
         
         // عرض النتائج مع تمييز أول نتيجة
-        const isAdmin = currentUser && currentUser.role === 'admin';
         content.innerHTML = filtered.map((s, index) => {
             const cardHtml = createShipmentCard(s, isAdmin);
             return index === 0 ? cardHtml.replace('shipment-card', 'shipment-card search-result-highlight') : cardHtml;
         }).join('');
         
-        // تمرير إلى أول نتيجة
-        const firstResult = document.querySelector('.search-result-highlight');
-        if (firstResult) {
-            firstResult.scrollIntoView({ behavior: 'smooth', block: 'center' });
-        }
+        // إظهار عدد النتائج
+        const resultMsg = document.createElement('div');
+        resultMsg.className = 'search-result-msg';
+        resultMsg.innerHTML = `✅ تم العثور على <strong>${filtered.length}</strong> شحنة تطابق "<strong>${document.getElementById('searchInput').value}</strong>"`;
+        content.prepend(resultMsg);
+        
+        content.scrollIntoView({ behavior: 'smooth', block: 'start' });
     }
 
     function renderShipments(shipments) {
