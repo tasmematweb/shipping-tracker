@@ -1,52 +1,243 @@
+```html
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>تجربة حذف وتعديل العميل - API حقيقي</title>
-    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&display=swap" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>EUX Express | نظام إدارة الشحنات</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        body {
+        /* ===== الأساسيات ===== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
             font-family: 'Cairo', sans-serif;
+            scroll-behavior: smooth;
+        }
+        body {
             background: #f0f4fa;
-            padding: 20px;
-            direction: rtl;
+            color: #333;
+            -webkit-user-select: none;
+            user-select: none;
         }
-        .container {
-            max-width: 800px;
-            margin: 0 auto;
+        .hidden { display: none !important; }
+
+        /* ===== صفحة الهبوط ===== */
+        .landing-page {
+            min-height: 100vh;
+            background: linear-gradient(135deg, #0a1628, #1a2a4a);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 40px 20px;
+            text-align: center;
+            color: white;
+        }
+        .landing-page .logo {
+            font-size: 48px;
+            font-weight: 900;
+            color: #0076ff;
+            margin-bottom: 10px;
+        }
+        .landing-page h1 {
+            font-size: 2.5rem;
+            margin-bottom: 15px;
+        }
+        .landing-page h1 span { color: #0076ff; }
+        .landing-page p {
+            max-width: 600px;
+            color: #aaa;
+            margin-bottom: 30px;
+            font-size: 1.1rem;
+        }
+        .landing-page .btn {
+            display: inline-block;
+            padding: 14px 40px;
+            background: #0076ff;
+            color: white;
+            border: none;
+            border-radius: 30px;
+            font-size: 1.1rem;
+            font-weight: 700;
+            cursor: pointer;
+            text-decoration: none;
+            transition: 0.3s;
+            margin: 5px;
+        }
+        .landing-page .btn:hover { transform: scale(1.05); box-shadow: 0 6px 25px rgba(0,118,255,0.4); }
+        .landing-page .btn-outline {
+            background: transparent;
+            border: 2px solid rgba(255,255,255,0.3);
+        }
+        .landing-page .btn-outline:hover { background: rgba(255,255,255,0.1); }
+
+        /* ===== نظام التتبع ===== */
+        .tracking-app {
+            max-width: 900px;
+            margin: 20px auto;
             background: white;
+            border-radius: 24px;
             padding: 30px;
-            border-radius: 20px;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+            box-shadow: 0 20px 60px rgba(0,0,0,0.1);
         }
-        .header {
+
+        /* ===== تسجيل الدخول ===== */
+        .login-page { text-align: center; padding: 20px 0; }
+        .login-page .brand { font-size: 28px; font-weight: 900; color: #0d2137; margin-bottom: 20px; }
+        .login-page .brand span { color: #0076ff; }
+        .login-page .input-group {
+            position: relative;
+            margin-bottom: 16px;
+            max-width: 380px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        .login-page .input-group input {
+            width: 100%;
+            padding: 16px 20px;
+            border: 2px solid #e8ecf0;
+            border-radius: 14px;
+            font-size: 16px;
+            font-family: 'Cairo', sans-serif;
+            background: #f8fafc;
+            transition: 0.3s;
+            text-align: center;
+        }
+        .login-page .input-group input:focus {
+            border-color: #0076ff;
+            outline: none;
+            box-shadow: 0 0 0 4px rgba(0,118,255,0.08);
+        }
+        .login-page .error-msg {
+            color: #dc3545;
+            font-size: 14px;
+            margin-top: 10px;
+            padding: 10px;
+            background: #ffeaea;
+            border-radius: 8px;
+            max-width: 380px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        /* ===== هيدر لوحة التحكم ===== */
+        .dashboard-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 20px;
             flex-wrap: wrap;
             gap: 10px;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #eef3f8;
         }
-        .user-info {
-            background: #e8f0fe;
-            padding: 10px 20px;
-            border-radius: 12px;
+        .dashboard-header h2 {
+            color: #0d2137;
+            font-weight: 700;
+            font-size: 18px;
+        }
+        .dashboard-header h2 i { color: #0076ff; margin-left: 8px; }
+        .dashboard-header .total {
+            font-size: 13px;
+            color: #888;
+            font-weight: 600;
+        }
+        .dashboard-header .total span { color: #0076ff; font-weight: 900; }
+        .header-actions {
+            display: flex;
+            gap: 6px;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+        .search-box {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            background: #f0f4fa;
+            padding: 4px 8px;
+            border-radius: 30px;
+            border: 1px solid #dce5ed;
+        }
+        .search-box input {
+            border: none;
+            background: transparent;
+            padding: 6px 10px;
+            font-family: 'Cairo', sans-serif;
             font-size: 14px;
+            min-width: 150px;
+            outline: none;
         }
-        .user-info strong { color: #0076ff; }
+        .search-box button {
+            background: #0076ff;
+            color: white;
+            border: none;
+            border-radius: 20px;
+            padding: 4px 16px;
+            font-weight: 600;
+            cursor: pointer;
+            font-family: 'Cairo', sans-serif;
+            font-size: 13px;
+            transition: 0.2s;
+        }
+        .search-box button:hover { background: #005fcc; }
+        .search-box .clear-btn {
+            background: transparent;
+            color: #888;
+            border: none;
+            border-radius: 20px;
+            padding: 4px 10px;
+            cursor: pointer;
+            font-family: 'Cairo', sans-serif;
+            font-size: 12px;
+        }
+        .search-box .clear-btn:hover { color: #333; }
+
+        /* ===== الأزرار ===== */
+        .btn-eux {
+            background: #0076ff;
+            color: white;
+            border: none;
+            padding: 10px 18px;
+            border-radius: 10px;
+            font-weight: 600;
+            cursor: pointer;
+            font-family: 'Cairo', sans-serif;
+            font-size: 13px;
+            transition: 0.3s;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .btn-eux:hover { background: #005fcc; transform: scale(1.02); }
+        .btn-eux-green { background: #28a745; color: white; border: none; padding: 10px 18px; border-radius: 10px; font-weight: 600; cursor: pointer; font-family: 'Cairo', sans-serif; font-size: 13px; transition: 0.3s; display: inline-flex; align-items: center; gap: 6px; }
+        .btn-eux-green:hover { background: #218838; transform: scale(1.02); }
+        .btn-eux-orange { background: #ff9800; color: white; border: none; padding: 10px 18px; border-radius: 10px; font-weight: 600; cursor: pointer; font-family: 'Cairo', sans-serif; font-size: 13px; transition: 0.3s; display: inline-flex; align-items: center; gap: 6px; }
+        .btn-eux-orange:hover { background: #e68900; transform: scale(1.02); }
+        .btn-eux-red { background: #dc3545; color: white; border: none; padding: 10px 18px; border-radius: 10px; font-weight: 600; cursor: pointer; font-family: 'Cairo', sans-serif; font-size: 13px; transition: 0.3s; display: inline-flex; align-items: center; gap: 6px; }
+        .btn-eux-red:hover { background: #c82333; transform: scale(1.02); }
+        .btn-eux-outline { background: transparent; border: 1.5px solid #ddd; color: #0d2137; padding: 10px 18px; border-radius: 10px; font-weight: 600; cursor: pointer; font-family: 'Cairo', sans-serif; font-size: 13px; transition: 0.3s; display: inline-flex; align-items: center; gap: 6px; }
+        .btn-eux-outline:hover { background: #f5f5f5; }
+
+        /* ===== بطاقة الشحنة ===== */
         .shipment-card {
             background: #f8fafc;
-            padding: 16px 20px;
             border-radius: 14px;
-            border: 1px solid #e8ecf0;
+            padding: 16px 20px;
             margin-bottom: 12px;
-            transition: all 0.3s ease;
+            border: 1px solid #e8ecf0;
+            cursor: pointer;
+            transition: 0.25s ease;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.03);
         }
         .shipment-card:hover {
             background: #f0f4fa;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.05);
             transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
         }
         .shipment-card .status-badge {
             display: inline-block;
@@ -54,92 +245,169 @@
             border-radius: 20px;
             font-size: 11px;
             font-weight: 700;
+            margin-bottom: 8px;
         }
         .status-waiting { background: #fff8e1; color: #f9a825; }
         .status-tracking { background: #e3f2fd; color: #0d47a1; }
         .status-done { background: #e8f5e9; color: #2e7d32; }
-        
-        .shipment-card .main-info {
+        .shipment-card .summary-row {
             display: flex;
+            justify-content: space-between;
+            align-items: center;
             flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 4px;
+        }
+        .shipment-card .summary-row .main-info {
+            display: flex;
             align-items: center;
             gap: 16px;
-            margin: 8px 0;
+            flex-wrap: wrap;
         }
-        .shipment-card .name {
+        .shipment-card .summary-row .main-info .name {
             font-weight: 700;
             font-size: 16px;
             color: #0d2137;
         }
-        .shipment-card .phone {
+        .shipment-card .summary-row .main-info .phone {
             color: #555;
             direction: ltr;
             font-size: 14px;
         }
-        .shipment-card .amount {
+        .shipment-card .summary-row .main-info .amount {
             color: #0076ff;
             font-weight: 700;
             font-size: 15px;
         }
+        .shipment-card .summary-row .last-update {
+            font-size: 12px;
+            color: #888;
+            direction: ltr;
+            background: #eef3f8;
+            padding: 4px 14px;
+            border-radius: 20px;
+        }
+        .shipment-card .status-row {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-top: 6px;
+            padding: 6px 12px;
+            background: #e8f5e9;
+            border-radius: 10px;
+            border-right: 4px solid #2e7d32;
+        }
+        .shipment-card .status-row .status-label {
+            font-size: 13px;
+            color: #555;
+            font-weight: 600;
+        }
+        .shipment-card .status-row .status-value {
+            font-size: 14px;
+            color: #2e7d32;
+            font-weight: 700;
+        }
+        .shipment-card .status-row.loading-status { background: #fff8e1; border-right-color: #f9a825; }
+        .shipment-card .status-row.loading-status .status-value { color: #f9a825; }
+        .shipment-card .status-row.error-status { background: #ffeaea; border-right-color: #dc3545; }
+        .shipment-card .status-row.error-status .status-value { color: #dc3545; }
+        .shipment-card .details {
+            margin-top: 14px;
+            padding-top: 14px;
+            border-top: 1px dashed #dce5ed;
+            display: none;
+        }
+        .shipment-card .details.open { display: block; animation: fadeIn 0.25s ease; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(-6px); } to { opacity: 1; transform: translateY(0); } }
+        .shipment-card .details .info {
+            margin: 5px 0;
+            font-size: 13px;
+            color: #555;
+        }
+        .shipment-card .details .info strong { color: #0d2137; margin-left: 5px; }
         .shipment-card .actions {
             margin-top: 12px;
             display: flex;
             gap: 8px;
             flex-wrap: wrap;
         }
-        .shipment-card .last-update {
+
+        /* ===== زر التتبع المتطور ===== */
+        .track-btn-spinner {
+            position: relative;
+            border-radius: 50%;
+            height: 44px;
+            width: 44px;
+            border: none;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            background: transparent;
+            padding: 0;
+            transition: transform 0.25s ease;
+        }
+        .track-btn-spinner .ring {
+            position: absolute;
+            border-radius: 50%;
+            height: 100%;
+            width: 100%;
+            animation: rotate_3922 1.2s linear infinite;
+        }
+        .track-btn-spinner .ring:nth-of-type(1) {
+            background: linear-gradient(135deg, #0076ff, #4fc3f7, #0076ff);
+            filter: blur(2px);
+        }
+        .track-btn-spinner .ring:nth-of-type(2) {
+            background: linear-gradient(135deg, #0076ff, #4fc3f7, #0076ff);
+            filter: blur(4px);
+            animation-duration: 1.4s;
+        }
+        .track-btn-spinner .ring:nth-of-type(3) {
+            background: linear-gradient(135deg, #0076ff, #4fc3f7, #0076ff);
+            filter: blur(10px);
+            animation-duration: 1.6s;
+        }
+        .track-btn-spinner .ring:nth-of-type(4) {
+            background: linear-gradient(135deg, #0076ff, #4fc3f7, #0076ff);
+            filter: blur(20px);
+            animation-duration: 1.8s;
+        }
+        .track-btn-spinner .inner-circle {
+            position: relative;
+            z-index: 5;
+            background: white;
+            border-radius: 50%;
+            height: 74%;
+            width: 74%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: inset 0 2px 8px rgba(0,0,0,0.06);
+        }
+        .track-btn-spinner .track-text {
             font-size: 12px;
-            color: #888;
-        }
-        .btn-eux-orange {
-            background: #ff9800;
-            color: white;
-            border: none;
-            padding: 8px 18px;
-            border-radius: 8px;
-            font-weight: 700;
-            cursor: pointer;
+            font-weight: 800;
+            color: #0076ff;
             font-family: 'Cairo', sans-serif;
-            transition: 0.3s;
+            letter-spacing: 0.5px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            z-index: 10;
+            text-align: center;
+            line-height: 1.2;
         }
-        .btn-eux-orange:hover { background: #e68900; transform: scale(1.02); }
-        .btn-eux-red {
-            background: #dc3545;
-            color: white;
-            border: none;
-            padding: 8px 18px;
-            border-radius: 8px;
-            font-weight: 700;
-            cursor: pointer;
-            font-family: 'Cairo', sans-serif;
-            transition: 0.3s;
+        @keyframes rotate_3922 {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
         }
-        .btn-eux-red:hover { background: #c82333; transform: scale(1.02); }
-        .btn-eux-green {
-            background: #28a745;
-            color: white;
-            border: none;
-            padding: 8px 18px;
-            border-radius: 8px;
-            font-weight: 700;
-            cursor: pointer;
-            font-family: 'Cairo', sans-serif;
-            transition: 0.3s;
-        }
-        .btn-eux-green:hover { background: #218838; transform: scale(1.02); }
-        .btn-eux-blue {
-            background: #0076ff;
-            color: white;
-            border: none;
-            padding: 8px 18px;
-            border-radius: 8px;
-            font-weight: 700;
-            cursor: pointer;
-            font-family: 'Cairo', sans-serif;
-            transition: 0.3s;
-        }
-        .btn-eux-blue:hover { background: #005fcc; transform: scale(1.02); }
-        
+        .track-btn-spinner:hover { transform: scale(1.1); }
+        .track-btn-spinner:active { transform: scale(0.92); }
+
+        /* ===== المودال ===== */
         .modal {
             position: fixed;
             top: 0;
@@ -158,17 +426,26 @@
             background: white;
             border-radius: 20px;
             padding: 28px 25px 25px;
-            max-width: 500px;
+            max-width: 550px;
             width: 100%;
             max-height: 85vh;
             overflow-y: auto;
             position: relative;
             animation: modalIn 0.3s ease;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.2);
         }
         @keyframes modalIn {
             from { opacity: 0; transform: translateY(30px) scale(0.96); }
             to { opacity: 1; transform: translateY(0) scale(1); }
         }
+        .modal-content h3 {
+            margin-bottom: 20px;
+            text-align: center;
+            font-size: 22px;
+            font-weight: 700;
+            color: #0d2137;
+        }
+        .modal-content h3 i { color: #0076ff; margin-left: 8px; }
         .close-btn {
             position: absolute;
             top: 16px;
@@ -191,7 +468,7 @@
             color: #0d2137;
             font-size: 14px;
         }
-        .form-group input, .form-group select, .form-group textarea {
+        .form-group input, .form-group textarea, .form-group select {
             width: 100%;
             padding: 12px 15px;
             border: 2px solid #e8ecf0;
@@ -201,17 +478,62 @@
             background: #f8fafc;
             transition: 0.3s;
         }
-        .form-group input:focus, .form-group select:focus, .form-group textarea:focus {
+        .form-group input:focus, .form-group textarea:focus, .form-group select:focus {
             border-color: #0076ff;
             outline: none;
             box-shadow: 0 0 0 4px rgba(0,118,255,0.08);
         }
         .form-group textarea { height: 80px; resize: vertical; }
-        .two-columns {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 12px;
+        .two-columns { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+
+        /* ===== التتبع ===== */
+        .timeline-item {
+            border-right: 3px solid #0076ff;
+            padding: 12px 16px 12px 0;
+            margin-right: 10px;
+            margin-bottom: 14px;
+            background: #f8fafc;
+            border-radius: 0 10px 10px 0;
+            transition: 0.2s;
         }
+        .timeline-item:hover { background: #f0f6fe; }
+        .timeline-item .time { color: #999; font-size: 13px; }
+        .timeline-item .event { font-weight: 700; color: #0d2137; margin: 5px 0; }
+        .timeline-item .location { color: #666; font-size: 14px; }
+        .timeline-item .problem { color: #dc3545; font-size: 13px; margin-top: 4px; }
+
+        /* ===== العملاء ===== */
+        .client-card {
+            background: #f8fafc;
+            padding: 14px 18px;
+            border-radius: 10px;
+            margin-bottom: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border: 1px solid #e8ecf0;
+            transition: 0.2s;
+        }
+        .client-card:hover { background: #f0f4fa; }
+        .client-card .client-info { flex: 1; }
+        .client-card .client-info strong { font-size: 16px; color: #0d2137; }
+        .client-card .client-info .phone { color: #666; font-size: 14px; direction: ltr; }
+        .client-card .client-info .created { font-size: 12px; color: #aaa; }
+
+        /* ===== أخرى ===== */
+        .loading { text-align: center; padding: 30px 0; }
+        .spinner {
+            border: 4px solid #e8ecf0;
+            border-top: 4px solid #0076ff;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 10px;
+        }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        .empty-state { text-align: center; padding: 40px 20px; color: #aaa; }
+        .empty-state .icon { font-size: 56px; margin-bottom: 12px; }
         .toast {
             position: fixed;
             bottom: 24px;
@@ -235,341 +557,699 @@
             from { opacity: 0; transform: translateX(-50%) translateY(20px); }
             to { opacity: 1; transform: translateX(-50%) translateY(0); }
         }
-        .hidden { display: none !important; }
-        .loading {
-            text-align: center;
-            padding: 30px 0;
-        }
-        .spinner {
-            border: 4px solid #e8ecf0;
-            border-top: 4px solid #0076ff;
-            border-radius: 50%;
-            width: 40px;
-            height: 40px;
-            animation: spin 1s linear infinite;
-            margin: 0 auto 10px;
-        }
-        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-        .empty-state {
-            text-align: center;
-            padding: 40px 20px;
-            color: #aaa;
-        }
-        .empty-state .icon { font-size: 56px; margin-bottom: 12px; }
-        
+
         @media (max-width: 768px) {
+            .tracking-app { padding: 15px; margin: 10px; }
             .two-columns { grid-template-columns: 1fr; }
-            .container { padding: 15px; }
+            .dashboard-header { flex-direction: column; align-items: stretch; }
+            .header-actions { justify-content: center; }
+            .search-box input { min-width: 100px; width: 120px; }
+            .track-btn-spinner { height: 36px; width: 36px; }
+            .track-btn-spinner .track-text { font-size: 10px; }
+            .landing-page h1 { font-size: 1.8rem; }
         }
     </style>
 </head>
 <body>
 
-<div class="container">
-    <div class="header">
-        <h2>🧪 تجربة حذف وتعديل العميل</h2>
-        <div class="user-info">
-            👤 <strong>عميل تجريبي</strong> | 📱 01012345678
-        </div>
-    </div>
-    
-    <div style="background: #e8f5e9; padding: 12px 16px; border-radius: 10px; margin-bottom: 20px; border-right: 4px solid #2e7d32;">
-        <strong>✅ جاهز للتجربة:</strong> يمكنك تعديل أو حذف أي شحنة. سيتم الاتصال بـ API الحقيقي.
-    </div>
-
-    <!-- زر تحديث -->
-    <button class="btn-eux-blue" onclick="loadShipments()" style="margin-bottom: 20px; width: 100%; padding: 12px;">
-        🔄 تحميل الشحنات
-    </button>
-
-    <div id="shipmentsList">
-        <div class="loading">
-            <div class="spinner"></div>
-            جاري تحميل الشحنات...
-        </div>
+<!-- ===== صفحة الهبوط ===== -->
+<div id="landingPage" class="landing-page">
+    <div class="logo">EUX EXPRESS</div>
+    <h1>شركة <span>EUX</span> للشحن</h1>
+    <p>الريادة في سرعة وحلول الشحن. نقدم خدماتنا من مدينة العبور إلى جميع محافظات مصر.</p>
+    <div>
+        <button class="btn" onclick="openTrackingSystem()"><i class="fas fa-sign-in-alt"></i> تسجيل الدخول</button>
     </div>
 </div>
 
-<!-- مودال التعديل -->
-<div id="editModal" class="modal hidden">
+<!-- ===== نظام التتبع ===== -->
+<div id="trackingApp" class="tracking-app hidden">
+
+    <!-- ===== تسجيل الدخول ===== -->
+    <div id="loginPage" class="login-page">
+        <div class="brand">مرحباً بك في <span>EUX Express</span></div>
+        <div class="input-group">
+            <input type="text" id="phoneInput" placeholder="رقم الهاتف" dir="ltr" maxlength="11" oninput="this.value=this.value.replace(/[^0-9]/g,'')">
+        </div>
+        <div class="input-group">
+            <input type="password" id="passwordInput" placeholder="كلمة المرور" dir="ltr">
+        </div>
+        <button class="btn-eux" onclick="doLogin()" style="width:100%;max-width:380px;padding:16px;font-size:18px;border-radius:14px;justify-content:center;">
+            <i class="fas fa-sign-in-alt"></i> دخول
+        </button>
+        <button class="btn-eux-outline" onclick="backToLanding()" style="width:100%;max-width:380px;margin-top:10px;padding:14px;border-radius:12px;justify-content:center;">
+            🏠 العودة للصفحة الرئيسية
+        </button>
+        <p class="error-msg hidden" id="loginError"></p>
+    </div>
+
+    <!-- ===== لوحة التحكم ===== -->
+    <div id="dashboard" class="hidden">
+        <div class="dashboard-header">
+            <div>
+                <h2><i class="fas fa-tachometer-alt"></i> لوحة التحكم</h2>
+                <span class="total">إجمالي الشحنات: <span id="totalCountSmall">0</span></span>
+            </div>
+            <div class="header-actions">
+                <div class="search-box">
+                    <i class="fas fa-search" style="color:#888;"></i>
+                    <input type="text" id="searchInput" placeholder="بحث باسم أو رقم هاتف...">
+                    <button onclick="searchShipments()">بحث</button>
+                    <button class="clear-btn" onclick="clearSearch()">إلغاء</button>
+                </div>
+                <button id="shareLinkBtn" class="btn-eux-orange hidden" onclick="copyShareLink()" style="font-size:12px;padding:8px 12px;">
+                    📤 رابط التسجيل
+                </button>
+                <button id="addShipmentBtn" class="btn-eux-green hidden" onclick="showAddShipmentForm()">
+                    ➕ إضافة شحنة
+                </button>
+                <button id="clientsBtn" class="btn-eux hidden" onclick="showClients()">
+                    👥 عملاء
+                </button>
+                <button id="allShipmentsBtn" class="btn-eux-orange hidden" onclick="loadAllShipments()">
+                    📋 الكل
+                </button>
+                <button class="btn-eux-outline" onclick="logout()">
+                    🚪 خروج
+                </button>
+            </div>
+        </div>
+        <div id="content"></div>
+    </div>
+</div>
+
+<!-- ===== المودال ===== -->
+<div id="modal" class="modal hidden">
     <div class="modal-content">
         <span class="close-btn" onclick="closeModal()">✕</span>
-        <h3 style="text-align: center;">✏️ تعديل الشحنة</h3>
-        
-        <input type="hidden" id="editShipmentId">
-        
-        <div class="form-group">
-            <label>👤 اسم المستلم *</label>
-            <input id="editName" placeholder="اسم المستلم">
-        </div>
-        <div class="form-group">
-            <label>📱 هاتف المستلم *</label>
-            <input id="editPhone" placeholder="مثال: 010xxxxxxxx" dir="ltr" maxlength="11" oninput="this.value=this.value.replace(/[^0-9]/g,'')">
-        </div>
-        <div class="form-group">
-            <label>📱 هاتف آخر</label>
-            <input id="editPhone2" placeholder="هاتف آخر (اختياري)" dir="ltr" maxlength="11" oninput="this.value=this.value.replace(/[^0-9]/g,'')">
-        </div>
-        <div class="two-columns">
-            <div class="form-group">
-                <label>🏛️ المحافظة *</label>
-                <select id="editGovernorate">
-                    <option value="">اختر المحافظة</option>
-                </select>
-            </div>
-            <div class="form-group">
-                <label>🏙️ المدينة *</label>
-                <select id="editCity">
-                    <option value="">اختر المحافظة أولاً</option>
-                </select>
-            </div>
-        </div>
-        <div class="form-group">
-            <label>📍 العنوان التفصيلي *</label>
-            <input id="editAddress" placeholder="العنوان بالتفصيل">
-        </div>
-        <div class="form-group">
-            <label>💰 المبلغ المطلوب تحصيله *</label>
-            <input id="editAmount" type="number" placeholder="المبلغ بالجنيه" dir="ltr">
-        </div>
-        <div class="form-group">
-            <label>⚖️ وزن الشحنة *</label>
-            <input id="editWeight" type="number" placeholder="الوزن بالكيلو" dir="ltr" value="1">
-        </div>
-        <div class="form-group">
-            <label>📝 ملاحظات</label>
-            <textarea id="editNotes" placeholder="ملاحظات إضافية"></textarea>
-        </div>
-        
-        <button class="btn-eux-orange" onclick="updateShipment()" style="width:100%;padding:14px;border-radius:12px;font-size:16px;border:none;color:white;font-weight:700;cursor:pointer;">
-            💾 حفظ التعديلات
-        </button>
-        <p id="editError" style="color:red;margin-top:10px;text-align:center;"></p>
+        <div id="modalBody"></div>
     </div>
 </div>
 
 <script>
     // ============================================================
-    //  API و متغيرات
+    //  🔗 الروابط
     // ============================================================
-    const API_URL = "https://script.google.com/macros/s/AKfycbyZYhdpkYQH-ZxM8te39VoEnoKJjx2vY5VzvgHg18y6FadPRMdpbZyTW2YuHByyI-ha/exec";
-    
-    // مستخدم تجريبي (عميل)
-    const testUser = {
-        phone: '01012345678',
-        password: '123456',
-        role: 'client'
-    };
+    const API_URL = "https://script.google.com/macros/s/AKfycbxwPTo3OP5Qp4clzMz0h6rRGMHjS3NyKXDRubBuhjtDGcTjBEoPgCytLQCH7F9hgrtl/exec";
+    const BASE_URL = "https://euxexpress.com";
 
-    let allShipments = [];
-    let currentEditId = null;
+    let currentUser = null;
+    let trackingCache = {};
+    let allShipmentsData = [];
 
-    // قائمة المحافظات والمدن
+    // ============================================================
+    //  قائمة المحافظات والمدن
+    // ============================================================
     const governorates = {
         'الشرقية': ['بلبيس', 'انشاص الرمل', 'أولاد صقر', 'الحسينية', 'ديرب نجم', 'فاقوس', 'كفر صقر', 'مشتول السوق', 'منيا القمح', 'الصالحية القديمة', 'الصالحية الجديدة', 'صان الحجر', 'مدينة العاشر من رمضان'],
         'الجيزة': ['مدينة السادس من أكتوبر', 'مدينة الشيخ زايد', 'العياط', 'الحوامدية', 'البدرشين', 'الصف', 'العمرانية', 'أطفيح', 'الواحات البحرية', 'الجيزة', 'حدائق الاهرام', 'فيصل', 'الهرم', 'أبو النمرس', 'العجوزة', 'الوراق', 'أوسيم', 'بولاق الدكرور', 'الدقي', 'أرض اللواء', 'المهندسين', 'كرداسة', 'إمبابة', 'منشأة القناطر'],
+        'الغربية': ['كفر الزيات', 'المحلة الكبرى', 'سمنود', 'بسيون', 'السنطة', 'زفتى', 'قطور', 'طنطا'],
+        'الدقهلية': ['المنصورة', 'أجا', 'المنزلة', 'بلقاس', 'دكرنس', 'السنبلاوين', 'منية النصر', 'ميت غمر', 'شربين', 'طلخا'],
+        'الإسكندرية': ['الدخيلة', 'العامرية', 'برج العرب', 'محرم بيك', 'باب شرقي', 'الساحل الشمالي', 'سيدي جابر', 'العطارين', 'المنشية', 'اللبان', 'الجمرك', 'مينا البصل', 'كرموز', 'الرمل', 'المنتزه'],
+        'أسيوط': ['أبنوب', 'أبوتيج', 'البداري', 'الغنايم', 'الفتح', 'القوصية', 'ديروط', 'ساحل سليم', 'صدفا', 'مدينة أسيوط', 'منفلوط', 'منقباد'],
+        'أسوان': ['أسوان', 'كوم امبو', 'دراو', 'إدفو'],
+        'بني سويف': ['الواسطى', 'ناصر', 'مدينة بني سويف', 'مركز بني سويف', 'أهناسيا', 'ببا', 'سمسطا', 'الفشن'],
+        'القليوبية': ['بنها', 'الخانكة', 'العبور', 'القناطر الخيرية', 'شبين القناطر', 'طوخ', 'كفر شكر', 'قليوب', 'شبرا الخيمة'],
         'القاهرة': ['عابدين', 'العباسية', 'الأزبكية', 'القطامية', 'المنيل', 'المقطم', 'دار السلام', 'البساتين', 'الجمالية', 'السيدة زينب', 'حلوان', 'المعادي', 'مصر القديمة', 'قصر النيل', 'الخليفة', 'طرة', 'الزمالك', 'الشروق', 'مدينة بدر', 'عين شمس', 'مدينتي', 'الزيتون', 'مدينة نصر', 'القاهرة الجديدة', 'هليوبوليس', 'الأميرية', 'السلام', 'الوايلي', 'الشرابية', 'المرج', 'المطرية', 'النزهة', 'حدائق القبة', 'شبرا مصر', 'كورنيش النيل'],
-        'الإسكندرية': ['الدخيلة', 'العامرية', 'برج العرب', 'محرم بيك', 'باب شرقي', 'الساحل الشمالي', 'سيدي جابر', 'العطارين', 'المنشية', 'اللبان', 'الجمرك', 'مينا البصل', 'كرموز', 'الرمل', 'المنتزه']
+        'البحيرة': ['دمنهور', 'كفر الدوار', 'أبو حمص', 'المحمودية', 'وادي النطرون', 'النوبارية', 'أبوالمطامير', 'حوش عيسي', 'إيتاي البارود', 'شبراخيت', 'رشيد', 'إدكوا', 'مركز بدر', 'الدلنجات', 'الرحمانية', 'كوم حمادة'],
+        'دمياط': ['فارسكور', 'دمياط القديمة', 'كفر سعد', 'الزرقا', 'كفر البطيخ', 'دمياط الجديدة', 'رأس البر', 'عزبة البرج'],
+        'الفيوم': ['طامية', 'سنورس', 'مركز الفيوم', 'مدينة الفيوم', 'أطسا', 'أبشواي', 'يوسف الصديق'],
+        'البحر الأحمر': ['الغردقة', 'رأس غارب', 'سفاجا', 'القصير', 'مرسى علم'],
+        'الإسماعيلية': ['الإسماعيلية'],
+        'كفر الشيخ': ['كفر الشيخ', 'دسوق', 'فوه', 'مطوبس', 'بلطيم', 'الحامول', 'الرياض', 'بيلا', 'قلين', 'سيدى سالم'],
+        'الأقصر': ['مدينة الأقصر', 'أرمنت', 'أسنا', 'القرنة'],
+        'مرسى مطروح': ['مرسى مطروح'],
+        'المنيا': ['العدوة', 'مغاغة', 'بني مزار', 'مطاي', 'سمالوط', 'مركز المنيا', 'مدينة المنيا', 'أبو قرقاص', 'ملوي', 'دير مواس'],
+        'بور سعيد': ['بورسعيد'],
+        'قنا': ['قنا', 'قوص', 'مدينة قفط', 'دشنا', 'نقادة', 'نجع حمادي', 'فرشوط', 'أبوتشت'],
+        'المنوفية': ['قويسنا', 'بركة السبع', 'السادات', 'الشهداء', 'تلا', 'شبين الكوم', 'الباجور', 'منوف', 'أشمون'],
+        'سوهاج': ['طما', 'طهطا', 'جهينة', 'مدينة سوهاج', 'المراغة', 'أخميم', 'ساقلته', 'المنشأة', 'جرجا', 'البلينا', 'دار السلام', 'العسيرات'],
+        'السويس': ['السويس'],
+        'الوادي الجديد': ['الخارجة', 'الداخلة', 'الفرافرة'],
+        'جنوب سيناء': ['جنوب سيناء', 'شرم الشيخ', 'دهب']
     };
+
+    // ============================================================
+    //  التنقل بين الصفحات
+    // ============================================================
+    function openTrackingSystem() {
+        document.getElementById('landingPage').classList.add('hidden');
+        document.getElementById('trackingApp').classList.remove('hidden');
+        document.body.style.background = 'linear-gradient(135deg, #e8f0fe, #d4e4f7)';
+        if (!checkSession()) {
+            document.getElementById('loginPage').classList.remove('hidden');
+            document.getElementById('dashboard').classList.add('hidden');
+        }
+    }
+
+    function backToLanding() {
+        document.getElementById('trackingApp').classList.add('hidden');
+        document.getElementById('landingPage').classList.remove('hidden');
+        document.body.style.background = '#f0f4fa';
+    }
+
+    // ============================================================
+    //  حفظ الجلسة
+    // ============================================================
+    function saveUserSession(userData) {
+        try {
+            sessionStorage.setItem('eux_user', JSON.stringify(userData));
+            localStorage.setItem('eux_user_data', JSON.stringify(userData));
+        } catch (e) { console.log('خطأ في حفظ الجلسة:', e); }
+    }
+
+    function getSavedUser() {
+        try {
+            const sessionUser = sessionStorage.getItem('eux_user');
+            if (sessionUser) return JSON.parse(sessionUser);
+            const localUser = localStorage.getItem('eux_user_data');
+            return localUser ? JSON.parse(localUser) : null;
+        } catch (e) { return null; }
+    }
+
+    function clearUserSession() {
+        sessionStorage.removeItem('eux_user');
+        localStorage.removeItem('eux_user_data');
+    }
+
+    function checkSession() {
+        const savedUser = getSavedUser();
+        if (savedUser && savedUser.phone && savedUser.password) {
+            currentUser = savedUser;
+            showDashboard();
+            return true;
+        }
+        return false;
+    }
+
+    // ============================================================
+    //  تسجيل الدخول
+    // ============================================================
+    async function doLogin() {
+        const phone = document.getElementById('phoneInput').value.trim();
+        const password = document.getElementById('passwordInput').value.trim();
+        const errorDiv = document.getElementById('loginError');
+        errorDiv.classList.add('hidden');
+
+        if (!phone || !password) {
+            errorDiv.textContent = "يرجى إدخال رقم الهاتف وكلمة المرور";
+            errorDiv.classList.remove('hidden');
+            return;
+        }
+        if (phone.length !== 11) {
+            errorDiv.textContent = "⚠️ رقم الهاتف يجب أن يكون 11 رقم";
+            errorDiv.classList.remove('hidden');
+            return;
+        }
+
+        try {
+            const res = await fetch(`${API_URL}?action=login&phone=${phone}&password=${password}`);
+            const data = await res.json();
+            if (data.success) {
+                currentUser = { phone, password, name: data.name, role: data.role };
+                saveUserSession(currentUser);
+                showDashboard();
+            } else {
+                errorDiv.textContent = data.msg || "فشل تسجيل الدخول";
+                errorDiv.classList.remove('hidden');
+            }
+        } catch (e) {
+            errorDiv.textContent = "فشل الاتصال";
+            errorDiv.classList.remove('hidden');
+        }
+    }
+
+    function logout() {
+        currentUser = null;
+        trackingCache = {};
+        clearUserSession();
+        document.getElementById('loginPage').classList.remove('hidden');
+        document.getElementById('dashboard').classList.add('hidden');
+        document.getElementById('phoneInput').value = '';
+        document.getElementById('passwordInput').value = '';
+        document.getElementById('loginError').classList.add('hidden');
+        showToast('تم تسجيل الخروج', '');
+    }
+
+    function showDashboard() {
+        document.getElementById('loginPage').classList.add('hidden');
+        document.getElementById('dashboard').classList.remove('hidden');
+        const isAdmin = currentUser.role === 'admin';
+        document.getElementById('shareLinkBtn').classList.toggle('hidden', isAdmin);
+        document.getElementById('addShipmentBtn').classList.toggle('hidden', isAdmin);
+        document.getElementById('clientsBtn').classList.toggle('hidden', !isAdmin);
+        document.getElementById('allShipmentsBtn').classList.toggle('hidden', !isAdmin);
+        if (isAdmin) loadAllShipments();
+        else loadMyShipments();
+    }
+
+    // ============================================================
+    //  نسخ رابط التسجيل
+    // ============================================================
+    function copyShareLink() {
+        const shareUrl = `${BASE_URL}/?ref=${currentUser.phone}`;
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+            navigator.clipboard.writeText(shareUrl).then(() => showToast('تم نسخ رابط التسجيل!', 'success'));
+        } else {
+            // طريقة بديلة
+            const textarea = document.createElement('textarea');
+            textarea.value = shareUrl;
+            document.body.appendChild(textarea);
+            textarea.select();
+            document.execCommand('copy');
+            document.body.removeChild(textarea);
+            showToast('تم نسخ رابط التسجيل!', 'success');
+        }
+    }
+
+    // ============================================================
+    //  تتبع الشحنات
+    // ============================================================
+    async function fetchTrackingStatus(trackingNumber) {
+        if (!trackingNumber || trackingNumber.length < 3) return null;
+        if (trackingCache[trackingNumber]) return trackingCache[trackingNumber];
+        try {
+            const res = await fetch(`${API_URL}?action=track&billCode=${trackingNumber}`);
+            const data = await res.json();
+            if (data.code === "1" && data.data && data.data[0]) {
+                let finalStatus = data.data[0].status || null;
+                const details = data.data[0].details || [];
+                for (const d of details) {
+                    if ((d.desc || '').includes('تم التسليم')) {
+                        finalStatus = 'تم التسليم';
+                        break;
+                    }
+                }
+                trackingCache[trackingNumber] = finalStatus;
+                return finalStatus;
+            }
+            trackingCache[trackingNumber] = null;
+            return null;
+        } catch (e) {
+            console.error('فشل تتبع:', trackingNumber, e);
+            return null;
+        }
+    }
+
+    function updateShipmentStatusCard(shipmentId, status) {
+        const card = document.getElementById(`card-${shipmentId}`);
+        if (!card) return;
+        const statusRow = card.querySelector('.status-row');
+        if (!statusRow) return;
+        statusRow.classList.remove('loading-status', 'error-status');
+        const statusValue = statusRow.querySelector('.status-value');
+        const statusLabel = statusRow.querySelector('.status-label');
+        if (status) {
+            statusLabel.textContent = 'الحالة الحالية:';
+            let displayStatus = status;
+            let isSuccess = status.includes('تم التسليم');
+            let isError = status.includes('خطأ') || status.includes('Error');
+            if (isSuccess) {
+                statusRow.style.background = '#e8f5e9';
+                statusRow.style.borderRightColor = '#2e7d32';
+                statusValue.style.color = '#2e7d32';
+            } else if (isError) {
+                statusRow.style.background = '#ffeaea';
+                statusRow.style.borderRightColor = '#dc3545';
+                statusValue.style.color = '#dc3545';
+                statusRow.classList.add('error-status');
+            } else {
+                statusRow.style.background = '#e3f2fd';
+                statusRow.style.borderRightColor = '#0d47a1';
+                statusValue.style.color = '#0d47a1';
+            }
+            statusValue.textContent = displayStatus;
+        } else {
+            statusLabel.textContent = 'الحالة:';
+            statusRow.style.background = '#f5f5f5';
+            statusRow.style.borderRightColor = '#999';
+            statusValue.style.color = '#999';
+            statusValue.textContent = 'لم يتم التحديد بعد';
+        }
+    }
+
+    async function updateAllTrackingStatuses(shipments) {
+        const shipmentsWithTracking = shipments.filter(s => s.trackingNumber && s.trackingNumber.length > 3);
+        if (shipmentsWithTracking.length === 0) return;
+        for (const s of shipmentsWithTracking) {
+            const status = await fetchTrackingStatus(s.trackingNumber);
+            updateShipmentStatusCard(s.id, status);
+        }
+    }
 
     // ============================================================
     //  تحميل الشحنات
     // ============================================================
-    async function loadShipments() {
-        const listDiv = document.getElementById('shipmentsList');
-        listDiv.innerHTML = '<div class="loading"><div class="spinner"></div>جاري التحميل...</div>';
-
+    async function loadMyShipments() {
+        const content = document.getElementById('content');
+        content.innerHTML = '<div class="loading"><div class="spinner"></div>جاري التحميل...</div>';
         try {
-            const res = await fetch(`${API_URL}?action=myShipments&phone=${testUser.phone}&password=${testUser.password}`);
+            const res = await fetch(`${API_URL}?action=myShipments&phone=${currentUser.phone}&password=${currentUser.password}`);
             const data = await res.json();
-
             if (data.success) {
-                allShipments = data.shipments || [];
-                renderShipments(allShipments);
-                showToast(`✅ تم تحميل ${allShipments.length} شحنة`, 'success');
-            } else {
-                listDiv.innerHTML = `<div class="empty-state"><div class="icon">❌</div><p>${data.msg || 'فشل التحميل'}</p></div>`;
-                showToast('❌ فشل تحميل الشحنات', 'error');
-            }
-        } catch (error) {
-            console.error('خطأ في التحميل:', error);
-            listDiv.innerHTML = '<div class="empty-state"><div class="icon">📡</div><p>فشل الاتصال بالخادم</p></div>';
-            showToast('⚠️ فشل الاتصال بالخادم', 'error');
-        }
-    }
-
-    // ============================================================
-    //  عرض الشحنات
-    // ============================================================
-    function renderShipments(shipments) {
-        const listDiv = document.getElementById('shipmentsList');
-        
-        if (!shipments || shipments.length === 0) {
-            listDiv.innerHTML = '<div class="empty-state"><div class="icon">📦</div><p>لا توجد شحنات لعرضها</p></div>';
-            return;
-        }
-
-        let html = '';
-        shipments.forEach(s => {
-            const statusClass = s.status?.includes('تم') ? 'status-done' : 
-                              s.status?.includes('تتبع') ? 'status-tracking' : 'status-waiting';
-            const statusText = s.status || 'في انتظار التتبع';
-            const hasTracking = s.trackingNumber && s.trackingNumber.length > 3;
-
-            html += `
-                <div class="shipment-card" id="card-${s.id}">
-                    <span class="status-badge ${statusClass}">${statusText}</span>
-                    <div class="main-info">
-                        <span class="name">👤 ${s.receiverName || 'غير معروف'}</span>
-                        <span class="phone">📱 ${s.receiverPhone || ''}</span>
-                        <span class="amount">${s.amount || '0'} ج.م</span>
-                    </div>
-                    ${s.trackingNumber ? `<div style="font-size:12px;color:#666;">🚚 رقم التتبع: ${s.trackingNumber}</div>` : ''}
-                    <div class="last-update">آخر تحديث: ${s.lastUpdate || s.date || 'غير معروف'}</div>
-                    <div class="actions">
-                        ${!hasTracking ? `
-                            <button class="btn-eux-orange" onclick="showEditForm('${s.id}')">
-                                ✏️ تعديل
-                            </button>
-                            <button class="btn-eux-red" onclick="deleteShipment('${s.id}')">
-                                🗑️ حذف
-                            </button>
-                        ` : `
-                            <span style="font-size:12px;color:#888;">🔒 لا يمكن تعديل أو حذف الشحنات المرتبطة بتتبع</span>
-                        `}
-                    </div>
-                </div>
-            `;
-        });
-
-        listDiv.innerHTML = html;
-    }
-
-    // ============================================================
-    //  حذف الشحنة (للعميل)
-    // ============================================================
-    async function deleteShipment(shipmentId) {
-        if (!confirm(`⚠️ هل أنت متأكد من حذف هذه الشحنة؟`)) {
-            return;
-        }
-
-        showToast('⏳ جاري الحذف...', '');
-        
-        try {
-            const params = new URLSearchParams();
-            params.append('action', 'deleteShipment');
-            params.append('phone', testUser.phone);
-            params.append('password', testUser.password);
-            params.append('shipmentId', shipmentId);
-
-            const res = await fetch(API_URL, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-                body: params.toString()
-            });
-
-            const data = await res.json();
-            console.log('استجابة الحذف:', data);
-
-            if (data.success) {
-                showToast('✅ تم حذف الشحنة بنجاح', 'success');
-                // إزالة البطاقة من الواجهة
-                const card = document.getElementById(`card-${shipmentId}`);
-                if (card) {
-                    card.style.transition = 'all 0.3s ease';
-                    card.style.opacity = '0';
-                    card.style.transform = 'translateX(-20px)';
-                    setTimeout(() => {
-                        card.remove();
-                        // إعادة تحميل القائمة
-                        loadShipments();
-                    }, 300);
+                allShipmentsData = data.shipments || [];
+                if (allShipmentsData.length === 0) {
+                    content.innerHTML = '<div class="empty-state"><div class="icon">📭</div><p>لا توجد شحنات حتى الآن</p></div>';
+                    document.getElementById('totalCountSmall').textContent = '0';
                 } else {
-                    loadShipments();
+                    document.getElementById('totalCountSmall').textContent = allShipmentsData.length;
+                    renderShipments(allShipmentsData);
+                    updateAllTrackingStatuses(allShipmentsData);
                 }
             } else {
-                showToast(`❌ ${data.msg || 'فشل الحذف'}`, 'error');
-                console.error('خطأ في الحذف:', data);
+                content.innerHTML = '<p style="color:red;">' + (data.msg || 'فشل التحميل') + '</p>';
             }
-        } catch (error) {
-            console.error('خطأ في الاتصال:', error);
-            showToast('⚠️ فشل الاتصال بالخادم', 'error');
+        } catch (e) {
+            content.innerHTML = '<p style="color:red;">فشل الاتصال</p>';
+        }
+    }
+
+    async function loadAllShipments() {
+        const content = document.getElementById('content');
+        content.innerHTML = '<div class="loading"><div class="spinner"></div>جاري التحميل...</div>';
+        try {
+            const params = new URLSearchParams();
+            params.append('action', 'allShipments');
+            params.append('adminPhone', currentUser.phone);
+            params.append('adminPassword', currentUser.password);
+            const res = await fetch(API_URL, { method: 'POST', body: params });
+            const data = await res.json();
+            if (data.success) {
+                allShipmentsData = data.shipments || [];
+                document.getElementById('totalCountSmall').textContent = allShipmentsData.length;
+                renderShipments(allShipmentsData);
+                updateAllTrackingStatuses(allShipmentsData);
+            } else {
+                content.innerHTML = '<p style="color:red;">' + (data.msg || 'فشل التحميل') + '</p>';
+            }
+        } catch (e) {
+            content.innerHTML = '<p style="color:red;">فشل الاتصال</p>';
         }
     }
 
     // ============================================================
-    //  عرض نموذج التعديل
+    //  عرض بطاقة الشحنة
     // ============================================================
-    function showEditForm(shipmentId) {
-        const shipment = allShipments.find(s => s.id === shipmentId);
-        if (!shipment) {
-            showToast('❌ لم يتم العثور على الشحنة', 'error');
+    function createShipmentCard(s, isAdmin = false) {
+        let statusClass = 'status-waiting';
+        let statusText = s.status || '';
+        if (statusText.includes('تتبع')) statusClass = 'status-tracking';
+        else if (statusText.includes('تم')) statusClass = 'status-done';
+        else if (!statusText) statusClass = 'status-waiting';
+        
+        let lastUpdate = s.lastUpdate || s.date || '';
+        let updateText = lastUpdate ? 'آخر تحديث: ' + lastUpdate : '';
+        let actions = '';
+        const trackingNum = s.trackingNumber || '';
+
+        // زر التتبع المتطور
+        let trackButton = '';
+        if (trackingNum && trackingNum.length > 3) {
+            trackButton = `
+                <button class="track-btn-spinner" onclick="event.stopPropagation(); trackShipment('${trackingNum}')">
+                    <span class="ring"></span><span class="ring"></span><span class="ring"></span><span class="ring"></span>
+                    <span class="inner-circle">
+                        <span class="track-text">تتبع</span>
+                    </span>
+                </button>
+            `;
+        }
+
+        // أزرار التعديل والحذف للعميل (تظهر فقط قبل إضافة رقم التتبع)
+        if (!isAdmin && (!trackingNum || trackingNum.length < 3)) {
+            actions += `
+                <button class="btn-eux-orange" onclick="event.stopPropagation(); showEditShipmentForm('${s.id}')">
+                    ✏️ تعديل
+                </button>
+                <button class="btn-eux-red" onclick="event.stopPropagation(); deleteShipment('${s.id}')">
+                    🗑️ حذف
+                </button>
+            `;
+        }
+
+        // أزرار للمشرف
+        if (isAdmin) {
+            if (!trackingNum || trackingNum.length < 3) {
+                actions += `<button class="btn-eux-green" onclick="event.stopPropagation(); showAddTracking('${s.id}')">🔢 إضافة تتبع</button>`;
+            }
+            actions += `<button class="btn-eux-red" onclick="event.stopPropagation(); deleteShipment('${s.id}')">🗑️ حذف</button>`;
+        }
+
+        const displayName = s.receiverName || s.customerName || 'غير معروف';
+        const displayPhone = s.receiverPhone || s.customerPhone || '';
+        const displayAmount = s.amount || '0';
+        const hasTracking = trackingNum && trackingNum.length > 3;
+        const badgeHTML = statusText ? `<span class="status-badge ${statusClass}">${statusText}</span>` : '';
+
+        let adminDetails = '';
+        if (isAdmin) {
+            adminDetails = `
+                <div class="info"><strong>رقم الشحنة:</strong> ${s.id}</div>
+                ${trackingNum ? `<div class="info"><strong>رقم التتبع:</strong> ${trackingNum}</div>` : ''}
+                <div class="info"><strong>رقم العميل:</strong> ${s.clientPhone || 'غير معروف'}</div>
+            `;
+        }
+
+        return `<div class="shipment-card" onclick="toggleDetails(this)" id="card-${s.id}">
+            ${badgeHTML}
+            <div class="summary-row">
+                <div class="main-info">
+                    <span class="name">${displayName}</span>
+                    <span class="phone">${displayPhone}</span>
+                    ${trackButton}
+                    <span class="amount">${displayAmount} ج.م</span>
+                </div>
+                <div class="last-update">${updateText}</div>
+            </div>
+            <div class="status-row${hasTracking ? ' loading-status' : ''}">
+                <span class="status-label">الحالة:</span>
+                <span class="status-value">${hasTracking ? '⏳ جاري التحميل...' : (trackingNum ? '⏳ انتظار...' : 'لم يتم التحديد بعد')}</span>
+            </div>
+            <div class="details">
+                ${adminDetails}
+                ${s.receiverPhone2 ? `<div class="info"><strong>هاتف آخر:</strong> ${s.receiverPhone2}</div>` : ''}
+                ${s.governorate ? `<div class="info"><strong>المحافظة:</strong> ${s.governorate}</div>` : ''}
+                ${s.city ? `<div class="info"><strong>المدينة:</strong> ${s.city}</div>` : ''}
+                <div class="info"><strong>العنوان:</strong> ${s.address || s.customerAddress || ''}</div>
+                ${s.weight ? `<div class="info"><strong>الوزن:</strong> ${s.weight} كجم</div>` : ''}
+                ${s.notes ? `<div class="info"><strong>ملاحظات:</strong> ${s.notes}</div>` : ''}
+                ${actions ? `<div class="actions">${actions}</div>` : ''}
+            </div>
+        </div>`;
+    }
+
+    function toggleDetails(element) {
+        const details = element.querySelector('.details');
+        if (details) details.classList.toggle('open');
+    }
+
+    function renderShipments(shipments) {
+        const content = document.getElementById('content');
+        if (shipments.length === 0) {
+            content.innerHTML = '<div class="empty-state"><div class="icon">📦</div><p>لا توجد شحنات حتى الآن</p></div>';
             return;
         }
-
-        currentEditId = shipmentId;
-        document.getElementById('editShipmentId').value = shipmentId;
-
-        // تعبئة الحقول
-        document.getElementById('editName').value = shipment.receiverName || '';
-        document.getElementById('editPhone').value = shipment.receiverPhone || '';
-        document.getElementById('editPhone2').value = shipment.receiverPhone2 || '';
-        document.getElementById('editAddress').value = shipment.address || '';
-        document.getElementById('editAmount').value = shipment.amount || '';
-        document.getElementById('editWeight').value = shipment.weight || '1';
-        document.getElementById('editNotes').value = shipment.notes || '';
-        document.getElementById('editError').textContent = '';
-
-        // تعبئة المحافظات
-        const govSelect = document.getElementById('editGovernorate');
-        govSelect.innerHTML = '<option value="">اختر المحافظة</option>';
-        Object.keys(governorates).forEach(gov => {
-            const selected = gov === shipment.governorate ? 'selected' : '';
-            govSelect.innerHTML += `<option value="${gov}" ${selected}>${gov}</option>`;
-        });
-
-        // تعبئة المدن
-        updateEditCities(shipment.governorate, shipment.city);
-
-        // إظهار المودال
-        document.getElementById('editModal').classList.remove('hidden');
+        const isAdmin = currentUser && currentUser.role === 'admin';
+        content.innerHTML = shipments.map(s => createShipmentCard(s, isAdmin)).join('');
     }
 
-    function updateEditCities(selectedGov, selectedCity) {
-        const citySelect = document.getElementById('editCity');
-        const gov = selectedGov || document.getElementById('editGovernorate').value;
-        
+    // ============================================================
+    //  البحث
+    // ============================================================
+    function searchShipments() {
+        const query = document.getElementById('searchInput').value.trim().toLowerCase();
+        if (!query) {
+            if (currentUser && currentUser.role === 'admin') loadAllShipments();
+            else loadMyShipments();
+            return;
+        }
+        const filtered = allShipmentsData.filter(s => {
+            const name = (s.receiverName || s.customerName || '').toLowerCase();
+            const phone = (s.receiverPhone || s.customerPhone || '').toLowerCase();
+            return name.includes(query) || phone.includes(query);
+        });
+        const content = document.getElementById('content');
+        if (filtered.length === 0) {
+            content.innerHTML = `<div class="empty-state"><div class="icon">🔍</div><p>لا توجد نتائج مطابقة لـ "${query}"</p></div>`;
+        } else {
+            const isAdmin = currentUser && currentUser.role === 'admin';
+            content.innerHTML = filtered.map(s => createShipmentCard(s, isAdmin)).join('');
+            updateAllTrackingStatuses(filtered);
+        }
+    }
+
+    function clearSearch() {
+        document.getElementById('searchInput').value = '';
+        if (currentUser && currentUser.role === 'admin') loadAllShipments();
+        else loadMyShipments();
+    }
+
+    // ============================================================
+    //  إضافة شحنة
+    // ============================================================
+    function showAddShipmentForm() {
+        if (!currentUser) { showToast('يرجى تسجيل الدخول أولاً', 'error'); return; }
+        let govOptions = '<option value="">اختر المحافظة</option>';
+        Object.keys(governorates).forEach(gov => {
+            govOptions += `<option value="${gov}">${gov}</option>`;
+        });
+        document.getElementById('modal').classList.remove('hidden');
+        document.getElementById('modalBody').innerHTML = `
+            <h3><i class="fas fa-box"></i> إضافة شحنة جديدة</h3>
+            <div class="form-group"><label>اسم المستلم *</label><input id="f_receiverName" placeholder="اسم المستلم"></div>
+            <div class="form-group"><label>هاتف المستلم *</label><input id="f_receiverPhone" placeholder="010xxxxxxxx" dir="ltr" maxlength="11" oninput="this.value=this.value.replace(/[^0-9]/g,'')"></div>
+            <div class="form-group"><label>هاتف آخر</label><input id="f_receiverPhone2" placeholder="هاتف آخر (اختياري)" dir="ltr" maxlength="11" oninput="this.value=this.value.replace(/[^0-9]/g,'')"></div>
+            <div class="two-columns">
+                <div class="form-group"><label>المحافظة *</label><select id="f_governorate" onchange="updateCities()">${govOptions}</select></div>
+                <div class="form-group"><label>المدينة *</label><select id="f_city"><option value="">اختر المحافظة أولاً</option></select></div>
+            </div>
+            <div class="form-group"><label>العنوان التفصيلي *</label><input id="f_address" placeholder="العنوان بالتفصيل"></div>
+            <div class="form-group"><label>المبلغ المطلوب تحصيله *</label><input id="f_amount" type="number" placeholder="المبلغ بالجنيه" dir="ltr"></div>
+            <div class="form-group"><label>وزن الشحنة *</label><input id="f_weight" type="number" placeholder="الوزن بالكيلو" dir="ltr" value="1"></div>
+            <div class="form-group"><label>ملاحظات</label><textarea id="f_notes" placeholder="ملاحظات إضافية"></textarea></div>
+            <button class="btn-eux-green" onclick="submitShipment()" style="width:100%;justify-content:center;padding:14px;">✅ إضافة الشحنة</button>
+            <p id="shipError" style="color:red;margin-top:10px;text-align:center;"></p>
+        `;
+    }
+
+    function updateCities() {
+        const govSelect = document.getElementById('f_governorate');
+        const citySelect = document.getElementById('f_city');
+        const selected = govSelect.value;
         citySelect.innerHTML = '<option value="">اختر المدينة</option>';
-        if (gov && governorates[gov]) {
-            governorates[gov].forEach(city => {
-                const selected = city === selectedCity ? 'selected' : '';
-                citySelect.innerHTML += `<option value="${city}" ${selected}>${city}</option>`;
+        if (selected && governorates[selected]) {
+            governorates[selected].forEach(city => {
+                const option = document.createElement('option');
+                option.value = city;
+                option.textContent = city;
+                citySelect.appendChild(option);
             });
         }
     }
 
-    // تحديث المدن عند تغيير المحافظة
-    document.getElementById('editGovernorate').addEventListener('change', function() {
-        updateEditCities(this.value, '');
-    });
+    async function submitShipment() {
+        const receiverName = document.getElementById('f_receiverName').value.trim();
+        const receiverPhone = document.getElementById('f_receiverPhone').value.trim();
+        const receiverPhone2 = document.getElementById('f_receiverPhone2').value.trim();
+        const governorate = document.getElementById('f_governorate').value;
+        const city = document.getElementById('f_city').value;
+        const address = document.getElementById('f_address').value.trim();
+        const amount = document.getElementById('f_amount').value.trim();
+        const weight = document.getElementById('f_weight').value.trim() || '1';
+        const notes = document.getElementById('f_notes').value.trim();
+        const errorDiv = document.getElementById('shipError');
+
+        if (!receiverName || !receiverPhone || !governorate || !city || !address || !amount) {
+            errorDiv.textContent = 'يرجى ملء جميع الحقول المطلوبة (*)';
+            return;
+        }
+        if (receiverPhone.length !== 11) {
+            errorDiv.textContent = '⚠️ رقم هاتف المستلم يجب أن يكون 11 رقم';
+            return;
+        }
+        if (receiverPhone2 && receiverPhone2.length !== 11) {
+            errorDiv.textContent = '⚠️ رقم هاتف آخر يجب أن يكون 11 رقم';
+            return;
+        }
+
+        const params = new URLSearchParams();
+        params.append('action', 'addShipment');
+        params.append('phone', currentUser.phone);
+        params.append('password', currentUser.password);
+        params.append('receiverName', receiverName);
+        params.append('receiverPhone', receiverPhone);
+        params.append('receiverPhone2', receiverPhone2);
+        params.append('governorate', governorate);
+        params.append('city', city);
+        params.append('address', address);
+        params.append('amount', amount);
+        params.append('weight', weight);
+        params.append('notes', notes);
+
+        try {
+            const res = await fetch(API_URL, { method: 'POST', body: params });
+            const data = await res.json();
+            if (data.success) {
+                closeModal();
+                loadMyShipments();
+                showToast('تم إضافة الشحنة بنجاح!', 'success');
+            } else {
+                errorDiv.textContent = data.msg || 'فشل الإضافة';
+            }
+        } catch (e) {
+            errorDiv.textContent = 'فشل الاتصال';
+        }
+    }
 
     // ============================================================
-    //  تحديث الشحنة
+    //  تعديل شحنة (للعميل)
     // ============================================================
+    function showEditShipmentForm(shipmentId) {
+        const shipment = allShipmentsData.find(s => s.id === shipmentId);
+        if (!shipment) { showToast('لم يتم العثور على الشحنة', 'error'); return; }
+
+        let govOptions = '<option value="">اختر المحافظة</option>';
+        Object.keys(governorates).forEach(gov => {
+            const selected = gov === shipment.governorate ? 'selected' : '';
+            govOptions += `<option value="${gov}" ${selected}>${gov}</option>`;
+        });
+
+        let cityOptions = '<option value="">اختر المدينة</option>';
+        if (shipment.governorate && governorates[shipment.governorate]) {
+            governorates[shipment.governorate].forEach(city => {
+                const selected = city === shipment.city ? 'selected' : '';
+                cityOptions += `<option value="${city}" ${selected}>${city}</option>`;
+            });
+        }
+
+        document.getElementById('modal').classList.remove('hidden');
+        document.getElementById('modalBody').innerHTML = `
+            <h3><i class="fas fa-edit"></i> تعديل الشحنة</h3>
+            <input type="hidden" id="editShipmentId" value="${shipmentId}">
+            <div class="form-group"><label>اسم المستلم *</label><input id="e_receiverName" value="${shipment.receiverName || ''}" placeholder="اسم المستلم"></div>
+            <div class="form-group"><label>هاتف المستلم *</label><input id="e_receiverPhone" value="${shipment.receiverPhone || ''}" placeholder="010xxxxxxxx" dir="ltr" maxlength="11" oninput="this.value=this.value.replace(/[^0-9]/g,'')"></div>
+            <div class="form-group"><label>هاتف آخر</label><input id="e_receiverPhone2" value="${shipment.receiverPhone2 || ''}" placeholder="هاتف آخر (اختياري)" dir="ltr" maxlength="11" oninput="this.value=this.value.replace(/[^0-9]/g,'')"></div>
+            <div class="two-columns">
+                <div class="form-group"><label>المحافظة *</label><select id="e_governorate" onchange="updateEditCities()">${govOptions}</select></div>
+                <div class="form-group"><label>المدينة *</label><select id="e_city">${cityOptions}</select></div>
+            </div>
+            <div class="form-group"><label>العنوان التفصيلي *</label><input id="e_address" value="${shipment.address || ''}" placeholder="العنوان بالتفصيل"></div>
+            <div class="form-group"><label>المبلغ المطلوب تحصيله *</label><input id="e_amount" type="number" value="${shipment.amount || ''}" placeholder="المبلغ بالجنيه" dir="ltr"></div>
+            <div class="form-group"><label>وزن الشحنة *</label><input id="e_weight" type="number" value="${shipment.weight || '1'}" placeholder="الوزن بالكيلو" dir="ltr"></div>
+            <div class="form-group"><label>ملاحظات</label><textarea id="e_notes" placeholder="ملاحظات إضافية">${shipment.notes || ''}</textarea></div>
+            <button class="btn-eux-orange" onclick="updateShipment()" style="width:100%;justify-content:center;padding:14px;">💾 حفظ التعديلات</button>
+            <p id="editError" style="color:red;margin-top:10px;text-align:center;"></p>
+        `;
+    }
+
+    function updateEditCities() {
+        const govSelect = document.getElementById('e_governorate');
+        const citySelect = document.getElementById('e_city');
+        const selected = govSelect.value;
+        citySelect.innerHTML = '<option value="">اختر المدينة</option>';
+        if (selected && governorates[selected]) {
+            governorates[selected].forEach(city => {
+                const option = document.createElement('option');
+                option.value = city;
+                option.textContent = city;
+                citySelect.appendChild(option);
+            });
+        }
+    }
+
     async function updateShipment() {
         const shipmentId = document.getElementById('editShipmentId').value;
-        const name = document.getElementById('editName').value.trim();
-        const phone = document.getElementById('editPhone').value.trim();
-        const phone2 = document.getElementById('editPhone2').value.trim();
-        const governorate = document.getElementById('editGovernorate').value;
-        const city = document.getElementById('editCity').value;
-        const address = document.getElementById('editAddress').value.trim();
-        const amount = document.getElementById('editAmount').value.trim();
-        const weight = document.getElementById('editWeight').value.trim() || '1';
-        const notes = document.getElementById('editNotes').value.trim();
+        const name = document.getElementById('e_receiverName').value.trim();
+        const phone = document.getElementById('e_receiverPhone').value.trim();
+        const phone2 = document.getElementById('e_receiverPhone2').value.trim();
+        const governorate = document.getElementById('e_governorate').value;
+        const city = document.getElementById('e_city').value;
+        const address = document.getElementById('e_address').value.trim();
+        const amount = document.getElementById('e_amount').value.trim();
+        const weight = document.getElementById('e_weight').value.trim() || '1';
+        const notes = document.getElementById('e_notes').value.trim();
         const errorDiv = document.getElementById('editError');
 
-        // التحقق
         if (!name || !phone || !governorate || !city || !address || !amount) {
             errorDiv.textContent = 'يرجى ملء جميع الحقول المطلوبة (*)';
             return;
@@ -579,50 +1259,288 @@
             return;
         }
         if (phone2 && phone2.length !== 11) {
-            errorDiv.textContent = '⚠️ رقم الهاتف الآخر يجب أن يكون 11 رقم';
+            errorDiv.textContent = '⚠️ رقم هاتف آخر يجب أن يكون 11 رقم';
             return;
         }
 
-        errorDiv.textContent = '';
-        showToast('⏳ جاري التحديث...', '');
+        const params = new URLSearchParams();
+        params.append('action', 'updateShipment');
+        params.append('phone', currentUser.phone);
+        params.append('password', currentUser.password);
+        params.append('shipmentId', shipmentId);
+        params.append('receiverName', name);
+        params.append('receiverPhone', phone);
+        params.append('receiverPhone2', phone2);
+        params.append('governorate', governorate);
+        params.append('city', city);
+        params.append('address', address);
+        params.append('amount', amount);
+        params.append('weight', weight);
+        params.append('notes', notes);
 
         try {
-            const params = new URLSearchParams();
-            params.append('action', 'updateShipment');
-            params.append('phone', testUser.phone);
-            params.append('password', testUser.password);
-            params.append('shipmentId', shipmentId);
-            params.append('receiverName', name);
-            params.append('receiverPhone', phone);
-            params.append('receiverPhone2', phone2);
-            params.append('governorate', governorate);
-            params.append('city', city);
-            params.append('address', address);
-            params.append('amount', amount);
-            params.append('weight', weight);
-            params.append('notes', notes);
-
-            const res = await fetch(API_URL, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-                body: params.toString()
-            });
-
+            const res = await fetch(API_URL, { method: 'POST', body: params });
             const data = await res.json();
-            console.log('استجابة التحديث:', data);
-
             if (data.success) {
                 closeModal();
-                showToast('✅ تم تحديث الشحنة بنجاح', 'success');
-                loadShipments();
+                loadMyShipments();
+                showToast('تم تحديث الشحنة بنجاح!', 'success');
             } else {
                 errorDiv.textContent = data.msg || 'فشل التحديث';
-                showToast(`❌ ${data.msg || 'فشل التحديث'}`, 'error');
             }
-        } catch (error) {
-            console.error('خطأ في التحديث:', error);
-            errorDiv.textContent = 'فشل الاتصال بالخادم';
-            showToast('⚠️ فشل الاتصال بالخادم', 'error');
+        } catch (e) {
+            errorDiv.textContent = 'فشل الاتصال';
+        }
+    }
+
+    // ============================================================
+    //  حذف شحنة (للعميل والأدمن)
+    // ============================================================
+    async function deleteShipment(shipmentId) {
+        if (!confirm('⚠️ هل أنت متأكد من حذف هذه الشحنة؟')) return;
+
+        const params = new URLSearchParams();
+        params.append('action', 'deleteShipment');
+        params.append('phone', currentUser.phone);
+        params.append('password', currentUser.password);
+        params.append('shipmentId', shipmentId);
+
+        try {
+            const res = await fetch(API_URL, { method: 'POST', body: params });
+            const data = await res.json();
+            if (data.success) {
+                trackingCache = {};
+                if (currentUser.role === 'admin') loadAllShipments();
+                else loadMyShipments();
+                showToast('تم حذف الشحنة بنجاح', 'success');
+            } else {
+                showToast(data.msg || 'فشل الحذف', 'error');
+            }
+        } catch (e) {
+            showToast('فشل الاتصال بالخادم', 'error');
+        }
+    }
+
+    // ============================================================
+    //  إضافة رقم تتبع (للمشرف)
+    // ============================================================
+    function showAddTracking(shipmentId) {
+        document.getElementById('modal').classList.remove('hidden');
+        document.getElementById('modalBody').innerHTML = `
+            <h3><i class="fas fa-qrcode"></i> إضافة رقم تتبع</h3>
+            <p style="margin-bottom:12px;color:#666;">رقم الشحنة: <strong>${shipmentId}</strong></p>
+            <div class="form-group"><label>رقم التتبع</label><input id="trackingNum" dir="ltr" placeholder="مثال: JEG000470355620"></div>
+            <button class="btn-eux-green" onclick="submitTracking('${shipmentId}')" style="width:100%;justify-content:center;padding:14px;">💾 حفظ</button>
+            <p id="trackError" style="color:red;margin-top:10px;text-align:center;"></p>
+        `;
+    }
+
+    async function submitTracking(shipmentId) {
+        const trackingNumber = document.getElementById('trackingNum').value.trim();
+        const errorDiv = document.getElementById('trackError');
+        if (!trackingNumber) { errorDiv.textContent = 'يرجى إدخال رقم التتبع'; return; }
+
+        const params = new URLSearchParams();
+        params.append('action', 'addTrackingNumber');
+        params.append('adminPhone', currentUser.phone);
+        params.append('adminPassword', currentUser.password);
+        params.append('shipmentId', shipmentId);
+        params.append('trackingNumber', trackingNumber);
+
+        try {
+            const res = await fetch(API_URL, { method: 'POST', body: params });
+            const data = await res.json();
+            if (data.success) {
+                closeModal();
+                trackingCache = {};
+                loadAllShipments();
+                showToast('تم إضافة رقم التتبع!', 'success');
+            } else {
+                errorDiv.textContent = data.msg;
+            }
+        } catch (e) {
+            errorDiv.textContent = 'فشل الاتصال';
+        }
+    }
+
+    // ============================================================
+    //  تتبع الشحنة
+    // ============================================================
+    async function trackShipment(billCode) {
+        document.getElementById('modal').classList.remove('hidden');
+        document.getElementById('modalBody').innerHTML = '<div class="loading"><div class="spinner"></div>جاري تتبع الشحنة...</div>';
+        try {
+            const res = await fetch(`${API_URL}?action=track&billCode=${billCode}`);
+            const data = await res.json();
+            if (data.code === "1" && data.data && data.data[0]) {
+                let html = `<h3><i class="fas fa-map-marked-alt"></i> مسار الشحنة</h3>`;
+                const currentStatus = data.data[0].status || '';
+                const details = data.data[0].details || [];
+                let foundDelivered = false;
+                for (const d of details) {
+                    if ((d.desc || '').includes('تم التسليم')) { foundDelivered = true; break; }
+                }
+                let displayStatus = currentStatus;
+                let statusBgColor = '#e8f5e9';
+                let statusBorderColor = '#2e7d32';
+                let statusTextColor = '#2e7d32';
+                if (foundDelivered || currentStatus.includes('تم التسليم')) {
+                    displayStatus = 'تم التسليم';
+                } else if (currentStatus.includes('خطأ') || currentStatus.includes('Error')) {
+                    displayStatus = 'خطأ في التوصيل';
+                    statusBgColor = '#ffeaea';
+                    statusBorderColor = '#dc3545';
+                    statusTextColor = '#dc3545';
+                }
+                html += `<div style="background:${statusBgColor};padding:10px 16px;border-radius:10px;margin-bottom:16px;border-right:4px solid ${statusBorderColor};">
+                    <strong style="color:${statusTextColor};font-size:15px;">الحالة الحالية:</strong>
+                    <span style="color:${statusTextColor};font-weight:700;font-size:16px;margin-right:8px;">${displayStatus}</span>
+                </div>`;
+                if (details.length === 0) {
+                    html += `<p style="text-align:center;color:#999;padding:20px;">لا توجد تفاصيل تتبع متاحة</p>`;
+                } else {
+                    for (const d of details) {
+                        let desc = (d.desc || '').replace(/\([0-9]{10,11}\)/g, '').replace(/[0-9]{10,11}/g, '').replace(/J&T/gi, '').replace(/courier/gi, '').replace(/Express/gi, '');
+                        let location = d.scanNetworkName || '';
+                        let city = d.scanNetworkCity || '';
+                        let locationText = city && !location.includes(city) ? city + (location ? ' - ' + location : '') : location;
+                        locationText = locationText.replace(/[0-9]/g, '').trim();
+                        let problemText = d.probleDescription || '';
+                        if (problemText) {
+                            problemText = problemText.replace(/[0-9]/g, '').trim();
+                        }
+                        html += `<div class="timeline-item">
+                            <div class="time">🕐 ${d.scanTime || ''}</div>
+                            <div class="event">📌 ${desc}</div>
+                            <div class="location">📍 ${locationText}</div>
+                            ${problemText ? `<div class="problem">⚠️ ${problemText}</div>` : ''}
+                        </div>`;
+                    }
+                }
+                document.getElementById('modalBody').innerHTML = html;
+            } else {
+                document.getElementById('modalBody').innerHTML = `
+                    <h3><i class="fas fa-map-marked-alt"></i> تتبع الشحنة</h3>
+                    <div style="text-align:center;padding:20px;color:#dc3545;">
+                        <div style="font-size:48px;margin-bottom:12px;">❌</div>
+                        <p>${data.msg || data.error || 'فشل تتبع الشحنة'}</p>
+                    </div>
+                `;
+            }
+        } catch (e) {
+            document.getElementById('modalBody').innerHTML = `
+                <h3><i class="fas fa-map-marked-alt"></i> تتبع الشحنة</h3>
+                <div style="text-align:center;padding:20px;color:#dc3545;">
+                    <div style="font-size:48px;margin-bottom:12px;">📡</div>
+                    <p>فشل الاتصال بخدمة التتبع</p>
+                </div>
+            `;
+        }
+    }
+
+    // ============================================================
+    //  العملاء (للمشرف)
+    // ============================================================
+    async function showClients() {
+        document.getElementById('modal').classList.remove('hidden');
+        document.getElementById('modalBody').innerHTML = '<div class="loading"><div class="spinner"></div>جاري التحميل...</div>';
+        try {
+            const params = new URLSearchParams();
+            params.append('action', 'allClients');
+            params.append('adminPhone', currentUser.phone);
+            params.append('adminPassword', currentUser.password);
+            const res = await fetch(API_URL, { method: 'POST', body: params });
+            const data = await res.json();
+            if (data.success) {
+                let html = `<h3><i class="fas fa-users"></i> إدارة العملاء</h3>
+                    <button class="btn-eux-green" onclick="showAddClientForm()" style="width:100%;margin-bottom:14px;justify-content:center;">➕ إنشاء حساب عميل جديد</button>
+                    <div id="clientList"></div>`;
+                document.getElementById('modalBody').innerHTML = html;
+                const listDiv = document.getElementById('clientList');
+                if (data.clients.length === 0) {
+                    listDiv.innerHTML = '<p style="text-align:center;color:#999;padding:20px;">لا يوجد عملاء حتى الآن</p>';
+                } else {
+                    data.clients.forEach(c => {
+                        listDiv.innerHTML += `<div class="client-card">
+                            <div class="client-info">
+                                <strong>${c.name}</strong><br>
+                                <span class="phone">📱 ${c.phone}</span><br>
+                                <span class="created">📅 ${c.created}</span>
+                            </div>
+                            <div class="client-actions">
+                                <button class="btn-eux-red" onclick="deleteClient('${c.phone}')">🗑️ حذف</button>
+                            </div>
+                        </div>`;
+                    });
+                }
+            } else {
+                document.getElementById('modalBody').innerHTML = `<p style="color:red;">${data.msg || 'فشل التحميل'}</p>`;
+            }
+        } catch (e) {
+            document.getElementById('modalBody').innerHTML = '<p style="color:red;">فشل الاتصال</p>';
+        }
+    }
+
+    function showAddClientForm() {
+        document.getElementById('modalBody').innerHTML = `
+            <h3><i class="fas fa-user-plus"></i> إنشاء حساب عميل جديد</h3>
+            <div class="form-group"><label>اسم العميل *</label><input id="newClientName" placeholder="الاسم الكامل"></div>
+            <div class="form-group"><label>رقم الهاتف *</label><input id="newClientPhone" dir="ltr" placeholder="011xxxxxxxx" maxlength="11" oninput="this.value=this.value.replace(/[^0-9]/g,'')"></div>
+            <div class="form-group"><label>كلمة المرور *</label><input id="newClientPassword" type="password" dir="ltr" placeholder="كلمة المرور للدخول"></div>
+            <button class="btn-eux-green" onclick="createClient()" style="width:100%;justify-content:center;padding:14px;">✅ إنشاء الحساب</button>
+            <button class="btn-eux-outline" onclick="showClients()" style="width:100%;margin-top:8px;justify-content:center;">↩️ رجوع</button>
+            <p id="clientError" style="color:red;margin-top:10px;text-align:center;"></p>
+        `;
+    }
+
+    async function createClient() {
+        const name = document.getElementById('newClientName').value.trim();
+        const phone = document.getElementById('newClientPhone').value.trim();
+        const password = document.getElementById('newClientPassword').value.trim();
+        const errorDiv = document.getElementById('clientError');
+
+        if (!name || !phone || !password) {
+            errorDiv.textContent = 'يرجى ملء جميع الحقول';
+            return;
+        }
+        if (phone.length !== 11) {
+            errorDiv.textContent = '⚠️ رقم الهاتف يجب أن يكون 11 رقم';
+            return;
+        }
+
+        const params = new URLSearchParams();
+        params.append('action', 'createClient');
+        params.append('adminPhone', currentUser.phone);
+        params.append('adminPassword', currentUser.password);
+        params.append('clientName', name);
+        params.append('clientPhone', phone);
+        params.append('clientPassword', password);
+
+        try {
+            const res = await fetch(API_URL, { method: 'POST', body: params });
+            const data = await res.json();
+            if (data.success) {
+                showClients();
+                showToast('تم إنشاء الحساب!', 'success');
+            } else {
+                errorDiv.textContent = data.msg;
+            }
+        } catch (e) {
+            errorDiv.textContent = 'فشل الاتصال';
+        }
+    }
+
+    async function deleteClient(phone) {
+        if (!confirm('هل أنت متأكد من حذف هذا العميل؟')) return;
+        try {
+            const params = new URLSearchParams();
+            params.append('action', 'deleteClient');
+            params.append('phone', phone);
+            await fetch(API_URL, { method: 'POST', body: params });
+            showClients();
+            showToast('تم حذف العميل', 'success');
+        } catch (e) {
+            showToast('فشل الحذف', 'error');
         }
     }
 
@@ -630,19 +1548,16 @@
     //  دوال مساعدة
     // ============================================================
     function closeModal() {
-        document.getElementById('editModal').classList.add('hidden');
-        document.getElementById('editError').textContent = '';
+        document.getElementById('modal').classList.add('hidden');
     }
 
     function showToast(message, type) {
         const existing = document.querySelector('.toast');
         if (existing) existing.remove();
-
         const toast = document.createElement('div');
         toast.className = 'toast' + (type ? ' ' + type : '');
         toast.textContent = message;
         document.body.appendChild(toast);
-
         setTimeout(() => {
             toast.style.opacity = '0';
             toast.style.transition = 'opacity 0.3s';
@@ -651,19 +1566,43 @@
     }
 
     // إغلاق المودال عند الضغط خارج المحتوى
-    document.getElementById('editModal').addEventListener('click', function(e) {
+    document.getElementById('modal').addEventListener('click', function(e) {
         if (e.target === this) closeModal();
     });
 
     // ============================================================
-    //  تحميل البيانات عند بدء التشغيل
+    //  الأحداث
+    // ============================================================
+    document.getElementById('passwordInput').addEventListener('keypress', function(e) {
+        if (e.key === 'Enter') doLogin();
+    });
+    document.getElementById('phoneInput').addEventListener('keypress', function(e) {
+        if (e.key === 'Enter') document.getElementById('passwordInput').focus();
+    });
+
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape') closeModal();
+    });
+
+    // ============================================================
+    //  بدء التشغيل
     // ============================================================
     document.addEventListener('DOMContentLoaded', function() {
-        loadShipments();
-        console.log('✅ النموذج التجريبي جاهز مع API حقيقي');
-        console.log('👤 المستخدم:', testUser);
+        const savedUser = getSavedUser();
+        if (savedUser && savedUser.phone && savedUser.password) {
+            currentUser = savedUser;
+            document.getElementById('landingPage').classList.add('hidden');
+            document.getElementById('trackingApp').classList.remove('hidden');
+            document.body.style.background = 'linear-gradient(135deg, #e8f0fe, #d4e4f7)';
+            showDashboard();
+        } else {
+            document.getElementById('landingPage').classList.remove('hidden');
+            document.getElementById('trackingApp').classList.add('hidden');
+            document.body.style.background = '#f0f4fa';
+        }
     });
 </script>
 
 </body>
 </html>
+```
