@@ -1,3 +1,4 @@
+```html
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
@@ -2032,6 +2033,7 @@
         let trackingCache = {};
         let publicClientPhone = null;
         let allShipmentsData = [];
+        let editingShipmentId = null;
 
         function openTrackingSystem() {
             document.getElementById('landingPage').classList.add('hidden');
@@ -2455,9 +2457,10 @@
             let updateText = lastUpdate ? 'آخر تحديث: ' + lastUpdate : '';
             let actions = '';
             const trackingNum = s.trackingNumber || '';
+            const hasTracking = trackingNum && trackingNum.length > 3;
 
             let trackButton = '';
-            if (trackingNum && trackingNum.length > 3) {
+            if (hasTracking) {
                 trackButton = `
                         <button class="track-btn-spinner" onclick="event.stopPropagation(); trackShipment('${trackingNum}')">
                             <span class="ring"></span>
@@ -2471,8 +2474,10 @@
                     `;
             }
 
+            // For non-admin users (clients) - show edit and delete buttons only if no tracking number exists
             if (!isAdmin) {
-                actions += `
+                if (!hasTracking) {
+                    actions += `
                         <button class="btn-eux-orange" onclick="event.stopPropagation(); showEditShipmentForm('${s.id}')" style="padding:6px 16px;border-radius:8px;font-size:13px;">
                             <span class="inner">تعديل</span><span class="fold"></span>
                         </button>
@@ -2480,21 +2485,21 @@
                             <span class="inner">حذف</span><span class="fold"></span>
                         </button>
                     `;
+                }
             }
 
             if (isAdmin) {
-                if (!trackingNum || trackingNum.length < 3) {
+                if (!hasTracking) {
                     actions += `<button class="btn-eux-green" onclick="event.stopPropagation(); showAddTracking('${s.id}')" style="padding:6px 16px;border-radius:8px;font-size:13px;"><span class="inner">اضافة تتبع</span><span class="fold"></span></button>`;
                 }
                 actions += `<button class="btn-eux-red" onclick="event.stopPropagation(); deleteShipment('${s.id}')" style="padding:6px 16px;border-radius:8px;font-size:13px;"><span class="inner">حذف</span><span class="fold"></span></button>`;
                 var adminDetails =
-                    `<div class="info"><strong>رقم الشحنة:</strong> ${s.id}</div>${trackingNum ? `<div class="info"><strong>رقم التتبع:</strong> ${trackingNum}</div>` : ''}`;
+                    `<div class="info"><strong>رقم الشحنة:</strong> ${s.id}</div>${hasTracking ? `<div class="info"><strong>رقم التتبع:</strong> ${trackingNum}</div>` : ''}`;
             } else { var adminDetails = ''; }
 
             const displayName = s.receiverName || s.customerName || 'غير معروف';
             const displayPhone = s.receiverPhone || s.customerPhone || '';
             const displayAmount = s.amount || '0';
-            const hasTracking = trackingNum && trackingNum.length > 3;
             const badgeHTML = statusText ? `<span class="status-badge ${statusClass}">${statusText}</span>` : '';
 
             return `<div class="shipment-card" onclick="toggleDetails(this)" id="card-${s.id}">
@@ -2575,6 +2580,7 @@
 
         function showAddShipmentForm() {
             if (!currentUser) { showToast('يرجى تسجيل الدخول أولا', 'error'); return; }
+            editingShipmentId = null;
             let govOptions = '<option value="">اختر المحافظة</option>';
             Object.keys(governorates).forEach(gov => { govOptions += `<option value="${gov}">${gov}</option>`; });
             document.getElementById('modal').classList.remove('hidden');
@@ -2607,6 +2613,24 @@
             if (!receiverName || !receiverPhone || !governorate || !city || !address || !amount) { errorDiv.textContent = "يرجى ملء جميع الحقول المطلوبة"; return; }
             if (receiverPhone.length !== 11) { errorDiv.textContent = "رقم هاتف المستلم يجب أن يكون 11 رقم"; return; }
             if (receiverPhone2 && receiverPhone2.length !== 11) { errorDiv.textContent = "رقم هاتف آخر يجب أن يكون 11 رقم"; return; }
+
+            // If editing, delete old shipment first, then add new one
+            if (editingShipmentId) {
+                // Delete old shipment
+                const deleteParams = new URLSearchParams();
+                deleteParams.append('action', 'deleteShipment');
+                deleteParams.append('phone', currentUser.phone);
+                deleteParams.append('password', currentUser.password);
+                deleteParams.append('shipmentId', editingShipmentId);
+                try {
+                    await fetch(API_URL, { method: 'POST', headers: { 'Content-Type': 'application/x-www-form-urlencoded' }, body: deleteParams.toString() });
+                } catch (e) {
+                    errorDiv.textContent = 'فشل حذف الشحنة القديمة';
+                    return;
+                }
+            }
+
+            // Add new shipment
             const params = new URLSearchParams();
             params.append('action', 'addShipment');
             params.append('phone', currentUser.phone);
@@ -2623,15 +2647,24 @@
             try {
                 const res = await fetch(API_URL, { method: 'POST', headers: { 'Content-Type': 'application/x-www-form-urlencoded' }, body: params.toString() });
                 const data = await res.json();
-                if (data.success) { closeModal();
-                    loadMyShipments();
-                    showToast('تم اضافة الشحنة بنجاح!', 'success'); } else { errorDiv.textContent = data.msg || "فشل الاضافة"; }
+                if (data.success) {
+                    closeModal();
+                    editingShipmentId = null;
+                    if (currentUser.role === 'admin') {
+                        loadAllShipments();
+                    } else {
+                        loadMyShipments();
+                    }
+                    showToast(editingShipmentId ? 'تم تحديث الشحنة بنجاح!' : 'تم اضافة الشحنة بنجاح!', 'success');
+                } else { errorDiv.textContent = data.msg || "فشل الاضافة"; }
             } catch (e) { errorDiv.textContent = 'فشل الاتصال'; }
         }
 
         function showEditShipmentForm(shipmentId) {
             const shipment = allShipmentsData.find(s => s.id === shipmentId);
             if (!shipment) { showToast('لم يتم العثور على الشحنة', 'error'); return; }
+
+            editingShipmentId = shipmentId;
 
             let govOptions = '<option value="">اختر المحافظة</option>';
             Object.keys(governorates).forEach(gov => {
@@ -2650,77 +2683,18 @@
             document.getElementById('modal').classList.remove('hidden');
             document.getElementById('modalBody').innerHTML = `
                     <h3><i class="fas fa-edit"></i> تعديل الشحنة</h3>
-                    <div class="form-group"><label>اسم المستلم *</label><input id="e_receiverName" value="${shipment.receiverName || ''}" placeholder="اسم المستلم"></div>
-                    <div class="form-group"><label>هاتف المستلم *</label><input id="e_receiverPhone" value="${shipment.receiverPhone || ''}" placeholder="مثال: 010xxxxxxxx" dir="ltr" maxlength="11" oninput="this.value=this.value.replace(/[^0-9]/g,'')"></div>
-                    <div class="form-group"><label>هاتف آخر للمستلم</label><input id="e_receiverPhone2" value="${shipment.receiverPhone2 || ''}" placeholder="هاتف آخر (اختياري)" dir="ltr" maxlength="11" oninput="this.value=this.value.replace(/[^0-9]/g,'')"></div>
-                    <div class="two-columns"><div class="form-group"><label>المحافظة *</label><select id="e_governorate" onchange="updateEditCities()">${govOptions}</select></div><div class="form-group"><label>المدينة *</label><select id="e_city">${cityOptions}</select></div></div>
-                    <div class="form-group"><label>العنوان التفصيلي *</label><input id="e_address" value="${shipment.address || ''}" placeholder="العنوان بالتفصيل"></div>
-                    <div class="form-group"><label>المبلغ المطلوب تحصيله شامل الشحن *</label><input id="e_amount" type="number" value="${shipment.amount || ''}" placeholder="المبلغ بالجنيه" dir="ltr"></div>
-                    <div class="form-group"><label>وزن الشحنة *</label><input id="e_weight" type="number" value="${shipment.weight || '1'}" placeholder="الوزن بالكيلو" dir="ltr"></div>
-                    <div class="form-group"><label>ملاحظات</label><textarea id="e_notes" placeholder="ملاحظات اضافية">${shipment.notes || ''}</textarea></div>
-                    <button class="btn-eux-orange" onclick="updateShipment('${shipmentId}')" style="width:100%;"><span class="inner">حفظ التعديلات</span><span class="fold"></span></button>
-                    <p id="editError" style="color:red;margin-top:10px;"></p>
+                    <p style="color:#888;font-size:13px;margin-bottom:12px;">سيتم حذف الشحنة القديمة وإنشاء شحنة جديدة بنفس البيانات بعد التعديل</p>
+                    <div class="form-group"><label>اسم المستلم *</label><input id="f_receiverName" value="${shipment.receiverName || ''}" placeholder="اسم المستلم"></div>
+                    <div class="form-group"><label>هاتف المستلم *</label><input id="f_receiverPhone" value="${shipment.receiverPhone || ''}" placeholder="مثال: 010xxxxxxxx" dir="ltr" maxlength="11" oninput="this.value=this.value.replace(/[^0-9]/g,'')"></div>
+                    <div class="form-group"><label>هاتف آخر للمستلم</label><input id="f_receiverPhone2" value="${shipment.receiverPhone2 || ''}" placeholder="هاتف آخر (اختياري)" dir="ltr" maxlength="11" oninput="this.value=this.value.replace(/[^0-9]/g,'')"></div>
+                    <div class="two-columns"><div class="form-group"><label>المحافظة *</label><select id="f_governorate" onchange="updateCities()">${govOptions}</select></div><div class="form-group"><label>المدينة *</label><select id="f_city">${cityOptions}</select></div></div>
+                    <div class="form-group"><label>العنوان التفصيلي *</label><input id="f_address" value="${shipment.address || ''}" placeholder="العنوان بالتفصيل"></div>
+                    <div class="form-group"><label>المبلغ المطلوب تحصيله شامل الشحن *</label><input id="f_amount" type="number" value="${shipment.amount || ''}" placeholder="المبلغ بالجنيه" dir="ltr"></div>
+                    <div class="form-group"><label>وزن الشحنة *</label><input id="f_weight" type="number" value="${shipment.weight || '1'}" placeholder="الوزن بالكيلو" dir="ltr"></div>
+                    <div class="form-group"><label>ملاحظات</label><textarea id="f_notes" placeholder="ملاحظات اضافية">${shipment.notes || ''}</textarea></div>
+                    <button class="btn-eux-orange" onclick="submitShipment()" style="width:100%;"><span class="inner">حفظ التعديلات (سيتم حذف القديمة)</span><span class="fold"></span></button>
+                    <p id="shipError" style="color:red;margin-top:10px;"></p>
                 `;
-        }
-
-        function updateEditCities() {
-            const govSelect = document.getElementById('e_governorate');
-            const citySelect = document.getElementById('e_city');
-            const selected = govSelect.value;
-            citySelect.innerHTML = '<option value="">اختر المدينة</option>';
-            if (selected && governorates[selected]) {
-                governorates[selected].forEach(city => {
-                    const option = document.createElement('option');
-                    option.value = city;
-                    option.textContent = city;
-                    citySelect.appendChild(option);
-                });
-            }
-        }
-
-        async function updateShipment(shipmentId) {
-            const receiverName = document.getElementById('e_receiverName').value.trim();
-            const receiverPhone = document.getElementById('e_receiverPhone').value.trim();
-            const receiverPhone2 = document.getElementById('e_receiverPhone2').value.trim();
-            const governorate = document.getElementById('e_governorate').value;
-            const city = document.getElementById('e_city').value;
-            const address = document.getElementById('e_address').value.trim();
-            const amount = document.getElementById('e_amount').value.trim();
-            const weight = document.getElementById('e_weight').value.trim() || '1';
-            const notes = document.getElementById('e_notes').value.trim();
-            const errorDiv = document.getElementById('editError');
-            if (!receiverName || !receiverPhone || !governorate || !city || !address || !amount) { errorDiv.textContent = "يرجى ملء جميع الحقول المطلوبة"; return; }
-            if (receiverPhone.length !== 11) { errorDiv.textContent = "رقم هاتف المستلم يجب أن يكون 11 رقم"; return; }
-            if (receiverPhone2 && receiverPhone2.length !== 11) { errorDiv.textContent = "رقم هاتف آخر يجب أن يكون 11 رقم"; return; }
-
-            const params = new URLSearchParams();
-            params.append('action', 'updateShipment');
-            params.append('phone', currentUser.phone);
-            params.append('password', currentUser.password);
-            params.append('shipmentId', shipmentId);
-            params.append('receiverName', receiverName);
-            params.append('receiverPhone', receiverPhone);
-            params.append('receiverPhone2', receiverPhone2);
-            params.append('governorate', governorate);
-            params.append('city', city);
-            params.append('address', address);
-            params.append('amount', amount);
-            params.append('weight', weight);
-            params.append('notes', notes);
-
-            try {
-                const res = await fetch(API_URL, { method: 'POST', headers: { 'Content-Type': 'application/x-www-form-urlencoded' }, body: params.toString() });
-                const data = await res.json();
-                if (data.success) {
-                    closeModal();
-                    loadMyShipments();
-                    showToast('تم تحديث الشحنة بنجاح!', 'success');
-                } else {
-                    errorDiv.textContent = data.msg || "فشل التحديث";
-                }
-            } catch (e) {
-                errorDiv.textContent = 'فشل الاتصال';
-            }
         }
 
         function showAddTracking(shipmentId) {
@@ -2747,10 +2721,16 @@
             try {
                 const res = await fetch(API_URL, { method: 'POST', headers: { 'Content-Type': 'application/x-www-form-urlencoded' }, body: params.toString() });
                 const data = await res.json();
-                if (data.success) { closeModal();
+                if (data.success) { 
+                    closeModal();
                     trackingCache = {};
-                    loadAllShipments();
-                    showToast('تم اضافة رقم التتبع!', 'success'); } else { errorDiv.textContent = data.msg; }
+                    if (currentUser.role === 'admin') {
+                        loadAllShipments();
+                    } else {
+                        loadMyShipments();
+                    }
+                    showToast('تم اضافة رقم التتبع!', 'success'); 
+                } else { errorDiv.textContent = data.msg; }
             } catch (e) { errorDiv.textContent = 'فشل الاتصال'; }
         }
 
@@ -3045,3 +3025,4 @@
 
 </body>
 </html>
+```
