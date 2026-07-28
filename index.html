@@ -1,10 +1,10 @@
+```html
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     
-    <!-- === إضافات SEO === -->
     <meta name="description" content="شركة EUX للشحن تقدم خدمات الشحن السريع من مدينة العبور إلى جميع محافظات مصر بأسعار تنافسية وخدمة احترافية.">
     <meta name="keywords" content="EUX, EUX Express, شركة شحن, شحن مصر, شحن سريع, شحن العبور">
     <meta name="robots" content="index, follow">
@@ -17,7 +17,6 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <style>
-        /* ============ الأساسيات ============ */
         :root {
             --primary-color: #0076ff;
             --secondary-color: #1a1a1a;
@@ -47,7 +46,6 @@
 
         .hidden { display: none !important; }
 
-        /* ============ صفحة الهبوط ============ */
         #landingPage { display: block; }
 
         header {
@@ -496,7 +494,6 @@
         }
         .footer-social a:hover { color: #1877f2; }
 
-        /* ============ نظام التتبع ============ */
         #trackingApp {
             background: linear-gradient(135deg, #e8f0fe, #d4e4f7);
             min-height: 100vh;
@@ -523,7 +520,6 @@
             pointer-events: none;
         }
 
-        /* صفحة تسجيل الدخول */
         .login-page {
             text-align: center;
             position: relative;
@@ -779,7 +775,6 @@
             border-radius: 8px;
         }
 
-        /* هيدر لوحة التحكم */
         .tracking-header {
             display: flex;
             justify-content: space-between;
@@ -818,7 +813,6 @@
             font-size: 16px;
         }
 
-        /* بطاقة الشحنة */
         .shipment-card {
             background: #f8fafc;
             border-radius: 14px;
@@ -880,7 +874,6 @@
             font-size: 15px;
         }
 
-        /* ===== زر التتبع المتطور (Spinner) - معدل ===== */
         .track-btn-spinner {
             position: relative;
             border-radius: 50%;
@@ -1039,7 +1032,6 @@
             flex-wrap: wrap;
         }
 
-        /* المودال */
         .modal {
             position: fixed;
             top: 0;
@@ -1131,7 +1123,6 @@
         .form-group textarea { height: 80px;
             resize: vertical; }
 
-        /* التتبع */
         .timeline-item {
             border-right: 3px solid #0076ff;
             padding: 12px 16px 12px 0;
@@ -1161,7 +1152,6 @@
             margin-top: 4px;
         }
 
-        /* العملاء */
         .client-card {
             background: #f8fafc;
             padding: 14px 18px;
@@ -1189,7 +1179,6 @@
             color: #aaa;
         }
 
-        /* أخرى */
         .loading {
             text-align: center;
             padding: 30px 0;
@@ -1221,7 +1210,6 @@
         }
         .text-center { text-align: center; }
 
-        /* ============ أزرار EUX ============ */
         .btn-eux,
         .btn-eux-green,
         .btn-eux-orange,
@@ -1425,7 +1413,6 @@
                 transform: translateX(-50%) translateY(0); }
         }
 
-        /* صفحة التسجيل العامة */
         .public-page-header {
             text-align: center;
             padding: 10px 0 5px 0;
@@ -1480,7 +1467,7 @@
             height: 100%;
             background-color: var(--black-700);
             border-radius: var(--border_radius);
-            box-shadow: inset 0 0.5px hsla(0, 0%, 100%, 0.3), inset 0 -1px 2px 0 hsla(0, 0%, 0%, 0.1), 0px 4px 10px -4px hsla(0 0% 0% / calc(1 - var(--active, 0))), 0 0 0 calc(var(--active, 0) * 0.375rem) hsla(210, 97%, 50%, 0.25);
+            box-shadow: inset 0 0.5px hsla(0, 0%, 100%, 0.3), inset 0 -1px 2px 0 hsla(0, 0%, 0%, 0.1), 0px 4px 10px -4px hsla(0, 0%, 0%, 0.1);
             transition: all var(--transtion);
             z-index: 0;
         }
@@ -1493,7 +1480,7 @@
             width: 100%;
             height: 100%;
             background-color: hsla(210, 97%, 61%, 0.15);
-            background-image: radial-gradient(at 51% 89%, hsla(210, 45%, 74%, 0.3) 0px, transparent 50%), radial-gradient(at 100% 100%, hsla(210, 36%, 60%, 0.2) 0px, transparent 50%), radial-gradient(at 22% 91%, hsla(210, 36%, 60%, 0.2) 0px, transparent 50%);
+            background-image: radial-gradient(at 51% 89%, hsla(210, 45%, 74%, 0.3) 0px, transparent 50%), radial-gradient(at 0% 0%, hsla(210, 45%, 74%, 0.3) 0px, transparent 50%);
             background-position: top;
             opacity: var(--active, 0);
             border-radius: var(--border_radius);
@@ -1579,7 +1566,6 @@
 </head>
 <body oncontextmenu="return false;">
 
-    <!-- ==================== صفحة الهبوط ==================== -->
     <div id="landingPage">
         <header>
             <a href="#" class="logo">EUX EXPRESS</a>
@@ -1639,7 +1625,7 @@
             </div>
 
             <h2 class="section-title">لماذا شركة EUX؟</h2>
-            <p style="max-width: 800px; margin: 0 auto 30px; color: #666;">نعمل في مجال الشحن منذ 3 أعوام متتالية حققنا فيها نجاحاً باهراً، وقدمنا حلولاً مبتكرة لجميع مشاكل الشحن التي تواجه التجار لأننا ندرك تماماً ما يهمك:</p>
+            <p style="max-width: 800px; margin: 0 auto 30px; color: #666;">نعمل في مجال الشحن منذ 3 أعوام متتالية حققنا فيها نجاحا باهرا، وقدمنا حلولا مبتكرة لجميع مشاكل الشحن التي تواجه التجار لأننا ندرك تماما ما يهمك:</p>
 
             <div class="about-container">
                 <div class="about-card">
@@ -1669,13 +1655,13 @@
         <section id="services" class="services">
             <h2 class="section-title">خدماتنا المميزة</h2>
             <div class="services-grid">
-                <div class="service-box"><i class="fas fa-mobile-alt"></i><h4>تطبيق متابعة خاص</h4><p>تابع شحناتك خطوة بخطوة أولاً بأول من خلال تطبيقنا الذكي</p></div>
+                <div class="service-box"><i class="fas fa-mobile-alt"></i><h4>تطبيق متابعة خاص</h4><p>تابع شحناتك خطوة بخطوة أولا بأول من خلال تطبيقنا الذكي</p></div>
                 <div class="service-box"><i class="fas fa-users"></i><h4>جروب للمتابعة والدعم</h4><p>فريق دعم فني متكامل متواجد لخدمتك ومتابعة طلباتك بمرونة</p></div>
-                <div class="service-box"><i class="fas fa-truck-loading"></i><h4>خدمة بيكب مجاني</h4><p>نقوم باستلام الشحنات من باب مخزنك أو مقر عملك مجاناً</p></div>
-                <div class="service-box"><i class="fas fa-money-bill-wave"></i><h4>تحصيل 3 أيام أسبوعياً</h4><p>دورة رأس مال سريعة مع نظام تحصيل مرن وموثوق 3 مرات في الأسبوع</p></div>
+                <div class="service-box"><i class="fas fa-truck-loading"></i><h4>خدمة بيكب مجاني</h4><p>نقوم باستلام الشحنات من باب مخزنك أو مقر عملك مجانا</p></div>
+                <div class="service-box"><i class="fas fa-money-bill-wave"></i><h4>تحصيل 3 أيام أسبوعيا</h4><p>دورة رأس مال سريعة مع نظام تحصيل مرن وموثوق 3 مرات في الأسبوع</p></div>
                 <div class="service-box"><i class="fas fa-search-plus"></i><h4>خدمة معاينة واستبدال</h4><p>نمنح عملائك ميزة المعاينة والاستبدال في مكان التسليم لزيادة الثقة</p></div>
                 <div class="service-box"><i class="fas fa-redo-alt"></i><h4>3 محاولات تسليم</h4><p>نحاول تسليم الشحنة حتى 3 مرات قبل تصنيفها كمرتجع لضمان أعلى نسبة نجاح</p></div>
-                <div class="service-box"><i class="fas fa-chart-line"></i><h4>نسبة تسليم عالية جداً</h4><p>بفضل خبرتنا الممتدة لـ 3 سنوات، نحقق أعلى معدلات نجاح تسليم بمصر</p></div>
+                <div class="service-box"><i class="fas fa-chart-line"></i><h4>نسبة تسليم عالية جدا</h4><p>بفضل خبرتنا الممتدة لـ 3 سنوات، نحقق أعلى معدلات نجاح تسليم بمصر</p></div>
             </div>
 
             <div class="sea-wave-divider">
@@ -1712,10 +1698,8 @@
         </footer>
     </div>
 
-    <!-- ==================== نظام التتبع ==================== -->
     <div id="trackingApp" class="hidden">
         <div class="tracking-container" id="app">
-            <!-- صفحة تسجيل الدخول -->
             <div id="loginPage" class="login-page">
                 <div class="logo-wrapper">
                     <div class="civil-helo">
@@ -1733,7 +1717,7 @@
                         <div class="nav-light green"></div>
                     </div>
                 </div>
-                <div class="brand">مرحباً بك في <span>EUX Express</span></div>
+                <div class="brand">مرحبا بك في <span>EUX Express</span></div>
 
                 <div class="input-group">
                     <span class="input-icon"><i class="fas fa-phone"></i></span>
@@ -1755,29 +1739,26 @@
                     </div>
                 </button>
                 <button class="btn-eux-outline" onclick="backToLanding()" style="width:100%;margin-top:10px;padding:14px;border-radius:12px;font-size:15px;">
-                    <span class="inner">🏠 العودة للصفحة الرئيسية</span>
+                    <span class="inner">العودة للصفحة الرئيسية</span>
                 </button>
                 <p class="error-msg" id="loginError"></p>
             </div>
 
-            <!-- لوحة التحكم -->
             <div id="dashboard" class="hidden">
                 <div class="tracking-header">
                     <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
                         <h2><i class="fas fa-tachometer-alt"></i> لوحة التحكم</h2>
-                        <span class="total-small">إجمالي الشحنات: <span class="count" id="totalCountSmall">0</span></span>
+                        <span class="total-small">اجمالي الشحنات: <span class="count" id="totalCountSmall">0</span></span>
                     </div>
                     <div class="header-actions">
-                        <!-- START: Search Section -->
                         <div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap;background:#f0f4fa;padding:4px 8px;border-radius:30px;border:1px solid #dce5ed;">
                             <i class="fas fa-search" style="color:#888;font-size:14px;"></i>
                             <input type="text" id="searchShipmentInput" placeholder="بحث باسم أو رقم هاتف..." style="border:none;background:transparent;padding:6px 10px;font-family:'Cairo',sans-serif;font-size:14px;min-width:150px;outline:none;" dir="rtl">
                             <button onclick="searchShipments()" style="background:#0076ff;color:white;border:none;border-radius:20px;padding:4px 16px;font-weight:600;cursor:pointer;font-family:'Cairo',sans-serif;font-size:13px;transition:0.2s;">بحث</button>
-                            <button onclick="clearSearch()" style="background:transparent;color:#888;border:none;border-radius:20px;padding:4px 10px;cursor:pointer;font-family:'Cairo',sans-serif;font-size:12px;">إلغاء</button>
+                            <button onclick="clearSearch()" style="background:transparent;color:#888;border:none;border-radius:20px;padding:4px 10px;cursor:pointer;font-family:'Cairo',sans-serif;font-size:12px;">الغاء</button>
                         </div>
-                        <!-- END: Search Section -->
                         <button id="shareLinkBtn" class="btn-eux-orange hidden share-btn-text" onclick="copyShareLink()" style="font-size:12px;padding:8px 12px;border-radius:10px;">
-                            <span class="inner">📤 يمكنك ارسال هاذا الرابط للراسل ليقوم بتسجيل الشحنه بنفسه</span>
+                            <span class="inner">يمكنك ارسال هذا الرابط للراسل ليقوم بتسجيل الشحنه بنفسه</span>
                             <span class="fold"></span>
                             <div class="points_wrapper">
                                 <span class="point"></span><span class="point"></span><span class="point"></span>
@@ -1787,7 +1768,7 @@
                             </div>
                         </button>
                         <button id="addShipmentBtn" class="btn-eux-green hidden" onclick="showAddShipmentForm()" style="padding:10px 16px;border-radius:10px;font-size:13px;">
-                            <span class="inner">➕ إضافة شحنة</span>
+                            <span class="inner">اضافة شحنة</span>
                             <span class="fold"></span>
                             <div class="points_wrapper">
                                 <span class="point"></span><span class="point"></span><span class="point"></span>
@@ -1797,7 +1778,7 @@
                             </div>
                         </button>
                         <button id="clientsBtn" class="btn-eux hidden" onclick="showClients()" style="padding:10px 16px;border-radius:10px;font-size:13px;">
-                            <span class="inner">👥 عملاء</span>
+                            <span class="inner">عملاء</span>
                             <span class="fold"></span>
                             <div class="points_wrapper">
                                 <span class="point"></span><span class="point"></span><span class="point"></span>
@@ -1807,7 +1788,7 @@
                             </div>
                         </button>
                         <button id="allShipmentsBtn" class="btn-eux-orange hidden" onclick="loadAllShipments()" style="padding:10px 16px;border-radius:10px;font-size:13px;">
-                            <span class="inner">📋 الكل</span>
+                            <span class="inner">الكل</span>
                             <span class="fold"></span>
                             <div class="points_wrapper">
                                 <span class="point"></span><span class="point"></span><span class="point"></span>
@@ -1817,7 +1798,7 @@
                             </div>
                         </button>
                         <button class="btn-eux-outline" onclick="logout()" style="padding:10px 16px;border-radius:10px;font-size:13px;">
-                            <span class="inner">🚪 خروج</span>
+                            <span class="inner">خروج</span>
                         </button>
                     </div>
                 </div>
@@ -1825,7 +1806,6 @@
                 <div id="content"></div>
             </div>
 
-            <!-- صفحة التسجيل العامة -->
             <div id="publicOrderPage" class="hidden">
                 <div class="public-page-header">
                     <div class="helo-wrapper">
@@ -1843,19 +1823,19 @@
                     </div>
                 </div>
 
-                <div class="form-group"><label>👤 اسم المستلم *</label><input id="pf_receiverName" placeholder="اسم المستلم"></div>
-                <div class="form-group"><label>📱 هاتف المستلم *</label><input id="pf_receiverPhone" placeholder="مثال: 010xxxxxxxx" dir="ltr" maxlength="11" oninput="this.value=this.value.replace(/[^0-9]/g,'')"></div>
-                <div class="form-group"><label>📱 هاتف آخر للمستلم</label><input id="pf_receiverPhone2" placeholder="هاتف آخر (اختياري)" dir="ltr" maxlength="11" oninput="this.value=this.value.replace(/[^0-9]/g,'')"></div>
+                <div class="form-group"><label>اسم المستلم *</label><input id="pf_receiverName" placeholder="اسم المستلم"></div>
+                <div class="form-group"><label>هاتف المستلم *</label><input id="pf_receiverPhone" placeholder="مثال: 010xxxxxxxx" dir="ltr" maxlength="11" oninput="this.value=this.value.replace(/[^0-9]/g,'')"></div>
+                <div class="form-group"><label>هاتف آخر للمستلم</label><input id="pf_receiverPhone2" placeholder="هاتف آخر (اختياري)" dir="ltr" maxlength="11" oninput="this.value=this.value.replace(/[^0-9]/g,'')"></div>
                 <div class="two-columns">
-                    <div class="form-group"><label>🏛️ المحافظة *</label><select id="pf_governorate" onchange="updatePublicCities()"><option value="">اختر المحافظة</option></select></div>
-                    <div class="form-group"><label>🏙️ المدينة *</label><select id="pf_city"><option value="">اختر المحافظة أولاً</option></select></div>
+                    <div class="form-group"><label>المحافظة *</label><select id="pf_governorate" onchange="updatePublicCities()"><option value="">اختر المحافظة</option></select></div>
+                    <div class="form-group"><label>المدينة *</label><select id="pf_city"><option value="">اختر المحافظة أولا</option></select></div>
                 </div>
-                <div class="form-group"><label>📍 العنوان التفصيلي *</label><input id="pf_address" placeholder="العنوان بالتفصيل"></div>
-                <div class="form-group"><label>💰 المبلغ المطلوب تحصيله شامل الشحن *</label><input id="pf_amount" type="number" placeholder="المبلغ بالجنيه" dir="ltr"></div>
-                <div class="form-group"><label>⚖️ وزن الشحنة *</label><input id="pf_weight" type="number" placeholder="الوزن بالكيلو" dir="ltr" value="1"></div>
-                <div class="form-group"><label>📝 ملاحظات</label><textarea id="pf_notes" placeholder="ملاحظات إضافية"></textarea></div>
+                <div class="form-group"><label>العنوان التفصيلي *</label><input id="pf_address" placeholder="العنوان بالتفصيل"></div>
+                <div class="form-group"><label>المبلغ المطلوب تحصيله شامل الشحن *</label><input id="pf_amount" type="number" placeholder="المبلغ بالجنيه" dir="ltr"></div>
+                <div class="form-group"><label>وزن الشحنة *</label><input id="pf_weight" type="number" placeholder="الوزن بالكيلو" dir="ltr" value="1"></div>
+                <div class="form-group"><label>ملاحظات</label><textarea id="pf_notes" placeholder="ملاحظات اضافية"></textarea></div>
                 <button class="btn-eux" onclick="submitPublicOrder()" style="width:100%;padding:14px;border-radius:12px;font-size:16px;">
-                    <span class="inner">✅ تسجيل الشحنة</span>
+                    <span class="inner">تسجيل الشحنة</span>
                     <span class="fold"></span>
                     <div class="points_wrapper">
                         <span class="point"></span><span class="point"></span><span class="point"></span>
@@ -1865,26 +1845,22 @@
                     </div>
                 </button>
                 <button class="btn-eux-outline" onclick="backToLanding()" style="width:100%;margin-top:8px;padding:12px;border-radius:10px;font-size:14px;">
-                    <span class="inner">🏠 العودة للصفحة الرئيسية</span>
+                    <span class="inner">العودة للصفحة الرئيسية</span>
                 </button>
                 <p id="publicError" style="color:red;margin-top:10px;text-align:center;"></p>
             </div>
         </div>
 
-        <!-- المودال -->
         <div id="modal" class="modal hidden">
             <div class="modal-content" id="modalContent">
-                <span class="close-btn" onclick="closeModal()">✕</span>
+                <span class="close-btn" onclick="closeModal()">×</span>
                 <div id="modalBody"></div>
             </div>
         </div>
     </div>
 
     <script>
-        // ============================================================
-        //  🔗 الروابط
-        // ============================================================
-        const API_URL = "https://script.google.com/macros/s/AKfycbx8a50FxoJayOe9aM7OmblI5_MBI2bMVoYDAOJmSFzIG2ouh7ew3UOwLNbK_cUVrHqH/exec";
+        const API_URL = "https://script.google.com/macros/s/AKfycbxADkYH0twv6PQNmHuDyd_MvGLv4qUr6d3e81k4hyLFDhiposHKctb0GboQllkeqj3i/exec";
         const BASE_URL = "https://euxexpress.com";
 
         let currentUser = null;
@@ -1892,9 +1868,6 @@
         let publicClientPhone = null;
         let allShipmentsData = [];
 
-        // ============================================================
-        //  التنقل بين الصفحات
-        // ============================================================
         function openTrackingSystem() {
             document.getElementById('landingPage').classList.add('hidden');
             document.getElementById('trackingApp').classList.remove('hidden');
@@ -1916,9 +1889,6 @@
             }
         }
 
-        // ============================================================
-        //  حفظ الجلسة
-        // ============================================================
         function saveUserSession(userData) {
             try {
                 sessionStorage.setItem('eux_user', JSON.stringify(userData));
@@ -1957,9 +1927,6 @@
             localStorage.removeItem('eux_login_count');
         }
 
-        // ============================================================
-        //  التحقق من الجلسة
-        // ============================================================
         function checkSession() {
             const urlParams = new URLSearchParams(window.location.search);
             const refPhone = urlParams.get('ref');
@@ -1980,9 +1947,6 @@
             return false;
         }
 
-        // ============================================================
-        //  قائمة المحافظات والمدن
-        // ============================================================
         const governorates = {
             'الشرقية': ['بلبيس', 'انشاص الرمل', 'أولاد صقر', 'الحسينية', 'ديرب نجم', 'فاقوس', 'كفر صقر', 'مشتول السوق', 'منيا القمح', 'الصالحية القديمة', 'الصالحية الجديدة', 'صان الحجر', 'مدينة العاشر من رمضان'],
             'الجيزة': ['مدينة السادس من أكتوبر', 'مدينة الشيخ زايد', 'العياط', 'الحوامدية', 'البدرشين', 'الصف', 'العمرانية', 'أطفيح', 'الواحات البحرية', 'الجيزة', 'حدائق الاهرام', 'فيصل', 'الهرم', 'أبو النمرس', 'العجوزة', 'الوراق', 'أوسيم', 'بولاق الدكرور', 'الدقي', 'أرض اللواء', 'المهندسين', 'كرداسة', 'إمبابة', 'منشأة القناطر'],
@@ -2042,9 +2006,6 @@
             }
         }
 
-        // ============================================================
-        //  صفحة التسجيل العامة
-        // ============================================================
         function showPublicOrderPage() {
             document.getElementById('landingPage').classList.add('hidden');
             document.getElementById('loginPage').classList.add('hidden');
@@ -2073,9 +2034,9 @@
             const weight = document.getElementById('pf_weight').value.trim() || '1';
             const notes = document.getElementById('pf_notes').value.trim();
             const errorDiv = document.getElementById('publicError');
-            if (!receiverName || !receiverPhone || !governorate || !city || !address || !amount) { errorDiv.textContent = "يرجى ملء جميع الحقول المطلوبة (*)"; return; }
-            if (receiverPhone.length !== 11) { errorDiv.textContent = "⚠️ رقم هاتف المستلم يجب أن يكون 11 رقم"; return; }
-            if (receiverPhone2 && receiverPhone2.length !== 11) { errorDiv.textContent = "⚠️ رقم هاتف آخر يجب أن يكون 11 رقم"; return; }
+            if (!receiverName || !receiverPhone || !governorate || !city || !address || !amount) { errorDiv.textContent = "يرجى ملء جميع الحقول المطلوبة"; return; }
+            if (receiverPhone.length !== 11) { errorDiv.textContent = "رقم هاتف المستلم يجب أن يكون 11 رقم"; return; }
+            if (receiverPhone2 && receiverPhone2.length !== 11) { errorDiv.textContent = "رقم هاتف آخر يجب أن يكون 11 رقم"; return; }
             const params = new URLSearchParams();
             params.append('action', 'addShipment');
             params.append('phone', publicClientPhone);
@@ -2093,12 +2054,12 @@
                 const res = await fetch(API_URL, { method: 'POST', headers: { 'Content-Type': 'application/x-www-form-urlencoded' }, body: params.toString() });
                 const data = await res.json();
                 if (data.success) {
-                    showToast('✅ تم تسجيل الشحنة بنجاح!', 'success');
+                    showToast('تم تسجيل الشحنة بنجاح!', 'success');
                     document.getElementById('pf_receiverName').value = '';
                     document.getElementById('pf_receiverPhone').value = '';
                     document.getElementById('pf_receiverPhone2').value = '';
                     document.getElementById('pf_governorate').value = '';
-                    document.getElementById('pf_city').innerHTML = '<option value="">اختر المحافظة أولاً</option>';
+                    document.getElementById('pf_city').innerHTML = '<option value="">اختر المحافظة أولا</option>';
                     document.getElementById('pf_address').value = '';
                     document.getElementById('pf_amount').value = '';
                     document.getElementById('pf_weight').value = '1';
@@ -2108,13 +2069,10 @@
             } catch (e) { errorDiv.textContent = 'فشل الاتصال'; }
         }
 
-        // ============================================================
-        //  نسخ رابط التسجيل
-        // ============================================================
         function copyShareLink() {
             const shareUrl = `${BASE_URL}/?ref=${currentUser.phone}`;
             if (navigator.clipboard && navigator.clipboard.writeText) {
-                navigator.clipboard.writeText(shareUrl).then(() => showToast('✅ تم نسخ رابط التسجيل!', 'success')).catch(() => fallbackCopy(shareUrl));
+                navigator.clipboard.writeText(shareUrl).then(() => showToast('تم نسخ رابط التسجيل!', 'success')).catch(() => fallbackCopy(shareUrl));
             } else { fallbackCopy(shareUrl); }
         }
 
@@ -2140,7 +2098,7 @@
             textarea.setSelectionRange(0, 999999);
             try {
                 const successful = document.execCommand('copy');
-                if (successful) showToast('✅ تم نسخ رابط التسجيل!', 'success');
+                if (successful) showToast('تم نسخ رابط التسجيل!', 'success');
                 else showModalWithLink(text);
             } catch (e) { showModalWithLink(text); }
             document.body.removeChild(textarea);
@@ -2150,25 +2108,22 @@
             document.getElementById('modal').classList.remove('hidden');
             document.getElementById('modalBody').innerHTML = `
                     <h3><i class="fas fa-link"></i> رابط التسجيل</h3>
-                    <p style="margin-bottom:12px;color:#666;font-size:13px;">انسخ الرابط يدوياً:</p>
+                    <p style="margin-bottom:12px;color:#666;font-size:13px;">انسخ الرابط يدويا:</p>
                     <div style="background:#f0f6fe;padding:14px;border-radius:10px;word-break:break-all;direction:ltr;text-align:left;margin-bottom:14px;font-size:13px;border:1px solid #dce8f5;">${url}</div>
-                    <button class="btn-eux" onclick="navigator.clipboard.writeText('${url.replace(/'/g, "\\'")}').then(()=>showToast('✅ تم النسخ!','success')).catch(()=>showToast('⚠️ فشل النسخ','error'))" style="width:100%;">
-                        <span class="inner">📋 نسخ الرابط</span><span class="fold"></span>
+                    <button class="btn-eux" onclick="navigator.clipboard.writeText('${url.replace(/'/g, "\\'")}').then(()=>showToast('تم النسخ!','success')).catch(()=>showToast('فشل النسخ','error'))" style="width:100%;">
+                        <span class="inner">نسخ الرابط</span><span class="fold"></span>
                         <div class="points_wrapper"><span class="point"></span><span class="point"></span><span class="point"></span><span class="point"></span><span class="point"></span><span class="point"></span><span class="point"></span><span class="point"></span><span class="point"></span><span class="point"></span></div>
                     </button>
-                    <button class="btn-eux-outline" onclick="closeModal()" style="width:100%;margin-top:8px;"><span class="inner">إغلاق</span></button>
+                    <button class="btn-eux-outline" onclick="closeModal()" style="width:100%;margin-top:8px;"><span class="inner">اغلاق</span></button>
                 `;
         }
 
-        // ============================================================
-        //  تسجيل الدخول
-        // ============================================================
         async function doLogin() {
             const phone = document.getElementById('phoneInput').value.trim();
             const password = document.getElementById('passwordInput').value.trim();
             const errorDiv = document.getElementById('loginError');
             if (!phone || !password) { errorDiv.textContent = "يرجى إدخال رقم الهاتف وكلمة المرور"; return; }
-            if (phone.length !== 11) { errorDiv.textContent = "⚠️ رقم الهاتف يجب أن يكون 11 رقم"; return; }
+            if (phone.length !== 11) { errorDiv.textContent = "رقم الهاتف يجب أن يكون 11 رقم"; return; }
             try {
                 const res = await fetch(`${API_URL}?action=login&phone=${phone}&password=${password}`);
                 const data = await res.json();
@@ -2194,7 +2149,7 @@
             document.getElementById('passwordInput').value = '';
             document.getElementById('loginError').classList.add('hidden');
             if (window.history && window.history.pushState) window.history.pushState({}, '', window.location.pathname);
-            showToast('🚪 تم تسجيل الخروج', '');
+            showToast('تم تسجيل الخروج', '');
         }
 
         function showDashboard() {
@@ -2210,9 +2165,6 @@
             else loadMyShipments();
         }
 
-        // ============================================================
-        //  تتبع الشحنات
-        // ============================================================
         async function fetchTrackingStatus(trackingNumber) {
             if (!trackingNumber || trackingNumber.length < 3) return null;
             if (trackingCache[trackingNumber]) return trackingCache[trackingNumber];
@@ -2223,8 +2175,8 @@
                     let finalStatus = data.data[0].status || null;
                     const details = data.data[0].details || [];
                     for (const d of details) { const desc = d.desc || '';
-                        if (desc.includes('تم التسليم')) { finalStatus = '✅ تم التسليم'; break; } }
-                    if (!finalStatus || !finalStatus.includes('تم التسليم')) { if (finalStatus && finalStatus.includes('تم التسليم')) finalStatus = '✅ تم التسليم'; }
+                        if (desc.includes('تم التسليم')) { finalStatus = 'تم التسليم'; break; } }
+                    if (!finalStatus || !finalStatus.includes('تم التسليم')) { if (finalStatus && finalStatus.includes('تم التسليم')) finalStatus = 'تم التسليم'; }
                     trackingCache[trackingNumber] = finalStatus;
                     return finalStatus;
                 }
@@ -2243,16 +2195,16 @@
             const statusValue = statusRow.querySelector('.status-value');
             const statusLabel = statusRow.querySelector('.status-label');
             if (status) {
-                statusLabel.textContent = '📍 الحالة الحالية:';
+                statusLabel.textContent = 'الحالة الحالية:';
                 let displayStatus = status,
                     isError = false,
                     isSuccess = false,
                     isInfo = false;
-                if (status.includes('خطأ') || status.includes('Error') || status.includes('❌')) { isError = true;
-                    displayStatus = '❌ ' + status.replace(/❌️?/g, '').replace(/خطأ/g, '').trim(); if (!displayStatus || displayStatus === '❌') displayStatus = '❌ خطأ في التوصيل'; } else if (status.includes('تم التسليم') || status.includes('✅ تم التسليم')) { isSuccess = true;
-                    displayStatus = '✅ تم التسليم'; } else if (status.includes('تم الاستلام')) { isInfo = true;
-                    displayStatus = '📦 تم استلام الشحنة'; } else if (status.includes('Delivered') || status.includes('✅')) { isSuccess = true;
-                    displayStatus = '✅ تم التسليم'; }
+                if (status.includes('خطأ') || status.includes('Error')) { isError = true;
+                    displayStatus = 'خطأ ' + status.replace(/خطأ/g, '').trim(); if (!displayStatus || displayStatus === 'خطأ') displayStatus = 'خطأ في التوصيل'; } else if (status.includes('تم التسليم')) { isSuccess = true;
+                    displayStatus = 'تم التسليم'; } else if (status.includes('تم الاستلام')) { isInfo = true;
+                    displayStatus = 'تم استلام الشحنة'; } else if (status.includes('Delivered')) { isSuccess = true;
+                    displayStatus = 'تم التسليم'; }
                 statusValue.textContent = displayStatus;
                 if (isSuccess) { statusRow.style.background = '#e8f5e9';
                     statusRow.style.borderRightColor = '#2e7d32';
@@ -2264,7 +2216,7 @@
                     statusRow.style.borderRightColor = '#0d47a1';
                     statusValue.style.color = '#0d47a1'; }
             } else {
-                statusLabel.textContent = '📍 الحالة:';
+                statusLabel.textContent = 'الحالة:';
                 statusRow.style.background = '#f5f5f5';
                 statusRow.style.borderRightColor = '#999';
                 statusValue.style.color = '#999';
@@ -2292,9 +2244,6 @@
             }
         }
 
-        // ============================================================
-        //  تحميل الشحنات
-        // ============================================================
         async function loadMyShipments() {
             const content = document.getElementById('content');
             content.innerHTML = '<div class="loading"><div class="spinner"></div>جاري التحميل...</div>';
@@ -2330,9 +2279,6 @@
             } catch (e) { content.innerHTML = '<p style="color:red;">فشل الاتصال</p>'; }
         }
 
-        // ============================================================
-        //  عرض بطاقة الشحنة - مع زر تتبع متطور (Spinner) + أزرار تعديل وحذف للعميل
-        // ============================================================
         function createShipmentCard(s, isAdmin = false) {
             let statusClass = 'status-waiting',
                 statusText = s.status || '';
@@ -2345,7 +2291,6 @@
             let actions = '';
             const trackingNum = s.trackingNumber || '';
             
-            // زر التتبع المتطور (Spinner) - يظهر بجوار رقم الهاتف
             let trackButton = '';
             if (trackingNum && trackingNum.length > 3) {
                 trackButton = `
@@ -2361,25 +2306,23 @@
                 `;
             }
 
-            // أزرار التعديل والحذف للعميل (تظهر دائماً)
             if (!isAdmin) {
                 actions += `
                     <button class="btn-eux-orange" onclick="event.stopPropagation(); showEditShipmentForm('${s.id}')" style="padding:6px 16px;border-radius:8px;font-size:13px;">
-                        <span class="inner">✏️ تعديل</span><span class="fold"></span>
+                        <span class="inner">تعديل</span><span class="fold"></span>
                     </button>
                     <button class="btn-eux-red" onclick="event.stopPropagation(); deleteShipment('${s.id}')" style="padding:6px 16px;border-radius:8px;font-size:13px;">
-                        <span class="inner">🗑️ حذف</span><span class="fold"></span>
+                        <span class="inner">حذف</span><span class="fold"></span>
                     </button>
                 `;
             }
 
-            // الأزرار داخل التفاصيل (للمشرف فقط)
             if (isAdmin) {
                 if (!trackingNum || trackingNum.length < 3) {
-                    actions += `<button class="btn-eux-green" onclick="event.stopPropagation(); showAddTracking('${s.id}')" style="padding:6px 16px;border-radius:8px;font-size:13px;"><span class="inner">🔢 إضافة تتبع</span><span class="fold"></span></button>`;
+                    actions += `<button class="btn-eux-green" onclick="event.stopPropagation(); showAddTracking('${s.id}')" style="padding:6px 16px;border-radius:8px;font-size:13px;"><span class="inner">اضافة تتبع</span><span class="fold"></span></button>`;
                 }
-                actions += `<button class="btn-eux-red" onclick="event.stopPropagation(); deleteShipment('${s.id}')" style="padding:6px 16px;border-radius:8px;font-size:13px;"><span class="inner">🗑️ حذف</span><span class="fold"></span></button>`;
-                var adminDetails = `<div class="info"><strong>🔢 رقم الشحنة:</strong> ${s.id}</div>${trackingNum ? `<div class="info"><strong>🚚 رقم التتبع:</strong> ${trackingNum}</div>` : ''}`;
+                actions += `<button class="btn-eux-red" onclick="event.stopPropagation(); deleteShipment('${s.id}')" style="padding:6px 16px;border-radius:8px;font-size:13px;"><span class="inner">حذف</span><span class="fold"></span></button>`;
+                var adminDetails = `<div class="info"><strong>رقم الشحنة:</strong> ${s.id}</div>${trackingNum ? `<div class="info"><strong>رقم التتبع:</strong> ${trackingNum}</div>` : ''}`;
             } else { var adminDetails = ''; }
             
             const displayName = s.receiverName || s.customerName || 'غير معروف';
@@ -2392,25 +2335,25 @@
                 ${badgeHTML}
                 <div class="summary-row">
                     <div class="main-info">
-                        <span class="name">👤 ${displayName}</span>
-                        <span class="phone">📱 ${displayPhone}</span>
+                        <span class="name">${displayName}</span>
+                        <span class="phone">${displayPhone}</span>
                         ${trackButton}
                         <span class="amount">${displayAmount} ج.م</span>
                     </div>
                     <div class="last-update">${updateText}</div>
                 </div>
                 <div class="status-row${hasTracking ? ' loading-status' : ''}">
-                    <span class="status-label">📍 الحالة:</span>
-                    <span class="status-value">${hasTracking ? '⏳ جاري التحميل...' : (trackingNum ? '⏳ انتظار...' : 'لم يتم التحديد بعد')}</span>
+                    <span class="status-label">الحالة:</span>
+                    <span class="status-value">${hasTracking ? 'جاري التحميل...' : (trackingNum ? 'انتظار...' : 'لم يتم التحديد بعد')}</span>
                 </div>
                 <div class="details">
-                    ${isAdmin ? `<div class="info"><strong>📱 رقم العميل:</strong> ${s.clientPhone || 'غير معروف'}</div>` : ''}${adminDetails}
-                    ${s.receiverPhone2 ? `<div class="info"><strong>📱 هاتف آخر:</strong> ${s.receiverPhone2}</div>` : ''}
-                    ${s.governorate ? `<div class="info"><strong>📍 المحافظة:</strong> ${s.governorate}</div>` : ''}
-                    ${s.city ? `<div class="info"><strong>🏙️ المدينة:</strong> ${s.city}</div>` : ''}
-                    <div class="info"><strong>📍 العنوان:</strong> ${s.address || s.customerAddress || ''}</div>
-                    ${s.weight ? `<div class="info"><strong>⚖️ الوزن:</strong> ${s.weight} كجم</div>` : ''}
-                    ${s.notes ? `<div class="info"><strong>📝 ملاحظات:</strong> ${s.notes}</div>` : ''}
+                    ${isAdmin ? `<div class="info"><strong>رقم العميل:</strong> ${s.clientPhone || 'غير معروف'}</div>` : ''}${adminDetails}
+                    ${s.receiverPhone2 ? `<div class="info"><strong>هاتف آخر:</strong> ${s.receiverPhone2}</div>` : ''}
+                    ${s.governorate ? `<div class="info"><strong>المحافظة:</strong> ${s.governorate}</div>` : ''}
+                    ${s.city ? `<div class="info"><strong>المدينة:</strong> ${s.city}</div>` : ''}
+                    <div class="info"><strong>العنوان:</strong> ${s.address || s.customerAddress || ''}</div>
+                    ${s.weight ? `<div class="info"><strong>الوزن:</strong> ${s.weight} كجم</div>` : ''}
+                    ${s.notes ? `<div class="info"><strong>ملاحظات:</strong> ${s.notes}</div>` : ''}
                     ${actions ? `<div class="actions">${actions}</div>` : ''}
                 </div>
             </div>`;
@@ -2418,9 +2361,6 @@
 
         function toggleDetails(element) { const details = element.querySelector('.details'); if (details) details.classList.toggle('open'); }
 
-        // ============================================================
-        //  عرض الشحنات
-        // ============================================================
         function renderShipments(shipments) {
             const content = document.getElementById('content');
             if (shipments.length === 0) {
@@ -2431,9 +2371,6 @@
             content.innerHTML = shipments.map(s => createShipmentCard(s, isAdmin)).join('');
         }
 
-        // ============================================================
-        //  البحث في الشحنات
-        // ============================================================
         function searchShipments() {
             const query = document.getElementById('searchShipmentInput').value.trim().toLowerCase();
             if (!query) {
@@ -2470,25 +2407,22 @@
             }
         }
 
-        // ============================================================
-        //  إضافة شحنة
-        // ============================================================
         function showAddShipmentForm() {
-            if (!currentUser) { showToast('⚠️ يرجى تسجيل الدخول أولاً', 'error'); return; }
+            if (!currentUser) { showToast('يرجى تسجيل الدخول أولا', 'error'); return; }
             let govOptions = '<option value="">اختر المحافظة</option>';
             Object.keys(governorates).forEach(gov => { govOptions += `<option value="${gov}">${gov}</option>`; });
             document.getElementById('modal').classList.remove('hidden');
             document.getElementById('modalBody').innerHTML = `
-                    <h3><i class="fas fa-box"></i> إضافة شحنة جديدة</h3>
-                    <div class="form-group"><label>👤 اسم المستلم *</label><input id="f_receiverName" placeholder="اسم المستلم"></div>
-                    <div class="form-group"><label>📱 هاتف المستلم *</label><input id="f_receiverPhone" placeholder="مثال: 010xxxxxxxx" dir="ltr" maxlength="11" oninput="this.value=this.value.replace(/[^0-9]/g,'')"></div>
-                    <div class="form-group"><label>📱 هاتف آخر للمستلم</label><input id="f_receiverPhone2" placeholder="هاتف آخر (اختياري)" dir="ltr" maxlength="11" oninput="this.value=this.value.replace(/[^0-9]/g,'')"></div>
-                    <div class="two-columns"><div class="form-group"><label>🏛️ المحافظة *</label><select id="f_governorate" onchange="updateCities()">${govOptions}</select></div><div class="form-group"><label>🏙️ المدينة *</label><select id="f_city"><option value="">اختر المحافظة أولاً</option></select></div></div>
-                    <div class="form-group"><label>📍 العنوان التفصيلي *</label><input id="f_address" placeholder="العنوان بالتفصيل"></div>
-                    <div class="form-group"><label>💰 المبلغ المطلوب تحصيله شامل الشحن *</label><input id="f_amount" type="number" placeholder="المبلغ بالجنيه" dir="ltr"></div>
-                    <div class="form-group"><label>⚖️ وزن الشحنة *</label><input id="f_weight" type="number" placeholder="الوزن بالكيلو" dir="ltr" value="1"></div>
-                    <div class="form-group"><label>📝 ملاحظات</label><textarea id="f_notes" placeholder="ملاحظات إضافية"></textarea></div>
-                    <button class="btn-eux" onclick="submitShipment()" style="width:100%;"><span class="inner">✅ إضافة الشحنة</span><span class="fold"></span></button>
+                    <h3><i class="fas fa-box"></i> اضافة شحنة جديدة</h3>
+                    <div class="form-group"><label>اسم المستلم *</label><input id="f_receiverName" placeholder="اسم المستلم"></div>
+                    <div class="form-group"><label>هاتف المستلم *</label><input id="f_receiverPhone" placeholder="مثال: 010xxxxxxxx" dir="ltr" maxlength="11" oninput="this.value=this.value.replace(/[^0-9]/g,'')"></div>
+                    <div class="form-group"><label>هاتف آخر للمستلم</label><input id="f_receiverPhone2" placeholder="هاتف آخر (اختياري)" dir="ltr" maxlength="11" oninput="this.value=this.value.replace(/[^0-9]/g,'')"></div>
+                    <div class="two-columns"><div class="form-group"><label>المحافظة *</label><select id="f_governorate" onchange="updateCities()">${govOptions}</select></div><div class="form-group"><label>المدينة *</label><select id="f_city"><option value="">اختر المحافظة أولا</option></select></div></div>
+                    <div class="form-group"><label>العنوان التفصيلي *</label><input id="f_address" placeholder="العنوان بالتفصيل"></div>
+                    <div class="form-group"><label>المبلغ المطلوب تحصيله شامل الشحن *</label><input id="f_amount" type="number" placeholder="المبلغ بالجنيه" dir="ltr"></div>
+                    <div class="form-group"><label>وزن الشحنة *</label><input id="f_weight" type="number" placeholder="الوزن بالكيلو" dir="ltr" value="1"></div>
+                    <div class="form-group"><label>ملاحظات</label><textarea id="f_notes" placeholder="ملاحظات اضافية"></textarea></div>
+                    <button class="btn-eux" onclick="submitShipment()" style="width:100%;"><span class="inner">اضافة الشحنة</span><span class="fold"></span></button>
                     <p id="shipError" style="color:red;margin-top:10px;"></p>
                 `;
         }
@@ -2504,9 +2438,9 @@
             const weight = document.getElementById('f_weight').value.trim() || '1';
             const notes = document.getElementById('f_notes').value.trim();
             const errorDiv = document.getElementById('shipError');
-            if (!receiverName || !receiverPhone || !governorate || !city || !address || !amount) { errorDiv.textContent = "يرجى ملء جميع الحقول المطلوبة (*)"; return; }
-            if (receiverPhone.length !== 11) { errorDiv.textContent = "⚠️ رقم هاتف المستلم يجب أن يكون 11 رقم"; return; }
-            if (receiverPhone2 && receiverPhone2.length !== 11) { errorDiv.textContent = "⚠️ رقم هاتف آخر يجب أن يكون 11 رقم"; return; }
+            if (!receiverName || !receiverPhone || !governorate || !city || !address || !amount) { errorDiv.textContent = "يرجى ملء جميع الحقول المطلوبة"; return; }
+            if (receiverPhone.length !== 11) { errorDiv.textContent = "رقم هاتف المستلم يجب أن يكون 11 رقم"; return; }
+            if (receiverPhone2 && receiverPhone2.length !== 11) { errorDiv.textContent = "رقم هاتف آخر يجب أن يكون 11 رقم"; return; }
             const params = new URLSearchParams();
             params.append('action', 'addShipment');
             params.append('phone', currentUser.phone);
@@ -2525,16 +2459,13 @@
                 const data = await res.json();
                 if (data.success) { closeModal();
                     loadMyShipments();
-                    showToast('✅ تم إضافة الشحنة بنجاح!', 'success'); } else { errorDiv.textContent = data.msg || "فشل الإضافة"; }
+                    showToast('تم اضافة الشحنة بنجاح!', 'success'); } else { errorDiv.textContent = data.msg || "فشل الاضافة"; }
             } catch (e) { errorDiv.textContent = 'فشل الاتصال'; }
         }
 
-        // ============================================================
-        //  تعديل شحنة (للعميل)
-        // ============================================================
         function showEditShipmentForm(shipmentId) {
             const shipment = allShipmentsData.find(s => s.id === shipmentId);
-            if (!shipment) { showToast('⚠️ لم يتم العثور على الشحنة', 'error'); return; }
+            if (!shipment) { showToast('لم يتم العثور على الشحنة', 'error'); return; }
             
             let govOptions = '<option value="">اختر المحافظة</option>';
             Object.keys(governorates).forEach(gov => {
@@ -2553,15 +2484,15 @@
             document.getElementById('modal').classList.remove('hidden');
             document.getElementById('modalBody').innerHTML = `
                     <h3><i class="fas fa-edit"></i> تعديل الشحنة</h3>
-                    <div class="form-group"><label>👤 اسم المستلم *</label><input id="e_receiverName" value="${shipment.receiverName || ''}" placeholder="اسم المستلم"></div>
-                    <div class="form-group"><label>📱 هاتف المستلم *</label><input id="e_receiverPhone" value="${shipment.receiverPhone || ''}" placeholder="مثال: 010xxxxxxxx" dir="ltr" maxlength="11" oninput="this.value=this.value.replace(/[^0-9]/g,'')"></div>
-                    <div class="form-group"><label>📱 هاتف آخر للمستلم</label><input id="e_receiverPhone2" value="${shipment.receiverPhone2 || ''}" placeholder="هاتف آخر (اختياري)" dir="ltr" maxlength="11" oninput="this.value=this.value.replace(/[^0-9]/g,'')"></div>
-                    <div class="two-columns"><div class="form-group"><label>🏛️ المحافظة *</label><select id="e_governorate" onchange="updateEditCities()">${govOptions}</select></div><div class="form-group"><label>🏙️ المدينة *</label><select id="e_city">${cityOptions}</select></div></div>
-                    <div class="form-group"><label>📍 العنوان التفصيلي *</label><input id="e_address" value="${shipment.address || ''}" placeholder="العنوان بالتفصيل"></div>
-                    <div class="form-group"><label>💰 المبلغ المطلوب تحصيله شامل الشحن *</label><input id="e_amount" type="number" value="${shipment.amount || ''}" placeholder="المبلغ بالجنيه" dir="ltr"></div>
-                    <div class="form-group"><label>⚖️ وزن الشحنة *</label><input id="e_weight" type="number" value="${shipment.weight || '1'}" placeholder="الوزن بالكيلو" dir="ltr"></div>
-                    <div class="form-group"><label>📝 ملاحظات</label><textarea id="e_notes" placeholder="ملاحظات إضافية">${shipment.notes || ''}</textarea></div>
-                    <button class="btn-eux-orange" onclick="updateShipment('${shipmentId}')" style="width:100%;"><span class="inner">💾 حفظ التعديلات</span><span class="fold"></span></button>
+                    <div class="form-group"><label>اسم المستلم *</label><input id="e_receiverName" value="${shipment.receiverName || ''}" placeholder="اسم المستلم"></div>
+                    <div class="form-group"><label>هاتف المستلم *</label><input id="e_receiverPhone" value="${shipment.receiverPhone || ''}" placeholder="مثال: 010xxxxxxxx" dir="ltr" maxlength="11" oninput="this.value=this.value.replace(/[^0-9]/g,'')"></div>
+                    <div class="form-group"><label>هاتف آخر للمستلم</label><input id="e_receiverPhone2" value="${shipment.receiverPhone2 || ''}" placeholder="هاتف آخر (اختياري)" dir="ltr" maxlength="11" oninput="this.value=this.value.replace(/[^0-9]/g,'')"></div>
+                    <div class="two-columns"><div class="form-group"><label>المحافظة *</label><select id="e_governorate" onchange="updateEditCities()">${govOptions}</select></div><div class="form-group"><label>المدينة *</label><select id="e_city">${cityOptions}</select></div></div>
+                    <div class="form-group"><label>العنوان التفصيلي *</label><input id="e_address" value="${shipment.address || ''}" placeholder="العنوان بالتفصيل"></div>
+                    <div class="form-group"><label>المبلغ المطلوب تحصيله شامل الشحن *</label><input id="e_amount" type="number" value="${shipment.amount || ''}" placeholder="المبلغ بالجنيه" dir="ltr"></div>
+                    <div class="form-group"><label>وزن الشحنة *</label><input id="e_weight" type="number" value="${shipment.weight || '1'}" placeholder="الوزن بالكيلو" dir="ltr"></div>
+                    <div class="form-group"><label>ملاحظات</label><textarea id="e_notes" placeholder="ملاحظات اضافية">${shipment.notes || ''}</textarea></div>
+                    <button class="btn-eux-orange" onclick="updateShipment('${shipmentId}')" style="width:100%;"><span class="inner">حفظ التعديلات</span><span class="fold"></span></button>
                     <p id="editError" style="color:red;margin-top:10px;"></p>
                 `;
         }
@@ -2592,9 +2523,9 @@
             const weight = document.getElementById('e_weight').value.trim() || '1';
             const notes = document.getElementById('e_notes').value.trim();
             const errorDiv = document.getElementById('editError');
-            if (!receiverName || !receiverPhone || !governorate || !city || !address || !amount) { errorDiv.textContent = "يرجى ملء جميع الحقول المطلوبة (*)"; return; }
-            if (receiverPhone.length !== 11) { errorDiv.textContent = "⚠️ رقم هاتف المستلم يجب أن يكون 11 رقم"; return; }
-            if (receiverPhone2 && receiverPhone2.length !== 11) { errorDiv.textContent = "⚠️ رقم هاتف آخر يجب أن يكون 11 رقم"; return; }
+            if (!receiverName || !receiverPhone || !governorate || !city || !address || !amount) { errorDiv.textContent = "يرجى ملء جميع الحقول المطلوبة"; return; }
+            if (receiverPhone.length !== 11) { errorDiv.textContent = "رقم هاتف المستلم يجب أن يكون 11 رقم"; return; }
+            if (receiverPhone2 && receiverPhone2.length !== 11) { errorDiv.textContent = "رقم هاتف آخر يجب أن يكون 11 رقم"; return; }
             
             const params = new URLSearchParams();
             params.append('action', 'updateShipment');
@@ -2617,7 +2548,7 @@
                 if (data.success) { 
                     closeModal();
                     loadMyShipments();
-                    showToast('✅ تم تحديث الشحنة بنجاح!', 'success'); 
+                    showToast('تم تحديث الشحنة بنجاح!', 'success'); 
                 } else { 
                     errorDiv.textContent = data.msg || "فشل التحديث"; 
                 }
@@ -2626,16 +2557,13 @@
             }
         }
 
-        // ============================================================
-        //  إضافة رقم تتبع
-        // ============================================================
         function showAddTracking(shipmentId) {
             document.getElementById('modal').classList.remove('hidden');
             document.getElementById('modalBody').innerHTML = `
-                    <h3><i class="fas fa-qrcode"></i> إضافة رقم تتبع</h3>
+                    <h3><i class="fas fa-qrcode"></i> اضافة رقم تتبع</h3>
                     <p style="margin-bottom:12px;color:#666;">رقم الشحنة: <strong>${shipmentId}</strong></p>
-                    <div class="form-group"><label>🚚 رقم التتبع</label><input id="trackingNum" dir="ltr" placeholder="مثال: JEG000470355620"></div>
-                    <button class="btn-eux-green" onclick="submitTracking('${shipmentId}')" style="width:100%;"><span class="inner">💾 حفظ</span><span class="fold"></span></button>
+                    <div class="form-group"><label>رقم التتبع</label><input id="trackingNum" dir="ltr" placeholder="مثال: JEG000470355620"></div>
+                    <button class="btn-eux-green" onclick="submitTracking('${shipmentId}')" style="width:100%;"><span class="inner">حفظ</span><span class="fold"></span></button>
                     <p id="trackError" style="color:red;margin-top:10px;"></p>
                 `;
         }
@@ -2643,7 +2571,7 @@
         async function submitTracking(shipmentId) {
             const trackingNumber = document.getElementById('trackingNum').value.trim();
             const errorDiv = document.getElementById('trackError');
-            if (!trackingNumber) { errorDiv.textContent = 'يرجى إدخال رقم التتبع'; return; }
+            if (!trackingNumber) { errorDiv.textContent = 'يرجى ادخال رقم التتبع'; return; }
             const params = new URLSearchParams();
             params.append('action', 'addTrackingNumber');
             params.append('adminPhone', currentUser.phone);
@@ -2656,15 +2584,12 @@
                 if (data.success) { closeModal();
                     trackingCache = {};
                     loadAllShipments();
-                    showToast('✅ تم إضافة رقم التتبع!', 'success'); } else { errorDiv.textContent = data.msg; }
+                    showToast('تم اضافة رقم التتبع!', 'success'); } else { errorDiv.textContent = data.msg; }
             } catch (e) { errorDiv.textContent = 'فشل الاتصال'; }
         }
 
-        // ============================================================
-        //  حذف شحنة
-        // ============================================================
         async function deleteShipment(shipmentId) {
-            if (!confirm('⚠️ هل أنت متأكد من حذف هذه الشحنة؟')) return;
+            if (!confirm('هل أنت متأكد من حذف هذه الشحنة؟')) return;
             const params = new URLSearchParams();
             params.append('action', 'deleteShipment');
             params.append('phone', currentUser.phone);
@@ -2680,16 +2605,13 @@
                     } else {
                         loadMyShipments();
                     }
-                    showToast('✅ تم حذف الشحنة بنجاح', 'success'); 
+                    showToast('تم حذف الشحنة بنجاح', 'success'); 
                 } else { 
-                    showToast(data.msg || '❌ فشل الحذف', 'error'); 
+                    showToast(data.msg || 'فشل الحذف', 'error'); 
                 }
-            } catch (e) { showToast('⚠️ فشل الاتصال بالخادم', 'error'); }
+            } catch (e) { showToast('فشل الاتصال بالخادم', 'error'); }
         }
 
-        // ============================================================
-        //  دالة ترجمة النصوص الحمراء
-        // ============================================================
         async function translateProblemText(text) {
             if (!text) return text;
             if (/[\u0600-\u06FF]/.test(text) && !/[a-zA-Z]/.test(text)) return text;
@@ -2728,7 +2650,7 @@
                 'Customer': 'العميل',
                 'refuse': 'رفض',
                 'call': 'اتصال هاتفي',
-                'الغاء': 'إلغاء'
+                'الغاء': 'الغاء'
             };
             let translated = cleanText;
             for (const [eng, arb] of Object.entries(translations)) {
@@ -2743,9 +2665,6 @@
             return translated.trim() || text;
         }
 
-        // ============================================================
-        //  تتبع الشحنة
-        // ============================================================
         async function trackShipment(billCode) {
             document.getElementById('modal').classList.remove('hidden');
             document.getElementById('modalBody').innerHTML = '<div class="loading"><div class="spinner"></div>جاري تتبع الشحنة...</div>';
@@ -2762,15 +2681,15 @@
                         statusBgColor = '#e8f5e9',
                         statusBorderColor = '#2e7d32',
                         statusTextColor = '#2e7d32';
-                    if (foundDelivered || currentStatus.includes('تم التسليم')) displayStatus = '✅ تم التسليم';
-                    else if (currentStatus.includes('خطأ') || currentStatus.includes('Error') || currentStatus.includes('❌')) {
-                        displayStatus = '❌ ' + currentStatus.replace(/❌️?/g, '').replace(/خطأ/g, '').trim();
-                        if (!displayStatus || displayStatus === '❌') displayStatus = '❌ خطأ في التوصيل';
+                    if (foundDelivered || currentStatus.includes('تم التسليم')) displayStatus = 'تم التسليم';
+                    else if (currentStatus.includes('خطأ') || currentStatus.includes('Error')) {
+                        displayStatus = 'خطأ ' + currentStatus.replace(/خطأ/g, '').trim();
+                        if (!displayStatus || displayStatus === 'خطأ') displayStatus = 'خطأ في التوصيل';
                         statusBgColor = '#ffeaea';
                         statusBorderColor = '#dc3545';
                         statusTextColor = '#dc3545';
                     }
-                    html += `<div style="background:${statusBgColor};padding:10px 16px;border-radius:10px;margin-bottom:16px;border-right:4px solid ${statusBorderColor};"><strong style="color:${statusTextColor};font-size:15px;">📍 الحالة الحالية:</strong><span style="color:${statusTextColor};font-weight:700;font-size:16px;margin-right:8px;">${displayStatus}</span></div>`;
+                    html += `<div style="background:${statusBgColor};padding:10px 16px;border-radius:10px;margin-bottom:16px;border-right:4px solid ${statusBorderColor};"><strong style="color:${statusTextColor};font-size:15px;">الحالة الحالية:</strong><span style="color:${statusTextColor};font-weight:700;font-size:16px;margin-right:8px;">${displayStatus}</span></div>`;
                     if (details.length === 0) html += `<p style="text-align:center;color:#999;padding:20px;">لا توجد تفاصيل تتبع متاحة</p>`;
                     else {
                         for (const d of details) {
@@ -2795,9 +2714,6 @@
             }
         }
 
-        // ============================================================
-        //  العملاء
-        // ============================================================
         async function showClients() {
             document.getElementById('modal').classList.remove('hidden');
             document.getElementById('modalBody').innerHTML = '<div class="loading"><div class="spinner"></div>جاري التحميل...</div>';
@@ -2809,12 +2725,12 @@
                 const res = await fetch(API_URL, { method: 'POST', headers: { 'Content-Type': 'application/x-www-form-urlencoded' }, body: params.toString() });
                 const data = await res.json();
                 if (data.success) {
-                    let html = `<h3><i class="fas fa-users"></i> إدارة العملاء</h3><button class="btn-eux-green" onclick="showAddClientForm()" style="width:100%;margin-bottom:14px;"><span class="inner">➕ إنشاء حساب عميل جديد</span><span class="fold"></span></button><div id="clientList"></div>`;
+                    let html = `<h3><i class="fas fa-users"></i> ادارة العملاء</h3><button class="btn-eux-green" onclick="showAddClientForm()" style="width:100%;margin-bottom:14px;"><span class="inner">انشاء حساب عميل جديد</span><span class="fold"></span></button><div id="clientList"></div>`;
                     document.getElementById('modalBody').innerHTML = html;
                     const listDiv = document.getElementById('clientList');
                     if (data.clients.length === 0) listDiv.innerHTML = '<p style="text-align:center;color:#999;padding:20px;">لا يوجد عملاء حتى الآن</p>';
                     else data.clients.forEach(c => {
-                        listDiv.innerHTML += `<div class="client-card"><div class="client-info"><strong>${c.name}</strong><br><span class="phone">📱 ${c.phone}</span><br><span class="created">📅 ${c.created}</span></div><div class="client-actions"><button class="btn-eux-red" onclick="deleteClient('${c.phone}')" style="padding:6px 16px;border-radius:8px;font-size:13px;"><span class="inner">🗑️ حذف</span><span class="fold"></span></button></div></div>`;
+                        listDiv.innerHTML += `<div class="client-card"><div class="client-info"><strong>${c.name}</strong><br><span class="phone">📱 ${c.phone}</span><br><span class="created">📅 ${c.created}</span></div><div class="client-actions"><button class="btn-eux-red" onclick="deleteClient('${c.phone}')" style="padding:6px 16px;border-radius:8px;font-size:13px;"><span class="inner">حذف</span><span class="fold"></span></button></div></div>`;
                     });
                 } else document.getElementById('modalBody').innerHTML = `<p style="color:red;">${data.msg || 'فشل التحميل'}</p>`;
             } catch (e) { document.getElementById('modalBody').innerHTML = `<p style="color:red;">فشل الاتصال</p>`; }
@@ -2822,12 +2738,12 @@
 
         function showAddClientForm() {
             document.getElementById('modalBody').innerHTML = `
-                    <h3><i class="fas fa-user-plus"></i> إنشاء حساب عميل جديد</h3>
-                    <div class="form-group"><label>👤 اسم العميل *</label><input id="newClientName" placeholder="الاسم الكامل"></div>
-                    <div class="form-group"><label>📱 رقم الهاتف *</label><input id="newClientPhone" dir="ltr" placeholder="مثال: 011xxxxxxxx" maxlength="11" oninput="this.value=this.value.replace(/[^0-9]/g,'')"></div>
-                    <div class="form-group"><label>🔒 كلمة المرور *</label><input id="newClientPassword" type="password" dir="ltr" placeholder="كلمة المرور للدخول"></div>
-                    <button class="btn-eux-green" onclick="createClient()" style="width:100%;"><span class="inner">✅ إنشاء الحساب</span><span class="fold"></span></button>
-                    <button class="btn-eux-outline" onclick="showClients()" style="width:100%;margin-top:8px;"><span class="inner">↩️ رجوع</span></button>
+                    <h3><i class="fas fa-user-plus"></i> انشاء حساب عميل جديد</h3>
+                    <div class="form-group"><label>اسم العميل *</label><input id="newClientName" placeholder="الاسم الكامل"></div>
+                    <div class="form-group"><label>رقم الهاتف *</label><input id="newClientPhone" dir="ltr" placeholder="مثال: 011xxxxxxxx" maxlength="11" oninput="this.value=this.value.replace(/[^0-9]/g,'')"></div>
+                    <div class="form-group"><label>كلمة المرور *</label><input id="newClientPassword" type="password" dir="ltr" placeholder="كلمة المرور للدخول"></div>
+                    <button class="btn-eux-green" onclick="createClient()" style="width:100%;"><span class="inner">انشاء الحساب</span><span class="fold"></span></button>
+                    <button class="btn-eux-outline" onclick="showClients()" style="width:100%;margin-top:8px;"><span class="inner">رجوع</span></button>
                     <p id="clientError" style="color:red;margin-top:10px;text-align:center;"></p>
                 `;
         }
@@ -2838,7 +2754,7 @@
             const password = document.getElementById('newClientPassword').value.trim();
             const errorDiv = document.getElementById('clientError');
             if (!name || !phone || !password) { errorDiv.textContent = "يرجى ملء جميع الحقول"; return; }
-            if (phone.length !== 11) { errorDiv.textContent = "⚠️ رقم الهاتف يجب أن يكون 11 رقم"; return; }
+            if (phone.length !== 11) { errorDiv.textContent = "رقم الهاتف يجب أن يكون 11 رقم"; return; }
             const params = new URLSearchParams();
             params.append('action', 'createClient');
             params.append('adminPhone', currentUser.phone);
@@ -2850,7 +2766,7 @@
                 const res = await fetch(API_URL, { method: 'POST', headers: { 'Content-Type': 'application/x-www-form-urlencoded' }, body: params.toString() });
                 const data = await res.json();
                 if (data.success) { showClients();
-                    showToast('✅ تم إنشاء الحساب!', 'success'); } else { errorDiv.textContent = data.msg; }
+                    showToast('تم انشاء الحساب!', 'success'); } else { errorDiv.textContent = data.msg; }
             } catch (e) { errorDiv.textContent = 'فشل الاتصال'; }
         }
 
@@ -2862,13 +2778,10 @@
                 params.append('phone', phone);
                 await fetch(API_URL, { method: 'POST', headers: { 'Content-Type': 'application/x-www-form-urlencoded' }, body: params.toString() });
                 showClients();
-                showToast('✅ تم حذف العميل', 'success');
-            } catch (e) { showToast('⚠️ فشل الحذف', 'error'); }
+                showToast('تم حذف العميل', 'success');
+            } catch (e) { showToast('فشل الحذف', 'error'); }
         }
 
-        // ============================================================
-        //  دوال مساعدة
-        // ============================================================
         function closeModal() { document.getElementById('modal').classList.add('hidden'); }
 
         function showToast(message, type) {
@@ -2883,9 +2796,6 @@
                 setTimeout(() => toast.remove(), 300); }, 3000);
         }
 
-        // ============================================================
-        //  دوال صفحة الهبوط
-        // ============================================================
         function togglePopup(show) {
             const popup = document.getElementById('accountPopup');
             if (show) { popup.classList.add('active'); } else { popup.classList.remove('active'); }
@@ -2904,7 +2814,7 @@
             submitBtn.disabled = true;
             const formData = new FormData(event.target);
             const params = new URLSearchParams(formData).toString();
-            const excelWebhookUrl = 'https://script.google.com/macros/s/AKfycbx8a50FxoJayOe9aM7OmblI5_MBI2bMVoYDAOJmSFzIG2ouh7ew3UOwLNbK_cUVrHqH/exec';
+            const excelWebhookUrl = 'https://script.google.com/macros/s/AKfycbxADkYH0twv6PQNmHuDyd_MvGLv4qUr6d3e81k4hyLFDhiposHKctb0GboQllkeqj3i/exec';
             fetch(`${excelWebhookUrl}?${params}`, { method: 'POST' })
                 .then(response => {
                     alert('تم إرسال طلبك بنجاح! سيتم التواصل معك خلال 5 ساعات لتفعيل الحساب.');
@@ -2920,9 +2830,6 @@
                     submitBtn.disabled = false; });
         }
 
-        // ============================================================
-        //  الأحداث
-        // ============================================================
         document.getElementById('passwordInput').addEventListener('keypress', function(e) { if (e.key === 'Enter') doLogin(); });
         document.getElementById('phoneInput').addEventListener('keypress', function(e) { if (e.key === 'Enter') document.getElementById('passwordInput').focus(); });
 
@@ -2931,7 +2838,6 @@
             if (e.key === 'Escape') closeModal();
         });
 
-        // التحقق من وجود ref في الرابط عند تحميل الصفحة مباشرة
         document.addEventListener('DOMContentLoaded', function() {
             const urlParams = new URLSearchParams(window.location.search);
             const refPhone = urlParams.get('ref');
@@ -2961,3 +2867,4 @@
 
 </body>
 </html>
+```
