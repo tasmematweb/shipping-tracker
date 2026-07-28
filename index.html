@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>نموذج تجربة - حذف وتعديل العميل</title>
+    <title>تجربة حذف وتعديل العميل - API حقيقي</title>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&display=swap" rel="stylesheet">
     <style>
         body {
@@ -13,25 +13,83 @@
             direction: rtl;
         }
         .container {
-            max-width: 600px;
+            max-width: 800px;
             margin: 0 auto;
             background: white;
             padding: 30px;
             border-radius: 20px;
             box-shadow: 0 10px 40px rgba(0,0,0,0.1);
         }
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        .user-info {
+            background: #e8f0fe;
+            padding: 10px 20px;
+            border-radius: 12px;
+            font-size: 14px;
+        }
+        .user-info strong { color: #0076ff; }
         .shipment-card {
             background: #f8fafc;
             padding: 16px 20px;
             border-radius: 14px;
             border: 1px solid #e8ecf0;
             margin-bottom: 12px;
+            transition: all 0.3s ease;
+        }
+        .shipment-card:hover {
+            background: #f0f4fa;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+        }
+        .shipment-card .status-badge {
+            display: inline-block;
+            padding: 4px 16px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 700;
+        }
+        .status-waiting { background: #fff8e1; color: #f9a825; }
+        .status-tracking { background: #e3f2fd; color: #0d47a1; }
+        .status-done { background: #e8f5e9; color: #2e7d32; }
+        
+        .shipment-card .main-info {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 16px;
+            margin: 8px 0;
+        }
+        .shipment-card .name {
+            font-weight: 700;
+            font-size: 16px;
+            color: #0d2137;
+        }
+        .shipment-card .phone {
+            color: #555;
+            direction: ltr;
+            font-size: 14px;
+        }
+        .shipment-card .amount {
+            color: #0076ff;
+            font-weight: 700;
+            font-size: 15px;
         }
         .shipment-card .actions {
             margin-top: 12px;
             display: flex;
             gap: 8px;
             flex-wrap: wrap;
+        }
+        .shipment-card .last-update {
+            font-size: 12px;
+            color: #888;
         }
         .btn-eux-orange {
             background: #ff9800;
@@ -44,7 +102,7 @@
             font-family: 'Cairo', sans-serif;
             transition: 0.3s;
         }
-        .btn-eux-orange:hover { background: #e68900; }
+        .btn-eux-orange:hover { background: #e68900; transform: scale(1.02); }
         .btn-eux-red {
             background: #dc3545;
             color: white;
@@ -56,7 +114,7 @@
             font-family: 'Cairo', sans-serif;
             transition: 0.3s;
         }
-        .btn-eux-red:hover { background: #c82333; }
+        .btn-eux-red:hover { background: #c82333; transform: scale(1.02); }
         .btn-eux-green {
             background: #28a745;
             color: white;
@@ -68,16 +126,20 @@
             font-family: 'Cairo', sans-serif;
             transition: 0.3s;
         }
-        .btn-eux-green:hover { background: #218838; }
-        .status-badge {
-            display: inline-block;
-            padding: 4px 16px;
-            border-radius: 20px;
-            font-size: 11px;
+        .btn-eux-green:hover { background: #218838; transform: scale(1.02); }
+        .btn-eux-blue {
+            background: #0076ff;
+            color: white;
+            border: none;
+            padding: 8px 18px;
+            border-radius: 8px;
             font-weight: 700;
-            background: #e3f2fd;
-            color: #0d47a1;
+            cursor: pointer;
+            font-family: 'Cairo', sans-serif;
+            transition: 0.3s;
         }
+        .btn-eux-blue:hover { background: #005fcc; transform: scale(1.02); }
+        
         .modal {
             position: fixed;
             top: 0;
@@ -101,6 +163,11 @@
             max-height: 85vh;
             overflow-y: auto;
             position: relative;
+            animation: modalIn 0.3s ease;
+        }
+        @keyframes modalIn {
+            from { opacity: 0; transform: translateY(30px) scale(0.96); }
+            to { opacity: 1; transform: translateY(0) scale(1); }
         }
         .close-btn {
             position: absolute;
@@ -112,7 +179,7 @@
             line-height: 1;
             transition: 0.2s;
         }
-        .close-btn:hover { color: #333; }
+        .close-btn:hover { color: #333; transform: rotate(90deg); }
         .form-group {
             margin-bottom: 16px;
             text-align: right;
@@ -124,7 +191,7 @@
             color: #0d2137;
             font-size: 14px;
         }
-        .form-group input, .form-group select {
+        .form-group input, .form-group select, .form-group textarea {
             width: 100%;
             padding: 12px 15px;
             border: 2px solid #e8ecf0;
@@ -132,11 +199,14 @@
             font-size: 14px;
             font-family: 'Cairo', sans-serif;
             background: #f8fafc;
+            transition: 0.3s;
         }
-        .form-group input:focus, .form-group select:focus {
+        .form-group input:focus, .form-group select:focus, .form-group textarea:focus {
             border-color: #0076ff;
             outline: none;
+            box-shadow: 0 0 0 4px rgba(0,118,255,0.08);
         }
+        .form-group textarea { height: 80px; resize: vertical; }
         .two-columns {
             display: grid;
             grid-template-columns: 1fr 1fr;
@@ -166,61 +236,57 @@
             to { opacity: 1; transform: translateX(-50%) translateY(0); }
         }
         .hidden { display: none !important; }
+        .loading {
+            text-align: center;
+            padding: 30px 0;
+        }
+        .spinner {
+            border: 4px solid #e8ecf0;
+            border-top: 4px solid #0076ff;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 10px;
+        }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        .empty-state {
+            text-align: center;
+            padding: 40px 20px;
+            color: #aaa;
+        }
+        .empty-state .icon { font-size: 56px; margin-bottom: 12px; }
+        
+        @media (max-width: 768px) {
+            .two-columns { grid-template-columns: 1fr; }
+            .container { padding: 15px; }
+        }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <h2>🧪 نموذج تجربة - حذف وتعديل العميل</h2>
-    <p style="color: #666; font-size: 14px;">هذا نموذج تجريبي يوضح كيفية عمل الحذف والتعديل للعميل</p>
+    <div class="header">
+        <h2>🧪 تجربة حذف وتعديل العميل</h2>
+        <div class="user-info">
+            👤 <strong>عميل تجريبي</strong> | 📱 01012345678
+        </div>
+    </div>
     
-    <!-- شحنة تجريبية -->
-    <div class="shipment-card" id="card-SH001">
-        <span class="status-badge">في انتظار التتبع</span>
-        <div style="margin: 8px 0;">
-            <strong>👤 أحمد محمد</strong><br>
-            <span style="color: #555;">📱 01012345678</span>
-        </div>
-        <div style="color: #0076ff; font-weight: 700;">150 ج.م</div>
-        
-        <!-- الأزرار: تعديل وحذف للعميل -->
-        <div class="actions">
-            <button class="btn-eux-orange" onclick="showEditForm('SH001')">
-                ✏️ تعديل
-            </button>
-            <button class="btn-eux-red" onclick="deleteShipment('SH001')">
-                🗑️ حذف
-            </button>
-        </div>
-        <div style="margin-top: 8px; font-size: 12px; color: #888;">
-            آخر تحديث: 2026-07-28
-        </div>
+    <div style="background: #e8f5e9; padding: 12px 16px; border-radius: 10px; margin-bottom: 20px; border-right: 4px solid #2e7d32;">
+        <strong>✅ جاهز للتجربة:</strong> يمكنك تعديل أو حذف أي شحنة. سيتم الاتصال بـ API الحقيقي.
     </div>
 
-    <div class="shipment-card" id="card-SH002">
-        <span class="status-badge">في انتظار التتبع</span>
-        <div style="margin: 8px 0;">
-            <strong>👤 سارة علي</strong><br>
-            <span style="color: #555;">📱 01198765432</span>
-        </div>
-        <div style="color: #0076ff; font-weight: 700;">250 ج.م</div>
-        
-        <!-- الأزرار: تعديل وحذف للعميل -->
-        <div class="actions">
-            <button class="btn-eux-orange" onclick="showEditForm('SH002')">
-                ✏️ تعديل
-            </button>
-            <button class="btn-eux-red" onclick="deleteShipment('SH002')">
-                🗑️ حذف
-            </button>
-        </div>
-        <div style="margin-top: 8px; font-size: 12px; color: #888;">
-            آخر تحديث: 2026-07-28
-        </div>
-    </div>
+    <!-- زر تحديث -->
+    <button class="btn-eux-blue" onclick="loadShipments()" style="margin-bottom: 20px; width: 100%; padding: 12px;">
+        🔄 تحميل الشحنات
+    </button>
 
-    <div style="margin-top: 20px; padding: 15px; background: #fff3cd; border-radius: 10px; border-right: 4px solid #ffc107;">
-        <strong>💡 ملاحظة:</strong> هذا نموذج تجريبي. في التطبيق الحقيقي، سيتم الاتصال بـ API لحذف وتعديل الشحنات.
+    <div id="shipmentsList">
+        <div class="loading">
+            <div class="spinner"></div>
+            جاري تحميل الشحنات...
+        </div>
     </div>
 </div>
 
@@ -228,7 +294,9 @@
 <div id="editModal" class="modal hidden">
     <div class="modal-content">
         <span class="close-btn" onclick="closeModal()">✕</span>
-        <h3 style="text-align: center;"><i class="fas fa-edit"></i> تعديل الشحنة</h3>
+        <h3 style="text-align: center;">✏️ تعديل الشحنة</h3>
+        
+        <input type="hidden" id="editShipmentId">
         
         <div class="form-group">
             <label>👤 اسم المستلم *</label>
@@ -236,28 +304,23 @@
         </div>
         <div class="form-group">
             <label>📱 هاتف المستلم *</label>
-            <input id="editPhone" placeholder="مثال: 010xxxxxxxx" dir="ltr" maxlength="11">
+            <input id="editPhone" placeholder="مثال: 010xxxxxxxx" dir="ltr" maxlength="11" oninput="this.value=this.value.replace(/[^0-9]/g,'')">
         </div>
         <div class="form-group">
             <label>📱 هاتف آخر</label>
-            <input id="editPhone2" placeholder="هاتف آخر (اختياري)" dir="ltr" maxlength="11">
+            <input id="editPhone2" placeholder="هاتف آخر (اختياري)" dir="ltr" maxlength="11" oninput="this.value=this.value.replace(/[^0-9]/g,'')">
         </div>
         <div class="two-columns">
             <div class="form-group">
                 <label>🏛️ المحافظة *</label>
                 <select id="editGovernorate">
-                    <option value="القاهرة">القاهرة</option>
-                    <option value="الجيزة">الجيزة</option>
-                    <option value="الإسكندرية">الإسكندرية</option>
-                    <option value="الشرقية">الشرقية</option>
+                    <option value="">اختر المحافظة</option>
                 </select>
             </div>
             <div class="form-group">
                 <label>🏙️ المدينة *</label>
                 <select id="editCity">
-                    <option value="مدينة نصر">مدينة نصر</option>
-                    <option value="المعادي">المعادي</option>
-                    <option value="الهرم">الهرم</option>
+                    <option value="">اختر المحافظة أولاً</option>
                 </select>
             </div>
         </div>
@@ -275,7 +338,7 @@
         </div>
         <div class="form-group">
             <label>📝 ملاحظات</label>
-            <textarea id="editNotes" placeholder="ملاحظات إضافية" style="width:100%;padding:12px;border:2px solid #e8ecf0;border-radius:10px;font-family:'Cairo',sans-serif;resize:vertical;height:80px;"></textarea>
+            <textarea id="editNotes" placeholder="ملاحظات إضافية"></textarea>
         </div>
         
         <button class="btn-eux-orange" onclick="updateShipment()" style="width:100%;padding:14px;border-radius:12px;font-size:16px;border:none;color:white;font-weight:700;cursor:pointer;">
@@ -287,64 +350,214 @@
 
 <script>
     // ============================================================
-    //  متغيرات تجريبية
+    //  API و متغيرات
     // ============================================================
-    let currentShipmentId = null;
+    const API_URL = "https://script.google.com/macros/s/AKfycbyZYhdpkYQH-ZxM8te39VoEnoKJjx2vY5VzvgHg18y6FadPRMdpbZyTW2YuHByyI-ha/exec";
     
-    // بيانات تجريبية للشحنات
-    let shipments = {
-        'SH001': {
-            id: 'SH001',
-            receiverName: 'أحمد محمد',
-            receiverPhone: '01012345678',
-            receiverPhone2: '',
-            governorate: 'القاهرة',
-            city: 'مدينة نصر',
-            address: 'شارع النصر، مدينة نصر',
-            amount: '150',
-            weight: '2',
-            notes: 'توصيل سريع'
-        },
-        'SH002': {
-            id: 'SH002',
-            receiverName: 'سارة علي',
-            receiverPhone: '01198765432',
-            receiverPhone2: '01234567890',
-            governorate: 'الجيزة',
-            city: 'الهرم',
-            address: 'شارع الهرم، الجيزة',
-            amount: '250',
-            weight: '3',
-            notes: 'الرجاء الاتصال قبل التوصيل'
-        }
+    // مستخدم تجريبي (عميل)
+    const testUser = {
+        phone: '01012345678',
+        password: '123456',
+        role: 'client'
+    };
+
+    let allShipments = [];
+    let currentEditId = null;
+
+    // قائمة المحافظات والمدن
+    const governorates = {
+        'الشرقية': ['بلبيس', 'انشاص الرمل', 'أولاد صقر', 'الحسينية', 'ديرب نجم', 'فاقوس', 'كفر صقر', 'مشتول السوق', 'منيا القمح', 'الصالحية القديمة', 'الصالحية الجديدة', 'صان الحجر', 'مدينة العاشر من رمضان'],
+        'الجيزة': ['مدينة السادس من أكتوبر', 'مدينة الشيخ زايد', 'العياط', 'الحوامدية', 'البدرشين', 'الصف', 'العمرانية', 'أطفيح', 'الواحات البحرية', 'الجيزة', 'حدائق الاهرام', 'فيصل', 'الهرم', 'أبو النمرس', 'العجوزة', 'الوراق', 'أوسيم', 'بولاق الدكرور', 'الدقي', 'أرض اللواء', 'المهندسين', 'كرداسة', 'إمبابة', 'منشأة القناطر'],
+        'القاهرة': ['عابدين', 'العباسية', 'الأزبكية', 'القطامية', 'المنيل', 'المقطم', 'دار السلام', 'البساتين', 'الجمالية', 'السيدة زينب', 'حلوان', 'المعادي', 'مصر القديمة', 'قصر النيل', 'الخليفة', 'طرة', 'الزمالك', 'الشروق', 'مدينة بدر', 'عين شمس', 'مدينتي', 'الزيتون', 'مدينة نصر', 'القاهرة الجديدة', 'هليوبوليس', 'الأميرية', 'السلام', 'الوايلي', 'الشرابية', 'المرج', 'المطرية', 'النزهة', 'حدائق القبة', 'شبرا مصر', 'كورنيش النيل'],
+        'الإسكندرية': ['الدخيلة', 'العامرية', 'برج العرب', 'محرم بيك', 'باب شرقي', 'الساحل الشمالي', 'سيدي جابر', 'العطارين', 'المنشية', 'اللبان', 'الجمرك', 'مينا البصل', 'كرموز', 'الرمل', 'المنتزه']
     };
 
     // ============================================================
-    //  دوال التعديل
+    //  تحميل الشحنات
+    // ============================================================
+    async function loadShipments() {
+        const listDiv = document.getElementById('shipmentsList');
+        listDiv.innerHTML = '<div class="loading"><div class="spinner"></div>جاري التحميل...</div>';
+
+        try {
+            const res = await fetch(`${API_URL}?action=myShipments&phone=${testUser.phone}&password=${testUser.password}`);
+            const data = await res.json();
+
+            if (data.success) {
+                allShipments = data.shipments || [];
+                renderShipments(allShipments);
+                showToast(`✅ تم تحميل ${allShipments.length} شحنة`, 'success');
+            } else {
+                listDiv.innerHTML = `<div class="empty-state"><div class="icon">❌</div><p>${data.msg || 'فشل التحميل'}</p></div>`;
+                showToast('❌ فشل تحميل الشحنات', 'error');
+            }
+        } catch (error) {
+            console.error('خطأ في التحميل:', error);
+            listDiv.innerHTML = '<div class="empty-state"><div class="icon">📡</div><p>فشل الاتصال بالخادم</p></div>';
+            showToast('⚠️ فشل الاتصال بالخادم', 'error');
+        }
+    }
+
+    // ============================================================
+    //  عرض الشحنات
+    // ============================================================
+    function renderShipments(shipments) {
+        const listDiv = document.getElementById('shipmentsList');
+        
+        if (!shipments || shipments.length === 0) {
+            listDiv.innerHTML = '<div class="empty-state"><div class="icon">📦</div><p>لا توجد شحنات لعرضها</p></div>';
+            return;
+        }
+
+        let html = '';
+        shipments.forEach(s => {
+            const statusClass = s.status?.includes('تم') ? 'status-done' : 
+                              s.status?.includes('تتبع') ? 'status-tracking' : 'status-waiting';
+            const statusText = s.status || 'في انتظار التتبع';
+            const hasTracking = s.trackingNumber && s.trackingNumber.length > 3;
+
+            html += `
+                <div class="shipment-card" id="card-${s.id}">
+                    <span class="status-badge ${statusClass}">${statusText}</span>
+                    <div class="main-info">
+                        <span class="name">👤 ${s.receiverName || 'غير معروف'}</span>
+                        <span class="phone">📱 ${s.receiverPhone || ''}</span>
+                        <span class="amount">${s.amount || '0'} ج.م</span>
+                    </div>
+                    ${s.trackingNumber ? `<div style="font-size:12px;color:#666;">🚚 رقم التتبع: ${s.trackingNumber}</div>` : ''}
+                    <div class="last-update">آخر تحديث: ${s.lastUpdate || s.date || 'غير معروف'}</div>
+                    <div class="actions">
+                        ${!hasTracking ? `
+                            <button class="btn-eux-orange" onclick="showEditForm('${s.id}')">
+                                ✏️ تعديل
+                            </button>
+                            <button class="btn-eux-red" onclick="deleteShipment('${s.id}')">
+                                🗑️ حذف
+                            </button>
+                        ` : `
+                            <span style="font-size:12px;color:#888;">🔒 لا يمكن تعديل أو حذف الشحنات المرتبطة بتتبع</span>
+                        `}
+                    </div>
+                </div>
+            `;
+        });
+
+        listDiv.innerHTML = html;
+    }
+
+    // ============================================================
+    //  حذف الشحنة (للعميل)
+    // ============================================================
+    async function deleteShipment(shipmentId) {
+        if (!confirm(`⚠️ هل أنت متأكد من حذف هذه الشحنة؟`)) {
+            return;
+        }
+
+        showToast('⏳ جاري الحذف...', '');
+        
+        try {
+            const params = new URLSearchParams();
+            params.append('action', 'deleteShipment');
+            params.append('phone', testUser.phone);
+            params.append('password', testUser.password);
+            params.append('shipmentId', shipmentId);
+
+            const res = await fetch(API_URL, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                body: params.toString()
+            });
+
+            const data = await res.json();
+            console.log('استجابة الحذف:', data);
+
+            if (data.success) {
+                showToast('✅ تم حذف الشحنة بنجاح', 'success');
+                // إزالة البطاقة من الواجهة
+                const card = document.getElementById(`card-${shipmentId}`);
+                if (card) {
+                    card.style.transition = 'all 0.3s ease';
+                    card.style.opacity = '0';
+                    card.style.transform = 'translateX(-20px)';
+                    setTimeout(() => {
+                        card.remove();
+                        // إعادة تحميل القائمة
+                        loadShipments();
+                    }, 300);
+                } else {
+                    loadShipments();
+                }
+            } else {
+                showToast(`❌ ${data.msg || 'فشل الحذف'}`, 'error');
+                console.error('خطأ في الحذف:', data);
+            }
+        } catch (error) {
+            console.error('خطأ في الاتصال:', error);
+            showToast('⚠️ فشل الاتصال بالخادم', 'error');
+        }
+    }
+
+    // ============================================================
+    //  عرض نموذج التعديل
     // ============================================================
     function showEditForm(shipmentId) {
-        currentShipmentId = shipmentId;
-        const shipment = shipments[shipmentId];
+        const shipment = allShipments.find(s => s.id === shipmentId);
         if (!shipment) {
             showToast('❌ لم يتم العثور على الشحنة', 'error');
             return;
         }
 
+        currentEditId = shipmentId;
+        document.getElementById('editShipmentId').value = shipmentId;
+
+        // تعبئة الحقول
         document.getElementById('editName').value = shipment.receiverName || '';
         document.getElementById('editPhone').value = shipment.receiverPhone || '';
         document.getElementById('editPhone2').value = shipment.receiverPhone2 || '';
-        document.getElementById('editGovernorate').value = shipment.governorate || '';
-        document.getElementById('editCity').value = shipment.city || '';
         document.getElementById('editAddress').value = shipment.address || '';
         document.getElementById('editAmount').value = shipment.amount || '';
         document.getElementById('editWeight').value = shipment.weight || '1';
         document.getElementById('editNotes').value = shipment.notes || '';
         document.getElementById('editError').textContent = '';
 
+        // تعبئة المحافظات
+        const govSelect = document.getElementById('editGovernorate');
+        govSelect.innerHTML = '<option value="">اختر المحافظة</option>';
+        Object.keys(governorates).forEach(gov => {
+            const selected = gov === shipment.governorate ? 'selected' : '';
+            govSelect.innerHTML += `<option value="${gov}" ${selected}>${gov}</option>`;
+        });
+
+        // تعبئة المدن
+        updateEditCities(shipment.governorate, shipment.city);
+
+        // إظهار المودال
         document.getElementById('editModal').classList.remove('hidden');
     }
 
-    function updateShipment() {
+    function updateEditCities(selectedGov, selectedCity) {
+        const citySelect = document.getElementById('editCity');
+        const gov = selectedGov || document.getElementById('editGovernorate').value;
+        
+        citySelect.innerHTML = '<option value="">اختر المدينة</option>';
+        if (gov && governorates[gov]) {
+            governorates[gov].forEach(city => {
+                const selected = city === selectedCity ? 'selected' : '';
+                citySelect.innerHTML += `<option value="${city}" ${selected}>${city}</option>`;
+            });
+        }
+    }
+
+    // تحديث المدن عند تغيير المحافظة
+    document.getElementById('editGovernorate').addEventListener('change', function() {
+        updateEditCities(this.value, '');
+    });
+
+    // ============================================================
+    //  تحديث الشحنة
+    // ============================================================
+    async function updateShipment() {
+        const shipmentId = document.getElementById('editShipmentId').value;
         const name = document.getElementById('editName').value.trim();
         const phone = document.getElementById('editPhone').value.trim();
         const phone2 = document.getElementById('editPhone2').value.trim();
@@ -356,7 +569,7 @@
         const notes = document.getElementById('editNotes').value.trim();
         const errorDiv = document.getElementById('editError');
 
-        // التحقق من الحقول المطلوبة
+        // التحقق
         if (!name || !phone || !governorate || !city || !address || !amount) {
             errorDiv.textContent = 'يرجى ملء جميع الحقول المطلوبة (*)';
             return;
@@ -370,82 +583,47 @@
             return;
         }
 
-        // تحديث البيانات في الكائن المحلي
-        if (shipments[currentShipmentId]) {
-            shipments[currentShipmentId] = {
-                ...shipments[currentShipmentId],
-                receiverName: name,
-                receiverPhone: phone,
-                receiverPhone2: phone2,
-                governorate: governorate,
-                city: city,
-                address: address,
-                amount: amount,
-                weight: weight,
-                notes: notes
-            };
+        errorDiv.textContent = '';
+        showToast('⏳ جاري التحديث...', '');
 
-            // تحديث واجهة المستخدم
-            updateCardUI(currentShipmentId);
-            closeModal();
-            showToast('✅ تم تحديث الشحنة بنجاح!', 'success');
-            
-            // محاكاة إرسال إلى API
-            console.log('📤 تم إرسال التحديث إلى API:', shipments[currentShipmentId]);
-        }
-    }
+        try {
+            const params = new URLSearchParams();
+            params.append('action', 'updateShipment');
+            params.append('phone', testUser.phone);
+            params.append('password', testUser.password);
+            params.append('shipmentId', shipmentId);
+            params.append('receiverName', name);
+            params.append('receiverPhone', phone);
+            params.append('receiverPhone2', phone2);
+            params.append('governorate', governorate);
+            params.append('city', city);
+            params.append('address', address);
+            params.append('amount', amount);
+            params.append('weight', weight);
+            params.append('notes', notes);
 
-    // ============================================================
-    //  دالة الحذف للعميل (محاكاة)
-    // ============================================================
-    function deleteShipment(shipmentId) {
-        if (!confirm(`⚠️ هل أنت متأكد من حذف الشحنة رقم ${shipmentId}؟`)) {
-            return;
-        }
+            const res = await fetch(API_URL, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                body: params.toString()
+            });
 
-        // محاكاة حذف من API
-        console.log(`🗑️ محاولة حذف الشحنة: ${shipmentId}`);
-        console.log('👤 المستخدم الحالي (عميل):', { phone: '01012345678', role: 'client' });
+            const data = await res.json();
+            console.log('استجابة التحديث:', data);
 
-        // حذف من الكائن المحلي
-        if (shipments[shipmentId]) {
-            delete shipments[shipmentId];
-            
-            // إزالة البطاقة من الواجهة
-            const card = document.getElementById(`card-${shipmentId}`);
-            if (card) {
-                card.style.transition = 'all 0.3s ease';
-                card.style.opacity = '0';
-                card.style.transform = 'translateX(-20px)';
-                setTimeout(() => {
-                    card.remove();
-                    showToast('✅ تم حذف الشحنة بنجاح', 'success');
-                }, 300);
+            if (data.success) {
+                closeModal();
+                showToast('✅ تم تحديث الشحنة بنجاح', 'success');
+                loadShipments();
+            } else {
+                errorDiv.textContent = data.msg || 'فشل التحديث';
+                showToast(`❌ ${data.msg || 'فشل التحديث'}`, 'error');
             }
-        } else {
-            showToast('❌ لم يتم العثور على الشحنة', 'error');
+        } catch (error) {
+            console.error('خطأ في التحديث:', error);
+            errorDiv.textContent = 'فشل الاتصال بالخادم';
+            showToast('⚠️ فشل الاتصال بالخادم', 'error');
         }
-    }
-
-    // ============================================================
-    //  تحديث واجهة البطاقة بعد التعديل
-    // ============================================================
-    function updateCardUI(shipmentId) {
-        const shipment = shipments[shipmentId];
-        if (!shipment) return;
-
-        const card = document.getElementById(`card-${shipmentId}`);
-        if (!card) return;
-
-        // تحديث الاسم والهاتف والمبلغ في البطاقة
-        const nameSpan = card.querySelector('strong');
-        if (nameSpan) nameSpan.textContent = `👤 ${shipment.receiverName}`;
-
-        const phoneSpan = card.querySelector('span[style*="color: #555;"]');
-        if (phoneSpan) phoneSpan.textContent = `📱 ${shipment.receiverPhone}`;
-
-        const amountDiv = card.querySelector('div[style*="color: #0076ff;"]');
-        if (amountDiv) amountDiv.textContent = `${shipment.amount} ج.م`;
     }
 
     // ============================================================
@@ -477,8 +655,14 @@
         if (e.target === this) closeModal();
     });
 
-    console.log('✅ النموذج التجريبي جاهز!');
-    console.log('📦 البيانات الحالية:', shipments);
+    // ============================================================
+    //  تحميل البيانات عند بدء التشغيل
+    // ============================================================
+    document.addEventListener('DOMContentLoaded', function() {
+        loadShipments();
+        console.log('✅ النموذج التجريبي جاهز مع API حقيقي');
+        console.log('👤 المستخدم:', testUser);
+    });
 </script>
 
 </body>
