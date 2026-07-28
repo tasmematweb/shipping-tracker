@@ -1,3 +1,4 @@
+```html
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
@@ -1924,7 +1925,7 @@
                             <button onclick="clearSearch()" style="background:transparent;color:#888;border:none;border-radius:20px;padding:4px 10px;cursor:pointer;font-family:'Cairo',sans-serif;font-size:12px;">الغاء</button>
                         </div>
                         <button id="shareLinkBtn" class="btn-eux-orange hidden share-btn-text" onclick="copyShareLink()" style="font-size:12px;padding:8px 12px;border-radius:10px;">
-                            <span class="inner">يمكنك ارسال هذا الرابط للراسل ليقوم بتسجيل الشحنه بنفسه</span>
+                            <span class="inner">يمكنك ارسال هذا الرابط للراسل ليقوم بتسجيل الشحنة بنفسه</span>
                             <span class="fold"></span>
                             <div class="points_wrapper">
                                 <span class="point"></span><span class="point"></span><span class="point"></span>
@@ -2501,7 +2502,7 @@
             const displayAmount = s.amount || '0';
             const badgeHTML = statusText ? `<span class="status-badge ${statusClass}">${statusText}</span>` : '';
 
-            return `<div class="shipment-card" onclick="toggleDetails(this)" id="card-${s.id}">
+            return `<div class="shipment-card" onclick="toggleDetails(this)" id="card-${s.id}" data-shipment='${JSON.stringify(s).replace(/'/g, "\\'")}'>
                     ${badgeHTML}
                     <div class="summary-row">
                         <div class="main-info">
@@ -2598,6 +2599,60 @@
                 `;
         }
 
+        function showEditShipmentForm(shipmentId) {
+            // Get shipment directly from the card element
+            const card = document.getElementById(`card-${shipmentId}`);
+            if (!card) {
+                showToast('لم يتم العثور على الشحنة', 'error');
+                return;
+            }
+
+            // Get shipment data from card attribute
+            const shipmentData = card.dataset.shipment;
+            if (!shipmentData) {
+                showToast('بيانات الشحنة غير متوفرة', 'error');
+                return;
+            }
+
+            try {
+                const shipment = JSON.parse(shipmentData);
+                editingShipmentId = shipmentId;
+
+                let govOptions = '<option value="">اختر المحافظة</option>';
+                Object.keys(governorates).forEach(gov => {
+                    const selected = gov === shipment.governorate ? 'selected' : '';
+                    govOptions += `<option value="${gov}" ${selected}>${gov}</option>`;
+                });
+
+                let cityOptions = '<option value="">اختر المدينة</option>';
+                if (shipment.governorate && governorates[shipment.governorate]) {
+                    governorates[shipment.governorate].forEach(city => {
+                        const selected = city === shipment.city ? 'selected' : '';
+                        cityOptions += `<option value="${city}" ${selected}>${city}</option>`;
+                    });
+                }
+
+                document.getElementById('modal').classList.remove('hidden');
+                document.getElementById('modalBody').innerHTML = `
+                        <h3><i class="fas fa-edit"></i> تعديل الشحنة</h3>
+                        <p style="color:#888;font-size:13px;margin-bottom:12px;">سيتم حذف الشحنة القديمة وإنشاء شحنة جديدة بنفس البيانات بعد التعديل</p>
+                        <div class="form-group"><label>اسم المستلم *</label><input id="f_receiverName" value="${shipment.receiverName || ''}" placeholder="اسم المستلم"></div>
+                        <div class="form-group"><label>هاتف المستلم *</label><input id="f_receiverPhone" value="${shipment.receiverPhone || ''}" placeholder="مثال: 010xxxxxxxx" dir="ltr" maxlength="11" oninput="this.value=this.value.replace(/[^0-9]/g,'')"></div>
+                        <div class="form-group"><label>هاتف آخر للمستلم</label><input id="f_receiverPhone2" value="${shipment.receiverPhone2 || ''}" placeholder="هاتف آخر (اختياري)" dir="ltr" maxlength="11" oninput="this.value=this.value.replace(/[^0-9]/g,'')"></div>
+                        <div class="two-columns"><div class="form-group"><label>المحافظة *</label><select id="f_governorate" onchange="updateCities()">${govOptions}</select></div><div class="form-group"><label>المدينة *</label><select id="f_city">${cityOptions}</select></div></div>
+                        <div class="form-group"><label>العنوان التفصيلي *</label><input id="f_address" value="${shipment.address || ''}" placeholder="العنوان بالتفصيل"></div>
+                        <div class="form-group"><label>المبلغ المطلوب تحصيله شامل الشحن *</label><input id="f_amount" type="number" value="${shipment.amount || ''}" placeholder="المبلغ بالجنيه" dir="ltr"></div>
+                        <div class="form-group"><label>وزن الشحنة *</label><input id="f_weight" type="number" value="${shipment.weight || '1'}" placeholder="الوزن بالكيلو" dir="ltr"></div>
+                        <div class="form-group"><label>ملاحظات</label><textarea id="f_notes" placeholder="ملاحظات اضافية">${shipment.notes || ''}</textarea></div>
+                        <button class="btn-eux-orange" onclick="submitShipment()" style="width:100%;"><span class="inner">حفظ التعديلات (سيتم حذف القديمة)</span><span class="fold"></span></button>
+                        <p id="shipError" style="color:red;margin-top:10px;"></p>
+                    `;
+            } catch (e) {
+                showToast('خطأ في قراءة بيانات الشحنة', 'error');
+                console.error('Error parsing shipment data:', e);
+            }
+        }
+
         async function submitShipment() {
             const receiverName = document.getElementById('f_receiverName').value.trim();
             const receiverPhone = document.getElementById('f_receiverPhone').value.trim();
@@ -2648,52 +2703,16 @@
                 const data = await res.json();
                 if (data.success) {
                     closeModal();
+                    const wasEditing = editingShipmentId !== null;
                     editingShipmentId = null;
                     if (currentUser.role === 'admin') {
                         loadAllShipments();
                     } else {
                         loadMyShipments();
                     }
-                    showToast(editingShipmentId ? 'تم تحديث الشحنة بنجاح!' : 'تم اضافة الشحنة بنجاح!', 'success');
+                    showToast(wasEditing ? 'تم تحديث الشحنة بنجاح!' : 'تم اضافة الشحنة بنجاح!', 'success');
                 } else { errorDiv.textContent = data.msg || "فشل الاضافة"; }
             } catch (e) { errorDiv.textContent = 'فشل الاتصال'; }
-        }
-
-        function showEditShipmentForm(shipmentId) {
-            const shipment = allShipmentsData.find(s => s.id === shipmentId);
-            if (!shipment) { showToast('لم يتم العثور على الشحنة', 'error'); return; }
-
-            editingShipmentId = shipmentId;
-
-            let govOptions = '<option value="">اختر المحافظة</option>';
-            Object.keys(governorates).forEach(gov => {
-                const selected = gov === shipment.governorate ? 'selected' : '';
-                govOptions += `<option value="${gov}" ${selected}>${gov}</option>`;
-            });
-
-            let cityOptions = '<option value="">اختر المدينة</option>';
-            if (shipment.governorate && governorates[shipment.governorate]) {
-                governorates[shipment.governorate].forEach(city => {
-                    const selected = city === shipment.city ? 'selected' : '';
-                    cityOptions += `<option value="${city}" ${selected}>${city}</option>`;
-                });
-            }
-
-            document.getElementById('modal').classList.remove('hidden');
-            document.getElementById('modalBody').innerHTML = `
-                    <h3><i class="fas fa-edit"></i> تعديل الشحنة</h3>
-                    <p style="color:#888;font-size:13px;margin-bottom:12px;">سيتم حذف الشحنة القديمة وإنشاء شحنة جديدة بنفس البيانات بعد التعديل</p>
-                    <div class="form-group"><label>اسم المستلم *</label><input id="f_receiverName" value="${shipment.receiverName || ''}" placeholder="اسم المستلم"></div>
-                    <div class="form-group"><label>هاتف المستلم *</label><input id="f_receiverPhone" value="${shipment.receiverPhone || ''}" placeholder="مثال: 010xxxxxxxx" dir="ltr" maxlength="11" oninput="this.value=this.value.replace(/[^0-9]/g,'')"></div>
-                    <div class="form-group"><label>هاتف آخر للمستلم</label><input id="f_receiverPhone2" value="${shipment.receiverPhone2 || ''}" placeholder="هاتف آخر (اختياري)" dir="ltr" maxlength="11" oninput="this.value=this.value.replace(/[^0-9]/g,'')"></div>
-                    <div class="two-columns"><div class="form-group"><label>المحافظة *</label><select id="f_governorate" onchange="updateCities()">${govOptions}</select></div><div class="form-group"><label>المدينة *</label><select id="f_city">${cityOptions}</select></div></div>
-                    <div class="form-group"><label>العنوان التفصيلي *</label><input id="f_address" value="${shipment.address || ''}" placeholder="العنوان بالتفصيل"></div>
-                    <div class="form-group"><label>المبلغ المطلوب تحصيله شامل الشحن *</label><input id="f_amount" type="number" value="${shipment.amount || ''}" placeholder="المبلغ بالجنيه" dir="ltr"></div>
-                    <div class="form-group"><label>وزن الشحنة *</label><input id="f_weight" type="number" value="${shipment.weight || '1'}" placeholder="الوزن بالكيلو" dir="ltr"></div>
-                    <div class="form-group"><label>ملاحظات</label><textarea id="f_notes" placeholder="ملاحظات اضافية">${shipment.notes || ''}</textarea></div>
-                    <button class="btn-eux-orange" onclick="submitShipment()" style="width:100%;"><span class="inner">حفظ التعديلات (سيتم حذف القديمة)</span><span class="fold"></span></button>
-                    <p id="shipError" style="color:red;margin-top:10px;"></p>
-                `;
         }
 
         function showAddTracking(shipmentId) {
@@ -3024,3 +3043,4 @@
 
 </body>
 </html>
+```
