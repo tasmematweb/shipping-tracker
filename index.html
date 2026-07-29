@@ -1,10 +1,9 @@
-```html
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>شعارات EUX الاحترافية - 5 تصاميم</title>
+    <title>أشرطة علوية احترافية - EUX</title>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
@@ -16,109 +15,60 @@
         }
         body {
             background: #0a0f1a;
-            padding: 40px 20px;
+            padding: 30px 20px;
             min-height: 100vh;
         }
         .page-title {
             text-align: center;
-            font-size: 36px;
+            font-size: 32px;
             font-weight: 900;
             color: #fff;
             margin-bottom: 6px;
-            letter-spacing: 2px;
         }
         .page-title span {
             color: #0076ff;
-            position: relative;
-        }
-        .page-title span::after {
-            content: '';
-            position: absolute;
-            bottom: -4px;
-            left: 0;
-            width: 100%;
-            height: 3px;
-            background: linear-gradient(90deg, transparent, #0076ff, transparent);
         }
         .page-sub {
             text-align: center;
             color: rgba(255,255,255,0.4);
-            font-size: 15px;
-            margin-bottom: 45px;
-            letter-spacing: 4px;
+            font-size: 14px;
+            margin-bottom: 40px;
+            letter-spacing: 3px;
             text-transform: uppercase;
         }
         .models-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(380px, 1fr));
-            gap: 35px;
-            max-width: 1300px;
+            grid-template-columns: repeat(auto-fit, minmax(360px, 1fr));
+            gap: 30px;
+            max-width: 1400px;
             margin: 0 auto;
         }
         .model-card {
             background: #111827;
-            border-radius: 24px;
+            border-radius: 20px;
             overflow: hidden;
             border: 1px solid #1e293b;
-            transition: 0.5s cubic-bezier(0.23, 1, 0.32, 1);
+            transition: 0.4s ease;
             cursor: pointer;
-            position: relative;
-        }
-        .model-card::before {
-            content: '';
-            position: absolute;
-            top: -2px;
-            left: -2px;
-            right: -2px;
-            bottom: -2px;
-            border-radius: 26px;
-            background: linear-gradient(135deg, transparent 40%, rgba(0,118,255,0.1) 100%);
-            opacity: 0;
-            transition: 0.5s;
-            z-index: -1;
-        }
-        .model-card:hover::before {
-            opacity: 1;
         }
         .model-card:hover {
             border-color: #0076ff;
-            transform: translateY(-8px);
-            box-shadow: 0 30px 60px rgba(0, 118, 255, 0.12);
+            transform: translateY(-6px);
+            box-shadow: 0 20px 50px rgba(0, 118, 255, 0.1);
         }
         .model-card.selected {
             border-color: #0076ff;
-            box-shadow: 0 0 40px rgba(0, 118, 255, 0.15);
+            box-shadow: 0 0 30px rgba(0, 118, 255, 0.15);
         }
         .model-preview {
-            padding: 40px 30px;
+            padding: 0;
             background: #0f172a;
+            min-height: 80px;
             display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 140px;
-            position: relative;
-            overflow: hidden;
-        }
-        .model-preview .bg-effect {
-            position: absolute;
-            width: 300px;
-            height: 300px;
-            border-radius: 50%;
-            background: radial-gradient(circle, rgba(0,118,255,0.04), transparent 70%);
-            top: -100px;
-            right: -100px;
-        }
-        .model-preview .bg-effect2 {
-            position: absolute;
-            width: 200px;
-            height: 200px;
-            border-radius: 50%;
-            background: radial-gradient(circle, rgba(0,118,255,0.03), transparent 70%);
-            bottom: -80px;
-            left: -80px;
+            flex-direction: column;
         }
         .model-label {
-            padding: 16px 24px;
+            padding: 14px 20px;
             background: #1a2332;
             display: flex;
             justify-content: space-between;
@@ -131,40 +81,37 @@
             color: #0076ff;
             font-weight: 700;
             font-size: 12px;
-            letter-spacing: 2px;
+            letter-spacing: 1px;
         }
         .model-label .name {
             color: #fff;
-            font-weight: 700;
-            font-size: 15px;
+            font-weight: 600;
+            font-size: 14px;
         }
         .model-label .badge {
-            background: rgba(0,118,255,0.15);
+            background: rgba(0,118,255,0.12);
             color: #0076ff;
             padding: 2px 14px;
             border-radius: 20px;
             font-size: 10px;
             font-weight: 700;
             text-transform: uppercase;
-            letter-spacing: 1px;
-            border: 1px solid rgba(0,118,255,0.1);
+            border: 1px solid rgba(0,118,255,0.08);
         }
         .select-btn {
             background: #0076ff;
             color: #fff;
             border: none;
-            padding: 6px 22px;
+            padding: 6px 20px;
             border-radius: 30px;
             font-size: 12px;
             font-weight: 700;
             cursor: pointer;
             transition: 0.3s;
             font-family: 'Cairo', sans-serif;
-            letter-spacing: 0.5px;
         }
         .select-btn:hover {
             background: #005dc7;
-            transform: scale(1.04);
         }
         .selected-indicator {
             display: none;
@@ -180,172 +127,262 @@
         }
 
         /* ============================================
-           التصميم 1: الفخامة الذهبية
+           الشريط 1: كلاسيكي أنيق
            ============================================ */
-        .logo-luxury {
+        .header-1 {
+            background: #0a1628;
+            padding: 18px 30px;
             display: flex;
+            justify-content: center;
             align-items: center;
-            gap: 18px;
+            border-bottom: 2px solid #0076ff;
         }
-        .logo-luxury .icon {
-            font-size: 38px;
-            color: #d4a843;
-            animation: luxuryGlow 2.5s ease-in-out infinite;
-        }
-        .logo-luxury .text {
-            font-size: 30px;
-            font-weight: 900;
+        .header-1 .logo {
             color: #fff;
+            font-size: 24px;
+            font-weight: 900;
+            letter-spacing: 2px;
+        }
+        .header-1 .logo span { color: #0076ff; }
+
+        /* ============================================
+           الشريط 2: شفاف زجاجي
+           ============================================ */
+        .header-2 {
+            background: rgba(10, 22, 40, 0.7);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            padding: 18px 30px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border-bottom: 1px solid rgba(255,255,255,0.06);
+        }
+        .header-2 .logo {
+            color: #fff;
+            font-size: 24px;
+            font-weight: 900;
+            letter-spacing: 2px;
+            text-shadow: 0 0 30px rgba(0,118,255,0.15);
+        }
+        .header-2 .logo span { color: #0076ff; }
+
+        /* ============================================
+           الشريط 3: ذهبي فاخر
+           ============================================ */
+        .header-3 {
+            background: linear-gradient(135deg, #0d0d0d, #1a1a1a);
+            padding: 18px 30px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border-bottom: 2px solid #d4a843;
+            position: relative;
+        }
+        .header-3::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, #d4a843, transparent);
+        }
+        .header-3 .logo {
+            color: #d4a843;
+            font-size: 24px;
+            font-weight: 900;
             letter-spacing: 3px;
         }
-        .logo-luxury .text span {
-            color: #d4a843;
-            text-shadow: 0 0 30px rgba(212, 168, 67, 0.2);
-        }
-        .logo-luxury .sub {
-            font-size: 10px;
-            color: rgba(212, 168, 67, 0.5);
-            letter-spacing: 4px;
-            text-transform: uppercase;
-            margin-top: 2px;
-            font-weight: 300;
-        }
-        @keyframes luxuryGlow {
-            0%, 100% { text-shadow: 0 0 10px rgba(212, 168, 67, 0.2); }
-            50% { text-shadow: 0 0 30px rgba(212, 168, 67, 0.5), 0 0 60px rgba(212, 168, 67, 0.1); }
-        }
+        .header-3 .logo span { color: #f5d77b; }
 
         /* ============================================
-           التصميم 2: المستقبلي الرقمي
+           الشريط 4: متدرج عصري
            ============================================ */
-        .logo-future {
+        .header-4 {
+            background: linear-gradient(135deg, #0a1628, #003d7a);
+            padding: 18px 30px;
             display: flex;
+            justify-content: center;
             align-items: center;
-            gap: 16px;
+            border-bottom: 2px solid rgba(0,118,255,0.3);
         }
-        .logo-future .digit {
-            font-size: 44px;
+        .header-4 .logo {
+            font-size: 24px;
             font-weight: 900;
-            color: #0076ff;
-            font-family: 'Cairo', sans-serif;
-            animation: digitalPulse 1.8s ease-in-out infinite;
-            text-shadow: 0 0 40px rgba(0,118,255,0.3);
-            background: linear-gradient(135deg, #0076ff, #4fc3f7);
+            background: linear-gradient(90deg, #0076ff, #4fc3f7);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
         }
-        .logo-future .text {
-            font-size: 26px;
+
+        /* ============================================
+           الشريط 5: أبيض نظيف
+           ============================================ */
+        .header-5 {
+            background: #ffffff;
+            padding: 16px 30px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border-bottom: 2px solid #e8ecf0;
+        }
+        .header-5 .logo {
+            color: #0d2137;
+            font-size: 22px;
             font-weight: 900;
-            color: #fff;
             letter-spacing: 2px;
         }
-        .logo-future .text span {
-            background: linear-gradient(135deg, #0076ff, #4fc3f7);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
+        .header-5 .logo span { color: #0076ff; }
+
+        /* ============================================
+           الشريط 6: جانبي مع روابط
+           ============================================ */
+        .header-6 {
+            background: #0a1628;
+            padding: 14px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 2px solid #0076ff;
+            flex-wrap: wrap;
+            gap: 10px;
         }
-        .logo-future .line {
-            width: 40px;
-            height: 2px;
-            background: linear-gradient(90deg, #0076ff, transparent);
-            animation: lineExpand 2.5s ease-in-out infinite;
+        .header-6 .logo {
+            color: #fff;
+            font-size: 22px;
+            font-weight: 900;
+            letter-spacing: 2px;
         }
-        @keyframes digitalPulse {
-            0%, 100% { transform: scale(1); opacity: 1; }
-            50% { transform: scale(1.05); opacity: 0.8; }
+        .header-6 .logo span { color: #0076ff; }
+        .header-6 .nav {
+            display: flex;
+            gap: 20px;
+            color: rgba(255,255,255,0.6);
+            font-size: 13px;
+            font-weight: 600;
         }
-        @keyframes lineExpand {
-            0% { width: 20px; opacity: 0.3; }
-            50% { width: 60px; opacity: 1; }
-            100% { width: 20px; opacity: 0.3; }
+        .header-6 .nav a {
+            color: rgba(255,255,255,0.6);
+            text-decoration: none;
+            transition: 0.3s;
+        }
+        .header-6 .nav a:hover { color: #fff; }
+        .header-6 .nav .active { color: #0076ff; }
+
+        /* ============================================
+           الشريط 7: نيون متوهج
+           ============================================ */
+        .header-7 {
+            background: #080d16;
+            padding: 18px 30px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border-bottom: 2px solid #0076ff;
+            box-shadow: 0 0 40px rgba(0,118,255,0.05);
+        }
+        .header-7 .logo {
+            color: #fff;
+            font-size: 24px;
+            font-weight: 900;
+            letter-spacing: 2px;
+            animation: neonPulse 2.5s ease-in-out infinite;
+        }
+        .header-7 .logo span {
+            color: #0076ff;
+            text-shadow: 0 0 20px rgba(0,118,255,0.4);
+        }
+        @keyframes neonPulse {
+            0%, 100% { text-shadow: 0 0 10px rgba(0,118,255,0.1); }
+            50% { text-shadow: 0 0 30px rgba(0,118,255,0.3); }
         }
 
         /* ============================================
-           التصميم 3: الكلاسيكي العصري
+           الشريط 8: داكن مع شريط سفلي متحرك
            ============================================ */
-        .logo-classic {
+        .header-8 {
+            background: #080d16;
+            padding: 18px 30px;
             display: flex;
-            align-items: center;
-            gap: 20px;
-        }
-        .logo-classic .box {
-            width: 55px;
-            height: 55px;
-            background: linear-gradient(135deg, #0076ff, #004a99);
-            border-radius: 12px;
-            display: flex;
-            align-items: center;
             justify-content: center;
-            font-size: 20px;
-            font-weight: 900;
-            color: #fff;
+            align-items: center;
             position: relative;
-            animation: boxFloat 3s ease-in-out infinite;
-            box-shadow: 0 8px 30px rgba(0,118,255,0.25);
+            border-bottom: 2px solid transparent;
         }
-        .logo-classic .box::after {
+        .header-8::after {
             content: '';
             position: absolute;
-            inset: -3px;
-            border-radius: 15px;
-            border: 1px solid rgba(0,118,255,0.2);
-            animation: boxRing 3s ease-in-out infinite;
+            bottom: -2px;
+            left: 20%;
+            right: 20%;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, #0076ff, transparent);
+            animation: slideGlow 3s ease-in-out infinite;
         }
-        .logo-classic .text {
-            font-size: 28px;
-            font-weight: 900;
+        @keyframes slideGlow {
+            0% { left: 20%; right: 80%; opacity: 0.3; }
+            50% { left: 10%; right: 10%; opacity: 1; }
+            100% { left: 80%; right: 20%; opacity: 0.3; }
+        }
+        .header-8 .logo {
             color: #fff;
+            font-size: 24px;
+            font-weight: 900;
             letter-spacing: 2px;
         }
-        .logo-classic .text span {
-            color: #0076ff;
-        }
-        @keyframes boxFloat {
-            0%, 100% { transform: translateY(0) rotate(0deg); }
-            50% { transform: translateY(-6px) rotate(2deg); }
-        }
-        @keyframes boxRing {
-            0%, 100% { transform: scale(1); opacity: 0.3; }
-            50% { transform: scale(1.1); opacity: 0.6; }
-        }
+        .header-8 .logo span { color: #0076ff; }
 
         /* ============================================
-           التصميم 4: الأناقة البسيطة
+           الشريط 9: مع شعار مصغر وأيقونة
            ============================================ */
-        .logo-elegant {
+        .header-9 {
+            background: #0a1628;
+            padding: 14px 30px;
             display: flex;
+            justify-content: center;
             align-items: center;
             gap: 14px;
+            border-bottom: 1px solid rgba(255,255,255,0.06);
         }
-        .logo-elegant .divider {
-            width: 2px;
-            height: 40px;
-            background: linear-gradient(180deg, transparent, #0076ff, transparent);
-        }
-        .logo-elegant .text {
-            font-size: 30px;
-            font-weight: 900;
-            color: #fff;
-            letter-spacing: 4px;
-        }
-        .logo-elegant .text span {
+        .header-9 .icon {
+            font-size: 22px;
             color: #0076ff;
-            position: relative;
         }
-        .logo-elegant .text span::before {
-            content: '';
-            position: absolute;
-            bottom: -4px;
-            left: 0;
-            width: 100%;
-            height: 2px;
-            background: #0076ff;
-            animation: underlineSlide 2s ease-in-out infinite;
+        .header-9 .logo {
+            color: #fff;
+            font-size: 20px;
+            font-weight: 900;
+            letter-spacing: 1px;
         }
-        .logo-elegant .dot {
+        .header-9 .logo span { color: #0076ff; }
+        .header-9 .sub {
+            font-size: 10px;
+            color: rgba(255,255,255,0.3);
+            font-weight: 300;
+            letter-spacing: 2px;
+        }
+
+        /* ============================================
+           الشريط 10: بسيط مع نقطة متحركة
+           ============================================ */
+        .header-10 {
+            background: #0a1628;
+            padding: 18px 30px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 16px;
+            border-bottom: 1px solid rgba(255,255,255,0.06);
+        }
+        .header-10 .logo {
+            color: #fff;
+            font-size: 24px;
+            font-weight: 900;
+            letter-spacing: 2px;
+        }
+        .header-10 .logo span { color: #0076ff; }
+        .header-10 .dot {
             width: 8px;
             height: 8px;
             background: #0076ff;
@@ -353,66 +390,9 @@
             animation: dotPulse 2s ease-in-out infinite;
             box-shadow: 0 0 20px rgba(0,118,255,0.3);
         }
-        @keyframes underlineSlide {
-            0% { transform: scaleX(0); transform-origin: right; }
-            50% { transform: scaleX(1); transform-origin: center; }
-            100% { transform: scaleX(0); transform-origin: left; }
-        }
         @keyframes dotPulse {
-            0%, 100% { transform: scale(1); opacity: 0.5; }
-            50% { transform: scale(1.4); opacity: 1; }
-        }
-
-        /* ============================================
-           التصميم 5: القوة والسرعة
-           ============================================ */
-        .logo-power {
-            display: flex;
-            align-items: center;
-            gap: 16px;
-        }
-        .logo-power .icon {
-            font-size: 38px;
-            color: #0076ff;
-            animation: powerPulse 2.2s ease-in-out infinite;
-        }
-        .logo-power .text {
-            font-size: 30px;
-            font-weight: 900;
-            color: #fff;
-            letter-spacing: 2px;
-        }
-        .logo-power .text span {
-            color: #0076ff;
-            position: relative;
-            display: inline-block;
-        }
-        .logo-power .text span::after {
-            content: '';
-            position: absolute;
-            bottom: -4px;
-            left: 0;
-            width: 100%;
-            height: 3px;
-            background: linear-gradient(90deg, #0076ff, #4fc3f7);
-            border-radius: 2px;
-            animation: powerBar 1.8s ease-in-out infinite;
-        }
-        .logo-power .speed {
-            font-size: 10px;
-            color: rgba(255,255,255,0.3);
-            letter-spacing: 3px;
-            text-transform: uppercase;
-            font-weight: 300;
-        }
-        @keyframes powerPulse {
-            0%, 100% { transform: scale(1) rotate(0deg); }
-            50% { transform: scale(1.1) rotate(-5deg); }
-        }
-        @keyframes powerBar {
-            0% { transform: scaleX(0); transform-origin: right; }
-            50% { transform: scaleX(1); transform-origin: left; }
-            100% { transform: scaleX(0); transform-origin: right; }
+            0%, 100% { transform: scale(1); opacity: 0.4; }
+            50% { transform: scale(1.6); opacity: 1; }
         }
 
         /* ============================================
@@ -421,24 +401,28 @@
         @media (max-width: 700px) {
             .models-grid {
                 grid-template-columns: 1fr;
-                gap: 25px;
             }
-            .model-preview {
-                min-height: 110px;
-                padding: 25px 20px;
+            .header-1, .header-2, .header-3, .header-4,
+            .header-5, .header-6, .header-7, .header-8,
+            .header-9, .header-10 {
+                padding: 14px 16px;
             }
-            .logo-luxury .text,
-            .logo-future .text,
-            .logo-classic .text,
-            .logo-elegant .text,
-            .logo-power .text {
-                font-size: 22px;
+            .header-6 {
+                flex-direction: column;
+                align-items: center;
+                gap: 8px;
             }
-            .logo-luxury .icon { font-size: 30px; }
-            .logo-future .digit { font-size: 34px; }
-            .logo-classic .box { width: 45px; height: 45px; font-size: 16px; }
-            .logo-power .icon { font-size: 30px; }
-            .page-title { font-size: 26px; }
+            .header-6 .nav {
+                gap: 12px;
+                font-size: 12px;
+            }
+            .header-1 .logo, .header-2 .logo, .header-3 .logo,
+            .header-4 .logo, .header-5 .logo, .header-6 .logo,
+            .header-7 .logo, .header-8 .logo, .header-9 .logo,
+            .header-10 .logo {
+                font-size: 18px;
+            }
+            .page-title { font-size: 24px; }
             .model-label .name { font-size: 13px; }
         }
 
@@ -452,146 +436,219 @@
             transform: translateX(-50%);
             background: #0d2137;
             color: #fff;
-            padding: 14px 32px;
-            border-radius: 16px;
+            padding: 14px 30px;
+            border-radius: 14px;
             font-size: 15px;
             font-weight: 600;
             box-shadow: 0 10px 40px rgba(0,0,0,0.4);
             z-index: 9999;
             text-align: center;
-            animation: toastIn 0.5s cubic-bezier(0.23, 1, 0.32, 1);
-            border: 1px solid rgba(0,118,255,0.15);
+            animation: toastIn 0.4s ease;
+            border: 1px solid rgba(0,118,255,0.1);
             backdrop-filter: blur(10px);
             background: rgba(13, 33, 55, 0.9);
         }
         .toast.hide {
             opacity: 0;
-            transition: opacity 0.5s;
+            transition: opacity 0.4s;
         }
         @keyframes toastIn {
-            from { opacity: 0; transform: translateX(-50%) translateY(30px) scale(0.9); }
-            to { opacity: 1; transform: translateX(-50%) translateY(0) scale(1); }
+            from { opacity: 0; transform: translateX(-50%) translateY(20px); }
+            to { opacity: 1; transform: translateX(-50%) translateY(0); }
         }
     </style>
 </head>
 <body>
 
-    <h1 class="page-title">✦ <span>EUX</span> PROFESSIONAL LOGOS ✦</h1>
-    <p class="page-sub">اختر هويتك • 5 تصاميم احترافية</p>
+    <h1 class="page-title">📐 <span>EUX</span> أشرطة علوية احترافية</h1>
+    <p class="page-sub">اختر تصميم الشريط العلوي لموقعك • 10 تصاميم</p>
 
     <div class="models-grid">
 
         <!-- ==========================================
-        التصميم 1: الفخامة الذهبية
+        الشريط 1: كلاسيكي أنيق
         ========================================== -->
         <div class="model-card" onclick="selectModel(1)">
             <div class="model-preview">
-                <div class="bg-effect"></div>
-                <div class="logo-luxury">
-                    <div class="icon"><i class="fas fa-crown"></i></div>
-                    <div>
-                        <div class="text"><span>EUX</span> EXPRESS</div>
-                        <div class="sub">✦ الشحن الفاخر ✦</div>
-                    </div>
-                </div>
-                <div class="bg-effect2"></div>
+                <header class="header-1">
+                    <div class="logo"><span>EUX</span> EXPRESS</div>
+                </header>
             </div>
             <div class="model-label">
                 <span class="num">01</span>
-                <span class="name">الفخامة الذهبية</span>
-                <span class="badge">Luxury</span>
+                <span class="name">كلاسيكي أنيق</span>
+                <span class="badge">Classic</span>
                 <button class="select-btn" onclick="event.stopPropagation(); selectModel(1)">اختيار</button>
                 <span class="selected-indicator">✅</span>
             </div>
         </div>
 
         <!-- ==========================================
-        التصميم 2: المستقبلي الرقمي
+        الشريط 2: شفاف زجاجي
         ========================================== -->
         <div class="model-card" onclick="selectModel(2)">
-            <div class="model-preview">
-                <div class="bg-effect"></div>
-                <div class="logo-future">
-                    <div class="digit">E</div>
-                    <div>
-                        <div class="text"><span>UX</span> EXPRESS</div>
-                        <div class="line"></div>
-                    </div>
-                </div>
-                <div class="bg-effect2"></div>
+            <div class="model-preview" style="background: linear-gradient(135deg, #1a2a3a, #0a1628);">
+                <header class="header-2">
+                    <div class="logo"><span>EUX</span> EXPRESS</div>
+                </header>
             </div>
             <div class="model-label">
                 <span class="num">02</span>
-                <span class="name">المستقبلي الرقمي</span>
-                <span class="badge">Digital</span>
+                <span class="name">شفاف زجاجي</span>
+                <span class="badge">Glass</span>
                 <button class="select-btn" onclick="event.stopPropagation(); selectModel(2)">اختيار</button>
                 <span class="selected-indicator">✅</span>
             </div>
         </div>
 
         <!-- ==========================================
-        التصميم 3: الكلاسيكي العصري
+        الشريط 3: ذهبي فاخر
         ========================================== -->
         <div class="model-card" onclick="selectModel(3)">
             <div class="model-preview">
-                <div class="bg-effect"></div>
-                <div class="logo-classic">
-                    <div class="box">EUX</div>
-                    <div class="text"><span>EX</span>PRESS</div>
-                </div>
-                <div class="bg-effect2"></div>
+                <header class="header-3">
+                    <div class="logo"><span>EUX</span> EXPRESS</div>
+                </header>
             </div>
             <div class="model-label">
                 <span class="num">03</span>
-                <span class="name">الكلاسيكي العصري</span>
-                <span class="badge">Classic</span>
+                <span class="name">ذهبي فاخر</span>
+                <span class="badge">Gold</span>
                 <button class="select-btn" onclick="event.stopPropagation(); selectModel(3)">اختيار</button>
                 <span class="selected-indicator">✅</span>
             </div>
         </div>
 
         <!-- ==========================================
-        التصميم 4: الأناقة البسيطة
+        الشريط 4: متدرج عصري
         ========================================== -->
         <div class="model-card" onclick="selectModel(4)">
             <div class="model-preview">
-                <div class="bg-effect"></div>
-                <div class="logo-elegant">
-                    <div class="divider"></div>
-                    <div class="text"><span>EUX</span> EXPRESS</div>
-                    <div class="dot"></div>
-                </div>
-                <div class="bg-effect2"></div>
+                <header class="header-4">
+                    <div class="logo">EUX EXPRESS</div>
+                </header>
             </div>
             <div class="model-label">
                 <span class="num">04</span>
-                <span class="name">الأناقة البسيطة</span>
-                <span class="badge">Elegant</span>
+                <span class="name">متدرج عصري</span>
+                <span class="badge">Gradient</span>
                 <button class="select-btn" onclick="event.stopPropagation(); selectModel(4)">اختيار</button>
                 <span class="selected-indicator">✅</span>
             </div>
         </div>
 
         <!-- ==========================================
-        التصميم 5: القوة والسرعة
+        الشريط 5: أبيض نظيف
         ========================================== -->
         <div class="model-card" onclick="selectModel(5)">
-            <div class="model-preview">
-                <div class="bg-effect"></div>
-                <div class="logo-power">
-                    <div class="icon"><i class="fas fa-bolt"></i></div>
-                    <div>
-                        <div class="text"><span>EUX</span> EXPRESS</div>
-                        <div class="speed">سرعة • قوة • ثقة</div>
-                    </div>
-                </div>
-                <div class="bg-effect2"></div>
+            <div class="model-preview" style="background: #eef1f5;">
+                <header class="header-5">
+                    <div class="logo"><span>EUX</span> EXPRESS</div>
+                </header>
             </div>
             <div class="model-label">
                 <span class="num">05</span>
-                <span class="name">القوة والسرعة</span>
-                <span class="badge">Power</span>
+                <span class="name">أبيض نظيف</span>
+                <span class="badge">Clean</span>
                 <button class="select-btn" onclick="event.stopPropagation(); selectModel(5)">اختيار</button>
+                <span class="selected-indicator">✅</span>
+            </div>
+        </div>
+
+        <!-- ==========================================
+        الشريط 6: جانبي مع روابط
+        ========================================== -->
+        <div class="model-card" onclick="selectModel(6)">
+            <div class="model-preview">
+                <header class="header-6">
+                    <div class="logo"><span>EUX</span> EXPRESS</div>
+                    <div class="nav">
+                        <a href="#" class="active">الرئيسية</a>
+                        <a href="#">خدماتنا</a>
+                        <a href="#">اتصل بنا</a>
+                    </div>
+                </header>
+            </div>
+            <div class="model-label">
+                <span class="num">06</span>
+                <span class="name">جانبي مع روابط</span>
+                <span class="badge">Nav</span>
+                <button class="select-btn" onclick="event.stopPropagation(); selectModel(6)">اختيار</button>
+                <span class="selected-indicator">✅</span>
+            </div>
+        </div>
+
+        <!-- ==========================================
+        الشريط 7: نيون متوهج
+        ========================================== -->
+        <div class="model-card" onclick="selectModel(7)">
+            <div class="model-preview">
+                <header class="header-7">
+                    <div class="logo"><span>EUX</span> EXPRESS</div>
+                </header>
+            </div>
+            <div class="model-label">
+                <span class="num">07</span>
+                <span class="name">نيون متوهج</span>
+                <span class="badge">Neon</span>
+                <button class="select-btn" onclick="event.stopPropagation(); selectModel(7)">اختيار</button>
+                <span class="selected-indicator">✅</span>
+            </div>
+        </div>
+
+        <!-- ==========================================
+        الشريط 8: داكن مع شريط سفلي متحرك
+        ========================================== -->
+        <div class="model-card" onclick="selectModel(8)">
+            <div class="model-preview">
+                <header class="header-8">
+                    <div class="logo"><span>EUX</span> EXPRESS</div>
+                </header>
+            </div>
+            <div class="model-label">
+                <span class="num">08</span>
+                <span class="name">شريط سفلي متحرك</span>
+                <span class="badge">Glow</span>
+                <button class="select-btn" onclick="event.stopPropagation(); selectModel(8)">اختيار</button>
+                <span class="selected-indicator">✅</span>
+            </div>
+        </div>
+
+        <!-- ==========================================
+        الشريط 9: مع شعار مصغر وأيقونة
+        ========================================== -->
+        <div class="model-card" onclick="selectModel(9)">
+            <div class="model-preview">
+                <header class="header-9">
+                    <span class="icon"><i class="fas fa-cube"></i></span>
+                    <div class="logo"><span>EUX</span> EXPRESS</div>
+                    <span class="sub">شحن سريع</span>
+                </header>
+            </div>
+            <div class="model-label">
+                <span class="num">09</span>
+                <span class="name">شعار مصغر + أيقونة</span>
+                <span class="badge">Icon</span>
+                <button class="select-btn" onclick="event.stopPropagation(); selectModel(9)">اختيار</button>
+                <span class="selected-indicator">✅</span>
+            </div>
+        </div>
+
+        <!-- ==========================================
+        الشريط 10: بسيط مع نقطة متحركة
+        ========================================== -->
+        <div class="model-card" onclick="selectModel(10)">
+            <div class="model-preview">
+                <header class="header-10">
+                    <div class="logo"><span>EUX</span> EXPRESS</div>
+                    <div class="dot"></div>
+                </header>
+            </div>
+            <div class="model-label">
+                <span class="num">10</span>
+                <span class="name">نقطة متحركة</span>
+                <span class="badge">Dot</span>
+                <button class="select-btn" onclick="event.stopPropagation(); selectModel(10)">اختيار</button>
                 <span class="selected-indicator">✅</span>
             </div>
         </div>
@@ -615,16 +672,21 @@
             window.scrollTo({ top: 0, behavior: 'smooth' });
 
             const names = {
-                1: 'الفخامة الذهبية',
-                2: 'المستقبلي الرقمي',
-                3: 'الكلاسيكي العصري',
-                4: 'الأناقة البسيطة',
-                5: 'القوة والسرعة'
+                1: 'كلاسيكي أنيق',
+                2: 'شفاف زجاجي',
+                3: 'ذهبي فاخر',
+                4: 'متدرج عصري',
+                5: 'أبيض نظيف',
+                6: 'جانبي مع روابط',
+                7: 'نيون متوهج',
+                8: 'شريط سفلي متحرك',
+                9: 'شعار مصغر + أيقونة',
+                10: 'نقطة متحركة'
             };
 
             showToast(`✓ تم اختيار: ${names[num]}`);
 
-            localStorage.setItem('selectedLogoPro', num);
+            localStorage.setItem('selectedHeader', num);
         }
 
         // ============================================
@@ -641,7 +703,7 @@
 
             setTimeout(() => {
                 toast.classList.add('hide');
-                setTimeout(() => toast.remove(), 500);
+                setTimeout(() => toast.remove(), 400);
             }, 3000);
         }
 
@@ -649,16 +711,15 @@
         // استرجاع الاختيار
         // ============================================
         document.addEventListener('DOMContentLoaded', function() {
-            const saved = localStorage.getItem('selectedLogoPro');
+            const saved = localStorage.getItem('selectedHeader');
             if (saved) {
                 selectModel(parseInt(saved));
             }
         });
 
-        console.log('✦ 5 تصاميم احترافية لشعار EUX ✦');
-        console.log('📌 اختر هوية علامتك التجارية');
+        console.log('📐 10 أشرطة علوية احترافية لـ EUX');
+        console.log('📌 اختر التصميم المناسب لهوية موقعك');
     </script>
 
 </body>
 </html>
-```
