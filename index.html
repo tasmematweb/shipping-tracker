@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>نماذج الشريط العلوي - EUX</title>
+    <title>شعارات EUX المتحركة - 10 نماذج احترافية</title>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
@@ -14,82 +14,98 @@
             font-family: 'Cairo', sans-serif;
         }
         body {
-            background: #f0f2f5;
-            padding: 20px;
+            background: #0a0f1a;
+            padding: 30px 20px;
+            min-height: 100vh;
         }
         .page-title {
             text-align: center;
-            font-size: 28px;
-            font-weight: 700;
-            color: #0d2137;
-            margin-bottom: 30px;
+            font-size: 32px;
+            font-weight: 900;
+            color: white;
+            margin-bottom: 10px;
         }
         .page-title span {
             color: #0076ff;
         }
+        .page-sub {
+            text-align: center;
+            color: rgba(255,255,255,0.5);
+            font-size: 16px;
+            margin-bottom: 40px;
+        }
         .models-grid {
             display: grid;
-            grid-template-columns: 1fr 1fr;
+            grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
             gap: 30px;
             max-width: 1400px;
             margin: 0 auto;
         }
         .model-card {
-            background: white;
-            border-radius: 16px;
+            background: #111827;
+            border-radius: 20px;
             overflow: hidden;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
-            border: 2px solid transparent;
-            transition: 0.3s;
+            border: 2px solid #1e293b;
+            transition: 0.4s ease;
             cursor: pointer;
+            position: relative;
         }
         .model-card:hover {
             border-color: #0076ff;
-            transform: translateY(-4px);
-            box-shadow: 0 8px 30px rgba(0, 118, 255, 0.15);
+            transform: translateY(-6px);
+            box-shadow: 0 20px 50px rgba(0, 118, 255, 0.15);
         }
         .model-card.selected {
             border-color: #0076ff;
-            background: #f0f7ff;
+            box-shadow: 0 0 30px rgba(0, 118, 255, 0.2);
         }
         .model-preview {
-            padding: 0;
-            background: white;
+            padding: 30px 20px;
+            background: #0f172a;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 120px;
+            position: relative;
+            overflow: hidden;
         }
         .model-label {
-            padding: 12px 16px;
-            background: #f8f9fa;
-            border-top: 1px solid #eee;
+            padding: 14px 20px;
+            background: #1e293b;
             display: flex;
             justify-content: space-between;
             align-items: center;
+            flex-wrap: wrap;
+            gap: 8px;
         }
         .model-label .num {
-            font-weight: 700;
             color: #0076ff;
-            font-size: 14px;
+            font-weight: 700;
+            font-size: 13px;
         }
         .model-label .name {
+            color: white;
             font-weight: 600;
-            font-size: 15px;
-            color: #0d2137;
+            font-size: 14px;
         }
         .model-label .badge {
             background: #0076ff;
             color: white;
-            padding: 2px 12px;
+            padding: 2px 14px;
             border-radius: 20px;
-            font-size: 11px;
-            font-weight: 600;
+            font-size: 10px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
         }
         .select-btn {
             background: #0076ff;
             color: white;
             border: none;
-            padding: 6px 20px;
+            padding: 6px 18px;
             border-radius: 20px;
-            font-size: 13px;
-            font-weight: 600;
+            font-size: 12px;
+            font-weight: 700;
             cursor: pointer;
             transition: 0.3s;
             font-family: 'Cairo', sans-serif;
@@ -97,553 +113,562 @@
         .select-btn:hover {
             background: #005dc7;
         }
-        .select-btn.selected {
-            background: #28a745;
-        }
-
-        /* ============================================
-           نموذج 1: الكلاسيكي الأزرق
-           ============================================ */
-        .header-1 {
-            background: #0a1628;
-            padding: 20px 40px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            border-bottom: 3px solid #0076ff;
-        }
-        .header-1 .logo {
-            color: white;
-            font-size: 28px;
-            font-weight: 900;
-            letter-spacing: 2px;
-        }
-        .header-1 .logo span {
-            color: #0076ff;
-        }
-
-        /* ============================================
-           نموذج 2: الشفاف
-           ============================================ */
-        .header-2 {
-            background: rgba(10, 22, 40, 0.75);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-            padding: 20px 40px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-        }
-        .header-2 .logo {
-            color: white;
-            font-size: 28px;
-            font-weight: 900;
-            letter-spacing: 2px;
-            text-shadow: 0 0 30px rgba(0, 118, 255, 0.3);
-        }
-        .header-2 .logo span {
-            color: #0076ff;
-        }
-
-        /* ============================================
-           نموذج 3: الذهبي الفاخر
-           ============================================ */
-        .header-3 {
-            background: linear-gradient(135deg, #0d0d0d, #1a1a1a);
-            padding: 20px 40px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            border-bottom: 3px solid #d4a843;
-            position: relative;
-        }
-        .header-3::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 2px;
-            background: linear-gradient(90deg, transparent, #d4a843, transparent);
-        }
-        .header-3 .logo {
-            color: #d4a843;
-            font-size: 28px;
-            font-weight: 900;
-            letter-spacing: 3px;
-            text-shadow: 0 0 20px rgba(212, 168, 67, 0.2);
-        }
-        .header-3 .logo span {
-            color: #f5d77b;
-        }
-
-        /* ============================================
-           نموذج 4: الحديث المتدرج
-           ============================================ */
-        .header-4 {
-            background: linear-gradient(135deg, #0a1628, #003d7a, #0a1628);
-            padding: 20px 40px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            border-bottom: 2px solid rgba(0, 118, 255, 0.3);
-        }
-        .header-4 .logo {
-            color: white;
-            font-size: 28px;
-            font-weight: 900;
-            letter-spacing: 2px;
-            background: linear-gradient(90deg, #0076ff, #4fc3f7);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
-
-        /* ============================================
-           نموذج 5: البسيط الأبيض
-           ============================================ */
-        .header-5 {
-            background: white;
-            padding: 18px 40px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            border-bottom: 2px solid #e8ecf0;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.04);
-        }
-        .header-5 .logo {
-            color: #0d2137;
-            font-size: 26px;
-            font-weight: 900;
-            letter-spacing: 2px;
-        }
-        .header-5 .logo span {
-            color: #0076ff;
-        }
-
-        /* ============================================
-           نموذج 6: الجانبي
-           ============================================ */
-        .header-6 {
-            background: #0a1628;
-            padding: 16px 40px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            border-bottom: 2px solid #0076ff;
-        }
-        .header-6 .logo {
-            color: white;
-            font-size: 26px;
-            font-weight: 900;
-            letter-spacing: 2px;
-        }
-        .header-6 .logo span {
-            color: #0076ff;
-        }
-        .header-6 .nav-links {
-            display: flex;
-            gap: 25px;
-            color: rgba(255, 255, 255, 0.7);
-            font-size: 14px;
-            font-weight: 600;
-        }
-        .header-6 .nav-links a {
-            color: rgba(255, 255, 255, 0.7);
-            text-decoration: none;
-            transition: 0.3s;
-        }
-        .header-6 .nav-links a:hover {
-            color: white;
-        }
-        .header-6 .nav-links .active {
-            color: #0076ff;
-        }
-
-        /* ============================================
-           نموذج 7: ثلاثي الأبعاد
-           ============================================ */
-        .header-7 {
-            background: #0a1628;
-            padding: 20px 40px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            border-bottom: 3px solid #0076ff;
-            transform: perspective(800px) rotateX(0deg);
-            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
-        }
-        .header-7 .logo {
-            color: white;
-            font-size: 30px;
-            font-weight: 900;
-            letter-spacing: 2px;
-            text-shadow: 0 4px 20px rgba(0, 118, 255, 0.4), 0 0 60px rgba(0, 118, 255, 0.1);
-            transform: perspective(500px) rotateX(2deg);
-        }
-        .header-7 .logo span {
-            color: #0076ff;
-            text-shadow: 0 0 30px rgba(0, 118, 255, 0.6);
-        }
-
-        /* ============================================
-           نموذج 8: الداكن المميز
-           ============================================ */
-        .header-8 {
-            background: #080d16;
-            padding: 20px 40px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            border-bottom: 3px solid #0076ff;
-            box-shadow: 0 4px 30px rgba(0, 118, 255, 0.15);
-            position: relative;
-        }
-        .header-8::after {
-            content: '';
-            position: absolute;
-            bottom: -3px;
-            left: 20%;
-            right: 20%;
-            height: 3px;
-            background: linear-gradient(90deg, transparent, #4fc3f7, transparent);
-            animation: glowLine 3s ease-in-out infinite;
-        }
-        @keyframes glowLine {
-            0%, 100% { opacity: 0.3; }
-            50% { opacity: 1; }
-        }
-        .header-8 .logo {
-            color: white;
-            font-size: 28px;
-            font-weight: 900;
-            letter-spacing: 2px;
-        }
-        .header-8 .logo span {
-            color: #0076ff;
-        }
-
-        /* ============================================
-           نموذج 9: المزخرف
-           ============================================ */
-        .header-9 {
-            background: #0a1628;
-            padding: 18px 40px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            border-bottom: 2px solid #0076ff;
-            position: relative;
-        }
-        .header-9::before {
-            content: '✦ ✦ ✦';
-            position: absolute;
-            left: 30px;
-            color: #0076ff;
-            font-size: 14px;
-            letter-spacing: 4px;
-            opacity: 0.5;
-        }
-        .header-9::after {
-            content: '✦ ✦ ✦';
-            position: absolute;
-            right: 30px;
-            color: #0076ff;
-            font-size: 14px;
-            letter-spacing: 4px;
-            opacity: 0.5;
-        }
-        .header-9 .logo {
-            color: white;
-            font-size: 26px;
-            font-weight: 900;
-            letter-spacing: 3px;
-        }
-        .header-9 .logo span {
-            color: #0076ff;
-        }
-
-        /* ============================================
-           نموذج 10: المصغر
-           ============================================ */
-        .header-10 {
-            background: #0a1628;
-            padding: 10px 20px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            border-bottom: 2px solid #0076ff;
-        }
-        .header-10 .logo {
-            color: white;
-            font-size: 18px;
-            font-weight: 900;
-            letter-spacing: 1px;
-        }
-        .header-10 .logo span {
-            color: #0076ff;
-        }
-        .header-10 .sub {
-            font-size: 11px;
-            color: rgba(255, 255, 255, 0.4);
-            margin-right: 8px;
-            font-weight: 400;
-        }
-
-        /* ============================================
-           للشاشات الصغيرة
-           ============================================ */
-        @media (max-width: 900px) {
-            .models-grid {
-                grid-template-columns: 1fr;
-            }
-        }
-        @media (max-width: 600px) {
-            .header-1, .header-2, .header-3, .header-4, .header-5,
-            .header-6, .header-7, .header-8, .header-9, .header-10 {
-                padding: 12px 16px;
-            }
-            .header-6 {
-                flex-direction: column;
-                gap: 8px;
-            }
-            .header-6 .nav-links {
-                gap: 12px;
-                font-size: 12px;
-            }
-            .header-9::before,
-            .header-9::after {
-                display: none;
-            }
-            .header-1 .logo,
-            .header-2 .logo,
-            .header-3 .logo,
-            .header-4 .logo,
-            .header-5 .logo,
-            .header-6 .logo,
-            .header-7 .logo,
-            .header-8 .logo,
-            .header-9 .logo {
-                font-size: 20px;
-            }
-            .header-10 .logo {
-                font-size: 15px;
-            }
-            .model-label {
-                flex-wrap: wrap;
-                gap: 8px;
-            }
-        }
-
-        /* ============================================
-           مؤشر التحديد
-           ============================================ */
         .selected-indicator {
             display: none;
-            color: #28a745;
-            font-size: 14px;
+            color: #22c55e;
+            font-size: 13px;
             font-weight: 600;
         }
         .model-card.selected .selected-indicator {
             display: inline;
         }
         .model-card.selected .select-btn {
-            background: #28a745;
+            background: #22c55e;
         }
-        .model-card.selected .select-btn:hover {
-            background: #218838;
+
+        /* ============================================
+           نموذج 1: النيون المتوهج
+           ============================================ */
+        .logo-1 {
+            font-size: 32px;
+            font-weight: 900;
+            color: white;
+            letter-spacing: 2px;
+            animation: neonPulse 2s ease-in-out infinite;
+            text-shadow: 0 0 10px rgba(0, 118, 255, 0.3);
+        }
+        .logo-1 span {
+            color: #0076ff;
+            animation: neonGlow 1.5s ease-in-out infinite alternate;
+        }
+        @keyframes neonPulse {
+            0%, 100% { text-shadow: 0 0 10px rgba(0, 118, 255, 0.3); }
+            50% { text-shadow: 0 0 30px rgba(0, 118, 255, 0.6), 0 0 60px rgba(0, 118, 255, 0.2); }
+        }
+        @keyframes neonGlow {
+            0% { text-shadow: 0 0 10px #0076ff; }
+            100% { text-shadow: 0 0 30px #0076ff, 0 0 60px #0076ff; }
+        }
+
+        /* ============================================
+           نموذج 2: السفر (طائرة)
+           ============================================ */
+        .logo-2 {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            font-size: 28px;
+            font-weight: 900;
+            color: white;
+        }
+        .logo-2 .plane {
+            font-size: 40px;
+            color: #0076ff;
+            animation: flyPlane 3s ease-in-out infinite;
+            display: inline-block;
+        }
+        .logo-2 span {
+            color: #0076ff;
+        }
+        @keyframes flyPlane {
+            0%, 100% { transform: translateY(0) rotate(-5deg); }
+            50% { transform: translateY(-12px) rotate(5deg); }
+        }
+
+        /* ============================================
+           نموذج 3: التكنو (دائرة دوارة)
+           ============================================ */
+        .logo-3 {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            font-size: 28px;
+            font-weight: 900;
+            color: white;
+        }
+        .logo-3 .circle {
+            width: 50px;
+            height: 50px;
+            border: 3px solid #0076ff;
+            border-radius: 50%;
+            border-top-color: transparent;
+            animation: spinCircle 1.2s linear infinite;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            color: #0076ff;
+            font-weight: 700;
+        }
+        .logo-3 span {
+            color: #0076ff;
+        }
+        @keyframes spinCircle {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* ============================================
+           نموذج 4: الموجي
+           ============================================ */
+        .logo-4 {
+            font-size: 32px;
+            font-weight: 900;
+            color: white;
+            letter-spacing: 2px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .logo-4 .wave {
+            display: inline-block;
+            animation: waveMove 1.8s ease-in-out infinite;
+        }
+        .logo-4 span {
+            color: #0076ff;
+            animation: waveMove 1.8s ease-in-out infinite 0.3s;
+        }
+        .logo-4 .wave:nth-child(3) { animation-delay: 0.6s; }
+        .logo-4 .wave:nth-child(4) { animation-delay: 0.9s; }
+        @keyframes waveMove {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-8px); }
+        }
+
+        /* ============================================
+           نموذج 5: الشعار مع شريط متحرك
+           ============================================ */
+        .logo-5 {
+            font-size: 32px;
+            font-weight: 900;
+            color: white;
+            position: relative;
+            display: inline-block;
+            padding: 0 20px;
+        }
+        .logo-5 span {
+            color: #0076ff;
+        }
+        .logo-5::after {
+            content: '';
+            position: absolute;
+            bottom: -6px;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: linear-gradient(90deg, transparent, #0076ff, transparent);
+            animation: slideLine 2s ease-in-out infinite;
+        }
+        @keyframes slideLine {
+            0% { transform: translateX(-100%); opacity: 0; }
+            50% { transform: translateX(0); opacity: 1; }
+            100% { transform: translateX(100%); opacity: 0; }
+        }
+
+        /* ============================================
+           نموذج 6: النجوم المتلألئة
+           ============================================ */
+        .logo-6 {
+            font-size: 30px;
+            font-weight: 900;
+            color: white;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .logo-6 .stars {
+            font-size: 24px;
+            color: #fbbf24;
+            animation: sparkle 1.2s ease-in-out infinite;
+        }
+        .logo-6 span {
+            color: #0076ff;
+        }
+        @keyframes sparkle {
+            0%, 100% { opacity: 0.3; transform: scale(0.8); }
+            50% { opacity: 1; transform: scale(1.2); }
+        }
+
+        /* ============================================
+           نموذج 7: الكتابة باليد (متحركة)
+           ============================================ */
+        .logo-7 {
+            font-size: 32px;
+            font-weight: 900;
+            color: white;
+            letter-spacing: 1px;
+            position: relative;
+        }
+        .logo-7 span {
+            color: #0076ff;
+            display: inline-block;
+            animation: bounceText 2s ease-in-out infinite;
+        }
+        .logo-7 span:nth-child(2) { animation-delay: 0.2s; }
+        .logo-7 span:nth-child(3) { animation-delay: 0.4s; }
+        .logo-7 span:nth-child(4) { animation-delay: 0.6s; }
+        @keyframes bounceText {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-6px); }
+        }
+
+        /* ============================================
+           نموذج 8: الحلزوني الدوار
+           ============================================ */
+        .logo-8 {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            font-size: 28px;
+            font-weight: 900;
+            color: white;
+        }
+        .logo-8 .spiral {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            border: 3px solid transparent;
+            border-top-color: #0076ff;
+            border-right-color: #4fc3f7;
+            animation: spinSpiral 1.5s linear infinite;
+        }
+        .logo-8 span {
+            color: #0076ff;
+        }
+        @keyframes spinSpiral {
+            0% { transform: rotate(0deg) scale(1); }
+            50% { transform: rotate(180deg) scale(1.1); }
+            100% { transform: rotate(360deg) scale(1); }
+        }
+
+        /* ============================================
+           نموذج 9: البكسلي
+           ============================================ */
+        .logo-9 {
+            font-size: 30px;
+            font-weight: 900;
+            color: white;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            letter-spacing: 4px;
+        }
+        .logo-9 .pixel {
+            display: inline-block;
+            animation: pixelJump 0.8s ease-in-out infinite alternate;
+        }
+        .logo-9 span {
+            color: #0076ff;
+            animation: pixelJump 0.8s ease-in-out infinite alternate 0.15s;
+        }
+        @keyframes pixelJump {
+            0% { transform: translateY(0) scale(1); }
+            100% { transform: translateY(-6px) scale(1.05); }
+        }
+
+        /* ============================================
+           نموذج 10: الكروي الثلاثي الأبعاد
+           ============================================ */
+        .logo-10 {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            font-size: 28px;
+            font-weight: 900;
+            color: white;
+            perspective: 800px;
+        }
+        .logo-10 .globe {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: radial-gradient(circle at 30% 30%, #0076ff, #003d7a);
+            animation: globeSpin 3s ease-in-out infinite;
+            box-shadow: 0 0 30px rgba(0, 118, 255, 0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            color: white;
+            font-weight: 700;
+        }
+        .logo-10 span {
+            color: #0076ff;
+            animation: floatText 2.5s ease-in-out infinite;
+        }
+        @keyframes globeSpin {
+            0% { transform: rotateY(0deg) scale(1); }
+            50% { transform: rotateY(180deg) scale(1.05); }
+            100% { transform: rotateY(360deg) scale(1); }
+        }
+        @keyframes floatText {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-5px); }
+        }
+
+        /* ============================================
+           تأثيرات إضافية
+           ============================================ */
+        .glow-bg {
+            position: absolute;
+            width: 200px;
+            height: 200px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(0, 118, 255, 0.05), transparent 70%);
+            animation: glowPulse 3s ease-in-out infinite;
+        }
+        @keyframes glowPulse {
+            0%, 100% { transform: scale(1); opacity: 0.3; }
+            50% { transform: scale(1.5); opacity: 0.6; }
+        }
+
+        /* ============================================
+           للشاشات الصغيرة
+           ============================================ */
+        @media (max-width: 600px) {
+            .models-grid {
+                grid-template-columns: 1fr;
+            }
+            .model-preview {
+                min-height: 90px;
+                padding: 20px 16px;
+            }
+            .logo-1, .logo-2, .logo-3, .logo-4, .logo-5,
+            .logo-6, .logo-7, .logo-8, .logo-9, .logo-10 {
+                font-size: 22px;
+            }
+            .logo-2 .plane { font-size: 30px; }
+            .logo-3 .circle, .logo-8 .spiral, .logo-10 .globe {
+                width: 40px;
+                height: 40px;
+                font-size: 14px;
+            }
+            .page-title { font-size: 24px; }
+        }
+
+        /* ============================================
+           رسالة التأكيد
+           ============================================ */
+        .toast {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #0d2137;
+            color: white;
+            padding: 14px 30px;
+            border-radius: 14px;
+            font-size: 16px;
+            font-weight: 600;
+            box-shadow: 0 8px 30px rgba(0,0,0,0.3);
+            z-index: 9999;
+            text-align: center;
+            animation: toastIn 0.4s ease;
+            border: 1px solid rgba(0, 118, 255, 0.2);
+        }
+        .toast.hide {
+            opacity: 0;
+            transition: opacity 0.4s;
+        }
+        @keyframes toastIn {
+            from { opacity: 0; transform: translateX(-50%) translateY(20px); }
+            to { opacity: 1; transform: translateX(-50%) translateY(0); }
         }
     </style>
 </head>
 <body>
 
-    <h1 class="page-title">🎨 اختر <span>شريط EUX</span> العلوي المفضل لديك</h1>
+    <h1 class="page-title">🚀 <span>EUX</span> شعارات احترافية متحركة</h1>
+    <p class="page-sub">اختر الشعار المناسب لموقعك • 10 تصاميم فريدة</p>
 
     <div class="models-grid">
 
         <!-- ==========================================
-        نموذج 1: الكلاسيكي الأزرق
+        نموذج 1: النيون المتوهج
         ========================================== -->
         <div class="model-card" onclick="selectModel(1)">
             <div class="model-preview">
-                <header class="header-1">
-                    <div class="logo"><span>EUX</span> EXPRESS</div>
-                </header>
+                <div class="glow-bg"></div>
+                <div class="logo-1"><span>EUX</span> EXPRESS</div>
             </div>
             <div class="model-label">
                 <span class="num">#1</span>
-                <span class="name">الكلاسيكي الأزرق</span>
-                <span class="badge">كلاسيكي</span>
+                <span class="name">النيون المتوهج</span>
+                <span class="badge">نيون</span>
                 <button class="select-btn" onclick="event.stopPropagation(); selectModel(1)">اختيار</button>
-                <span class="selected-indicator">✅ تم الاختيار</span>
+                <span class="selected-indicator">✅ تم</span>
             </div>
         </div>
 
         <!-- ==========================================
-        نموذج 2: الشفاف
+        نموذج 2: السفر (طائرة)
         ========================================== -->
         <div class="model-card" onclick="selectModel(2)">
-            <div class="model-preview" style="background: linear-gradient(135deg, #1a2a3a, #0a1628);">
-                <header class="header-2">
-                    <div class="logo"><span>EUX</span> EXPRESS</div>
-                </header>
+            <div class="model-preview">
+                <div class="logo-2">
+                    <span class="plane">✈️</span>
+                    <span><span>EUX</span> EXPRESS</span>
+                </div>
             </div>
             <div class="model-label">
                 <span class="num">#2</span>
-                <span class="name">الشفاف</span>
-                <span class="badge">زجاجي</span>
+                <span class="name">السفر (طائرة)</span>
+                <span class="badge">شحن</span>
                 <button class="select-btn" onclick="event.stopPropagation(); selectModel(2)">اختيار</button>
-                <span class="selected-indicator">✅ تم الاختيار</span>
+                <span class="selected-indicator">✅ تم</span>
             </div>
         </div>
 
         <!-- ==========================================
-        نموذج 3: الذهبي الفاخر
+        نموذج 3: التكنو (دائرة دوارة)
         ========================================== -->
         <div class="model-card" onclick="selectModel(3)">
             <div class="model-preview">
-                <header class="header-3">
-                    <div class="logo"><span>EUX</span> EXPRESS</div>
-                </header>
+                <div class="logo-3">
+                    <div class="circle">EUX</div>
+                    <span>EXPRESS</span>
+                </div>
             </div>
             <div class="model-label">
                 <span class="num">#3</span>
-                <span class="name">الذهبي الفاخر</span>
-                <span class="badge">فاخر</span>
+                <span class="name">التكنو (دائرة دوارة)</span>
+                <span class="badge">تقني</span>
                 <button class="select-btn" onclick="event.stopPropagation(); selectModel(3)">اختيار</button>
-                <span class="selected-indicator">✅ تم الاختيار</span>
+                <span class="selected-indicator">✅ تم</span>
             </div>
         </div>
 
         <!-- ==========================================
-        نموذج 4: الحديث المتدرج
+        نموذج 4: الموجي
         ========================================== -->
         <div class="model-card" onclick="selectModel(4)">
             <div class="model-preview">
-                <header class="header-4">
-                    <div class="logo">EUX EXPRESS</div>
-                </header>
+                <div class="logo-4">
+                    <span class="wave">E</span>
+                    <span class="wave">U</span>
+                    <span class="wave">X</span>
+                    <span>EXPRESS</span>
+                </div>
             </div>
             <div class="model-label">
                 <span class="num">#4</span>
-                <span class="name">الحديث المتدرج</span>
-                <span class="badge">عصري</span>
+                <span class="name">الموجي</span>
+                <span class="badge">حركي</span>
                 <button class="select-btn" onclick="event.stopPropagation(); selectModel(4)">اختيار</button>
-                <span class="selected-indicator">✅ تم الاختيار</span>
+                <span class="selected-indicator">✅ تم</span>
             </div>
         </div>
 
         <!-- ==========================================
-        نموذج 5: البسيط الأبيض
+        نموذج 5: الشعار مع شريط متحرك
         ========================================== -->
         <div class="model-card" onclick="selectModel(5)">
-            <div class="model-preview" style="background: #f5f7fa;">
-                <header class="header-5">
-                    <div class="logo"><span>EUX</span> EXPRESS</div>
-                </header>
+            <div class="model-preview">
+                <div class="logo-5"><span>EUX</span> EXPRESS</div>
             </div>
             <div class="model-label">
                 <span class="num">#5</span>
-                <span class="name">البسيط الأبيض</span>
-                <span class="badge">نظيف</span>
+                <span class="name">شريط متحرك</span>
+                <span class="badge">أنيق</span>
                 <button class="select-btn" onclick="event.stopPropagation(); selectModel(5)">اختيار</button>
-                <span class="selected-indicator">✅ تم الاختيار</span>
+                <span class="selected-indicator">✅ تم</span>
             </div>
         </div>
 
         <!-- ==========================================
-        نموذج 6: الجانبي
+        نموذج 6: النجوم المتلألئة
         ========================================== -->
         <div class="model-card" onclick="selectModel(6)">
             <div class="model-preview">
-                <header class="header-6">
-                    <div class="logo"><span>EUX</span> EXPRESS</div>
-                    <div class="nav-links">
-                        <a href="#" class="active">الرئيسية</a>
-                        <a href="#">خدماتنا</a>
-                        <a href="#">اتصل بنا</a>
-                    </div>
-                </header>
+                <div class="logo-6">
+                    <span class="stars">✦</span>
+                    <span><span>EUX</span> EXPRESS</span>
+                    <span class="stars">✦</span>
+                </div>
             </div>
             <div class="model-label">
                 <span class="num">#6</span>
-                <span class="name">الجانبي</span>
-                <span class="badge">عصري</span>
+                <span class="name">النجوم المتلألئة</span>
+                <span class="badge">فاخر</span>
                 <button class="select-btn" onclick="event.stopPropagation(); selectModel(6)">اختيار</button>
-                <span class="selected-indicator">✅ تم الاختيار</span>
+                <span class="selected-indicator">✅ تم</span>
             </div>
         </div>
 
         <!-- ==========================================
-        نموذج 7: ثلاثي الأبعاد
+        نموذج 7: الكتابة باليد (متحركة)
         ========================================== -->
         <div class="model-card" onclick="selectModel(7)">
             <div class="model-preview">
-                <header class="header-7">
-                    <div class="logo"><span>EUX</span> EXPRESS</div>
-                </header>
+                <div class="logo-7">
+                    <span>E</span><span>U</span><span>X</span> <span>EXPRESS</span>
+                </div>
             </div>
             <div class="model-label">
                 <span class="num">#7</span>
-                <span class="name">ثلاثي الأبعاد</span>
-                <span class="badge">3D</span>
+                <span class="name">الكتابة باليد</span>
+                <span class="badge">مرح</span>
                 <button class="select-btn" onclick="event.stopPropagation(); selectModel(7)">اختيار</button>
-                <span class="selected-indicator">✅ تم الاختيار</span>
+                <span class="selected-indicator">✅ تم</span>
             </div>
         </div>
 
         <!-- ==========================================
-        نموذج 8: الداكن المميز
+        نموذج 8: الحلزوني الدوار
         ========================================== -->
         <div class="model-card" onclick="selectModel(8)">
             <div class="model-preview">
-                <header class="header-8">
-                    <div class="logo"><span>EUX</span> EXPRESS</div>
-                </header>
+                <div class="logo-8">
+                    <div class="spiral"></div>
+                    <span><span>EUX</span> EXPRESS</span>
+                </div>
             </div>
             <div class="model-label">
                 <span class="num">#8</span>
-                <span class="name">الداكن المميز</span>
-                <span class="badge">مضيء</span>
+                <span class="name">الحلزوني الدوار</span>
+                <span class="badge">3D</span>
                 <button class="select-btn" onclick="event.stopPropagation(); selectModel(8)">اختيار</button>
-                <span class="selected-indicator">✅ تم الاختيار</span>
+                <span class="selected-indicator">✅ تم</span>
             </div>
         </div>
 
         <!-- ==========================================
-        نموذج 9: المزخرف
+        نموذج 9: البكسلي
         ========================================== -->
         <div class="model-card" onclick="selectModel(9)">
             <div class="model-preview">
-                <header class="header-9">
-                    <div class="logo"><span>EUX</span> EXPRESS</div>
-                </header>
+                <div class="logo-9">
+                    <span class="pixel">E</span>
+                    <span class="pixel">U</span>
+                    <span class="pixel">X</span>
+                    <span>EXPRESS</span>
+                </div>
             </div>
             <div class="model-label">
                 <span class="num">#9</span>
-                <span class="name">المزخرف</span>
-                <span class="badge">زخرفي</span>
+                <span class="name">البكسلي</span>
+                <span class="badge">جريء</span>
                 <button class="select-btn" onclick="event.stopPropagation(); selectModel(9)">اختيار</button>
-                <span class="selected-indicator">✅ تم الاختيار</span>
+                <span class="selected-indicator">✅ تم</span>
             </div>
         </div>
 
         <!-- ==========================================
-        نموذج 10: المصغر
+        نموذج 10: الكروي الثلاثي الأبعاد
         ========================================== -->
         <div class="model-card" onclick="selectModel(10)">
             <div class="model-preview">
-                <header class="header-10">
-                    <div class="logo"><span>EUX</span> EXPRESS <span class="sub">شحن سريع</span></div>
-                </header>
+                <div class="logo-10">
+                    <div class="globe">EUX</div>
+                    <span><span>EXPRESS</span></span>
+                </div>
             </div>
             <div class="model-label">
                 <span class="num">#10</span>
-                <span class="name">المصغر</span>
-                <span class="badge">صغير</span>
+                <span class="name">الكروي الثلاثي الأبعاد</span>
+                <span class="badge">3D</span>
                 <button class="select-btn" onclick="event.stopPropagation(); selectModel(10)">اختيار</button>
-                <span class="selected-indicator">✅ تم الاختيار</span>
+                <span class="selected-indicator">✅ تم</span>
             </div>
         </div>
 
@@ -668,68 +693,57 @@
             // تمرير إلى الأعلى
             window.scrollTo({ top: 0, behavior: 'smooth' });
 
-            // رسالة تأكيد
+            // أسماء النماذج
             const names = {
-                1: 'الكلاسيكي الأزرق',
-                2: 'الشفاف',
-                3: 'الذهبي الفاخر',
-                4: 'الحديث المتدرج',
-                5: 'البسيط الأبيض',
-                6: 'الجانبي',
-                7: 'ثلاثي الأبعاد',
-                8: 'الداكن المميز',
-                9: 'المزخرف',
-                10: 'المصغر'
+                1: 'النيون المتوهج',
+                2: 'السفر (طائرة)',
+                3: 'التكنو (دائرة دوارة)',
+                4: 'الموجي',
+                5: 'شريط متحرك',
+                6: 'النجوم المتلألئة',
+                7: 'الكتابة باليد',
+                8: 'الحلزوني الدوار',
+                9: 'البكسلي',
+                10: 'الكروي الثلاثي الأبعاد'
             };
 
-            // عرض رسالة منبثقة
-            const msg = document.createElement('div');
-            msg.style.cssText = `
-                    position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%);
-                    background: #0d2137; color: white; padding: 14px 30px;
-                    border-radius: 14px; font-size: 16px; font-weight: 600;
-                    box-shadow: 0 8px 30px rgba(0,0,0,0.2); z-index: 9999;
-                    font-family: 'Cairo', sans-serif; text-align: center;
-                    animation: fadeInUp 0.4s ease;
-                `;
-            msg.innerHTML = `✅ تم اختيار النموذج <strong>#${num} - ${names[num]}</strong>`;
-            document.body.appendChild(msg);
-
-            // إزالة الرسالة بعد 3 ثوانٍ
-            setTimeout(() => {
-                msg.style.opacity = '0';
-                msg.style.transition = 'opacity 0.4s';
-                setTimeout(() => msg.remove(), 400);
-            }, 3000);
+            // عرض رسالة تأكيد
+            showToast(`✅ تم اختيار الشعار: ${names[num]}`);
 
             // حفظ الاختيار في localStorage
-            localStorage.setItem('selectedHeader', num);
+            localStorage.setItem('selectedLogo', num);
+        }
+
+        // ============================================
+        // عرض رسالة منبثقة
+        // ============================================
+        function showToast(message) {
+            const old = document.querySelector('.toast');
+            if (old) old.remove();
+
+            const toast = document.createElement('div');
+            toast.className = 'toast';
+            toast.textContent = message;
+            document.body.appendChild(toast);
+
+            setTimeout(() => {
+                toast.classList.add('hide');
+                setTimeout(() => toast.remove(), 400);
+            }, 3000);
         }
 
         // ============================================
         // استرجاع الاختيار السابق
         // ============================================
         document.addEventListener('DOMContentLoaded', function() {
-            const saved = localStorage.getItem('selectedHeader');
+            const saved = localStorage.getItem('selectedLogo');
             if (saved) {
                 selectModel(parseInt(saved));
             }
         });
 
-        // ============================================
-        // إضافة أنيميشن للرسالة
-        // ============================================
-        const style = document.createElement('style');
-        style.textContent = `
-                @keyframes fadeInUp {
-                    from { opacity: 0; transform: translateX(-50%) translateY(20px); }
-                    to { opacity: 1; transform: translateX(-50%) translateY(0); }
-                }
-            `;
-        document.head.appendChild(style);
-
-        console.log('🎨 اختر النموذج المناسب لشريط EUX العلوي!');
-        console.log('📌 سيتم حفظ اختيارك تلقائياً.');
+        console.log('🚀 10 شعارات احترافية متحركة لـ EUX');
+        console.log('📌 اختر ما يناسبك وسيتم حفظه تلقائياً');
     </script>
 
 </body>
