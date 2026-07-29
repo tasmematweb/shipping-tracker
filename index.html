@@ -1,4 +1,4 @@
-
+```html
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
@@ -2026,7 +2026,7 @@
     </div>
 
     <script>
-        const API_URL = "https://script.google.com/macros/s/AKfycbyivNeqCjIIfd4iJRyGoriUfiD5rwCdfRedFeYTpUeWmpbQV0BnLxAnlTAqWKkOmp9j/exec";
+        const API_URL = "https://script.google.com/macros/s/AKfycbwiI6c4Kxh3EQxmCWwipr0MsAHgfPUadPqP9LqnUH9WGeGu0QuCXbl-sLTcS7l9NbJu/exec";
         const BASE_URL = "https://euxexpress.com";
 
         let currentUser = null;
@@ -2034,6 +2034,7 @@
         let publicClientPhone = null;
         let allShipmentsData = [];
         let editingShipmentId = null;
+        let isSubmitting = false;
 
         function openTrackingSystem() {
             document.getElementById('landingPage').classList.add('hidden');
@@ -2654,6 +2655,12 @@
         }
 
         async function submitShipment() {
+            // Prevent double submission
+            if (isSubmitting) {
+                showToast('يرجى الانتظار 10 ثوانٍ قبل إضافة شحنة أخرى', 'error');
+                return;
+            }
+
             const receiverName = document.getElementById('f_receiverName').value.trim();
             const receiverPhone = document.getElementById('f_receiverPhone').value.trim();
             const receiverPhone2 = document.getElementById('f_receiverPhone2').value.trim();
@@ -2668,37 +2675,52 @@
             if (receiverPhone.length !== 11) { errorDiv.textContent = "رقم هاتف المستلم يجب أن يكون 11 رقم"; return; }
             if (receiverPhone2 && receiverPhone2.length !== 11) { errorDiv.textContent = "رقم هاتف آخر يجب أن يكون 11 رقم"; return; }
 
-            // If editing, delete old shipment first, then add new one
-            if (editingShipmentId) {
-                // Delete old shipment
-                const deleteParams = new URLSearchParams();
-                deleteParams.append('action', 'deleteShipment');
-                deleteParams.append('phone', currentUser.phone);
-                deleteParams.append('password', currentUser.password);
-                deleteParams.append('shipmentId', editingShipmentId);
-                try {
-                    await fetch(API_URL, { method: 'POST', headers: { 'Content-Type': 'application/x-www-form-urlencoded' }, body: deleteParams.toString() });
-                } catch (e) {
-                    errorDiv.textContent = 'فشل حذف الشحنة القديمة';
-                    return;
-                }
+            // Set submitting flag
+            isSubmitting = true;
+            const submitBtn = document.querySelector('.modal-content .btn-eux, .modal-content .btn-eux-orange');
+            if (submitBtn) {
+                submitBtn.disabled = true;
+                submitBtn.style.opacity = '0.6';
+                submitBtn.style.cursor = 'not-allowed';
             }
 
-            // Add new shipment
-            const params = new URLSearchParams();
-            params.append('action', 'addShipment');
-            params.append('phone', currentUser.phone);
-            params.append('password', currentUser.password);
-            params.append('receiverName', receiverName);
-            params.append('receiverPhone', receiverPhone);
-            params.append('receiverPhone2', receiverPhone2);
-            params.append('governorate', governorate);
-            params.append('city', city);
-            params.append('address', address);
-            params.append('amount', amount);
-            params.append('weight', weight);
-            params.append('notes', notes);
             try {
+                // If editing, delete old shipment first, then add new one
+                if (editingShipmentId) {
+                    // Delete old shipment
+                    const deleteParams = new URLSearchParams();
+                    deleteParams.append('action', 'deleteShipment');
+                    deleteParams.append('phone', currentUser.phone);
+                    deleteParams.append('password', currentUser.password);
+                    deleteParams.append('shipmentId', editingShipmentId);
+                    try {
+                        await fetch(API_URL, { method: 'POST', headers: { 'Content-Type': 'application/x-www-form-urlencoded' }, body: deleteParams.toString() });
+                    } catch (e) {
+                        errorDiv.textContent = 'فشل حذف الشحنة القديمة';
+                        isSubmitting = false;
+                        if (submitBtn) {
+                            submitBtn.disabled = false;
+                            submitBtn.style.opacity = '1';
+                            submitBtn.style.cursor = 'pointer';
+                        }
+                        return;
+                    }
+                }
+
+                // Add new shipment
+                const params = new URLSearchParams();
+                params.append('action', 'addShipment');
+                params.append('phone', currentUser.phone);
+                params.append('password', currentUser.password);
+                params.append('receiverName', receiverName);
+                params.append('receiverPhone', receiverPhone);
+                params.append('receiverPhone2', receiverPhone2);
+                params.append('governorate', governorate);
+                params.append('city', city);
+                params.append('address', address);
+                params.append('amount', amount);
+                params.append('weight', weight);
+                params.append('notes', notes);
                 const res = await fetch(API_URL, { method: 'POST', headers: { 'Content-Type': 'application/x-www-form-urlencoded' }, body: params.toString() });
                 const data = await res.json();
                 if (data.success) {
@@ -2713,6 +2735,16 @@
                     showToast(wasEditing ? 'تم تحديث الشحنة بنجاح!' : 'تم اضافة الشحنة بنجاح!', 'success');
                 } else { errorDiv.textContent = data.msg || "فشل الاضافة"; }
             } catch (e) { errorDiv.textContent = 'فشل الاتصال'; }
+
+            // Reset submitting flag after 10 seconds
+            setTimeout(() => {
+                isSubmitting = false;
+                if (submitBtn) {
+                    submitBtn.disabled = false;
+                    submitBtn.style.opacity = '1';
+                    submitBtn.style.cursor = 'pointer';
+                }
+            }, 10000);
         }
 
         function showAddTracking(shipmentId) {
@@ -2988,9 +3020,8 @@
             submitBtn.disabled = true;
             const formData = new FormData(event.target);
             const params = new URLSearchParams(formData).toString();
-            const excelWebhookUrl =
-                'https://script.google.com/macros/s/AKfycbyivNeqCjIIfd4iJRyGoriUfiD5rwCdfRedFeYTpUeWmpbQV0BnLxAnlTAqWKkOmp9j/exec';
-            fetch(`${excelWebhookUrl}?${params}`, { method: 'POST' })
+            const excelWebhookUrl = 'https://script.google.com/macros/s/AKfycbwiI6c4Kxh3EQxmCWwipr0MsAHgfPUadPqP9LqnUH9WGeGu0QuCXbl-sLTcS7l9NbJu/exec';
+            fetch(`${excelWebhookUrl}?action=openAccount&${params}`, { method: 'POST' })
                 .then(response => {
                     alert('تم إرسال طلبك بنجاح! سيتم التواصل معك خلال 5 ساعات لتفعيل الحساب.');
                     event.target.reset();
@@ -3040,3 +3071,7 @@
             }
         });
     </script>
+
+</body>
+</html>
+```
