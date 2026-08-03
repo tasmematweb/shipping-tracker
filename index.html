@@ -1114,9 +1114,9 @@
             gap: 10px;
             margin-top: 6px;
             padding: 6px 12px;
-            background: #e8f5e9;
             border-radius: 10px;
-            border-right: 4px solid #2e7d32;
+            transition: all 0.3s ease;
+            min-height: 40px;
         }
         .shipment-card .status-row .status-label {
             font-size: 13px;
@@ -1125,29 +1125,36 @@
         }
         .shipment-card .status-row .status-value {
             font-size: 14px;
-            color: #2e7d32;
             font-weight: 700;
+            transition: all 0.3s ease;
         }
         .shipment-card .status-row.loading-status {
             background: #fff8e1;
-            border-right-color: #f9a825;
+            border-right: 4px solid #f9a825;
         }
         .shipment-card .status-row.loading-status .status-value {
             color: #f9a825;
         }
         .shipment-card .status-row.error-status {
             background: #ffeaea;
-            border-right-color: #dc3545;
+            border-right: 4px solid #dc3545;
         }
         .shipment-card .status-row.error-status .status-value {
             color: #dc3545;
         }
         .shipment-card .status-row.info-status {
             background: #e3f2fd;
-            border-right-color: #0d47a1;
+            border-right: 4px solid #0d47a1;
         }
         .shipment-card .status-row.info-status .status-value {
             color: #0d47a1;
+        }
+        .shipment-card .status-row.success-status {
+            background: #e8f5e9;
+            border-right: 4px solid #2e7d32;
+        }
+        .shipment-card .status-row.success-status .status-value {
+            color: #2e7d32;
         }
         .shipment-card .details {
             margin-top: 14px;
@@ -2034,6 +2041,10 @@
                     <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
                         <h2><i class="fas fa-tachometer-alt"></i> لوحة التحكم</h2>
                         <span class="total-small">اجمالي الشحنات: <span class="count" id="totalCountSmall">0</span></span>
+                        <button onclick="refreshAllStatuses()" class="btn-eux" style="padding:4px 14px;font-size:12px;border-radius:20px;">
+                            <span class="inner"><i class="fas fa-sync-alt"></i> تحديث الكل</span>
+                            <span class="fold"></span>
+                        </button>
                     </div>
                     <div class="header-actions">
                         <div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap;background:#f0f4fa;padding:4px 8px;border-radius:30px;border:1px solid #dce5ed;">
@@ -2169,7 +2180,9 @@
         let editingShipmentId = null;
         let isSubmitting = false;
         let isPublicSubmitting = false;
-        let currentFetchController = null; // لإلغاء الطلبات السابقة
+        let currentFetchController = null;
+        let isUpdatingStatuses = false;
+        let pendingShipments = [];
 
         function openTrackingSystem() {
             document.getElementById('landingPage').classList.add('hidden');
@@ -2330,7 +2343,6 @@
         // دالة تسجيل الشحنة العامة مع عداد منع التكرار
         // ============================================
         async function submitPublicOrder() {
-            // منع الضغط المتكرر
             if (isPublicSubmitting) {
                 showToast('يرجى الانتظار 10 ثوانٍ قبل تسجيل شحنة أخرى', 'error');
                 return;
@@ -2360,7 +2372,6 @@
                 return; 
             }
 
-            // تعطيل الزر
             isPublicSubmitting = true;
             const submitBtn = document.getElementById('publicSubmitBtn');
             if (submitBtn) {
@@ -2407,7 +2418,6 @@
                 errorDiv.textContent = 'فشل الاتصال'; 
             }
 
-            // إعادة تفعيل الزر بعد 10 ثوانٍ
             setTimeout(() => {
                 isPublicSubmitting = false;
                 if (submitBtn) {
@@ -2520,111 +2530,179 @@
         // دالة جلب حالة التتبع مع إلغاء الطلبات السابقة
         // ============================================
         async function fetchTrackingStatus(trackingNumber) {
-            // إلغاء الطلب السابق إن وجد
-            if (currentFetchController) {
-                currentFetchController.abort();
-            }
-            currentFetchController = new AbortController();
-
-            if (!trackingNumber || trackingNumber.length < 3) return null;
+            if (!trackingNumber || trackingNumber.length < 5) return null;
+            
+            // التحقق من الكاش أولاً
             if (trackingCache[trackingNumber]) return trackingCache[trackingNumber];
 
             try {
-                const res = await fetch(`${API_URL}?action=track&billCode=${trackingNumber}`, {
-                    signal: currentFetchController.signal
-                });
+                const res = await fetch(`${API_URL}?action=track&billCode=${trackingNumber}`);
                 const data = await res.json();
+                
                 if (data.code === "1" && data.data && data.data[0]) {
                     let finalStatus = data.data[0].status || null;
                     const details = data.data[0].details || [];
-                    for (const d of details) { 
-                        const desc = d.desc || '';
-                        if (desc.includes('تم التسليم')) { 
-                            finalStatus = 'تم التسليم'; 
-                            break; 
-                        } 
+                    
+                    // البحث عن حالة التسليم في التفاصيل
+                    for (const d of details) {
+                        const desc = (d.desc || '').toLowerCase();
+                        if (desc.includes('تم التسليم') || desc.includes('delivered')) {
+                            finalStatus = 'تم التسليم';
+                            break;
+                        }
                     }
-                    if (!finalStatus || !finalStatus.includes('تم التسليم')) { 
-                        if (finalStatus && finalStatus.includes('تم التسليم')) finalStatus = 'تم التسليم'; 
+                    
+                    // إذا لم يتم العثور على حالة، استخدام الحالة الافتراضية
+                    if (!finalStatus) {
+                        if (details.length > 0) {
+                            const lastDetail = details[0];
+                            finalStatus = lastDetail.desc || 'قيد التتبع';
+                        } else {
+                            finalStatus = 'قيد التتبع';
+                        }
                     }
+                    
                     trackingCache[trackingNumber] = finalStatus;
                     return finalStatus;
                 }
-                trackingCache[trackingNumber] = null;
                 return null;
             } catch (e) {
-                if (e.name !== 'AbortError') {
-                    console.error('فشل تتبع:', trackingNumber, e);
-                }
+                console.error('فشل تتبع:', trackingNumber, e);
                 return null;
             }
         }
 
+        // ============================================
+        // دالة تحديث بطاقة الشحنة بالحالة
+        // ============================================
         function updateShipmentStatusCard(shipmentId, status) {
             const card = document.getElementById(`card-${shipmentId}`);
             if (!card) return;
+            
             const statusRow = card.querySelector('.status-row');
             if (!statusRow) return;
-            statusRow.classList.remove('loading-status', 'error-status', 'info-status');
+            
             const statusValue = statusRow.querySelector('.status-value');
             const statusLabel = statusRow.querySelector('.status-label');
+            
+            // إزالة جميع الكلاسات السابقة
+            statusRow.classList.remove('loading-status', 'error-status', 'info-status', 'success-status');
+            
             if (status) {
-                statusLabel.textContent = 'الحالة الحالية:';
-                let displayStatus = status,
-                    isError = false,
-                    isSuccess = false,
-                    isInfo = false;
-                if (status.includes('خطأ') || status.includes('Error')) { isError = true;
-                    displayStatus = 'خطأ ' + status.replace(/خطأ/g, '').trim(); if (!displayStatus || displayStatus === 'خطأ') displayStatus = 'خطأ في التوصيل'; } else if (status.includes('تم التسليم')) { isSuccess = true;
-                    displayStatus = 'تم التسليم'; } else if (status.includes('تم الاستلام')) { isInfo = true;
-                    displayStatus = 'تم استلام الشحنة'; } else if (status.includes('Delivered')) { isSuccess = true;
-                    displayStatus = 'تم التسليم'; }
+                statusLabel.textContent = 'الحالة:';
+                let displayStatus = status;
+                let isSuccess = false;
+                let isError = false;
+                let isInfo = false;
+                
+                // تحديد نوع الحالة
+                if (status.includes('تم التسليم') || status.includes('Delivered')) {
+                    isSuccess = true;
+                    displayStatus = '✅ تم التسليم';
+                    statusRow.classList.add('success-status');
+                } else if (status.includes('تم الاستلام') || status.includes('Received')) {
+                    isInfo = true;
+                    displayStatus = '📦 تم الاستلام';
+                    statusRow.classList.add('info-status');
+                } else if (status.includes('خطأ') || status.includes('Error') || status.includes('فشل')) {
+                    isError = true;
+                    displayStatus = '❌ ' + status;
+                    statusRow.classList.add('error-status');
+                } else if (status.includes('قيد التتبع') || status.includes('Tracking')) {
+                    isInfo = true;
+                    displayStatus = '🔄 ' + status;
+                    statusRow.classList.add('info-status');
+                } else {
+                    statusRow.classList.add('info-status');
+                }
+                
                 statusValue.textContent = displayStatus;
-                if (isSuccess) { statusRow.style.background = '#e8f5e9';
-                    statusRow.style.borderRightColor = '#2e7d32';
-                    statusValue.style.color = '#2e7d32'; } else if (isError) { statusRow.style.background = '#ffeaea';
-                    statusRow.style.borderRightColor = '#dc3545';
-                    statusValue.style.color = '#dc3545'; } else if (isInfo) { statusRow.style.background = '#e3f2fd';
-                    statusRow.style.borderRightColor = '#0d47a1';
-                    statusValue.style.color = '#0d47a1'; } else { statusRow.style.background = '#e3f2fd';
-                    statusRow.style.borderRightColor = '#0d47a1';
-                    statusValue.style.color = '#0d47a1'; }
             } else {
                 statusLabel.textContent = 'الحالة:';
-                statusRow.style.background = '#f5f5f5';
-                statusRow.style.borderRightColor = '#999';
-                statusValue.style.color = '#999';
                 statusValue.textContent = 'لم يتم التحديد بعد';
+                statusRow.style.background = '#f5f5f5';
+                statusValue.style.color = '#999';
             }
         }
 
         // ============================================
-        // دالة تحديث حالات الشحنات مع إعادة المحاولة
+        // دالة تحديث حالات الشحنات بسرعة فائقة
         // ============================================
         async function updateAllTrackingStatuses(shipments) {
+            if (isUpdatingStatuses) {
+                // إذا كان هناك تحديث جاري، نضيف الشحنات الجديدة للقائمة
+                pendingShipments = [...pendingShipments, ...shipments];
+                return;
+            }
+
+            isUpdatingStatuses = true;
+            
             // تصفية الشحنات التي لها رقم تتبع صالح
             const shipmentsWithTracking = shipments.filter(s => 
-                s.trackingNumber && /^[A-Z0-9]{8,20}$/.test(s.trackingNumber)
+                s.trackingNumber && s.trackingNumber.length >= 5
             );
 
-            if (shipmentsWithTracking.length === 0) return;
+            if (shipmentsWithTracking.length === 0) {
+                isUpdatingStatuses = false;
+                return;
+            }
 
-            const chunkSize = 10; // تقليل حجم المجموعة لتقليل الضغط
+            // عرض حالة "جاري التحميل" لكل شحنة
+            shipmentsWithTracking.forEach(s => {
+                const card = document.getElementById(`card-${s.id}`);
+                if (card) {
+                    const statusRow = card.querySelector('.status-row');
+                    if (statusRow) {
+                        statusRow.classList.add('loading-status');
+                        const statusValue = statusRow.querySelector('.status-value');
+                        if (statusValue) statusValue.textContent = '🔄 جاري التحميل...';
+                    }
+                }
+            });
+
+            // استخدام Promise.all مع chunks صغيرة للسرعة
+            const chunkSize = 5; // حجم صغير للسرعة العالية
             for (let i = 0; i < shipmentsWithTracking.length; i += chunkSize) {
                 const chunk = shipmentsWithTracking.slice(i, i + chunkSize);
-                const promises = chunk.map(async (s) => {
-                    let status = await fetchTrackingStatus(s.trackingNumber);
-                    // إذا فشل، حاول مرة أخرى بعد 3 ثوانٍ
-                    if (!status) {
-                        await new Promise(resolve => setTimeout(resolve, 3000));
-                        status = await fetchTrackingStatus(s.trackingNumber);
-                    }
-                    return { id: s.id, status };
-                });
-                const results = await Promise.all(promises);
+                
+                // تنفيذ الطلبات بالتوازي
+                const results = await Promise.all(
+                    chunk.map(async (s) => {
+                        let status = await fetchTrackingStatus(s.trackingNumber);
+                        // إذا فشل، حاول مرة واحدة بعد 1 ثانية
+                        if (!status) {
+                            await new Promise(resolve => setTimeout(resolve, 1000));
+                            status = await fetchTrackingStatus(s.trackingNumber);
+                        }
+                        return { id: s.id, status };
+                    })
+                );
+                
+                // تحديث البطاقات فوراً بعد كل مجموعة
                 results.forEach(({ id, status }) => {
                     updateShipmentStatusCard(id, status);
                 });
+            }
+
+            isUpdatingStatuses = false;
+            
+            // إذا كانت هناك شحنات معلقة، قم بتحديثها
+            if (pendingShipments.length > 0) {
+                const pending = [...pendingShipments];
+                pendingShipments = [];
+                updateAllTrackingStatuses(pending);
+            }
+        }
+
+        // ============================================
+        // دالة تحديث جميع الحالات يدوياً
+        // ============================================
+        function refreshAllStatuses() {
+            if (allShipmentsData.length > 0) {
+                showToast('جاري تحديث حالات الشحنات...', '');
+                updateAllTrackingStatuses(allShipmentsData);
+            } else {
+                showToast('لا توجد شحنات لتحديثها', 'error');
             }
         }
 
@@ -2636,12 +2714,21 @@
                 const data = await res.json();
                 if (data.success) {
                     allShipmentsData = data.shipments || [];
-                    if (allShipmentsData.length === 0) { content.innerHTML = '<div class="empty-state"><div class="icon">📭</div><p>لا توجد شحنات حتى الآن</p></div>';
-                        document.getElementById('totalCountSmall').textContent = '0'; } else { document.getElementById('totalCountSmall').textContent = allShipmentsData.length;
+                    if (allShipmentsData.length === 0) { 
+                        content.innerHTML = '<div class="empty-state"><div class="icon">📭</div><p>لا توجد شحنات حتى الآن</p></div>';
+                        document.getElementById('totalCountSmall').textContent = '0'; 
+                    } else { 
+                        document.getElementById('totalCountSmall').textContent = allShipmentsData.length;
                         renderShipments(allShipmentsData);
-                        updateAllTrackingStatuses(allShipmentsData); }
-                } else { content.innerHTML = '<p style="color:red;">' + (data.msg || 'فشل التحميل') + '</p>'; }
-            } catch (e) { content.innerHTML = '<p style="color:red;">فشل الاتصال</p>'; }
+                        // تحميل الحالات فوراً
+                        updateAllTrackingStatuses(allShipmentsData);
+                    }
+                } else { 
+                    content.innerHTML = '<p style="color:red;">' + (data.msg || 'فشل التحميل') + '</p>'; 
+                }
+            } catch (e) { 
+                content.innerHTML = '<p style="color:red;">فشل الاتصال</p>'; 
+            }
         }
 
         async function loadAllShipments() {
@@ -2658,9 +2745,14 @@
                     allShipmentsData = data.shipments || [];
                     document.getElementById('totalCountSmall').textContent = allShipmentsData.length;
                     renderShipments(allShipmentsData);
+                    // تحميل الحالات فوراً
                     updateAllTrackingStatuses(allShipmentsData);
-                } else { content.innerHTML = '<p style="color:red;">' + (data.msg || 'فشل التحميل') + '</p>'; }
-            } catch (e) { content.innerHTML = '<p style="color:red;">فشل الاتصال</p>'; }
+                } else { 
+                    content.innerHTML = '<p style="color:red;">' + (data.msg || 'فشل التحميل') + '</p>'; 
+                }
+            } catch (e) { 
+                content.innerHTML = '<p style="color:red;">فشل الاتصال</p>'; 
+            }
         }
 
         function createShipmentCard(s, isAdmin = false) {
@@ -2674,7 +2766,7 @@
             let updateText = lastUpdate ? 'آخر تحديث: ' + lastUpdate : '';
             let actions = '';
             const trackingNum = s.trackingNumber || '';
-            const hasTracking = trackingNum && /^[A-Z0-9]{8,20}$/.test(trackingNum);
+            const hasTracking = trackingNum && trackingNum.length >= 5;
 
             let trackButton = '';
             if (hasTracking) {
@@ -2691,7 +2783,6 @@
                     `;
             }
 
-            // For non-admin users (clients) - show edit and delete buttons only if no tracking number exists
             if (!isAdmin) {
                 if (!hasTracking) {
                     actions += `
@@ -2730,9 +2821,9 @@
                         </div>
                         <div class="last-update">${updateText}</div>
                     </div>
-                    <div class="status-row${hasTracking ? ' loading-status' : ''}">
+                    <div class="status-row">
                         <span class="status-label">الحالة:</span>
-                        <span class="status-value">${hasTracking ? 'جاري التحميل...' : (trackingNum ? 'انتظار...' : 'لم يتم التحديد بعد')}</span>
+                        <span class="status-value">${hasTracking ? '🔄 جاري التحميل...' : (trackingNum ? 'انتظار...' : 'لم يتم التحديد بعد')}</span>
                     </div>
                     <div class="details">
                         ${isAdmin ? `<div class="info"><strong>رقم العميل:</strong> ${s.clientPhone || 'غير معروف'}</div>` : ''}${adminDetails}
