@@ -2169,6 +2169,7 @@
         let editingShipmentId = null;
         let isSubmitting = false;
         let isPublicSubmitting = false;
+        let currentFetchController = null; // لإلغاء الطلبات السابقة
 
         function openTrackingSystem() {
             document.getElementById('landingPage').classList.add('hidden');
@@ -2515,25 +2516,48 @@
             else loadMyShipments();
         }
 
+        // ============================================
+        // دالة جلب حالة التتبع مع إلغاء الطلبات السابقة
+        // ============================================
         async function fetchTrackingStatus(trackingNumber) {
+            // إلغاء الطلب السابق إن وجد
+            if (currentFetchController) {
+                currentFetchController.abort();
+            }
+            currentFetchController = new AbortController();
+
             if (!trackingNumber || trackingNumber.length < 3) return null;
             if (trackingCache[trackingNumber]) return trackingCache[trackingNumber];
+
             try {
-                const res = await fetch(`${API_URL}?action=track&billCode=${trackingNumber}`);
+                const res = await fetch(`${API_URL}?action=track&billCode=${trackingNumber}`, {
+                    signal: currentFetchController.signal
+                });
                 const data = await res.json();
                 if (data.code === "1" && data.data && data.data[0]) {
                     let finalStatus = data.data[0].status || null;
                     const details = data.data[0].details || [];
-                    for (const d of details) { const desc = d.desc || '';
-                        if (desc.includes('تم التسليم')) { finalStatus = 'تم التسليم'; break; } }
-                    if (!finalStatus || !finalStatus.includes('تم التسليم')) { if (finalStatus && finalStatus.includes('تم التسليم')) finalStatus = 'تم التسليم'; }
+                    for (const d of details) { 
+                        const desc = d.desc || '';
+                        if (desc.includes('تم التسليم')) { 
+                            finalStatus = 'تم التسليم'; 
+                            break; 
+                        } 
+                    }
+                    if (!finalStatus || !finalStatus.includes('تم التسليم')) { 
+                        if (finalStatus && finalStatus.includes('تم التسليم')) finalStatus = 'تم التسليم'; 
+                    }
                     trackingCache[trackingNumber] = finalStatus;
                     return finalStatus;
                 }
                 trackingCache[trackingNumber] = null;
                 return null;
-            } catch (e) { console.error('فشل تتبع:', trackingNumber, e);
-                return null; }
+            } catch (e) {
+                if (e.name !== 'AbortError') {
+                    console.error('فشل تتبع:', trackingNumber, e);
+                }
+                return null;
+            }
         }
 
         function updateShipmentStatusCard(shipmentId, status) {
@@ -2553,7 +2577,7 @@
                 if (status.includes('خطأ') || status.includes('Error')) { isError = true;
                     displayStatus = 'خطأ ' + status.replace(/خطأ/g, '').trim(); if (!displayStatus || displayStatus === 'خطأ') displayStatus = 'خطأ في التوصيل'; } else if (status.includes('تم التسليم')) { isSuccess = true;
                     displayStatus = 'تم التسليم'; } else if (status.includes('تم الاستلام')) { isInfo = true;
-                    displayStatus = 'في انتظار التتبع'; } else if (status.includes('Delivered')) { isSuccess = true;
+                    displayStatus = 'تم استلام الشحنة'; } else if (status.includes('Delivered')) { isSuccess = true;
                     displayStatus = 'تم التسليم'; }
                 statusValue.textContent = displayStatus;
                 if (isSuccess) { statusRow.style.background = '#e8f5e9';
@@ -2574,27 +2598,33 @@
             }
         }
 
+        // ============================================
+        // دالة تحديث حالات الشحنات مع إعادة المحاولة
+        // ============================================
         async function updateAllTrackingStatuses(shipments) {
-            const shipmentsWithTracking = shipments.filter(s => s.trackingNumber && s.trackingNumber.length > 3);
+            // تصفية الشحنات التي لها رقم تتبع صالح
+            const shipmentsWithTracking = shipments.filter(s => 
+                s.trackingNumber && /^[A-Z0-9]{8,20}$/.test(s.trackingNumber)
+            );
+
             if (shipmentsWithTracking.length === 0) return;
-            const chunkSize = 25;
-            const chunks = [];
+
+            const chunkSize = 10; // تقليل حجم المجموعة لتقليل الضغط
             for (let i = 0; i < shipmentsWithTracking.length; i += chunkSize) {
-                chunks.push(shipmentsWithTracking.slice(i, i + chunkSize));
-            }
-            for (const chunk of chunks) {
+                const chunk = shipmentsWithTracking.slice(i, i + chunkSize);
                 const promises = chunk.map(async (s) => {
-                    const status = await fetchTrackingStatus(s.trackingNumber);
+                    let status = await fetchTrackingStatus(s.trackingNumber);
+                    // إذا فشل، حاول مرة أخرى بعد 3 ثوانٍ
+                    if (!status) {
+                        await new Promise(resolve => setTimeout(resolve, 3000));
+                        status = await fetchTrackingStatus(s.trackingNumber);
+                    }
                     return { id: s.id, status };
                 });
-                const results = await Promise.allSettled(promises);
-                results.forEach(result => {
-                    if (result.status === 'fulfilled' && result.value) {
-                        const { id, status } = result.value;
-                        updateShipmentStatusCard(id, status);
-                    }
+                const results = await Promise.all(promises);
+                results.forEach(({ id, status }) => {
+                    updateShipmentStatusCard(id, status);
                 });
-                await new Promise(resolve => setTimeout(resolve, 50));
             }
         }
 
@@ -2644,7 +2674,7 @@
             let updateText = lastUpdate ? 'آخر تحديث: ' + lastUpdate : '';
             let actions = '';
             const trackingNum = s.trackingNumber || '';
-            const hasTracking = trackingNum && trackingNum.length > 3;
+            const hasTracking = trackingNum && /^[A-Z0-9]{8,20}$/.test(trackingNum);
 
             let trackButton = '';
             if (hasTracking) {
@@ -3085,19 +3115,6 @@
                         }
                     }
                     document.getElementById('modalBody').innerHTML = html;
-
-                    // تحديث البطاقة في القائمة فوراً
-                    let shipmentId = null;
-                    for (const s of allShipmentsData) {
-                        if (s.trackingNumber === billCode) {
-                            shipmentId = s.id;
-                            break;
-                        }
-                    }
-                    if (shipmentId) {
-                        updateShipmentStatusCard(shipmentId, displayStatus);
-                        trackingCache[billCode] = displayStatus;
-                    }
                 } else {
                     document.getElementById('modalBody').innerHTML =
                         `<h3><i class="fas fa-map-marked-alt"></i> تتبع الشحنة</h3><div style="text-align:center;padding:20px;color:#dc3545;"><div style="font-size:48px;margin-bottom:12px;">❌</div><p>${data.msg || data.error || 'فشل تتبع الشحنة'}</p></div>`;
