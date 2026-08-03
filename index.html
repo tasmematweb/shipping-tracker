@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
@@ -2554,7 +2553,7 @@
                 if (status.includes('خطأ') || status.includes('Error')) { isError = true;
                     displayStatus = 'خطأ ' + status.replace(/خطأ/g, '').trim(); if (!displayStatus || displayStatus === 'خطأ') displayStatus = 'خطأ في التوصيل'; } else if (status.includes('تم التسليم')) { isSuccess = true;
                     displayStatus = 'تم التسليم'; } else if (status.includes('تم الاستلام')) { isInfo = true;
-                    displayStatus = 'تم استلام الشحنة'; } else if (status.includes('Delivered')) { isSuccess = true;
+                    displayStatus = 'في انتظار التتبع'; } else if (status.includes('Delivered')) { isSuccess = true;
                     displayStatus = 'تم التسليم'; }
                 statusValue.textContent = displayStatus;
                 if (isSuccess) { statusRow.style.background = '#e8f5e9';
@@ -2578,7 +2577,7 @@
         async function updateAllTrackingStatuses(shipments) {
             const shipmentsWithTracking = shipments.filter(s => s.trackingNumber && s.trackingNumber.length > 3);
             if (shipmentsWithTracking.length === 0) return;
-            const chunkSize = 15;
+            const chunkSize = 25;
             const chunks = [];
             for (let i = 0; i < shipmentsWithTracking.length; i += chunkSize) {
                 chunks.push(shipmentsWithTracking.slice(i, i + chunkSize));
@@ -2588,10 +2587,14 @@
                     const status = await fetchTrackingStatus(s.trackingNumber);
                     return { id: s.id, status };
                 });
-                const results = await Promise.all(promises);
-                results.forEach(({ id, status }) => {
-                    updateShipmentStatusCard(id, status);
+                const results = await Promise.allSettled(promises);
+                results.forEach(result => {
+                    if (result.status === 'fulfilled' && result.value) {
+                        const { id, status } = result.value;
+                        updateShipmentStatusCard(id, status);
+                    }
                 });
+                await new Promise(resolve => setTimeout(resolve, 50));
             }
         }
 
@@ -3082,6 +3085,19 @@
                         }
                     }
                     document.getElementById('modalBody').innerHTML = html;
+
+                    // تحديث البطاقة في القائمة فوراً
+                    let shipmentId = null;
+                    for (const s of allShipmentsData) {
+                        if (s.trackingNumber === billCode) {
+                            shipmentId = s.id;
+                            break;
+                        }
+                    }
+                    if (shipmentId) {
+                        updateShipmentStatusCard(shipmentId, displayStatus);
+                        trackingCache[billCode] = displayStatus;
+                    }
                 } else {
                     document.getElementById('modalBody').innerHTML =
                         `<h3><i class="fas fa-map-marked-alt"></i> تتبع الشحنة</h3><div style="text-align:center;padding:20px;color:#dc3545;"><div style="font-size:48px;margin-bottom:12px;">❌</div><p>${data.msg || data.error || 'فشل تتبع الشحنة'}</p></div>`;
@@ -3246,3 +3262,5 @@
             }
         });
     </script>
+</body>
+</html>
