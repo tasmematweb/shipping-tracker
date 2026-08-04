@@ -1,3 +1,4 @@
+```html
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
@@ -2171,10 +2172,171 @@
         let isPublicSubmitting = false;
 
         // ============================================
+        // نظام التتبع المتقدم - الحل الجذري
+        // ============================================
+
+        const TRACKING_CACHE_KEY = 'eux_tracking_cache';
+        const TRACKING_CACHE_DURATION = 30 * 60 * 1000; // 30 دقيقة
+
+        function cacheTrackingStatus(trackingNumber, status) {
+            try {
+                const cache = getTrackingCache();
+                cache[trackingNumber] = {
+                    status: status,
+                    timestamp: Date.now()
+                };
+                localStorage.setItem(TRACKING_CACHE_KEY, JSON.stringify(cache));
+            } catch (e) { console.error('Tracking cache save error:', e); }
+        }
+
+        function getTrackingCache() {
+            try {
+                const cached = localStorage.getItem(TRACKING_CACHE_KEY);
+                if (cached) {
+                    return JSON.parse(cached);
+                }
+                return {};
+            } catch (e) { return {}; }
+        }
+
+        function getCachedTrackingStatus(trackingNumber) {
+            const cache = getTrackingCache();
+            const entry = cache[trackingNumber];
+            if (entry && (Date.now() - entry.timestamp < TRACKING_CACHE_DURATION)) {
+                return entry.status;
+            }
+            return null;
+        }
+
+        // ============================================
+        // دالة التتبع المحسنة - تعتمد على الكاش أولاً
+        // ============================================
+        async function fetchTrackingStatus(trackingNumber) {
+            if (!trackingNumber || trackingNumber.length < 3) return null;
+            
+            // 1. جلب من الكاش أولاً (فوري)
+            const cachedStatus = getCachedTrackingStatus(trackingNumber);
+            if (cachedStatus) {
+                return cachedStatus;
+            }
+            
+            // 2. إذا كان في trackingCache (الذاكرة المؤقتة) نرجعه فوراً
+            if (trackingCache[trackingNumber]) {
+                return trackingCache[trackingNumber];
+            }
+            
+            // 3. جلب من API في الخلفية
+            try {
+                const res = await fetch(`${API_URL}?action=track&billCode=${trackingNumber}`);
+                const data = await res.json();
+                if (data.code === "1" && data.data && data.data[0]) {
+                    let finalStatus = data.data[0].status || null;
+                    const details = data.data[0].details || [];
+                    for (const d of details) {
+                        const desc = d.desc || '';
+                        if (desc.includes('تم التسليم')) {
+                            finalStatus = 'تم التسليم';
+                            break;
+                        }
+                    }
+                    if (!finalStatus || !finalStatus.includes('تم التسليم')) {
+                        if (finalStatus && finalStatus.includes('تم التسليم')) {
+                            finalStatus = 'تم التسليم';
+                        }
+                    }
+                    // حفظ في الكاشين
+                    trackingCache[trackingNumber] = finalStatus;
+                    cacheTrackingStatus(trackingNumber, finalStatus);
+                    return finalStatus;
+                }
+                trackingCache[trackingNumber] = null;
+                return null;
+            } catch (e) {
+                console.error('فشل تتبع:', trackingNumber, e);
+                return null;
+            }
+        }
+
+        // ============================================
+        // تحديث حالات التتبع في الخلفية (Batch Update)
+        // ============================================
+        let isTrackingUpdateRunning = false;
+
+        async function updateAllTrackingStatuses(shipments) {
+            const shipmentsWithTracking = shipments.filter(s => s.trackingNumber && s.trackingNumber.length > 3);
+            if (shipmentsWithTracking.length === 0) return;
+            
+            if (isTrackingUpdateRunning) return;
+            isTrackingUpdateRunning = true;
+            
+            try {
+                const chunkSize = 10;
+                const chunks = [];
+                for (let i = 0; i < shipmentsWithTracking.length; i += chunkSize) {
+                    chunks.push(shipmentsWithTracking.slice(i, i + chunkSize));
+                }
+                
+                for (const chunk of chunks) {
+                    // أولاً: عرض الحالة المخزنة في الكاش فوراً
+                    chunk.forEach(s => {
+                        const cachedStatus = getCachedTrackingStatus(s.trackingNumber);
+                        if (cachedStatus) {
+                            updateShipmentStatusCard(s.id, cachedStatus);
+                        }
+                    });
+                    
+                    // ثانياً: جلب التحديثات من API في الخلفية
+                    const promises = chunk.map(async (s) => {
+                        const status = await fetchTrackingStatus(s.trackingNumber);
+                        return { id: s.id, status };
+                    });
+                    
+                    const results = await Promise.all(promises);
+                    results.forEach(({ id, status }) => {
+                        if (status) {
+                            updateShipmentStatusCard(id, status);
+                        }
+                    });
+                    
+                    if (chunks.length > 1) {
+                        await new Promise(resolve => setTimeout(resolve, 500));
+                    }
+                }
+            } finally {
+                isTrackingUpdateRunning = false;
+            }
+        }
+
+        // ============================================
+        // تحديث التتبع بشكل دوري في الخلفية
+        // ============================================
+        let trackingInterval = null;
+
+        function startBackgroundTrackingUpdates() {
+            if (trackingInterval) return;
+            
+            trackingInterval = setInterval(() => {
+                if (allShipmentsData && allShipmentsData.length > 0) {
+                    const hasTracking = allShipmentsData.some(s => s.trackingNumber && s.trackingNumber.length > 3);
+                    if (hasTracking) {
+                        console.log('🔄 تحديث التتبع في الخلفية...');
+                        updateAllTrackingStatuses(allShipmentsData);
+                    }
+                }
+            }, 60 * 1000);
+        }
+
+        function stopBackgroundTrackingUpdates() {
+            if (trackingInterval) {
+                clearInterval(trackingInterval);
+                trackingInterval = null;
+            }
+        }
+
+        // ============================================
         // استراتيجيات الأداء: Cache-First + Optimistic UI
         // ============================================
 
-        // دالة لحفظ البيانات في localStorage مع زمن انتهاء (للتحديث التلقائي)
         function cacheShipments(shipments, key = 'eux_shipments') {
             try {
                 const cacheData = {
@@ -2185,8 +2347,7 @@
             } catch (e) { console.error('Cache save error:', e); }
         }
 
-        // دالة لجلب البيانات من الكاش (إذا كانت صالحة لمدة 5 دقائق)
-        function getCachedShipments(key = 'eux_shipments', maxAge = 300000) { // 5 دقائق
+        function getCachedShipments(key = 'eux_shipments', maxAge = 300000) {
             try {
                 const cached = localStorage.getItem(key);
                 if (!cached) return null;
@@ -2198,25 +2359,29 @@
             } catch (e) { return null; }
         }
 
-        // دالة لتحديث الواجهة من الكاش فوراً ثم جلب البيانات الجديدة في الخلفية
         function loadShipmentsWithCache(loadFn, cacheKey = 'eux_shipments') {
             const content = document.getElementById('content');
             
-            // 1. عرض البيانات من الكاش فوراً (إن وجدت)
             const cachedData = getCachedShipments(cacheKey);
             if (cachedData && cachedData.length > 0) {
                 allShipmentsData = cachedData;
                 document.getElementById('totalCountSmall').textContent = allShipmentsData.length;
                 const isAdmin = currentUser && currentUser.role === 'admin';
                 content.innerHTML = allShipmentsData.map(s => createShipmentCard(s, isAdmin)).join('');
-                // تحديث حالات التتبع من الكاش إن وجدت
-                updateAllTrackingStatuses(allShipmentsData);
+                
+                // عرض حالات التتبع المخزنة فوراً
+                allShipmentsData.forEach(s => {
+                    if (s.trackingNumber && s.trackingNumber.length > 3) {
+                        const cachedStatus = getCachedTrackingStatus(s.trackingNumber);
+                        if (cachedStatus) {
+                            updateShipmentStatusCard(s.id, cachedStatus);
+                        }
+                    }
+                });
             } else {
-                // إذا لم يوجد كاش، نعرض حالة تحميل خفيفة
                 content.innerHTML = '<div class="loading"><div class="spinner"></div>جاري التحميل...</div>';
             }
 
-            // 2. جلب البيانات الجديدة في الخلفية (Stale-while-revalidate)
             loadFn(true)
                 .then(newData => {
                     if (newData && newData.length > 0) {
@@ -2224,14 +2389,15 @@
                         cacheShipments(newData, cacheKey);
                         document.getElementById('totalCountSmall').textContent = newData.length;
                         const isAdmin = currentUser && currentUser.role === 'admin';
-                        // تحديث الواجهة بسلاسة (تحديث العناصر الموجودة)
                         content.innerHTML = newData.map(s => createShipmentCard(s, isAdmin)).join('');
+                        
+                        // تحديث حالات التتبع في الخلفية
                         updateAllTrackingStatuses(newData);
+                        startBackgroundTrackingUpdates();
                     }
                 })
                 .catch(err => {
                     console.error('Background fetch error:', err);
-                    // إذا لم يكن هناك كاش وعرضنا loading، نعرض رسالة خطأ
                     if (!cachedData || cachedData.length === 0) {
                         content.innerHTML = '<div style="text-align:center;padding:30px;color:#dc3545;">فشل تحميل البيانات</div>';
                     }
@@ -2239,7 +2405,7 @@
         }
 
         // ============================================
-        // دوال الجلب المحسنة (مع cache-first)
+        // دوال الجلب المحسنة
         // ============================================
 
         async function loadMyShipments(background = false) {
@@ -2274,61 +2440,10 @@
             }
         }
 
-        // دالة لتحديث حالة شحنة واحدة مع optimistic UI
-        async function updateShipmentStatusOptimistic(shipmentId, newStatus) {
-            // 1. تحديث الواجهة فوراً (Optimistic)
-            const card = document.getElementById(`card-${shipmentId}`);
-            if (card) {
-                const statusRow = card.querySelector('.status-row');
-                if (statusRow) {
-                    const statusValue = statusRow.querySelector('.status-value');
-                    const statusLabel = statusRow.querySelector('.status-label');
-                    statusLabel.textContent = 'الحالة الحالية:';
-                    statusValue.textContent = newStatus;
-                    statusRow.className = 'status-row';
-                    if (newStatus.includes('تم التسليم')) {
-                        statusRow.classList.add('info-status');
-                        statusValue.style.color = '#2e7d32';
-                    } else {
-                        statusRow.classList.add('loading-status');
-                        statusValue.style.color = '#f9a825';
-                    }
-                }
-            }
-
-            // 2. إرسال الطلب في الخلفية
-            try {
-                const params = new URLSearchParams();
-                params.append('action', 'updateStatus');
-                params.append('shipmentId', shipmentId);
-                params.append('status', newStatus);
-                params.append('phone', currentUser.phone);
-                params.append('password', currentUser.password);
-                const res = await fetch(API_URL, { method: 'POST', body: params });
-                const data = await res.json();
-                if (!data.success) {
-                    // فشل التحديث - نعيد الحالة القديمة
-                    showToast('فشل تحديث الحالة، سيتم التراجع', 'error');
-                    // إعادة تحميل البيانات من الكاش
-                    loadShipmentsWithCache(
-                        currentUser.role === 'admin' ? loadAllShipments : loadMyShipments,
-                        'eux_shipments'
-                    );
-                }
-            } catch (e) {
-                showToast('فشل الاتصال، سيتم التراجع', 'error');
-                loadShipmentsWithCache(
-                    currentUser.role === 'admin' ? loadAllShipments : loadMyShipments,
-                    'eux_shipments'
-                );
-            }
-        }
-
         // ============================================
-        // تعديل دوال العرض والتحكم لاستخدام الاستراتيجيات الجديدة
+        // دوال العرض والتحكم
         // ============================================
 
-        // تعديل دالة showDashboard لاستخدام loadShipmentsWithCache
         function showDashboard() {
             document.getElementById('loginPage').classList.add('hidden');
             document.getElementById('dashboard').classList.remove('hidden');
@@ -2339,206 +2454,9 @@
             document.getElementById('clientsBtn').classList.toggle('hidden', !isAdmin);
             document.getElementById('allShipmentsBtn').classList.toggle('hidden', !isAdmin);
             
-            // استخدام cache-first
             const loadFn = isAdmin ? loadAllShipments : loadMyShipments;
             const cacheKey = isAdmin ? 'eux_shipments_admin' : `eux_shipments_${currentUser.phone}`;
             loadShipmentsWithCache(loadFn, cacheKey);
-        }
-
-        // تعديل دالة searchShipments للبحث في البيانات المخزنة محلياً
-        function searchShipments() {
-            const query = document.getElementById('searchShipmentInput').value.trim().toLowerCase();
-            if (!query) {
-                // إعادة تحميل البيانات مع cache-first
-                const isAdmin = currentUser && currentUser.role === 'admin';
-                const loadFn = isAdmin ? loadAllShipments : loadMyShipments;
-                const cacheKey = isAdmin ? 'eux_shipments_admin' : `eux_shipments_${currentUser.phone}`;
-                loadShipmentsWithCache(loadFn, cacheKey);
-                return;
-            }
-
-            const content = document.getElementById('content');
-            // استخدام البيانات المخزنة محلياً (allShipmentsData)
-            const filtered = allShipmentsData.filter(s => {
-                const name = (s.receiverName || s.customerName || '').toLowerCase();
-                const phone = (s.receiverPhone || s.customerPhone || '').toLowerCase();
-                return name.includes(query) || phone.includes(query);
-            });
-
-            if (filtered.length === 0) {
-                content.innerHTML = `<div class="empty-state"><div class="icon">🔍</div><p>لا توجد نتائج مطابقة لـ "${query}"</p></div>`;
-            } else {
-                const isAdmin = currentUser && currentUser.role === 'admin';
-                content.innerHTML = filtered.map(s => createShipmentCard(s, isAdmin)).join('');
-                updateAllTrackingStatuses(filtered);
-            }
-        }
-
-        // تعديل دالة clearSearch
-        function clearSearch() {
-            document.getElementById('searchShipmentInput').value = '';
-            const isAdmin = currentUser && currentUser.role === 'admin';
-            const loadFn = isAdmin ? loadAllShipments : loadMyShipments;
-            const cacheKey = isAdmin ? 'eux_shipments_admin' : `eux_shipments_${currentUser.phone}`;
-            loadShipmentsWithCache(loadFn, cacheKey);
-        }
-
-        // تعديل دالة submitShipment لتحديث الكاش بعد الإضافة
-        async function submitShipment() {
-            if (isSubmitting) {
-                showToast('يرجى الانتظار 10 ثوانٍ قبل إضافة شحنة أخرى', 'error');
-                return;
-            }
-
-            const receiverName = document.getElementById('f_receiverName').value.trim();
-            const receiverPhone = document.getElementById('f_receiverPhone').value.trim();
-            const receiverPhone2 = document.getElementById('f_receiverPhone2').value.trim();
-            const governorate = document.getElementById('f_governorate').value;
-            const city = document.getElementById('f_city').value;
-            const address = document.getElementById('f_address').value.trim();
-            const amount = document.getElementById('f_amount').value.trim();
-            const weight = document.getElementById('f_weight').value.trim() || '1';
-            const notes = document.getElementById('f_notes').value.trim();
-            const errorDiv = document.getElementById('shipError');
-            if (!receiverName || !receiverPhone || !governorate || !city || !address || !amount) { errorDiv.textContent = "يرجى ملء جميع الحقول المطلوبة"; return; }
-            if (receiverPhone.length !== 11) { errorDiv.textContent = "رقم هاتف المستلم يجب أن يكون 11 رقم"; return; }
-            if (receiverPhone2 && receiverPhone2.length !== 11) { errorDiv.textContent = "رقم هاتف آخر يجب أن يكون 11 رقم"; return; }
-
-            isSubmitting = true;
-            const submitBtn = document.querySelector('.modal-content .btn-eux, .modal-content .btn-eux-orange');
-            if (submitBtn) {
-                submitBtn.disabled = true;
-                submitBtn.style.opacity = '0.6';
-                submitBtn.style.cursor = 'not-allowed';
-            }
-
-            try {
-                if (editingShipmentId) {
-                    const deleteParams = new URLSearchParams();
-                    deleteParams.append('action', 'deleteShipment');
-                    deleteParams.append('phone', currentUser.phone);
-                    deleteParams.append('password', currentUser.password);
-                    deleteParams.append('shipmentId', editingShipmentId);
-                    try {
-                        await fetch(API_URL, { method: 'POST', headers: { 'Content-Type': 'application/x-www-form-urlencoded' }, body: deleteParams.toString() });
-                    } catch (e) {
-                        errorDiv.textContent = 'فشل حذف الشحنة القديمة';
-                        isSubmitting = false;
-                        if (submitBtn) {
-                            submitBtn.disabled = false;
-                            submitBtn.style.opacity = '1';
-                            submitBtn.style.cursor = 'pointer';
-                        }
-                        return;
-                    }
-                }
-
-                const params = new URLSearchParams();
-                params.append('action', 'addShipment');
-                params.append('phone', currentUser.phone);
-                params.append('password', currentUser.password);
-                params.append('receiverName', receiverName);
-                params.append('receiverPhone', receiverPhone);
-                params.append('receiverPhone2', receiverPhone2);
-                params.append('governorate', governorate);
-                params.append('city', city);
-                params.append('address', address);
-                params.append('amount', amount);
-                params.append('weight', weight);
-                params.append('notes', notes);
-                const res = await fetch(API_URL, { method: 'POST', headers: { 'Content-Type': 'application/x-www-form-urlencoded' }, body: params.toString() });
-                const data = await res.json();
-                if (data.success) {
-                    closeModal();
-                    const wasEditing = editingShipmentId !== null;
-                    editingShipmentId = null;
-                    // تحديث الكاش والواجهة
-                    const isAdmin = currentUser.role === 'admin';
-                    const loadFn = isAdmin ? loadAllShipments : loadMyShipments;
-                    const cacheKey = isAdmin ? 'eux_shipments_admin' : `eux_shipments_${currentUser.phone}`;
-                    // جلب البيانات الجديدة وتحديث الكاش
-                    const newData = await loadFn(true);
-                    if (newData && newData.length > 0) {
-                        allShipmentsData = newData;
-                        cacheShipments(newData, cacheKey);
-                        document.getElementById('totalCountSmall').textContent = newData.length;
-                        const isAdminNow = currentUser && currentUser.role === 'admin';
-                        document.getElementById('content').innerHTML = newData.map(s => createShipmentCard(s, isAdminNow)).join('');
-                        updateAllTrackingStatuses(newData);
-                    }
-                    showToast(wasEditing ? 'تم تحديث الشحنة بنجاح!' : 'تم اضافة الشحنة بنجاح!', 'success');
-                } else { errorDiv.textContent = data.msg || "فشل الاضافة"; }
-            } catch (e) { errorDiv.textContent = 'فشل الاتصال'; }
-
-            setTimeout(() => {
-                isSubmitting = false;
-                if (submitBtn) {
-                    submitBtn.disabled = false;
-                    submitBtn.style.opacity = '1';
-                    submitBtn.style.cursor = 'pointer';
-                }
-            }, 10000);
-        }
-
-        // تعديل دالة deleteShipment لتحديث الكاش
-        async function deleteShipment(shipmentId) {
-            if (!confirm('هل أنت متأكد من حذف هذه الشحنة؟')) return;
-            const params = new URLSearchParams();
-            params.append('action', 'deleteShipment');
-            params.append('phone', currentUser.phone);
-            params.append('password', currentUser.password);
-            params.append('shipmentId', shipmentId);
-            try {
-                const res = await fetch(API_URL, { method: 'POST', headers: { 'Content-Type': 'application/x-www-form-urlencoded' }, body: params.toString() });
-                const data = await res.json();
-                if (data.success) {
-                    trackingCache = {};
-                    // تحديث الكاش والواجهة
-                    const isAdmin = currentUser.role === 'admin';
-                    const loadFn = isAdmin ? loadAllShipments : loadMyShipments;
-                    const cacheKey = isAdmin ? 'eux_shipments_admin' : `eux_shipments_${currentUser.phone}`;
-                    const newData = await loadFn(true);
-                    if (newData && newData.length > 0) {
-                        allShipmentsData = newData;
-                        cacheShipments(newData, cacheKey);
-                        document.getElementById('totalCountSmall').textContent = newData.length;
-                        const isAdminNow = currentUser && currentUser.role === 'admin';
-                        document.getElementById('content').innerHTML = newData.map(s => createShipmentCard(s, isAdminNow)).join('');
-                        updateAllTrackingStatuses(newData);
-                    } else {
-                        document.getElementById('content').innerHTML = '<div class="empty-state"><div class="icon">📦</div><p>لا توجد شحنات حتى الآن</p></div>';
-                        document.getElementById('totalCountSmall').textContent = '0';
-                    }
-                    showToast('تم حذف الشحنة بنجاح', 'success');
-                } else {
-                    showToast(data.msg || 'فشل الحذف', 'error');
-                }
-            } catch (e) { showToast('فشل الاتصال بالخادم', 'error'); }
-        }
-
-        // ============================================
-        // دوال التتبع والمساعدة (محسنة مع cache)
-        // ============================================
-
-        async function fetchTrackingStatus(trackingNumber) {
-            if (!trackingNumber || trackingNumber.length < 3) return null;
-            if (trackingCache[trackingNumber]) return trackingCache[trackingNumber];
-            try {
-                const res = await fetch(`${API_URL}?action=track&billCode=${trackingNumber}`);
-                const data = await res.json();
-                if (data.code === "1" && data.data && data.data[0]) {
-                    let finalStatus = data.data[0].status || null;
-                    const details = data.data[0].details || [];
-                    for (const d of details) { const desc = d.desc || '';
-                        if (desc.includes('تم التسليم')) { finalStatus = 'تم التسليم'; break; } }
-                    if (!finalStatus || !finalStatus.includes('تم التسليم')) { if (finalStatus && finalStatus.includes('تم التسليم')) finalStatus = 'تم التسليم'; }
-                    trackingCache[trackingNumber] = finalStatus;
-                    return finalStatus;
-                }
-                trackingCache[trackingNumber] = null;
-                return null;
-            } catch (e) { console.error('فشل تتبع:', trackingNumber, e);
-                return null; }
         }
 
         function updateShipmentStatusCard(shipmentId, status) {
@@ -2576,26 +2494,6 @@
                 statusRow.style.borderRightColor = '#999';
                 statusValue.style.color = '#999';
                 statusValue.textContent = 'لم يتم التحديد بعد';
-            }
-        }
-
-        async function updateAllTrackingStatuses(shipments) {
-            const shipmentsWithTracking = shipments.filter(s => s.trackingNumber && s.trackingNumber.length > 3);
-            if (shipmentsWithTracking.length === 0) return;
-            const chunkSize = 15;
-            const chunks = [];
-            for (let i = 0; i < shipmentsWithTracking.length; i += chunkSize) {
-                chunks.push(shipmentsWithTracking.slice(i, i + chunkSize));
-            }
-            for (const chunk of chunks) {
-                const promises = chunk.map(async (s) => {
-                    const status = await fetchTrackingStatus(s.trackingNumber);
-                    return { id: s.id, status };
-                });
-                const results = await Promise.all(promises);
-                results.forEach(({ id, status }) => {
-                    updateShipmentStatusCard(id, status);
-                });
             }
         }
 
@@ -2665,9 +2563,9 @@
                         </div>
                         <div class="last-update">${updateText}</div>
                     </div>
-                    <div class="status-row${hasTracking ? ' loading-status' : ''}">
+                    <div class="status-row">
                         <span class="status-label">الحالة:</span>
-                        <span class="status-value">${hasTracking ? 'جاري التحميل...' : (trackingNum ? 'انتظار...' : 'لم يتم التحديد بعد')}</span>
+                        <span class="status-value">جاري التحميل...</span>
                     </div>
                     <div class="details">
                         ${isAdmin ? `<div class="info"><strong>رقم العميل:</strong> ${s.clientPhone || 'غير معروف'}</div>` : ''}${adminDetails}
@@ -2682,11 +2580,218 @@
                 </div>`;
         }
 
+        function toggleDetails(element) { const details = element.querySelector('.details'); if (details) details.classList.toggle('open'); }
+
+        function searchShipments() {
+            const query = document.getElementById('searchShipmentInput').value.trim().toLowerCase();
+            if (!query) {
+                const isAdmin = currentUser && currentUser.role === 'admin';
+                const loadFn = isAdmin ? loadAllShipments : loadMyShipments;
+                const cacheKey = isAdmin ? 'eux_shipments_admin' : `eux_shipments_${currentUser.phone}`;
+                loadShipmentsWithCache(loadFn, cacheKey);
+                return;
+            }
+
+            const content = document.getElementById('content');
+            const filtered = allShipmentsData.filter(s => {
+                const name = (s.receiverName || s.customerName || '').toLowerCase();
+                const phone = (s.receiverPhone || s.customerPhone || '').toLowerCase();
+                return name.includes(query) || phone.includes(query);
+            });
+
+            if (filtered.length === 0) {
+                content.innerHTML = `<div class="empty-state"><div class="icon">🔍</div><p>لا توجد نتائج مطابقة لـ "${query}"</p></div>`;
+            } else {
+                const isAdmin = currentUser && currentUser.role === 'admin';
+                content.innerHTML = filtered.map(s => createShipmentCard(s, isAdmin)).join('');
+                // عرض حالات التتبع المخزنة للنتائج
+                filtered.forEach(s => {
+                    if (s.trackingNumber && s.trackingNumber.length > 3) {
+                        const cachedStatus = getCachedTrackingStatus(s.trackingNumber);
+                        if (cachedStatus) {
+                            updateShipmentStatusCard(s.id, cachedStatus);
+                        }
+                    }
+                });
+            }
+        }
+
+        function clearSearch() {
+            document.getElementById('searchShipmentInput').value = '';
+            const isAdmin = currentUser && currentUser.role === 'admin';
+            const loadFn = isAdmin ? loadAllShipments : loadMyShipments;
+            const cacheKey = isAdmin ? 'eux_shipments_admin' : `eux_shipments_${currentUser.phone}`;
+            loadShipmentsWithCache(loadFn, cacheKey);
+        }
+
+        // ============================================
+        // دوال الإضافة والحذف والتعديل
+        // ============================================
+
+        async function submitShipment() {
+            if (isSubmitting) {
+                showToast('يرجى الانتظار 10 ثوانٍ قبل إضافة شحنة أخرى', 'error');
+                return;
+            }
+
+            const receiverName = document.getElementById('f_receiverName').value.trim();
+            const receiverPhone = document.getElementById('f_receiverPhone').value.trim();
+            const receiverPhone2 = document.getElementById('f_receiverPhone2').value.trim();
+            const governorate = document.getElementById('f_governorate').value;
+            const city = document.getElementById('f_city').value;
+            const address = document.getElementById('f_address').value.trim();
+            const amount = document.getElementById('f_amount').value.trim();
+            const weight = document.getElementById('f_weight').value.trim() || '1';
+            const notes = document.getElementById('f_notes').value.trim();
+            const errorDiv = document.getElementById('shipError');
+            if (!receiverName || !receiverPhone || !governorate || !city || !address || !amount) { errorDiv.textContent = "يرجى ملء جميع الحقول المطلوبة"; return; }
+            if (receiverPhone.length !== 11) { errorDiv.textContent = "رقم هاتف المستلم يجب أن يكون 11 رقم"; return; }
+            if (receiverPhone2 && receiverPhone2.length !== 11) { errorDiv.textContent = "رقم هاتف آخر يجب أن يكون 11 رقم"; return; }
+
+            isSubmitting = true;
+            const submitBtn = document.querySelector('.modal-content .btn-eux, .modal-content .btn-eux-orange');
+            if (submitBtn) {
+                submitBtn.disabled = true;
+                submitBtn.style.opacity = '0.6';
+                submitBtn.style.cursor = 'not-allowed';
+            }
+
+            try {
+                if (editingShipmentId) {
+                    const deleteParams = new URLSearchParams();
+                    deleteParams.append('action', 'deleteShipment');
+                    deleteParams.append('phone', currentUser.phone);
+                    deleteParams.append('password', currentUser.password);
+                    deleteParams.append('shipmentId', editingShipmentId);
+                    try {
+                        await fetch(API_URL, { method: 'POST', headers: { 'Content-Type': 'application/x-www-form-urlencoded' }, body: deleteParams.toString() });
+                    } catch (e) {
+                        errorDiv.textContent = 'فشل حذف الشحنة القديمة';
+                        isSubmitting = false;
+                        if (submitBtn) {
+                            submitBtn.disabled = false;
+                            submitBtn.style.opacity = '1';
+                            submitBtn.style.cursor = 'pointer';
+                        }
+                        return;
+                    }
+                }
+
+                const params = new URLSearchParams();
+                params.append('action', 'addShipment');
+                params.append('phone', currentUser.phone);
+                params.append('password', currentUser.password);
+                params.append('receiverName', receiverName);
+                params.append('receiverPhone', receiverPhone);
+                params.append('receiverPhone2', receiverPhone2);
+                params.append('governorate', governorate);
+                params.append('city', city);
+                params.append('address', address);
+                params.append('amount', amount);
+                params.append('weight', weight);
+                params.append('notes', notes);
+                const res = await fetch(API_URL, { method: 'POST', headers: { 'Content-Type': 'application/x-www-form-urlencoded' }, body: params.toString() });
+                const data = await res.json();
+                if (data.success) {
+                    closeModal();
+                    const wasEditing = editingShipmentId !== null;
+                    editingShipmentId = null;
+                    const isAdmin = currentUser.role === 'admin';
+                    const loadFn = isAdmin ? loadAllShipments : loadMyShipments;
+                    const cacheKey = isAdmin ? 'eux_shipments_admin' : `eux_shipments_${currentUser.phone}`;
+                    const newData = await loadFn(true);
+                    if (newData && newData.length > 0) {
+                        allShipmentsData = newData;
+                        cacheShipments(newData, cacheKey);
+                        document.getElementById('totalCountSmall').textContent = newData.length;
+                        const isAdminNow = currentUser && currentUser.role === 'admin';
+                        document.getElementById('content').innerHTML = newData.map(s => createShipmentCard(s, isAdminNow)).join('');
+                        updateAllTrackingStatuses(newData);
+                    }
+                    showToast(wasEditing ? 'تم تحديث الشحنة بنجاح!' : 'تم اضافة الشحنة بنجاح!', 'success');
+                } else { errorDiv.textContent = data.msg || "فشل الاضافة"; }
+            } catch (e) { errorDiv.textContent = 'فشل الاتصال'; }
+
+            setTimeout(() => {
+                isSubmitting = false;
+                if (submitBtn) {
+                    submitBtn.disabled = false;
+                    submitBtn.style.opacity = '1';
+                    submitBtn.style.cursor = 'pointer';
+                }
+            }, 10000);
+        }
+
+        async function deleteShipment(shipmentId) {
+            if (!confirm('هل أنت متأكد من حذف هذه الشحنة؟')) return;
+            const params = new URLSearchParams();
+            params.append('action', 'deleteShipment');
+            params.append('phone', currentUser.phone);
+            params.append('password', currentUser.password);
+            params.append('shipmentId', shipmentId);
+            try {
+                const res = await fetch(API_URL, { method: 'POST', headers: { 'Content-Type': 'application/x-www-form-urlencoded' }, body: params.toString() });
+                const data = await res.json();
+                if (data.success) {
+                    trackingCache = {};
+                    const isAdmin = currentUser.role === 'admin';
+                    const loadFn = isAdmin ? loadAllShipments : loadMyShipments;
+                    const cacheKey = isAdmin ? 'eux_shipments_admin' : `eux_shipments_${currentUser.phone}`;
+                    const newData = await loadFn(true);
+                    if (newData && newData.length > 0) {
+                        allShipmentsData = newData;
+                        cacheShipments(newData, cacheKey);
+                        document.getElementById('totalCountSmall').textContent = newData.length;
+                        const isAdminNow = currentUser && currentUser.role === 'admin';
+                        document.getElementById('content').innerHTML = newData.map(s => createShipmentCard(s, isAdminNow)).join('');
+                        updateAllTrackingStatuses(newData);
+                    } else {
+                        document.getElementById('content').innerHTML = '<div class="empty-state"><div class="icon">📦</div><p>لا توجد شحنات حتى الآن</p></div>';
+                        document.getElementById('totalCountSmall').textContent = '0';
+                    }
+                    showToast('تم حذف الشحنة بنجاح', 'success');
+                } else {
+                    showToast(data.msg || 'فشل الحذف', 'error');
+                }
+            } catch (e) { showToast('فشل الاتصال بالخادم', 'error'); }
+        }
+
+        async function submitTracking(shipmentId) {
+            const trackingNumber = document.getElementById('trackingNum').value.trim();
+            const errorDiv = document.getElementById('trackError');
+            if (!trackingNumber) { errorDiv.textContent = 'يرجى ادخال رقم التتبع'; return; }
+            const params = new URLSearchParams();
+            params.append('action', 'addTrackingNumber');
+            params.append('adminPhone', currentUser.phone);
+            params.append('adminPassword', currentUser.password);
+            params.append('shipmentId', shipmentId);
+            params.append('trackingNumber', trackingNumber);
+            try {
+                const res = await fetch(API_URL, { method: 'POST', headers: { 'Content-Type': 'application/x-www-form-urlencoded' }, body: params.toString() });
+                const data = await res.json();
+                if (data.success) { 
+                    closeModal();
+                    trackingCache = {};
+                    const isAdmin = currentUser.role === 'admin';
+                    const loadFn = isAdmin ? loadAllShipments : loadMyShipments;
+                    const cacheKey = isAdmin ? 'eux_shipments_admin' : `eux_shipments_${currentUser.phone}`;
+                    const newData = await loadFn(true);
+                    if (newData && newData.length > 0) {
+                        allShipmentsData = newData;
+                        cacheShipments(newData, cacheKey);
+                        document.getElementById('totalCountSmall').textContent = newData.length;
+                        const isAdminNow = currentUser && currentUser.role === 'admin';
+                        document.getElementById('content').innerHTML = newData.map(s => createShipmentCard(s, isAdminNow)).join('');
+                        updateAllTrackingStatuses(newData);
+                    }
+                    showToast('تم اضافة رقم التتبع!', 'success'); 
+                } else { errorDiv.textContent = data.msg; }
+            } catch (e) { errorDiv.textContent = 'فشل الاتصال'; }
+        }
+
         // ============================================
         // دوال عامة (لم تتغير)
         // ============================================
-
-        function toggleDetails(element) { const details = element.querySelector('.details'); if (details) details.classList.toggle('open'); }
 
         function openTrackingSystem() {
             document.getElementById('landingPage').classList.add('hidden');
@@ -2844,7 +2949,7 @@
         }
 
         // ============================================
-        // دالة تسجيل الشحنة العامة مع عداد منع التكرار
+        // دالة تسجيل الشحنة العامة
         // ============================================
         async function submitPublicOrder() {
             if (isPublicSubmitting) {
@@ -3006,6 +3111,7 @@
         function logout() {
             currentUser = null;
             trackingCache = {};
+            stopBackgroundTrackingUpdates();
             clearUserSession();
             document.getElementById('loginPage').classList.remove('hidden');
             document.getElementById('dashboard').classList.add('hidden');
@@ -3099,40 +3205,6 @@
                     <button class="btn-eux-green" onclick="submitTracking('${shipmentId}')" style="width:100%;"><span class="inner">حفظ</span><span class="fold"></span></button>
                     <p id="trackError" style="color:red;margin-top:10px;"></p>
                 `;
-        }
-
-        async function submitTracking(shipmentId) {
-            const trackingNumber = document.getElementById('trackingNum').value.trim();
-            const errorDiv = document.getElementById('trackError');
-            if (!trackingNumber) { errorDiv.textContent = 'يرجى ادخال رقم التتبع'; return; }
-            const params = new URLSearchParams();
-            params.append('action', 'addTrackingNumber');
-            params.append('adminPhone', currentUser.phone);
-            params.append('adminPassword', currentUser.password);
-            params.append('shipmentId', shipmentId);
-            params.append('trackingNumber', trackingNumber);
-            try {
-                const res = await fetch(API_URL, { method: 'POST', headers: { 'Content-Type': 'application/x-www-form-urlencoded' }, body: params.toString() });
-                const data = await res.json();
-                if (data.success) { 
-                    closeModal();
-                    trackingCache = {};
-                    // تحديث الكاش والواجهة
-                    const isAdmin = currentUser.role === 'admin';
-                    const loadFn = isAdmin ? loadAllShipments : loadMyShipments;
-                    const cacheKey = isAdmin ? 'eux_shipments_admin' : `eux_shipments_${currentUser.phone}`;
-                    const newData = await loadFn(true);
-                    if (newData && newData.length > 0) {
-                        allShipmentsData = newData;
-                        cacheShipments(newData, cacheKey);
-                        document.getElementById('totalCountSmall').textContent = newData.length;
-                        const isAdminNow = currentUser && currentUser.role === 'admin';
-                        document.getElementById('content').innerHTML = newData.map(s => createShipmentCard(s, isAdminNow)).join('');
-                        updateAllTrackingStatuses(newData);
-                    }
-                    showToast('تم اضافة رقم التتبع!', 'success'); 
-                } else { errorDiv.textContent = data.msg; }
-            } catch (e) { errorDiv.textContent = 'فشل الاتصال'; }
         }
 
         async function translateProblemText(text) {
@@ -3400,3 +3472,4 @@
     </script>
 </body>
 </html>
+```
