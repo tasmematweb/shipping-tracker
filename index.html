@@ -1,3 +1,4 @@
+```html
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
@@ -274,23 +275,26 @@
                     showToast('⚠️ لا توجد شحنات جديدة', '');
                 }
 
-                // 2. 🔹 الضغط على جميع أزرار "تحديث الآن" تلقائياً (البنفسجية)
+                // 2. 🔹 الانتظار حتى تظهر جميع الشحنات بالكامل ثم الضغط على أزرار "تحديث الآن"
+                // ننتظر حتى يتم رسم البطاقات بالكامل
+                await new Promise(resolve => setTimeout(resolve, 800));
+
                 const updateButtons = document.querySelectorAll('.force-update-btn');
                 if (updateButtons.length > 0) {
                     console.log(`🔄 جارٍ تحديث ${updateButtons.length} شحنة...`);
                     showToast(`🔄 جارٍ تحديث ${updateButtons.length} شحنة...`, '');
                     
-                    // الضغط على كل زر مع تأخير 300ms بين كل زر
+                    // الضغط على كل زر مع تأخير 400ms بين كل زر
                     updateButtons.forEach((btn, index) => {
                         setTimeout(() => {
                             btn.click();
-                        }, index * 300);
+                        }, index * 400);
                     });
                     
                     // رسالة بعد الانتهاء من جميع التحديثات
                     setTimeout(() => {
                         showToast(`✅ تم تحديث ${updateButtons.length} شحنة!`, 'success');
-                    }, updateButtons.length * 300 + 1000);
+                    }, updateButtons.length * 400 + 1500);
                 } else {
                     console.log('ℹ️ لا توجد أزرار تحديث للضغط عليها');
                 }
@@ -316,16 +320,19 @@
             const btn = document.querySelector('.refresh-all-btn');
             if (btn && !btn.disabled) {
                 isAutoRefreshing = true;
-                btn.click();
-                console.log('🔄 تحديث تلقائي بعد Refresh');
+                // ننتظر حتى تظهر جميع الشحنات ثم نضغط على زر تحديث الكل
+                setTimeout(() => {
+                    btn.click();
+                    console.log('🔄 تحديث تلقائي بعد Refresh');
+                }, 2000);
                 setTimeout(() => { isAutoRefreshing = false; }, 5000);
             }
         }
 
-        document.addEventListener('DOMContentLoaded', () => setTimeout(autoRefreshAll, 1500));
-        window.addEventListener('load', () => setTimeout(autoRefreshAll, 2000));
-        window.addEventListener('pageshow', (e) => { if (e.persisted) setTimeout(autoRefreshAll, 1500); });
-        window.addEventListener('hashchange', () => setTimeout(autoRefreshAll, 1000));
+        document.addEventListener('DOMContentLoaded', () => setTimeout(autoRefreshAll, 2500));
+        window.addEventListener('load', () => setTimeout(autoRefreshAll, 3000));
+        window.addEventListener('pageshow', (e) => { if (e.persisted) setTimeout(autoRefreshAll, 2500); });
+        window.addEventListener('hashchange', () => setTimeout(autoRefreshAll, 2000));
 
         // ============================================================
         // إضافة أزرار التحديث للبطاقات (اللون البنفسجي)
@@ -767,8 +774,8 @@
 
         // ============================================================
         // ❌ لا يوجد setInterval للتحديث التلقائي
-        // ✅ زر "تحديث الكل" يضغط على جميع أزرار "تحديث الآن"
-        // ✅ تحديث تلقائي عند Refresh الصفحة فقط
+        // ✅ زر "تحديث الكل" يضغط على جميع أزرار "تحديث الآن" بعد ظهور الشحنات
+        // ✅ تحديث تلقائي عند Refresh الصفحة بعد ظهور الشحنات
         // ============================================================
 
         document.getElementById('passwordInput').addEventListener('keypress', function(e) {
@@ -784,3 +791,4 @@
     </script>
 </body>
 </html>
+```
