@@ -14,1815 +14,249 @@
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        :root {
-            --primary-color: #0076ff;
-            --secondary-color: #1a1a1a;
-            --light-bg: #f9f9f9;
-            --text-color: #333;
-            --white: #ffffff;
-        }
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-            font-family: 'Cairo', sans-serif;
-            scroll-behavior: smooth;
-        }
-        body {
-            color: var(--text-color);
-            line-height: 1.8;
-            background-color: var(--white);
-            overflow-x: hidden;
-            -webkit-user-select: none;
-            -moz-user-select: none;
-            -ms-user-select: none;
-            user-select: none;
-        }
-        .hidden {
-            display: none !important;
-        }
-        #landingPage {
-            display: block;
-        }
-
-        /* ============================================
-           الشريط العلوي الجديد - المتدرج العصري (النموذج 4)
-           ============================================ */
-        .header-new {
-            background: linear-gradient(135deg, #0a1628, #003d7a);
-            padding: 18px 30px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            border-bottom: 2px solid rgba(0, 118, 255, 0.3);
-            position: sticky;
-            top: 0;
-            z-index: 1000;
-            width: 100%;
-            margin: 0;
-            border-radius: 0;
-        }
-        .header-new .logo-container {
-            display: flex;
-            align-items: center;
-            gap: 14px;
-        }
-        .header-new .divider {
-            width: 2px;
-            height: 35px;
-            background: linear-gradient(180deg, transparent, var(--primary-color), transparent);
-        }
-        .header-new .logo-text {
-            font-size: 28px;
-            font-weight: 900;
-            color: #fff;
-            letter-spacing: 3px;
-        }
-        .header-new .logo-text span {
-            color: var(--primary-color);
-            position: relative;
-        }
-        .header-new .logo-text span::before {
-            content: '';
-            position: absolute;
-            bottom: -4px;
-            left: 0;
-            width: 100%;
-            height: 2px;
-            background: var(--primary-color);
-            animation: underlineSlide 2s ease-in-out infinite;
-        }
-        .header-new .dot {
-            width: 8px;
-            height: 8px;
-            background: var(--primary-color);
-            border-radius: 50%;
-            animation: dotPulse 2s ease-in-out infinite;
-            box-shadow: 0 0 20px rgba(0, 118, 255, 0.3);
-        }
-        @keyframes underlineSlide {
-            0% { transform: scaleX(0); transform-origin: right; }
-            50% { transform: scaleX(1); transform-origin: center; }
-            100% { transform: scaleX(0); transform-origin: left; }
-        }
-        @keyframes dotPulse {
-            0%, 100% { transform: scale(1); opacity: 0.4; }
-            50% { transform: scale(1.6); opacity: 1; }
-        }
-
-        /* ============================================
-           الشريط القديم - نبقيه للتوافق
-           ============================================ */
-        header {
-            background-color: var(--secondary-color);
-            padding: 35px 8%;
-            position: sticky;
-            top: 0;
-            z-index: 1000;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            border-bottom-left-radius: 40px;
-            border-bottom-right-radius: 40px;
-            border-bottom: 2px solid rgba(0, 118, 255, 0.3);
-        }
-        .logo {
-            color: var(--primary-color);
-            font-size: 38px;
-            font-weight: 900;
-            text-decoration: none;
-            letter-spacing: 2px;
-        }
-        .hero {
-            background: linear-gradient(rgba(26, 26, 26, 0.88), rgba(26, 26, 26, 0.88)), url('https://images.unsplash.com/photo-1524661135-423995f22d0b?ixlib=rb-4.0.3') no-repeat center center/cover;
-            min-height: 85vh;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            text-align: center;
-            color: var(--white);
-            padding: 60px 20px 180px 20px;
-            position: relative;
-        }
-        .sea-wave-divider {
-            position: absolute;
-            bottom: -1px;
-            left: 0;
-            width: 100%;
-            overflow: hidden;
-            line-height: 0;
-            z-index: 5;
-        }
-        .sea-wave-divider svg {
-            position: relative;
-            display: block;
-            width: calc(100% + 1.3px);
-            height: 110px;
-        }
-        .sea-wave-divider .wave-fill-white {
-            fill: var(--white);
-        }
-        .sea-wave-divider .wave-fill-light {
-            fill: var(--light-bg);
-        }
-        .showcase-wrapper {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            margin-bottom: 40px;
-            position: relative;
-            z-index: 10;
-        }
-        .cyber-node {
-            width: 160px;
-            height: 160px;
-            background: linear-gradient(135deg, #131c2e, #080d16);
-            border: 3px solid rgba(0, 210, 255, 0.6);
-            border-radius: 16px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            font-size: 36px;
-            font-weight: 900;
-            color: var(--white);
-            position: relative;
-            animation: nodeFloat 2.6s ease-in-out infinite;
-        }
-        .cyber-node::after {
-            content: '';
-            position: absolute;
-            inset: -12px;
-            border: 3px dashed var(--primary-color);
-            border-radius: 24px;
-            opacity: 0.7;
-            animation: rotateDashed 15s linear infinite;
-        }
-        @keyframes nodeFloat {
-            0%,
-            100% {
-                transform: translateY(0);
-                box-shadow: 0 0 25px rgba(0, 210, 255, 0.25);
-            }
-            50% {
-                transform: translateY(-20px);
-                box-shadow: 0 0 50px rgba(0, 210, 255, 0.6);
-            }
-        }
-        @keyframes rotateDashed {
-            100% {
-                transform: rotate(360deg);
-            }
-        }
-        .cube-container {
-            width: 180px;
-            height: 170px;
-            perspective: 1000px;
-            animation: isometricFloat 3s ease-in-out infinite;
-        }
-        .iso-cube {
-            width: 130px;
-            height: 130px;
-            position: relative;
-            transform-style: preserve-3d;
-            transform: rotateX(-30deg) rotateY(45deg);
-            margin: auto;
-        }
-        .iso-face {
-            position: absolute;
-            width: 130px;
-            height: 130px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            font-size: 32px;
-            font-weight: 900;
-            color: var(--white);
-            border: 1.5px solid rgba(255, 255, 255, 0.15);
-        }
-        .iso-front {
-            transform: rotateY(0deg) translateZ(65px);
-            background: linear-gradient(135deg, #0052cc, #002d80);
-        }
-        .iso-right {
-            transform: rotateY(90deg) translateZ(65px);
-            background: linear-gradient(135deg, #003399, #0a1329);
-        }
-        .iso-top {
-            transform: rotateX(90deg) translateZ(65px);
-            background: linear-gradient(135deg, #2575fc, #0052cc);
-        }
-        .iso-top::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 10px;
-            background: #ffb700;
-            box-shadow: 0 0 15px #ffb700;
-            animation: laserMove 2.5s linear infinite;
-        }
-        @keyframes isometricFloat {
-            0%,
-            100% {
-                transform: translateY(0);
-            }
-            50% {
-                transform: translateY(-20px);
-            }
-        }
-        @keyframes laserMove {
-            0% {
-                top: 0;
-                opacity: 0;
-            }
-            50% {
-                opacity: 1;
-            }
-            100% {
-                top: 100%;
-                opacity: 0;
-            }
-        }
-        .quantum-box {
-            width: 150px;
-            height: 150px;
-            background: rgba(10, 15, 24, 0.85);
-            border: 2px solid rgba(0, 118, 255, 0.4);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-            border-radius: 28px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            position: relative;
-            animation: quantumFloat 2.8s ease-in-out infinite;
-            border-bottom: 4px solid var(--primary-color);
-        }
-        .quantum-box::before {
-            content: '';
-            position: absolute;
-            width: 220px;
-            height: 70px;
-            border: 3px solid #ffb700;
-            border-radius: 50%;
-            transform: rotateX(70deg) rotateY(15deg);
-            box-shadow: 0 0 20px #ffb700;
-            animation: orbitPulse 2.8s linear infinite;
-        }
-        @keyframes quantumFloat {
-            0%,
-            100% {
-                transform: translateY(0);
-            }
-            50% {
-                transform: translateY(-20px);
-            }
-        }
-        .glow-floor {
-            width: 110px;
-            height: 10px;
-            background: radial-gradient(var(--primary-color), transparent 70%);
-            border-radius: 50%;
-            margin-top: 20px;
-            opacity: 0.6;
-        }
-        .hero h1 {
-            font-size: 3rem;
-            margin-bottom: 15px;
-            font-weight: 700;
-        }
-        .hero h1 span {
-            color: var(--primary-color);
-        }
-        .hero p {
-            font-size: 1.3rem;
-            max-width: 700px;
-            margin-bottom: 30px;
-            color: #ddd;
-        }
-        .btn {
-            display: inline-block;
-            background-color: var(--primary-color);
-            color: var(--white);
-            padding: 12px 35px;
-            border: none;
-            border-radius: 30px;
-            font-size: 1.1rem;
-            font-weight: 700;
-            cursor: pointer;
-            text-decoration: none;
-            transition: 0.3s ease;
-            box-shadow: 0 4px 15px rgba(0, 118, 255, 0.4);
-        }
-        .btn:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 6px 20px rgba(0, 118, 255, 0.6);
-        }
-        .login-btn-hero {
-            display: inline-block;
-            background-color: transparent;
-            color: var(--white);
-            padding: 10px 28px;
-            border: 2px solid rgba(255, 255, 255, 0.3);
-            border-radius: 30px;
-            font-size: 1rem;
-            font-weight: 600;
-            cursor: pointer;
-            text-decoration: none;
-            transition: 0.3s ease;
-            font-family: 'Cairo', sans-serif;
-            margin-top: 12px;
-        }
-        .login-btn-hero:hover {
-            background-color: rgba(255, 255, 255, 0.1);
-            border-color: var(--primary-color);
-            transform: translateY(-2px);
-        }
-        .login-btn-hero i {
-            margin-left: 8px;
-        }
-        .popup-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.75);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            z-index: 2000;
-            opacity: 0;
-            pointer-events: none;
-            transition: 0.4s ease;
-            backdrop-filter: blur(8px);
-            -webkit-backdrop-filter: blur(8px);
-        }
-        .popup-overlay.active {
-            opacity: 1;
-            pointer-events: auto;
-        }
-        .popup-box {
-            background: var(--white);
-            padding: 40px 30px;
-            border-radius: 24px;
-            max-width: 450px;
-            width: 90%;
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
-            position: relative;
-            transform: scale(0.8);
-            transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            text-align: center;
-            border-top: 6px solid var(--primary-color);
-        }
-        .popup-overlay.active .popup-box {
-            transform: scale(1);
-        }
-        .popup-close {
-            position: absolute;
-            top: 15px;
-            left: 20px;
-            font-size: 1.5rem;
-            color: #aaa;
-            cursor: pointer;
-            transition: 0.3s;
-        }
-        .popup-close:hover {
-            color: var(--secondary-color);
-        }
-        .popup-title {
-            font-size: 1.25rem;
-            font-weight: 700;
-            color: var(--primary-color);
-            margin-bottom: 25px;
-            background: rgba(0, 118, 255, 0.08);
-            padding: 10px;
-            border-radius: 12px;
-        }
-        .popup-form-group {
-            text-align: right;
-            margin-bottom: 20px;
-        }
-        .popup-form-group label {
-            display: block;
-            font-weight: 600;
-            margin-bottom: 8px;
-            font-size: 0.95rem;
-            color: var(--secondary-color);
-        }
-        .popup-form-group input {
-            width: 100%;
-            padding: 12px 15px;
-            border: 2px solid #e1e1e1;
-            border-radius: 12px;
-            font-size: 1rem;
-            font-family: 'Cairo', sans-serif;
-            transition: 0.3s;
-            text-align: right;
-        }
-        .popup-form-group input:focus {
-            border-color: var(--primary-color);
-            outline: none;
-            box-shadow: 0 0 10px rgba(0, 118, 255, 0.15);
-        }
-        .popup-submit-btn {
-            width: 100%;
-            background: var(--primary-color);
-            color: var(--white);
-            border: none;
-            padding: 12px;
-            border-radius: 12px;
-            font-size: 1.1rem;
-            font-weight: 700;
-            cursor: pointer;
-            transition: 0.3s;
-            font-family: 'Cairo', sans-serif;
-            box-shadow: 0 4px 12px rgba(0, 118, 255, 0.3);
-        }
-        .popup-submit-btn:hover {
-            background: #005dc7;
-            transform: translateY(-2px);
-        }
-        .about {
-            padding: 40px 10% 180px 10%;
-            text-align: center;
-            background-color: var(--white);
-            position: relative;
-        }
-        .section-title {
-            font-size: 2.2rem;
-            margin-bottom: 40px;
-            position: relative;
-            display: inline-block;
-            font-weight: 700;
-        }
-        .section-title::after {
-            content: '';
-            width: 60%;
-            height: 4px;
-            background-color: var(--primary-color);
-            position: absolute;
-            bottom: -10px;
-            left: 20%;
-            border-radius: 2px;
-        }
-        .about-container {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: space-around;
-            margin-top: 40px;
-        }
-        .about-card {
-            flex: 1;
-            min-width: 250px;
-            margin: 15px;
-            padding: 30px;
-            background: var(--light-bg);
-            border-radius: 10px;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
-            transition: 0.3s;
-        }
-        .about-card:hover {
-            transform: translateY(-5px);
-        }
-        .about-card i {
-            font-size: 3rem;
-            color: var(--primary-color);
-            margin-bottom: 20px;
-        }
-        .about-card h3 {
-            margin-bottom: 10px;
-            font-size: 1.4rem;
-        }
-        .services {
-            background-color: var(--secondary-color);
-            color: var(--white);
-            padding: 80px 10% 180px 10%;
-            text-align: center;
-            position: relative;
-        }
-        .services .section-title {
-            color: var(--white);
-        }
-        .services-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 25px;
-            margin-top: 50px;
-        }
-        .service-box {
-            background-color: rgba(255, 255, 255, 0.05);
-            padding: 30px 20px;
-            border-radius: 8px;
-            border-top: 4px solid var(--primary-color);
-            transition: 0.3s;
-        }
-        .service-box:hover {
-            background-color: rgba(255, 255, 255, 0.1);
-            transform: scale(1.03);
-        }
-        .service-box i {
-            font-size: 2.5rem;
-            color: var(--primary-color);
-            margin-bottom: 15px;
-        }
-        .service-box h4 {
-            font-size: 1.25rem;
-            margin-bottom: 10px;
-        }
-        .contact {
-            padding: 80px 10%;
-            text-align: center;
-            background-color: var(--light-bg);
-        }
-        .contact-info {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
-            gap: 40px;
-            margin-top: 40px;
-        }
-        .info-item {
-            font-size: 1.2rem;
-            font-weight: 600;
-        }
-        .info-item i {
-            color: var(--primary-color);
-            margin-left: 10px;
-            font-size: 1.4rem;
-        }
-        footer {
-            background-color: #111;
-            color: #aaa;
-            text-align: center;
-            padding: 30px 20px;
-            border-top: 1px solid #222;
-        }
-        .footer-social {
-            margin-top: 15px;
-        }
-        .footer-social a {
-            color: var(--white);
-            font-size: 1.8rem;
-            transition: 0.3s;
-        }
-        .footer-social a:hover {
-            color: #1877f2;
-        }
-        #trackingApp {
-            background: linear-gradient(135deg, #e8f0fe, #d4e4f7);
-            min-height: 100vh;
-            padding: 20px;
-        }
-        .tracking-container {
-            max-width: 900px;
-            margin: 0 auto;
-            background: white;
-            border-radius: 24px;
-            padding: 30px;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.1);
-            position: relative;
-            overflow: hidden;
-        }
-        .tracking-container::before {
-            content: '';
-            position: absolute;
-            top: -50%;
-            right: -50%;
-            width: 200%;
-            height: 200%;
-            background: radial-gradient(circle at 30% 20%, rgba(0, 118, 255, 0.04), transparent 70%);
-            pointer-events: none;
-        }
-        .login-page {
-            text-align: center;
-            position: relative;
-            z-index: 1;
-            padding: 20px 0;
-        }
-        .login-page .logo-wrapper {
-            display: flex;
-            justify-content: center;
-            margin-bottom: 25px;
-            position: relative;
-            height: 220px;
-        }
-        .civil-helo {
-            position: relative;
-            width: 180px;
-            height: 135px;
-            animation: hoverCivil 3s ease-in-out infinite;
-            margin-top: 40px;
-            transform: scale(0.85);
-            transform-origin: center center;
-        }
-        @keyframes hoverCivil {
-            0%,
-            100% {
-                transform: scale(0.85) translateY(0px);
-            }
-            50% {
-                transform: scale(0.85) translateY(-8px);
-            }
-        }
-        .civil-helo .body {
-            position: absolute;
-            width: 120px;
-            height: 28px;
-            background: linear-gradient(135deg, #ffffff, #e8ecf0);
-            border-radius: 60px 30px 15px 20px;
-            top: 55%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            border: 1px solid #c0c8d0;
-            box-shadow: 0 0 30px rgba(255, 255, 255, 0.05);
-        }
-        .civil-helo .body::before {
-            content: '';
-            position: absolute;
-            top: -8px;
-            left: 12px;
-            width: 48px;
-            height: 15px;
-            background: rgba(200, 210, 220, 0.3);
-            border-radius: 12px 12px 0 0;
-            border: 1px solid #c0c8d0;
-            border-bottom: none;
-        }
-        .civil-helo .body-stripe {
-            position: absolute;
-            bottom: 3px;
-            left: 10%;
-            width: 80%;
-            height: 2px;
-            background: linear-gradient(90deg, #0076ff, #4fc3f7, #0076ff);
-            border-radius: 4px;
-        }
-        .civil-helo .cockpit {
-            position: absolute;
-            top: 6px;
-            left: 8px;
-            width: 35px;
-            height: 15px;
-            background: linear-gradient(180deg, #81d4fa, #0288d1);
-            border-radius: 12px 8px 0 0;
-            border: 1px solid #4fc3f7;
-            box-shadow: inset 0 0 20px rgba(79, 195, 247, 0.15);
-        }
-        .civil-helo .cockpit::after {
-            content: '';
-            position: absolute;
-            top: 2px;
-            left: 4px;
-            width: 10px;
-            height: 6px;
-            background: rgba(255, 255, 255, 0.2);
-            border-radius: 50%;
-        }
-        .civil-helo .cockpit-wiper {
-            position: absolute;
-            top: 8px;
-            left: 16px;
-            width: 12px;
-            height: 2px;
-            background: rgba(255, 255, 255, 0.2);
-            border-radius: 2px;
-            transform: rotate(-15deg);
-        }
-        .civil-helo .tail {
-            position: absolute;
-            right: -44px;
-            top: 50%;
-            transform: translateY(-50%);
-            width: 52px;
-            height: 7px;
-            background: linear-gradient(135deg, #ffffff, #d0d8e0);
-            border-radius: 0 20px 20px 0;
-            border: 1px solid #c0c8d0;
-        }
-        .civil-helo .tail::after {
-            content: '';
-            position: absolute;
-            right: -4px;
-            top: -4px;
-            width: 8px;
-            height: 15px;
-            background: #ffffff;
-            border-radius: 4px;
-            border: 1px solid #c0c8d0;
-        }
-        .civil-helo .main-rotor {
-            position: absolute;
-            top: -20px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 110px;
-            height: 5px;
-            background: rgba(200, 200, 200, 0.25);
-            border-radius: 10px;
-            animation: spinRotor 0.45s linear infinite;
-            box-shadow: 0 0 40px rgba(200, 200, 200, 0.05);
-        }
-        .civil-helo .main-rotor::after {
-            content: '';
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            width: 8px;
-            height: 8px;
-            background: #888;
-            border-radius: 50%;
-            border: 1px solid #aaa;
-        }
-        .civil-helo .main-rotor::before {
-            content: '';
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%) rotate(72deg);
-            width: 110px;
-            height: 5px;
-            background: rgba(200, 200, 200, 0.15);
-            border-radius: 10px;
-        }
-        .civil-helo .tail-rotor {
-            position: absolute;
-            right: -56px;
-            top: 50%;
-            transform: translateY(-50%);
-            width: 24px;
-            height: 3px;
-            background: rgba(200, 200, 200, 0.2);
-            border-radius: 4px;
-            animation: spinRotor 0.3s linear infinite;
-        }
-        .civil-helo .tail-rotor::after {
-            content: '';
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            width: 4px;
-            height: 4px;
-            background: #888;
-            border-radius: 50%;
-        }
-        .civil-helo .eux-logo {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            color: #0076ff;
-            font-weight: 900;
-            font-size: 13px;
-            letter-spacing: 2px;
-            text-shadow: 0 0 30px rgba(0, 118, 255, 0.2);
-            z-index: 5;
-        }
-        .civil-helo .nav-light {
-            position: absolute;
-            width: 5px;
-            height: 5px;
-            border-radius: 50%;
-            animation: blinkLight 1.5s ease-in-out infinite;
-        }
-        .civil-helo .nav-light.red {
-            background: #ff1744;
-            box-shadow: 0 0 15px rgba(255, 23, 68, 0.5);
-            right: 8px;
-            top: 30%;
-        }
-        .civil-helo .nav-light.green {
-            background: #00e676;
-            box-shadow: 0 0 15px rgba(0, 230, 118, 0.5);
-            left: 8px;
-            top: 30%;
-            animation-delay: 0.75s;
-        }
-        @keyframes blinkLight {
-            0%,
-            100% {
-                opacity: 0.2;
-            }
-            50% {
-                opacity: 1;
-            }
-        }
-        @keyframes spinRotor {
-            0% {
-                transform: translateX(-50%) rotate(0deg);
-            }
-            100% {
-                transform: translateX(-50%) rotate(360deg);
-            }
-        }
-        .login-page .brand {
-            color: #0d2137;
-            font-size: 28px;
-            font-weight: 900;
-            margin-bottom: 4px;
-        }
-        .login-page .brand span {
-            color: #0076ff;
-        }
-        .login-page .input-group {
-            position: relative;
-            margin-bottom: 16px;
-        }
-        .login-page .input-group input {
-            width: 100%;
-            padding: 16px 20px 16px 50px;
-            border: 2px solid #e8ecf0;
-            border-radius: 14px;
-            font-size: 16px;
-            font-family: 'Cairo', sans-serif;
-            background: #f8fafc;
-            transition: 0.3s;
-        }
-        .login-page .input-group input:focus {
-            border-color: #0076ff;
-            outline: none;
-            background: white;
-            box-shadow: 0 0 0 4px rgba(0, 118, 255, 0.08);
-        }
-        .login-page .input-group .input-icon {
-            position: absolute;
-            right: 18px;
-            top: 50%;
-            transform: translateY(-50%);
-            color: #999;
-            font-size: 18px;
-        }
-        .login-page .error-msg {
-            color: #dc3545;
-            font-size: 14px;
-            margin-top: 14px;
-            padding: 10px;
-            background: #ffeaea;
-            border-radius: 8px;
-        }
-        .tracking-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 20px;
-            padding-bottom: 15px;
-            border-bottom: 2px solid #eef3f8;
-            flex-wrap: wrap;
-            gap: 10px;
-            position: relative;
-            z-index: 1;
-        }
-        .tracking-header h2 {
-            color: #0d2137;
-            font-weight: 700;
-            font-size: 18px;
-        }
-        .tracking-header h2 i {
-            color: #0076ff;
-            margin-left: 8px;
-        }
-        .header-actions {
-            display: flex;
-            gap: 6px;
-            flex-wrap: wrap;
-            align-items: center;
-        }
-        .total-small {
-            font-size: 13px;
-            color: #888;
-            margin-right: 12px;
-            font-weight: 600;
-            white-space: nowrap;
-        }
-        .total-small .count {
-            color: #0076ff;
-            font-weight: 900;
-            font-size: 16px;
-        }
-        .shipment-card {
-            background: #f8fafc;
-            border-radius: 14px;
-            padding: 16px 20px;
-            margin-bottom: 12px;
-            border: 1px solid #e8ecf0;
-            position: relative;
-            cursor: pointer;
-            transition: 0.25s ease;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);
-        }
-        .shipment-card:hover {
-            background: #f0f4fa;
-            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.05);
-            transform: translateY(-2px);
-        }
-        .shipment-card .status-badge {
-            display: inline-block;
-            padding: 4px 16px;
-            border-radius: 20px;
-            font-size: 11px;
-            font-weight: 700;
-            margin-bottom: 8px;
-        }
-        .status-waiting {
-            background: #fff8e1;
-            color: #f9a825;
-        }
-        .status-tracking {
-            background: #e3f2fd;
-            color: #0d47a1;
-        }
-        .status-done {
-            background: #e8f5e9;
-            color: #2e7d32;
-        }
-        .shipment-card .summary-row {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            flex-wrap: wrap;
-            gap: 8px;
-            margin-top: 4px;
-        }
-        .shipment-card .summary-row .main-info {
-            display: flex;
-            align-items: center;
-            gap: 16px;
-            flex-wrap: wrap;
-        }
-        .shipment-card .summary-row .main-info .name {
-            font-weight: 700;
-            font-size: 16px;
-            color: #0d2137;
-        }
-        .shipment-card .summary-row .main-info .phone {
-            color: #555;
-            direction: ltr;
-            font-size: 14px;
-        }
-        .shipment-card .summary-row .main-info .amount {
-            color: #0076ff;
-            font-weight: 700;
-            font-size: 15px;
-        }
-        .track-btn-spinner {
-            position: relative;
-            border-radius: 50%;
-            height: 44px;
-            width: 44px;
-            border: none;
-            cursor: pointer;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            flex-shrink: 0;
-            background: transparent;
-            padding: 0;
-            transition: transform 0.25s ease;
-        }
-        .track-btn-spinner .ring {
-            position: absolute;
-            border-radius: 50%;
-            height: 100%;
-            width: 100%;
-            animation: rotate_3922 1.2s linear infinite;
-        }
-        .track-btn-spinner .ring:nth-of-type(1) {
-            background: linear-gradient(135deg, #0076ff, #4fc3f7, #0076ff);
-            filter: blur(2px);
-        }
-        .track-btn-spinner .ring:nth-of-type(2) {
-            background: linear-gradient(135deg, #0076ff, #4fc3f7, #0076ff);
-            filter: blur(4px);
-            animation-duration: 1.4s;
-        }
-        .track-btn-spinner .ring:nth-of-type(3) {
-            background: linear-gradient(135deg, #0076ff, #4fc3f7, #0076ff);
-            filter: blur(10px);
-            animation-duration: 1.6s;
-        }
-        .track-btn-spinner .ring:nth-of-type(4) {
-            background: linear-gradient(135deg, #0076ff, #4fc3f7, #0076ff);
-            filter: blur(20px);
-            animation-duration: 1.8s;
-        }
-        .track-btn-spinner .inner-circle {
-            position: relative;
-            z-index: 5;
-            background: white;
-            border-radius: 50%;
-            height: 74%;
-            width: 74%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.06);
-        }
-        .track-btn-spinner .track-text {
-            font-size: 12px;
-            font-weight: 800;
-            color: #0076ff;
-            font-family: 'Cairo', sans-serif;
-            letter-spacing: 0.5px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            position: relative;
-            z-index: 10;
-            text-align: center;
-            line-height: 1.2;
-        }
-        @keyframes rotate_3922 {
-            from {
-                transform: rotate(0deg);
-            }
-            to {
-                transform: rotate(360deg);
-            }
-        }
-        .track-btn-spinner:hover {
-            transform: scale(1.1);
-        }
-        .track-btn-spinner:active {
-            transform: scale(0.92);
-        }
-        .shipment-card .summary-row .main-info .phone {
-            color: #555;
-            direction: ltr;
-            font-size: 14px;
-        }
-        .shipment-card .summary-row .main-info .amount {
-            color: #0076ff;
-            font-weight: 700;
-            font-size: 15px;
-        }
-        .shipment-card .summary-row .last-update {
-            font-size: 12px;
-            color: #888;
-            direction: ltr;
-            background: #eef3f8;
-            padding: 4px 14px;
-            border-radius: 20px;
-        }
-        .shipment-card .status-row {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            margin-top: 6px;
-            padding: 6px 12px;
-            background: #e8f5e9;
-            border-radius: 10px;
-            border-right: 4px solid #2e7d32;
-        }
-        .shipment-card .status-row .status-label {
-            font-size: 13px;
-            color: #555;
-            font-weight: 600;
-        }
-        .shipment-card .status-row .status-value {
-            font-size: 14px;
-            color: #2e7d32;
-            font-weight: 700;
-        }
-        .shipment-card .status-row.loading-status {
-            background: #fff8e1;
-            border-right-color: #f9a825;
-        }
-        .shipment-card .status-row.loading-status .status-value {
-            color: #f9a825;
-        }
-        .shipment-card .status-row.error-status {
-            background: #ffeaea;
-            border-right-color: #dc3545;
-        }
-        .shipment-card .status-row.error-status .status-value {
-            color: #dc3545;
-        }
-        .shipment-card .status-row.info-status {
-            background: #e3f2fd;
-            border-right-color: #0d47a1;
-        }
-        .shipment-card .status-row.info-status .status-value {
-            color: #0d47a1;
-        }
-        .shipment-card .details {
-            margin-top: 14px;
-            padding-top: 14px;
-            border-top: 1px dashed #dce5ed;
-            display: none;
-        }
-        .shipment-card .details.open {
-            display: block;
-            animation: fadeIn 0.25s ease;
-        }
-        @keyframes fadeIn {
-            from {
-                opacity: 0;
-                transform: translateY(-6px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-        .shipment-card .details .info {
-            margin: 5px 0;
-            font-size: 13px;
-            color: #555;
-        }
-        .shipment-card .details .info strong {
-            color: #0d2137;
-            margin-left: 5px;
-        }
-        .shipment-card .actions {
-            margin-top: 12px;
-            display: flex;
-            gap: 8px;
-            flex-wrap: wrap;
-        }
-        .modal {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.5);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            z-index: 2000;
-            padding: 16px;
-            backdrop-filter: blur(6px);
-            -webkit-backdrop-filter: blur(6px);
-        }
-        .modal-content {
-            background: white;
-            border-radius: 20px;
-            padding: 28px 25px 25px;
-            max-width: 600px;
-            width: 100%;
-            max-height: 85vh;
-            overflow-y: auto;
-            position: relative;
-            animation: modalIn 0.3s ease;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.2);
-        }
-        @keyframes modalIn {
-            from {
-                opacity: 0;
-                transform: translateY(30px) scale(0.96);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0) scale(1);
-            }
-        }
-        .modal-content h3 {
-            margin-bottom: 20px;
-            text-align: center;
-            font-size: 22px;
-            font-weight: 700;
-            color: #0d2137;
-        }
-        .modal-content h3 i {
-            color: #0076ff;
-            margin-left: 8px;
-        }
-        .close-btn {
-            position: absolute;
-            top: 16px;
-            left: 20px;
-            font-size: 28px;
-            cursor: pointer;
-            color: #aaa;
-            line-height: 1;
-            transition: 0.2s;
-        }
-        .close-btn:hover {
-            color: #333;
-            transform: rotate(90deg);
-        }
-        .form-group {
-            margin-bottom: 16px;
-            text-align: right;
-        }
-        .form-group label {
-            display: block;
-            margin-bottom: 5px;
-            font-weight: 700;
-            color: #0d2137;
-            font-size: 14px;
-        }
-        .form-group input,
-        .form-group textarea,
-        .form-group select {
-            width: 100%;
-            padding: 12px 15px;
-            border: 2px solid #e8ecf0;
-            border-radius: 10px;
-            font-size: 14px;
-            font-family: 'Cairo', sans-serif;
-            background: #f8fafc;
-            transition: 0.3s;
-        }
-        .form-group input:focus,
-        .form-group textarea:focus,
-        .form-group select:focus {
-            border-color: #0076ff;
-            outline: none;
-            background: white;
-            box-shadow: 0 0 0 4px rgba(0, 118, 255, 0.08);
-        }
-        .form-group textarea {
-            height: 80px;
-            resize: vertical;
-        }
-        .timeline-item {
-            border-right: 3px solid #0076ff;
-            padding: 12px 16px 12px 0;
-            margin-right: 10px;
-            margin-bottom: 14px;
-            background: #f8fafc;
-            border-radius: 0 10px 10px 0;
-            transition: 0.2s;
-        }
-        .timeline-item:hover {
-            background: #f0f6fe;
-        }
-        .timeline-item .time {
-            color: #999;
-            font-size: 13px;
-        }
-        .timeline-item .event {
-            font-weight: 700;
-            color: #0d2137;
-            margin: 5px 0;
-        }
-        .timeline-item .location {
-            color: #666;
-            font-size: 14px;
-        }
-        .timeline-item .problem {
-            color: #dc3545;
-            font-size: 13px;
-            margin-top: 4px;
-        }
-        .client-card {
-            background: #f8fafc;
-            padding: 14px 18px;
-            border-radius: 10px;
-            margin-bottom: 10px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            border: 1px solid #e8ecf0;
-            transition: 0.2s;
-        }
-        .client-card:hover {
-            background: #f0f4fa;
-        }
-        .client-card .client-info {
-            flex: 1;
-        }
-        .client-card .client-info strong {
-            font-size: 16px;
-            color: #0d2137;
-        }
-        .client-card .client-info .phone {
-            color: #666;
-            font-size: 14px;
-            direction: ltr;
-        }
-        .client-card .client-info .created {
-            font-size: 12px;
-            color: #aaa;
-        }
-        .loading {
-            text-align: center;
-            padding: 30px 0;
-        }
-        .spinner {
-            border: 4px solid #e8ecf0;
-            border-top: 4px solid #0076ff;
-            border-radius: 50%;
-            width: 40px;
-            height: 40px;
-            animation: spin 1s linear infinite;
-            margin: 0 auto 10px;
-        }
-        @keyframes spin {
-            0% {
-                transform: rotate(0deg);
-            }
-            100% {
-                transform: rotate(360deg);
-            }
-        }
-        .empty-state {
-            text-align: center;
-            padding: 40px 20px;
-            color: #aaa;
-        }
-        .empty-state .icon {
-            font-size: 56px;
-            margin-bottom: 12px;
-        }
-        .two-columns {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 12px;
-        }
-        .text-center {
-            text-align: center;
-        }
-        .btn-eux,
-        .btn-eux-green,
-        .btn-eux-orange,
-        .btn-eux-red,
-        .btn-eux-outline {
-            --round: 0.75rem;
-            cursor: pointer;
-            position: relative;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            overflow: hidden;
-            transition: all 0.25s ease;
-            border-radius: var(--round);
-            border: none;
-            outline: none;
-            padding: 12px 18px;
-            font-family: 'Cairo', sans-serif;
-            font-weight: 600;
-            font-size: 14px;
-            color: white;
-        }
-        .btn-eux {
-            background: radial-gradient(65.28% 65.28% at 50% 100%, rgba(0, 118, 255, 0.6) 0%, rgba(0, 118, 255, 0) 100%), linear-gradient(0deg, #0076ff, #0076ff);
-            box-shadow: 0 4px 15px rgba(0, 118, 255, 0.25);
-        }
-        .btn-eux-green {
-            background: radial-gradient(65.28% 65.28% at 50% 100%, rgba(40, 167, 69, 0.6) 0%, rgba(40, 167, 69, 0) 100%), linear-gradient(0deg, #28a745, #28a745);
-            box-shadow: 0 4px 15px rgba(40, 167, 69, 0.25);
-        }
-        .btn-eux-orange {
-            background: radial-gradient(65.28% 65.28% at 50% 100%, rgba(255, 152, 0, 0.6) 0%, rgba(255, 152, 0, 0) 100%), linear-gradient(0deg, #ff9800, #ff9800);
-            box-shadow: 0 4px 15px rgba(255, 152, 0, 0.25);
-        }
-        .btn-eux-red {
-            background: radial-gradient(65.28% 65.28% at 50% 100%, rgba(220, 53, 69, 0.6) 0%, rgba(220, 53, 69, 0) 100%), linear-gradient(0deg, #dc3545, #dc3545);
-            box-shadow: 0 4px 15px rgba(220, 53, 69, 0.25);
-        }
-        .btn-eux-outline {
-            background: transparent;
-            border: 1.5px solid #ddd;
-            color: #0d2137;
-            box-shadow: none;
-        }
-        .btn-eux-outline:hover {
-            background: #f5f5f5;
-        }
-        .btn-eux:active,
-        .btn-eux-green:active,
-        .btn-eux-orange:active,
-        .btn-eux-red:active,
-        .btn-eux-outline:active {
-            transform: scale(0.95);
-        }
-        .btn-eux .inner,
-        .btn-eux-green .inner,
-        .btn-eux-orange .inner,
-        .btn-eux-red .inner,
-        .btn-eux-outline .inner {
-            z-index: 2;
-            gap: 6px;
-            position: relative;
-            width: 100%;
-            color: inherit;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 16px;
-            font-weight: 500;
-            line-height: 1.5;
-        }
-        .btn-eux .fold,
-        .btn-eux-green .fold,
-        .btn-eux-orange .fold,
-        .btn-eux-red .fold,
-        .btn-eux-outline .fold {
-            z-index: 1;
-            position: absolute;
-            top: 0;
-            right: 0;
-            height: 1rem;
-            width: 1rem;
-            display: inline-block;
-            transition: all 0.5s ease-in-out;
-            border-bottom-left-radius: 0.5rem;
-            border-top-right-radius: var(--round);
-        }
-        .btn-eux .fold {
-            background: radial-gradient(100% 75% at 55%, rgba(0, 118, 255, 0.6) 0%, rgba(0, 118, 255, 0) 100%);
-            box-shadow: 0 0 3px rgba(0, 0, 0, 0.2);
-        }
-        .btn-eux-green .fold {
-            background: radial-gradient(100% 75% at 55%, rgba(40, 167, 69, 0.6) 0%, rgba(40, 167, 69, 0) 100%);
-            box-shadow: 0 0 3px rgba(0, 0, 0, 0.2);
-        }
-        .btn-eux-orange .fold {
-            background: radial-gradient(100% 75% at 55%, rgba(255, 152, 0, 0.6) 0%, rgba(255, 152, 0, 0) 100%);
-            box-shadow: 0 0 3px rgba(0, 0, 0, 0.2);
-        }
-        .btn-eux-red .fold {
-            background: radial-gradient(100% 75% at 55%, rgba(220, 53, 69, 0.6) 0%, rgba(220, 53, 69, 0) 100%);
-            box-shadow: 0 0 3px rgba(0, 0, 0, 0.2);
-        }
-        .btn-eux-outline .fold {
-            background: radial-gradient(100% 75% at 55%, rgba(13, 33, 55, 0.1) 0%, rgba(13, 33, 55, 0) 100%);
-            box-shadow: 0 0 3px rgba(0, 0, 0, 0.1);
-        }
-        .btn-eux:hover .fold,
-        .btn-eux-green:hover .fold,
-        .btn-eux-orange:hover .fold,
-        .btn-eux-red:hover .fold,
-        .btn-eux-outline:hover .fold {
-            margin-top: -1rem;
-            margin-right: -1rem;
-        }
-        .points_wrapper {
-            overflow: hidden;
-            width: 100%;
-            height: 100%;
-            pointer-events: none;
-            position: absolute;
-            z-index: 1;
-        }
-        .points_wrapper .point {
-            bottom: -10px;
-            position: absolute;
-            animation: floating-points infinite ease-in-out;
-            pointer-events: none;
-            width: 2px;
-            height: 2px;
-            background-color: #fff;
-            border-radius: 9999px;
-        }
-        @keyframes floating-points {
-            0% {
-                transform: translateY(0);
-            }
-            85% {
-                opacity: 0;
-            }
-            100% {
-                transform: translateY(-55px);
-                opacity: 0;
-            }
-        }
-        .points_wrapper .point:nth-child(1) {
-            left: 10%;
-            opacity: 1;
-            animation-duration: 2.35s;
-            animation-delay: 0.2s;
-        }
-        .points_wrapper .point:nth-child(2) {
-            left: 30%;
-            opacity: 0.7;
-            animation-duration: 2.5s;
-            animation-delay: 0.5s;
-        }
-        .points_wrapper .point:nth-child(3) {
-            left: 25%;
-            opacity: 0.8;
-            animation-duration: 2.2s;
-            animation-delay: 0.1s;
-        }
-        .points_wrapper .point:nth-child(4) {
-            left: 44%;
-            opacity: 0.6;
-            animation-duration: 2.05s;
-        }
-        .points_wrapper .point:nth-child(5) {
-            left: 50%;
-            opacity: 1;
-            animation-duration: 1.9s;
-        }
-        .points_wrapper .point:nth-child(6) {
-            left: 75%;
-            opacity: 0.5;
-            animation-duration: 1.5s;
-            animation-delay: 1.5s;
-        }
-        .points_wrapper .point:nth-child(7) {
-            left: 88%;
-            opacity: 0.9;
-            animation-duration: 2.2s;
-            animation-delay: 0.2s;
-        }
-        .points_wrapper .point:nth-child(8) {
-            left: 58%;
-            opacity: 0.8;
-            animation-duration: 2.25s;
-            animation-delay: 0.2s;
-        }
-        .points_wrapper .point:nth-child(9) {
-            left: 98%;
-            opacity: 0.6;
-            animation-duration: 2.6s;
-            animation-delay: 0.1s;
-        }
-        .points_wrapper .point:nth-child(10) {
-            left: 65%;
-            opacity: 1;
-            animation-duration: 2.5s;
-            animation-delay: 0.2s;
-        }
-        .btn-eux-outline .points_wrapper .point {
-            background-color: #0d2137;
-        }
-        .toast {
-            position: fixed;
-            bottom: 24px;
-            left: 50%;
-            transform: translateX(-50%);
-            background: #0d2137;
-            color: white;
-            padding: 12px 28px;
-            border-radius: 14px;
-            font-size: 14px;
-            z-index: 9999;
-            animation: toastIn 0.3s ease;
-            max-width: 90%;
-            text-align: center;
-            font-family: 'Cairo', sans-serif;
-            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.2);
-        }
-        .toast.success {
-            background: #28a745;
-        }
-        .toast.error {
-            background: #dc3545;
-        }
-        @keyframes toastIn {
-            from {
-                opacity: 0;
-                transform: translateX(-50%) translateY(20px);
-            }
-            to {
-                opacity: 1;
-                transform: translateX(-50%) translateY(0);
-            }
-        }
-        .public-page-header {
-            text-align: center;
-            padding: 10px 0 5px 0;
-        }
-        .public-page-header .helo-wrapper {
-            display: flex;
-            justify-content: center;
-            margin-bottom: 5px;
-        }
-        .public-page-header .helo-wrapper .civil-helo {
-            margin-top: 0;
-            transform: scale(0.75);
-            animation: hoverCivilSmall 3s ease-in-out infinite;
-        }
-        @keyframes hoverCivilSmall {
-            0%,
-            100% {
-                transform: scale(0.75) translateY(0px);
-            }
-            50% {
-                transform: scale(0.75) translateY(-6px);
-            }
-        }
-        .site-link-wrapper {
-            display: flex;
-            justify-content: center;
-            margin: 2px 0 16px 0;
-        }
-        .site-link-btn {
-            --black-700: hsla(210, 97%, 50%, 0.15);
-            --border_radius: 9999px;
-            --transtion: 0.3s ease-in-out;
-            --offset: 2px;
-            cursor: pointer;
-            position: relative;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            transform-origin: center;
-            padding: 0.6rem 1.8rem;
-            background-color: transparent;
-            border: none;
-            border-radius: var(--border_radius);
-            transform: scale(calc(1 + (var(--active, 0) * 0.05)));
-            transition: transform var(--transtion);
-            text-decoration: none;
-            font-family: 'Cairo', sans-serif;
-        }
-        .site-link-btn::before {
-            content: "";
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            width: 100%;
-            height: 100%;
-            background-color: var(--black-700);
-            border-radius: var(--border_radius);
-            box-shadow: inset 0 0.5px hsla(0, 0%, 100%, 0.3), inset 0 -1px 2px 0 hsla(0, 0%, 0%, 0.1), 0px 4px 10px -4px hsla(0, 0%, 0%, 0.1);
-            transition: all var(--transtion);
-            z-index: 0;
-        }
-        .site-link-btn::after {
-            content: "";
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            width: 100%;
-            height: 100%;
-            background-color: hsla(210, 97%, 61%, 0.15);
-            background-image: radial-gradient(at 51% 89%, hsla(210, 45%, 74%, 0.3) 0px, transparent 50%), radial-gradient(at 0% 0%, hsla(210, 45%, 74%, 0.3) 0px, transparent 50%);
-            background-position: top;
-            opacity: var(--active, 0);
-            border-radius: var(--border_radius);
-            transition: opacity var(--transtion);
-            z-index: 2;
-        }
-        .site-link-btn:is(:hover,
-        :focus-visible) {
-            --active: 1;
-        }
-        .site-link-btn:active {
-            transform: scale(1);
-        }
-        .site-link-btn .dots_border {
-            --size_border: calc(100% + 2px);
-            overflow: hidden;
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            width: var(--size_border);
-            height: var(--size_border);
-            background-color: transparent;
-            border-radius: var(--border_radius);
-            z-index: -10;
-        }
-        .site-link-btn .dots_border::before {
-            content: "";
-            position: absolute;
-            top: 30%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            transform-origin: left;
-            transform: rotate(0deg);
-            width: 100%;
-            height: 2rem;
-            background: linear-gradient(90deg, transparent, #0076ff, transparent);
-            mask: linear-gradient(transparent 0%, white 120%);
-            animation: rotate 3s linear infinite;
-        }
-        @keyframes rotate {
-            to {
-                transform: rotate(360deg);
-            }
-        }
-        .site-link-btn .text_button {
-            position: relative;
-            z-index: 10;
-            font-size: 1rem;
-            color: #0076ff;
-            font-weight: 700;
-            font-family: 'Cairo', sans-serif;
-            transition: color var(--transtion);
-        }
-        .site-link-btn:is(:hover,
-        :focus-visible) .text_button {
-            color: #0055b3;
-        }
-        @media (max-width: 768px) {
-            .header-new {
-                padding: 12px 16px;
-            }
-            .header-new .logo-text {
-                font-size: 20px;
-                letter-spacing: 1px;
-            }
-            .header-new .divider {
-                height: 25px;
-            }
-            .header-new .dot {
-                width: 6px;
-                height: 6px;
-            }
-            header {
-                padding: 20px 5%;
-            }
-            .logo {
-                font-size: 24px;
-            }
-            .hero h1 {
-                font-size: 2rem;
-            }
-            .hero p {
-                font-size: 1rem;
-            }
-            .cyber-node {
-                width: 120px;
-                height: 120px;
-                font-size: 28px;
-            }
-            .cube-container {
-                width: 130px;
-                height: 120px;
-            }
-            .iso-cube {
-                width: 90px;
-                height: 90px;
-            }
-            .iso-face {
-                width: 90px;
-                height: 90px;
-                font-size: 24px;
-            }
-            .iso-front {
-                transform: rotateY(0deg) translateZ(45px);
-            }
-            .iso-right {
-                transform: rotateY(90deg) translateZ(45px);
-            }
-            .iso-top {
-                transform: rotateX(90deg) translateZ(45px);
-            }
-            .quantum-box {
-                width: 120px;
-                height: 120px;
-            }
-            .two-columns {
-                grid-template-columns: 1fr;
-            }
-            .header-actions .share-btn-text {
-                font-size: 11px;
-                max-width: 180px;
-                padding: 6px 10px;
-            }
-            .track-btn-spinner {
-                height: 36px;
-                width: 36px;
-            }
-            .track-btn-spinner .track-text {
-                font-size: 10px;
-            }
-        }
+        :root { --primary-color: #0076ff; --secondary-color: #1a1a1a; --light-bg: #f9f9f9; --text-color: #333; --white: #ffffff; }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Cairo', sans-serif; scroll-behavior: smooth; }
+        body { color: var(--text-color); line-height: 1.8; background-color: var(--white); overflow-x: hidden; -webkit-user-select: none; -moz-user-select: none; -ms-user-select: none; user-select: none; }
+        .hidden { display: none !important; }
+        #landingPage { display: block; }
+        .header-new { background: linear-gradient(135deg, #0a1628, #003d7a); padding: 18px 30px; display: flex; justify-content: center; align-items: center; border-bottom: 2px solid rgba(0, 118, 255, 0.3); position: sticky; top: 0; z-index: 1000; width: 100%; margin: 0; border-radius: 0; }
+        .header-new .logo-container { display: flex; align-items: center; gap: 14px; }
+        .header-new .divider { width: 2px; height: 35px; background: linear-gradient(180deg, transparent, var(--primary-color), transparent); }
+        .header-new .logo-text { font-size: 28px; font-weight: 900; color: #fff; letter-spacing: 3px; }
+        .header-new .logo-text span { color: var(--primary-color); position: relative; }
+        .header-new .logo-text span::before { content: ''; position: absolute; bottom: -4px; left: 0; width: 100%; height: 2px; background: var(--primary-color); animation: underlineSlide 2s ease-in-out infinite; }
+        .header-new .dot { width: 8px; height: 8px; background: var(--primary-color); border-radius: 50%; animation: dotPulse 2s ease-in-out infinite; box-shadow: 0 0 20px rgba(0, 118, 255, 0.3); }
+        @keyframes underlineSlide { 0% { transform: scaleX(0); transform-origin: right; } 50% { transform: scaleX(1); transform-origin: center; } 100% { transform: scaleX(0); transform-origin: left; } }
+        @keyframes dotPulse { 0%, 100% { transform: scale(1); opacity: 0.4; } 50% { transform: scale(1.6); opacity: 1; } }
+        header { background-color: var(--secondary-color); padding: 35px 8%; position: sticky; top: 0; z-index: 1000; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2); display: flex; justify-content: center; align-items: center; border-bottom-left-radius: 40px; border-bottom-right-radius: 40px; border-bottom: 2px solid rgba(0, 118, 255, 0.3); }
+        .logo { color: var(--primary-color); font-size: 38px; font-weight: 900; text-decoration: none; letter-spacing: 2px; }
+        .hero { background: linear-gradient(rgba(26, 26, 26, 0.88), rgba(26, 26, 26, 0.88)), url('https://images.unsplash.com/photo-1524661135-423995f22d0b?ixlib=rb-4.0.3') no-repeat center center/cover; min-height: 85vh; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; color: var(--white); padding: 60px 20px 180px 20px; position: relative; }
+        .sea-wave-divider { position: absolute; bottom: -1px; left: 0; width: 100%; overflow: hidden; line-height: 0; z-index: 5; }
+        .sea-wave-divider svg { position: relative; display: block; width: calc(100% + 1.3px); height: 110px; }
+        .sea-wave-divider .wave-fill-white { fill: var(--white); }
+        .sea-wave-divider .wave-fill-light { fill: var(--light-bg); }
+        .showcase-wrapper { display: flex; flex-direction: column; align-items: center; justify-content: center; margin-bottom: 40px; position: relative; z-index: 10; }
+        .cyber-node { width: 160px; height: 160px; background: linear-gradient(135deg, #131c2e, #080d16); border: 3px solid rgba(0, 210, 255, 0.6); border-radius: 16px; display: flex; justify-content: center; align-items: center; font-size: 36px; font-weight: 900; color: var(--white); position: relative; animation: nodeFloat 2.6s ease-in-out infinite; }
+        .cyber-node::after { content: ''; position: absolute; inset: -12px; border: 3px dashed var(--primary-color); border-radius: 24px; opacity: 0.7; animation: rotateDashed 15s linear infinite; }
+        @keyframes nodeFloat { 0%, 100% { transform: translateY(0); box-shadow: 0 0 25px rgba(0, 210, 255, 0.25); } 50% { transform: translateY(-20px); box-shadow: 0 0 50px rgba(0, 210, 255, 0.6); } }
+        @keyframes rotateDashed { 100% { transform: rotate(360deg); } }
+        .cube-container { width: 180px; height: 170px; perspective: 1000px; animation: isometricFloat 3s ease-in-out infinite; }
+        .iso-cube { width: 130px; height: 130px; position: relative; transform-style: preserve-3d; transform: rotateX(-30deg) rotateY(45deg); margin: auto; }
+        .iso-face { position: absolute; width: 130px; height: 130px; display: flex; justify-content: center; align-items: center; font-size: 32px; font-weight: 900; color: var(--white); border: 1.5px solid rgba(255, 255, 255, 0.15); }
+        .iso-front { transform: rotateY(0deg) translateZ(65px); background: linear-gradient(135deg, #0052cc, #002d80); }
+        .iso-right { transform: rotateY(90deg) translateZ(65px); background: linear-gradient(135deg, #003399, #0a1329); }
+        .iso-top { transform: rotateX(90deg) translateZ(65px); background: linear-gradient(135deg, #2575fc, #0052cc); }
+        .iso-top::before { content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 10px; background: #ffb700; box-shadow: 0 0 15px #ffb700; animation: laserMove 2.5s linear infinite; }
+        @keyframes isometricFloat { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-20px); } }
+        @keyframes laserMove { 0% { top: 0; opacity: 0; } 50% { opacity: 1; } 100% { top: 100%; opacity: 0; } }
+        .quantum-box { width: 150px; height: 150px; background: rgba(10, 15, 24, 0.85); border: 2px solid rgba(0, 118, 255, 0.4); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border-radius: 28px; display: flex; justify-content: center; align-items: center; position: relative; animation: quantumFloat 2.8s ease-in-out infinite; border-bottom: 4px solid var(--primary-color); }
+        .quantum-box::before { content: ''; position: absolute; width: 220px; height: 70px; border: 3px solid #ffb700; border-radius: 50%; transform: rotateX(70deg) rotateY(15deg); box-shadow: 0 0 20px #ffb700; animation: orbitPulse 2.8s linear infinite; }
+        @keyframes quantumFloat { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-20px); } }
+        .glow-floor { width: 110px; height: 10px; background: radial-gradient(var(--primary-color), transparent 70%); border-radius: 50%; margin-top: 20px; opacity: 0.6; }
+        .hero h1 { font-size: 3rem; margin-bottom: 15px; font-weight: 700; }
+        .hero h1 span { color: var(--primary-color); }
+        .hero p { font-size: 1.3rem; max-width: 700px; margin-bottom: 30px; color: #ddd; }
+        .btn { display: inline-block; background-color: var(--primary-color); color: var(--white); padding: 12px 35px; border: none; border-radius: 30px; font-size: 1.1rem; font-weight: 700; cursor: pointer; text-decoration: none; transition: 0.3s ease; box-shadow: 0 4px 15px rgba(0, 118, 255, 0.4); }
+        .btn:hover { transform: translateY(-3px); box-shadow: 0 6px 20px rgba(0, 118, 255, 0.6); }
+        .login-btn-hero { display: inline-block; background-color: transparent; color: var(--white); padding: 10px 28px; border: 2px solid rgba(255, 255, 255, 0.3); border-radius: 30px; font-size: 1rem; font-weight: 600; cursor: pointer; text-decoration: none; transition: 0.3s ease; font-family: 'Cairo', sans-serif; margin-top: 12px; }
+        .login-btn-hero:hover { background-color: rgba(255, 255, 255, 0.1); border-color: var(--primary-color); transform: translateY(-2px); }
+        .login-btn-hero i { margin-left: 8px; }
+        .popup-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.75); display: flex; justify-content: center; align-items: center; z-index: 2000; opacity: 0; pointer-events: none; transition: 0.4s ease; backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); }
+        .popup-overlay.active { opacity: 1; pointer-events: auto; }
+        .popup-box { background: var(--white); padding: 40px 30px; border-radius: 24px; max-width: 450px; width: 90%; box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3); position: relative; transform: scale(0.8); transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); text-align: center; border-top: 6px solid var(--primary-color); }
+        .popup-overlay.active .popup-box { transform: scale(1); }
+        .popup-close { position: absolute; top: 15px; left: 20px; font-size: 1.5rem; color: #aaa; cursor: pointer; transition: 0.3s; }
+        .popup-close:hover { color: var(--secondary-color); }
+        .popup-title { font-size: 1.25rem; font-weight: 700; color: var(--primary-color); margin-bottom: 25px; background: rgba(0, 118, 255, 0.08); padding: 10px; border-radius: 12px; }
+        .popup-form-group { text-align: right; margin-bottom: 20px; }
+        .popup-form-group label { display: block; font-weight: 600; margin-bottom: 8px; font-size: 0.95rem; color: var(--secondary-color); }
+        .popup-form-group input { width: 100%; padding: 12px 15px; border: 2px solid #e1e1e1; border-radius: 12px; font-size: 1rem; font-family: 'Cairo', sans-serif; transition: 0.3s; text-align: right; }
+        .popup-form-group input:focus { border-color: var(--primary-color); outline: none; box-shadow: 0 0 10px rgba(0, 118, 255, 0.15); }
+        .popup-submit-btn { width: 100%; background: var(--primary-color); color: var(--white); border: none; padding: 12px; border-radius: 12px; font-size: 1.1rem; font-weight: 700; cursor: pointer; transition: 0.3s; font-family: 'Cairo', sans-serif; box-shadow: 0 4px 12px rgba(0, 118, 255, 0.3); }
+        .popup-submit-btn:hover { background: #005dc7; transform: translateY(-2px); }
+        .about { padding: 40px 10% 180px 10%; text-align: center; background-color: var(--white); position: relative; }
+        .section-title { font-size: 2.2rem; margin-bottom: 40px; position: relative; display: inline-block; font-weight: 700; }
+        .section-title::after { content: ''; width: 60%; height: 4px; background-color: var(--primary-color); position: absolute; bottom: -10px; left: 20%; border-radius: 2px; }
+        .about-container { display: flex; flex-wrap: wrap; justify-content: space-around; margin-top: 40px; }
+        .about-card { flex: 1; min-width: 250px; margin: 15px; padding: 30px; background: var(--light-bg); border-radius: 10px; box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05); transition: 0.3s; }
+        .about-card:hover { transform: translateY(-5px); }
+        .about-card i { font-size: 3rem; color: var(--primary-color); margin-bottom: 20px; }
+        .about-card h3 { margin-bottom: 10px; font-size: 1.4rem; }
+        .services { background-color: var(--secondary-color); color: var(--white); padding: 80px 10% 180px 10%; text-align: center; position: relative; }
+        .services .section-title { color: var(--white); }
+        .services-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 25px; margin-top: 50px; }
+        .service-box { background-color: rgba(255, 255, 255, 0.05); padding: 30px 20px; border-radius: 8px; border-top: 4px solid var(--primary-color); transition: 0.3s; }
+        .service-box:hover { background-color: rgba(255, 255, 255, 0.1); transform: scale(1.03); }
+        .service-box i { font-size: 2.5rem; color: var(--primary-color); margin-bottom: 15px; }
+        .service-box h4 { font-size: 1.25rem; margin-bottom: 10px; }
+        .contact { padding: 80px 10%; text-align: center; background-color: var(--light-bg); }
+        .contact-info { display: flex; flex-wrap: wrap; justify-content: center; gap: 40px; margin-top: 40px; }
+        .info-item { font-size: 1.2rem; font-weight: 600; }
+        .info-item i { color: var(--primary-color); margin-left: 10px; font-size: 1.4rem; }
+        footer { background-color: #111; color: #aaa; text-align: center; padding: 30px 20px; border-top: 1px solid #222; }
+        .footer-social { margin-top: 15px; }
+        .footer-social a { color: var(--white); font-size: 1.8rem; transition: 0.3s; }
+        .footer-social a:hover { color: #1877f2; }
+        #trackingApp { background: linear-gradient(135deg, #e8f0fe, #d4e4f7); min-height: 100vh; padding: 20px; }
+        .tracking-container { max-width: 900px; margin: 0 auto; background: white; border-radius: 24px; padding: 30px; box-shadow: 0 20px 60px rgba(0, 0, 0, 0.1); position: relative; overflow: hidden; }
+        .tracking-container::before { content: ''; position: absolute; top: -50%; right: -50%; width: 200%; height: 200%; background: radial-gradient(circle at 30% 20%, rgba(0, 118, 255, 0.04), transparent 70%); pointer-events: none; }
+        .login-page { text-align: center; position: relative; z-index: 1; padding: 20px 0; }
+        .login-page .logo-wrapper { display: flex; justify-content: center; margin-bottom: 25px; position: relative; height: 220px; }
+        .civil-helo { position: relative; width: 180px; height: 135px; animation: hoverCivil 3s ease-in-out infinite; margin-top: 40px; transform: scale(0.85); transform-origin: center center; }
+        @keyframes hoverCivil { 0%, 100% { transform: scale(0.85) translateY(0px); } 50% { transform: scale(0.85) translateY(-8px); } }
+        .civil-helo .body { position: absolute; width: 120px; height: 28px; background: linear-gradient(135deg, #ffffff, #e8ecf0); border-radius: 60px 30px 15px 20px; top: 55%; left: 50%; transform: translate(-50%, -50%); border: 1px solid #c0c8d0; box-shadow: 0 0 30px rgba(255, 255, 255, 0.05); }
+        .civil-helo .body::before { content: ''; position: absolute; top: -8px; left: 12px; width: 48px; height: 15px; background: rgba(200, 210, 220, 0.3); border-radius: 12px 12px 0 0; border: 1px solid #c0c8d0; border-bottom: none; }
+        .civil-helo .body-stripe { position: absolute; bottom: 3px; left: 10%; width: 80%; height: 2px; background: linear-gradient(90deg, #0076ff, #4fc3f7, #0076ff); border-radius: 4px; }
+        .civil-helo .cockpit { position: absolute; top: 6px; left: 8px; width: 35px; height: 15px; background: linear-gradient(180deg, #81d4fa, #0288d1); border-radius: 12px 8px 0 0; border: 1px solid #4fc3f7; box-shadow: inset 0 0 20px rgba(79, 195, 247, 0.15); }
+        .civil-helo .cockpit::after { content: ''; position: absolute; top: 2px; left: 4px; width: 10px; height: 6px; background: rgba(255, 255, 255, 0.2); border-radius: 50%; }
+        .civil-helo .cockpit-wiper { position: absolute; top: 8px; left: 16px; width: 12px; height: 2px; background: rgba(255, 255, 255, 0.2); border-radius: 2px; transform: rotate(-15deg); }
+        .civil-helo .tail { position: absolute; right: -44px; top: 50%; transform: translateY(-50%); width: 52px; height: 7px; background: linear-gradient(135deg, #ffffff, #d0d8e0); border-radius: 0 20px 20px 0; border: 1px solid #c0c8d0; }
+        .civil-helo .tail::after { content: ''; position: absolute; right: -4px; top: -4px; width: 8px; height: 15px; background: #ffffff; border-radius: 4px; border: 1px solid #c0c8d0; }
+        .civil-helo .main-rotor { position: absolute; top: -20px; left: 50%; transform: translateX(-50%); width: 110px; height: 5px; background: rgba(200, 200, 200, 0.25); border-radius: 10px; animation: spinRotor 0.45s linear infinite; box-shadow: 0 0 40px rgba(200, 200, 200, 0.05); }
+        .civil-helo .main-rotor::after { content: ''; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 8px; height: 8px; background: #888; border-radius: 50%; border: 1px solid #aaa; }
+        .civil-helo .main-rotor::before { content: ''; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%) rotate(72deg); width: 110px; height: 5px; background: rgba(200, 200, 200, 0.15); border-radius: 10px; }
+        .civil-helo .tail-rotor { position: absolute; right: -56px; top: 50%; transform: translateY(-50%); width: 24px; height: 3px; background: rgba(200, 200, 200, 0.2); border-radius: 4px; animation: spinRotor 0.3s linear infinite; }
+        .civil-helo .tail-rotor::after { content: ''; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 4px; height: 4px; background: #888; border-radius: 50%; }
+        .civil-helo .eux-logo { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); color: #0076ff; font-weight: 900; font-size: 13px; letter-spacing: 2px; text-shadow: 0 0 30px rgba(0, 118, 255, 0.2); z-index: 5; }
+        .civil-helo .nav-light { position: absolute; width: 5px; height: 5px; border-radius: 50%; animation: blinkLight 1.5s ease-in-out infinite; }
+        .civil-helo .nav-light.red { background: #ff1744; box-shadow: 0 0 15px rgba(255, 23, 68, 0.5); right: 8px; top: 30%; }
+        .civil-helo .nav-light.green { background: #00e676; box-shadow: 0 0 15px rgba(0, 230, 118, 0.5); left: 8px; top: 30%; animation-delay: 0.75s; }
+        @keyframes blinkLight { 0%, 100% { opacity: 0.2; } 50% { opacity: 1; } }
+        @keyframes spinRotor { 0% { transform: translateX(-50%) rotate(0deg); } 100% { transform: translateX(-50%) rotate(360deg); } }
+        .login-page .brand { color: #0d2137; font-size: 28px; font-weight: 900; margin-bottom: 4px; }
+        .login-page .brand span { color: #0076ff; }
+        .login-page .input-group { position: relative; margin-bottom: 16px; }
+        .login-page .input-group input { width: 100%; padding: 16px 20px 16px 50px; border: 2px solid #e8ecf0; border-radius: 14px; font-size: 16px; font-family: 'Cairo', sans-serif; background: #f8fafc; transition: 0.3s; }
+        .login-page .input-group input:focus { border-color: #0076ff; outline: none; background: white; box-shadow: 0 0 0 4px rgba(0, 118, 255, 0.08); }
+        .login-page .input-group .input-icon { position: absolute; right: 18px; top: 50%; transform: translateY(-50%); color: #999; font-size: 18px; }
+        .login-page .error-msg { color: #dc3545; font-size: 14px; margin-top: 14px; padding: 10px; background: #ffeaea; border-radius: 8px; }
+        .tracking-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; padding-bottom: 15px; border-bottom: 2px solid #eef3f8; flex-wrap: wrap; gap: 10px; position: relative; z-index: 1; }
+        .tracking-header h2 { color: #0d2137; font-weight: 700; font-size: 18px; }
+        .tracking-header h2 i { color: #0076ff; margin-left: 8px; }
+        .header-actions { display: flex; gap: 6px; flex-wrap: wrap; align-items: center; }
+        .total-small { font-size: 13px; color: #888; margin-right: 12px; font-weight: 600; white-space: nowrap; }
+        .total-small .count { color: #0076ff; font-weight: 900; font-size: 16px; }
+        .shipment-card { background: #f8fafc; border-radius: 14px; padding: 16px 20px; margin-bottom: 12px; border: 1px solid #e8ecf0; position: relative; cursor: pointer; transition: 0.25s ease; box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03); }
+        .shipment-card:hover { background: #f0f4fa; box-shadow: 0 4px 16px rgba(0, 0, 0, 0.05); transform: translateY(-2px); }
+        .shipment-card .status-badge { display: inline-block; padding: 4px 16px; border-radius: 20px; font-size: 11px; font-weight: 700; margin-bottom: 8px; }
+        .status-waiting { background: #fff8e1; color: #f9a825; }
+        .status-tracking { background: #e3f2fd; color: #0d47a1; }
+        .status-done { background: #e8f5e9; color: #2e7d32; }
+        .shipment-card .summary-row { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px; margin-top: 4px; }
+        .shipment-card .summary-row .main-info { display: flex; align-items: center; gap: 16px; flex-wrap: wrap; }
+        .shipment-card .summary-row .main-info .name { font-weight: 700; font-size: 16px; color: #0d2137; }
+        .shipment-card .summary-row .main-info .phone { color: #555; direction: ltr; font-size: 14px; }
+        .shipment-card .summary-row .main-info .amount { color: #0076ff; font-weight: 700; font-size: 15px; }
+        .track-btn-spinner { position: relative; border-radius: 50%; height: 44px; width: 44px; border: none; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0; background: transparent; padding: 0; transition: transform 0.25s ease; }
+        .track-btn-spinner .ring { position: absolute; border-radius: 50%; height: 100%; width: 100%; animation: rotate_3922 1.2s linear infinite; }
+        .track-btn-spinner .ring:nth-of-type(1) { background: linear-gradient(135deg, #0076ff, #4fc3f7, #0076ff); filter: blur(2px); }
+        .track-btn-spinner .ring:nth-of-type(2) { background: linear-gradient(135deg, #0076ff, #4fc3f7, #0076ff); filter: blur(4px); animation-duration: 1.4s; }
+        .track-btn-spinner .ring:nth-of-type(3) { background: linear-gradient(135deg, #0076ff, #4fc3f7, #0076ff); filter: blur(10px); animation-duration: 1.6s; }
+        .track-btn-spinner .ring:nth-of-type(4) { background: linear-gradient(135deg, #0076ff, #4fc3f7, #0076ff); filter: blur(20px); animation-duration: 1.8s; }
+        .track-btn-spinner .inner-circle { position: relative; z-index: 5; background: white; border-radius: 50%; height: 74%; width: 74%; display: flex; align-items: center; justify-content: center; box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.06); }
+        .track-btn-spinner .track-text { font-size: 12px; font-weight: 800; color: #0076ff; font-family: 'Cairo', sans-serif; letter-spacing: 0.5px; display: flex; align-items: center; justify-content: center; position: relative; z-index: 10; text-align: center; line-height: 1.2; }
+        @keyframes rotate_3922 { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+        .track-btn-spinner:hover { transform: scale(1.1); }
+        .track-btn-spinner:active { transform: scale(0.92); }
+        .shipment-card .summary-row .main-info .phone { color: #555; direction: ltr; font-size: 14px; }
+        .shipment-card .summary-row .main-info .amount { color: #0076ff; font-weight: 700; font-size: 15px; }
+        .shipment-card .summary-row .last-update { font-size: 12px; color: #888; direction: ltr; background: #eef3f8; padding: 4px 14px; border-radius: 20px; }
+        .shipment-card .status-row { display: flex; align-items: center; gap: 10px; margin-top: 6px; padding: 6px 12px; background: #e8f5e9; border-radius: 10px; border-right: 4px solid #2e7d32; }
+        .shipment-card .status-row .status-label { font-size: 13px; color: #555; font-weight: 600; }
+        .shipment-card .status-row .status-value { font-size: 14px; color: #2e7d32; font-weight: 700; }
+        .shipment-card .status-row.loading-status { background: #fff8e1; border-right-color: #f9a825; }
+        .shipment-card .status-row.loading-status .status-value { color: #f9a825; }
+        .shipment-card .status-row.error-status { background: #ffeaea; border-right-color: #dc3545; }
+        .shipment-card .status-row.error-status .status-value { color: #dc3545; }
+        .shipment-card .status-row.info-status { background: #e3f2fd; border-right-color: #0d47a1; }
+        .shipment-card .status-row.info-status .status-value { color: #0d47a1; }
+        .shipment-card .details { margin-top: 14px; padding-top: 14px; border-top: 1px dashed #dce5ed; display: none; }
+        .shipment-card .details.open { display: block; animation: fadeIn 0.25s ease; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(-6px); } to { opacity: 1; transform: translateY(0); } }
+        .shipment-card .details .info { margin: 5px 0; font-size: 13px; color: #555; }
+        .shipment-card .details .info strong { color: #0d2137; margin-left: 5px; }
+        .shipment-card .actions { margin-top: 12px; display: flex; gap: 8px; flex-wrap: wrap; }
+        .modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.5); display: flex; justify-content: center; align-items: center; z-index: 2000; padding: 16px; backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px); }
+        .modal-content { background: white; border-radius: 20px; padding: 28px 25px 25px; max-width: 600px; width: 100%; max-height: 85vh; overflow-y: auto; position: relative; animation: modalIn 0.3s ease; box-shadow: 0 20px 60px rgba(0, 0, 0, 0.2); }
+        @keyframes modalIn { from { opacity: 0; transform: translateY(30px) scale(0.96); } to { opacity: 1; transform: translateY(0) scale(1); } }
+        .modal-content h3 { margin-bottom: 20px; text-align: center; font-size: 22px; font-weight: 700; color: #0d2137; }
+        .modal-content h3 i { color: #0076ff; margin-left: 8px; }
+        .close-btn { position: absolute; top: 16px; left: 20px; font-size: 28px; cursor: pointer; color: #aaa; line-height: 1; transition: 0.2s; }
+        .close-btn:hover { color: #333; transform: rotate(90deg); }
+        .form-group { margin-bottom: 16px; text-align: right; }
+        .form-group label { display: block; margin-bottom: 5px; font-weight: 700; color: #0d2137; font-size: 14px; }
+        .form-group input, .form-group textarea, .form-group select { width: 100%; padding: 12px 15px; border: 2px solid #e8ecf0; border-radius: 10px; font-size: 14px; font-family: 'Cairo', sans-serif; background: #f8fafc; transition: 0.3s; }
+        .form-group input:focus, .form-group textarea:focus, .form-group select:focus { border-color: #0076ff; outline: none; background: white; box-shadow: 0 0 0 4px rgba(0, 118, 255, 0.08); }
+        .form-group textarea { height: 80px; resize: vertical; }
+        .timeline-item { border-right: 3px solid #0076ff; padding: 12px 16px 12px 0; margin-right: 10px; margin-bottom: 14px; background: #f8fafc; border-radius: 0 10px 10px 0; transition: 0.2s; }
+        .timeline-item:hover { background: #f0f6fe; }
+        .timeline-item .time { color: #999; font-size: 13px; }
+        .timeline-item .event { font-weight: 700; color: #0d2137; margin: 5px 0; }
+        .timeline-item .location { color: #666; font-size: 14px; }
+        .timeline-item .problem { color: #dc3545; font-size: 13px; margin-top: 4px; }
+        .client-card { background: #f8fafc; padding: 14px 18px; border-radius: 10px; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center; border: 1px solid #e8ecf0; transition: 0.2s; }
+        .client-card:hover { background: #f0f4fa; }
+        .client-card .client-info { flex: 1; }
+        .client-card .client-info strong { font-size: 16px; color: #0d2137; }
+        .client-card .client-info .phone { color: #666; font-size: 14px; direction: ltr; }
+        .client-card .client-info .created { font-size: 12px; color: #aaa; }
+        .loading { text-align: center; padding: 30px 0; }
+        .spinner { border: 4px solid #e8ecf0; border-top: 4px solid #0076ff; border-radius: 50%; width: 40px; height: 40px; animation: spin 1s linear infinite; margin: 0 auto 10px; }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        .empty-state { text-align: center; padding: 40px 20px; color: #aaa; }
+        .empty-state .icon { font-size: 56px; margin-bottom: 12px; }
+        .two-columns { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+        .text-center { text-align: center; }
+        .btn-eux, .btn-eux-green, .btn-eux-orange, .btn-eux-red, .btn-eux-outline { --round: 0.75rem; cursor: pointer; position: relative; display: inline-flex; align-items: center; justify-content: center; overflow: hidden; transition: all 0.25s ease; border-radius: var(--round); border: none; outline: none; padding: 12px 18px; font-family: 'Cairo', sans-serif; font-weight: 600; font-size: 14px; color: white; }
+        .btn-eux { background: radial-gradient(65.28% 65.28% at 50% 100%, rgba(0, 118, 255, 0.6) 0%, rgba(0, 118, 255, 0) 100%), linear-gradient(0deg, #0076ff, #0076ff); box-shadow: 0 4px 15px rgba(0, 118, 255, 0.25); }
+        .btn-eux-green { background: radial-gradient(65.28% 65.28% at 50% 100%, rgba(40, 167, 69, 0.6) 0%, rgba(40, 167, 69, 0) 100%), linear-gradient(0deg, #28a745, #28a745); box-shadow: 0 4px 15px rgba(40, 167, 69, 0.25); }
+        .btn-eux-orange { background: radial-gradient(65.28% 65.28% at 50% 100%, rgba(255, 152, 0, 0.6) 0%, rgba(255, 152, 0, 0) 100%), linear-gradient(0deg, #ff9800, #ff9800); box-shadow: 0 4px 15px rgba(255, 152, 0, 0.25); }
+        .btn-eux-red { background: radial-gradient(65.28% 65.28% at 50% 100%, rgba(220, 53, 69, 0.6) 0%, rgba(220, 53, 69, 0) 100%), linear-gradient(0deg, #dc3545, #dc3545); box-shadow: 0 4px 15px rgba(220, 53, 69, 0.25); }
+        .btn-eux-outline { background: transparent; border: 1.5px solid #ddd; color: #0d2137; box-shadow: none; }
+        .btn-eux-outline:hover { background: #f5f5f5; }
+        .btn-eux:active, .btn-eux-green:active, .btn-eux-orange:active, .btn-eux-red:active, .btn-eux-outline:active { transform: scale(0.95); }
+        .btn-eux .inner, .btn-eux-green .inner, .btn-eux-orange .inner, .btn-eux-red .inner, .btn-eux-outline .inner { z-index: 2; gap: 6px; position: relative; width: 100%; color: inherit; display: inline-flex; align-items: center; justify-content: center; font-size: 16px; font-weight: 500; line-height: 1.5; }
+        .btn-eux .fold, .btn-eux-green .fold, .btn-eux-orange .fold, .btn-eux-red .fold, .btn-eux-outline .fold { z-index: 1; position: absolute; top: 0; right: 0; height: 1rem; width: 1rem; display: inline-block; transition: all 0.5s ease-in-out; border-bottom-left-radius: 0.5rem; border-top-right-radius: var(--round); }
+        .btn-eux .fold { background: radial-gradient(100% 75% at 55%, rgba(0, 118, 255, 0.6) 0%, rgba(0, 118, 255, 0) 100%); box-shadow: 0 0 3px rgba(0, 0, 0, 0.2); }
+        .btn-eux-green .fold { background: radial-gradient(100% 75% at 55%, rgba(40, 167, 69, 0.6) 0%, rgba(40, 167, 69, 0) 100%); box-shadow: 0 0 3px rgba(0, 0, 0, 0.2); }
+        .btn-eux-orange .fold { background: radial-gradient(100% 75% at 55%, rgba(255, 152, 0, 0.6) 0%, rgba(255, 152, 0, 0) 100%); box-shadow: 0 0 3px rgba(0, 0, 0, 0.2); }
+        .btn-eux-red .fold { background: radial-gradient(100% 75% at 55%, rgba(220, 53, 69, 0.6) 0%, rgba(220, 53, 69, 0) 100%); box-shadow: 0 0 3px rgba(0, 0, 0, 0.2); }
+        .btn-eux-outline .fold { background: radial-gradient(100% 75% at 55%, rgba(13, 33, 55, 0.1) 0%, rgba(13, 33, 55, 0) 100%); box-shadow: 0 0 3px rgba(0, 0, 0, 0.1); }
+        .btn-eux:hover .fold, .btn-eux-green:hover .fold, .btn-eux-orange:hover .fold, .btn-eux-red:hover .fold, .btn-eux-outline:hover .fold { margin-top: -1rem; margin-right: -1rem; }
+        .points_wrapper { overflow: hidden; width: 100%; height: 100%; pointer-events: none; position: absolute; z-index: 1; }
+        .points_wrapper .point { bottom: -10px; position: absolute; animation: floating-points infinite ease-in-out; pointer-events: none; width: 2px; height: 2px; background-color: #fff; border-radius: 9999px; }
+        @keyframes floating-points { 0% { transform: translateY(0); } 85% { opacity: 0; } 100% { transform: translateY(-55px); opacity: 0; } }
+        .points_wrapper .point:nth-child(1) { left: 10%; opacity: 1; animation-duration: 2.35s; animation-delay: 0.2s; }
+        .points_wrapper .point:nth-child(2) { left: 30%; opacity: 0.7; animation-duration: 2.5s; animation-delay: 0.5s; }
+        .points_wrapper .point:nth-child(3) { left: 25%; opacity: 0.8; animation-duration: 2.2s; animation-delay: 0.1s; }
+        .points_wrapper .point:nth-child(4) { left: 44%; opacity: 0.6; animation-duration: 2.05s; }
+        .points_wrapper .point:nth-child(5) { left: 50%; opacity: 1; animation-duration: 1.9s; }
+        .points_wrapper .point:nth-child(6) { left: 75%; opacity: 0.5; animation-duration: 1.5s; animation-delay: 1.5s; }
+        .points_wrapper .point:nth-child(7) { left: 88%; opacity: 0.9; animation-duration: 2.2s; animation-delay: 0.2s; }
+        .points_wrapper .point:nth-child(8) { left: 58%; opacity: 0.8; animation-duration: 2.25s; animation-delay: 0.2s; }
+        .points_wrapper .point:nth-child(9) { left: 98%; opacity: 0.6; animation-duration: 2.6s; animation-delay: 0.1s; }
+        .points_wrapper .point:nth-child(10) { left: 65%; opacity: 1; animation-duration: 2.5s; animation-delay: 0.2s; }
+        .btn-eux-outline .points_wrapper .point { background-color: #0d2137; }
+        .toast { position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%); background: #0d2137; color: white; padding: 12px 28px; border-radius: 14px; font-size: 14px; z-index: 9999; animation: toastIn 0.3s ease; max-width: 90%; text-align: center; font-family: 'Cairo', sans-serif; box-shadow: 0 8px 30px rgba(0, 0, 0, 0.2); }
+        .toast.success { background: #28a745; }
+        .toast.error { background: #dc3545; }
+        @keyframes toastIn { from { opacity: 0; transform: translateX(-50%) translateY(20px); } to { opacity: 1; transform: translateX(-50%) translateY(0); } }
+        .public-page-header { text-align: center; padding: 10px 0 5px 0; }
+        .public-page-header .helo-wrapper { display: flex; justify-content: center; margin-bottom: 5px; }
+        .public-page-header .helo-wrapper .civil-helo { margin-top: 0; transform: scale(0.75); animation: hoverCivilSmall 3s ease-in-out infinite; }
+        @keyframes hoverCivilSmall { 0%, 100% { transform: scale(0.75) translateY(0px); } 50% { transform: scale(0.75) translateY(-6px); } }
+        .site-link-wrapper { display: flex; justify-content: center; margin: 2px 0 16px 0; }
+        .site-link-btn { --black-700: hsla(210, 97%, 50%, 0.15); --border_radius: 9999px; --transtion: 0.3s ease-in-out; --offset: 2px; cursor: pointer; position: relative; display: flex; align-items: center; gap: 0.5rem; transform-origin: center; padding: 0.6rem 1.8rem; background-color: transparent; border: none; border-radius: var(--border_radius); transform: scale(calc(1 + (var(--active, 0) * 0.05))); transition: transform var(--transtion); text-decoration: none; font-family: 'Cairo', sans-serif; }
+        .site-link-btn::before { content: ""; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 100%; height: 100%; background-color: var(--black-700); border-radius: var(--border_radius); box-shadow: inset 0 0.5px hsla(0, 0%, 100%, 0.3), inset 0 -1px 2px 0 hsla(0, 0%, 0%, 0.1), 0px 4px 10px -4px hsla(0, 0%, 0%, 0.1); transition: all var(--transtion); z-index: 0; }
+        .site-link-btn::after { content: ""; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 100%; height: 100%; background-color: hsla(210, 97%, 61%, 0.15); background-image: radial-gradient(at 51% 89%, hsla(210, 45%, 74%, 0.3) 0px, transparent 50%), radial-gradient(at 0% 0%, hsla(210, 45%, 74%, 0.3) 0px, transparent 50%); background-position: top; opacity: var(--active, 0); border-radius: var(--border_radius); transition: opacity var(--transtion); z-index: 2; }
+        .site-link-btn:is(:hover, :focus-visible) { --active: 1; }
+        .site-link-btn:active { transform: scale(1); }
+        .site-link-btn .dots_border { --size_border: calc(100% + 2px); overflow: hidden; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: var(--size_border); height: var(--size_border); background-color: transparent; border-radius: var(--border_radius); z-index: -10; }
+        .site-link-btn .dots_border::before { content: ""; position: absolute; top: 30%; left: 50%; transform: translate(-50%, -50%); transform-origin: left; transform: rotate(0deg); width: 100%; height: 2rem; background: linear-gradient(90deg, transparent, #0076ff, transparent); mask: linear-gradient(transparent 0%, white 120%); animation: rotate 3s linear infinite; }
+        @keyframes rotate { to { transform: rotate(360deg); } }
+        .site-link-btn .text_button { position: relative; z-index: 10; font-size: 1rem; color: #0076ff; font-weight: 700; font-family: 'Cairo', sans-serif; transition: color var(--transtion); }
+        .site-link-btn:is(:hover, :focus-visible) .text_button { color: #0055b3; }
+        @media (max-width: 768px) { .header-new { padding: 12px 16px; } .header-new .logo-text { font-size: 20px; letter-spacing: 1px; } .header-new .divider { height: 25px; } .header-new .dot { width: 6px; height: 6px; } header { padding: 20px 5%; } .logo { font-size: 24px; } .hero h1 { font-size: 2rem; } .hero p { font-size: 1rem; } .cyber-node { width: 120px; height: 120px; font-size: 28px; } .cube-container { width: 130px; height: 120px; } .iso-cube { width: 90px; height: 90px; } .iso-face { width: 90px; height: 90px; font-size: 24px; } .iso-front { transform: rotateY(0deg) translateZ(45px); } .iso-right { transform: rotateY(90deg) translateZ(45px); } .iso-top { transform: rotateX(90deg) translateZ(45px); } .quantum-box { width: 120px; height: 120px; } .two-columns { grid-template-columns: 1fr; } .header-actions .share-btn-text { font-size: 11px; max-width: 180px; padding: 6px 10px; } .track-btn-spinner { height: 36px; width: 36px; } .track-btn-spinner .track-text { font-size: 10px; } }
     </style>
 </head>
 <body oncontextmenu="return false;">
@@ -1831,7 +265,6 @@
     صفحة الهبوط (Landing Page) مع الشريط الجديد
     ============================================ -->
     <div id="landingPage">
-        <!-- الشريط العلوي الجديد -->
         <header class="header-new">
             <div class="logo-container">
                 <div class="divider"></div>
@@ -1966,7 +399,6 @@
             صفحة تسجيل الدخول (Login) مع الشريط الجديد
             ========================================== -->
             <div id="loginPage" class="login-page">
-                <!-- الشريط العلوي الجديد -->
                 <header class="header-new" style="border-radius: 16px 16px 0 0; margin-bottom: 20px;">
                     <div class="logo-container">
                         <div class="divider"></div>
@@ -2022,7 +454,6 @@
             لوحة التحكم (Dashboard) مع الشريط الجديد
             ========================================== -->
             <div id="dashboard" class="hidden">
-                <!-- الشريط العلوي الجديد -->
                 <header class="header-new" style="border-radius: 16px 16px 0 0; margin-bottom: 20px;">
                     <div class="logo-container">
                         <div class="divider"></div>
@@ -2093,10 +524,8 @@
 
             <!-- ==========================================
             صفحة تسجيل الشحنة العامة (Public Order Page)
-            مع الشريط الجديد وعداد منع التكرار
             ========================================== -->
             <div id="publicOrderPage" class="hidden">
-                <!-- الشريط العلوي الجديد -->
                 <header class="header-new" style="border-radius: 16px 16px 0 0; margin-bottom: 20px;">
                     <div class="logo-container">
                         <div class="divider"></div>
@@ -2133,7 +562,6 @@
                 <div class="form-group"><label>وزن الشحنة *</label><input id="pf_weight" type="number" placeholder="الوزن بالكيلو" dir="ltr" value="1"></div>
                 <div class="form-group"><label>ملاحظات</label><textarea id="pf_notes" placeholder="ملاحظات اضافية"></textarea></div>
                 
-                <!-- زر تسجيل الشحنة مع عداد منع التكرار -->
                 <button class="btn-eux" id="publicSubmitBtn" onclick="submitPublicOrder()" style="width:100%;padding:14px;border-radius:12px;font-size:16px;">
                     <span class="inner">تسجيل الشحنة</span>
                     <span class="fold"></span>
@@ -2170,21 +598,19 @@
         let editingShipmentId = null;
         let isSubmitting = false;
         let isPublicSubmitting = false;
+        let autoUpdateInterval = null;
 
         // ============================================
         // نظام التتبع المتقدم - الحل الجذري
         // ============================================
 
         const TRACKING_CACHE_KEY = 'eux_tracking_cache';
-        const TRACKING_CACHE_DURATION = 30 * 60 * 1000; // 30 دقيقة
+        const TRACKING_CACHE_DURATION = 30 * 60 * 1000;
 
         function cacheTrackingStatus(trackingNumber, status) {
             try {
                 const cache = getTrackingCache();
-                cache[trackingNumber] = {
-                    status: status,
-                    timestamp: Date.now()
-                };
+                cache[trackingNumber] = { status: status, timestamp: Date.now() };
                 localStorage.setItem(TRACKING_CACHE_KEY, JSON.stringify(cache));
             } catch (e) { console.error('Tracking cache save error:', e); }
         }
@@ -2192,9 +618,7 @@
         function getTrackingCache() {
             try {
                 const cached = localStorage.getItem(TRACKING_CACHE_KEY);
-                if (cached) {
-                    return JSON.parse(cached);
-                }
+                if (cached) return JSON.parse(cached);
                 return {};
             } catch (e) { return {}; }
         }
@@ -2209,23 +633,16 @@
         }
 
         // ============================================
-        // دالة التتبع المحسنة - تعتمد على الكاش أولاً
+        // دالة التتبع المحسنة
         // ============================================
         async function fetchTrackingStatus(trackingNumber) {
             if (!trackingNumber || trackingNumber.length < 3) return null;
             
-            // 1. جلب من الكاش أولاً (فوري)
             const cachedStatus = getCachedTrackingStatus(trackingNumber);
-            if (cachedStatus) {
-                return cachedStatus;
-            }
+            if (cachedStatus) return cachedStatus;
             
-            // 2. إذا كان في trackingCache (الذاكرة المؤقتة) نرجعه فوراً
-            if (trackingCache[trackingNumber]) {
-                return trackingCache[trackingNumber];
-            }
+            if (trackingCache[trackingNumber]) return trackingCache[trackingNumber];
             
-            // 3. جلب من API في الخلفية
             try {
                 const res = await fetch(`${API_URL}?action=track&billCode=${trackingNumber}`);
                 const data = await res.json();
@@ -2233,18 +650,14 @@
                     let finalStatus = data.data[0].status || null;
                     const details = data.data[0].details || [];
                     for (const d of details) {
-                        const desc = d.desc || '';
-                        if (desc.includes('تم التسليم')) {
+                        if ((d.desc || '').includes('تم التسليم')) {
                             finalStatus = 'تم التسليم';
                             break;
                         }
                     }
                     if (!finalStatus || !finalStatus.includes('تم التسليم')) {
-                        if (finalStatus && finalStatus.includes('تم التسليم')) {
-                            finalStatus = 'تم التسليم';
-                        }
+                        if (finalStatus && finalStatus.includes('تم التسليم')) finalStatus = 'تم التسليم';
                     }
-                    // حفظ في الكاشين
                     trackingCache[trackingNumber] = finalStatus;
                     cacheTrackingStatus(trackingNumber, finalStatus);
                     return finalStatus;
@@ -2258,91 +671,94 @@
         }
 
         // ============================================
-        // تحديث حالات التتبع في الخلفية (Batch Update)
+        // دالة تحديث شحنة واحدة فوراً (الزر الجديد)
         // ============================================
-        let isTrackingUpdateRunning = false;
-
-        async function updateAllTrackingStatuses(shipments) {
-            const shipmentsWithTracking = shipments.filter(s => s.trackingNumber && s.trackingNumber.length > 3);
-            if (shipmentsWithTracking.length === 0) return;
-            
-            if (isTrackingUpdateRunning) return;
-            isTrackingUpdateRunning = true;
+        async function forceUpdateTracking(shipmentId, trackingNumber) {
+            const card = document.getElementById(`card-${shipmentId}`);
+            if (card) {
+                const statusValue = card.querySelector('.status-value');
+                if (statusValue) {
+                    statusValue.textContent = 'جاري التحديث...';
+                    statusValue.style.color = '#ff9800';
+                }
+            }
             
             try {
-                const chunkSize = 10;
-                const chunks = [];
-                for (let i = 0; i < shipmentsWithTracking.length; i += chunkSize) {
-                    chunks.push(shipmentsWithTracking.slice(i, i + chunkSize));
+                const status = await fetchTrackingStatus(trackingNumber);
+                if (status) {
+                    cacheTrackingStatus(trackingNumber, status);
+                    updateShipmentStatusCard(shipmentId, status);
+                    showToast('تم تحديث حالة الشحنة بنجاح!', 'success');
+                } else {
+                    showToast('فشل تحديث الحالة', 'error');
                 }
-                
-                for (const chunk of chunks) {
-                    // أولاً: عرض الحالة المخزنة في الكاش فوراً
-                    chunk.forEach(s => {
-                        const cachedStatus = getCachedTrackingStatus(s.trackingNumber);
-                        if (cachedStatus) {
-                            updateShipmentStatusCard(s.id, cachedStatus);
-                        }
-                    });
-                    
-                    // ثانياً: جلب التحديثات من API في الخلفية
-                    const promises = chunk.map(async (s) => {
-                        const status = await fetchTrackingStatus(s.trackingNumber);
-                        return { id: s.id, status };
-                    });
-                    
-                    const results = await Promise.all(promises);
-                    results.forEach(({ id, status }) => {
-                        if (status) {
-                            updateShipmentStatusCard(id, status);
-                        }
-                    });
-                    
-                    if (chunks.length > 1) {
-                        await new Promise(resolve => setTimeout(resolve, 500));
-                    }
-                }
-            } finally {
-                isTrackingUpdateRunning = false;
+            } catch (e) {
+                showToast('خطأ في الاتصال', 'error');
             }
         }
 
         // ============================================
-        // تحديث التتبع بشكل دوري في الخلفية
+        // تحديث تلقائي كل 20 ثانية
         // ============================================
-        let trackingInterval = null;
-
-        function startBackgroundTrackingUpdates() {
-            if (trackingInterval) return;
+        function startAutoUpdate() {
+            if (autoUpdateInterval) return;
             
-            trackingInterval = setInterval(() => {
-                if (allShipmentsData && allShipmentsData.length > 0) {
-                    const hasTracking = allShipmentsData.some(s => s.trackingNumber && s.trackingNumber.length > 3);
-                    if (hasTracking) {
-                        console.log('🔄 تحديث التتبع في الخلفية...');
-                        updateAllTrackingStatuses(allShipmentsData);
-                    }
+            autoUpdateInterval = setInterval(() => {
+                const updateButtons = document.querySelectorAll('.shipment-card .force-update-btn');
+                if (updateButtons.length > 0) {
+                    console.log(`🔄 تحديث تلقائي: ${updateButtons.length} شحنة...`);
+                    updateButtons.forEach((btn, index) => {
+                        setTimeout(() => btn.click(), index * 300);
+                    });
                 }
-            }, 60 * 1000);
+            }, 20000);
         }
 
-        function stopBackgroundTrackingUpdates() {
-            if (trackingInterval) {
-                clearInterval(trackingInterval);
-                trackingInterval = null;
+        function stopAutoUpdate() {
+            if (autoUpdateInterval) {
+                clearInterval(autoUpdateInterval);
+                autoUpdateInterval = null;
+                console.log('⏹️ تم إيقاف التحديث التلقائي');
             }
         }
 
         // ============================================
-        // استراتيجيات الأداء: Cache-First + Optimistic UI
+        // دالة إضافة أزرار التحديث للبطاقات
+        // ============================================
+        function addUpdateButtonsToCards() {
+            document.querySelectorAll('.shipment-card').forEach(card => {
+                if (card.querySelector('.force-update-btn')) return;
+                
+                const actionsDiv = card.querySelector('.actions');
+                if (!actionsDiv) return;
+                
+                const shipmentData = card.dataset.shipment;
+                if (!shipmentData) return;
+                
+                try {
+                    const s = JSON.parse(shipmentData);
+                    if (s.trackingNumber && s.trackingNumber.length > 3) {
+                        const updateBtn = document.createElement('button');
+                        updateBtn.className = 'btn-eux force-update-btn';
+                        updateBtn.style.cssText = 'padding:4px 12px;border-radius:8px;font-size:12px;background:#ff9800;';
+                        updateBtn.innerHTML = `<span class="inner"><i class="fas fa-sync-alt"></i> تحديث الآن</span><span class="fold"></span>`;
+                        updateBtn.onclick = function(e) {
+                            e.stopPropagation();
+                            forceUpdateTracking(s.id, s.trackingNumber);
+                        };
+                        actionsDiv.appendChild(updateBtn);
+                    }
+                } catch(e) {}
+            });
+        }
+
+        // ============================================
+        // دوال الجلب والكاش
         // ============================================
 
         function cacheShipments(shipments, key = 'eux_shipments') {
             try {
-                const cacheData = {
-                    data: shipments,
-                    timestamp: Date.now()
-                };
+                const cacheData = { data: shipments, timestamp: Date.now() };
                 localStorage.setItem(key, JSON.stringify(cacheData));
             } catch (e) { console.error('Cache save error:', e); }
         }
@@ -2369,7 +785,6 @@
                 const isAdmin = currentUser && currentUser.role === 'admin';
                 content.innerHTML = allShipmentsData.map(s => createShipmentCard(s, isAdmin)).join('');
                 
-                // عرض حالات التتبع المخزنة فوراً
                 allShipmentsData.forEach(s => {
                     if (s.trackingNumber && s.trackingNumber.length > 3) {
                         const cachedStatus = getCachedTrackingStatus(s.trackingNumber);
@@ -2378,6 +793,10 @@
                         }
                     }
                 });
+                
+                // إضافة أزرار التحديث
+                setTimeout(addUpdateButtonsToCards, 100);
+                startAutoUpdate();
             } else {
                 content.innerHTML = '<div class="loading"><div class="spinner"></div>جاري التحميل...</div>';
             }
@@ -2390,10 +809,7 @@
                         document.getElementById('totalCountSmall').textContent = newData.length;
                         const isAdmin = currentUser && currentUser.role === 'admin';
                         content.innerHTML = newData.map(s => createShipmentCard(s, isAdmin)).join('');
-                        
-                        // تحديث حالات التتبع في الخلفية
-                        updateAllTrackingStatuses(newData);
-                        startBackgroundTrackingUpdates();
+                        setTimeout(addUpdateButtonsToCards, 100);
                     }
                 })
                 .catch(err => {
@@ -2404,22 +820,13 @@
                 });
         }
 
-        // ============================================
-        // دوال الجلب المحسنة
-        // ============================================
-
         async function loadMyShipments(background = false) {
             try {
                 const res = await fetch(`${API_URL}?action=myShipments&phone=${currentUser.phone}&password=${currentUser.password}`);
                 const data = await res.json();
-                if (data.success) {
-                    return data.shipments || [];
-                }
+                if (data.success) return data.shipments || [];
                 return [];
-            } catch (e) {
-                console.error('loadMyShipments error:', e);
-                return [];
-            }
+            } catch (e) { return []; }
         }
 
         async function loadAllShipments(background = false) {
@@ -2430,18 +837,13 @@
                 params.append('adminPassword', currentUser.password);
                 const res = await fetch(API_URL, { method: 'POST', body: params });
                 const data = await res.json();
-                if (data.success) {
-                    return data.shipments || [];
-                }
+                if (data.success) return data.shipments || [];
                 return [];
-            } catch (e) {
-                console.error('loadAllShipments error:', e);
-                return [];
-            }
+            } catch (e) { return []; }
         }
 
         // ============================================
-        // دوال العرض والتحكم
+        // دوال العرض الأساسية
         // ============================================
 
         function showDashboard() {
@@ -2513,16 +915,11 @@
             let trackButton = '';
             if (hasTracking) {
                 trackButton = `
-                        <button class="track-btn-spinner" onclick="event.stopPropagation(); trackShipment('${trackingNum}')">
-                            <span class="ring"></span>
-                            <span class="ring"></span>
-                            <span class="ring"></span>
-                            <span class="ring"></span>
-                            <span class="inner-circle">
-                                <span class="track-text">تتبع</span>
-                            </span>
-                        </button>
-                    `;
+                    <button class="track-btn-spinner" onclick="event.stopPropagation(); trackShipment('${trackingNum}')">
+                        <span class="ring"></span><span class="ring"></span><span class="ring"></span><span class="ring"></span>
+                        <span class="inner-circle"><span class="track-text">تتبع</span></span>
+                    </button>
+                `;
             }
 
             if (!isAdmin) {
@@ -2553,31 +950,31 @@
             const badgeHTML = statusText ? `<span class="status-badge ${statusClass}">${statusText}</span>` : '';
 
             return `<div class="shipment-card" onclick="toggleDetails(this)" id="card-${s.id}" data-shipment='${JSON.stringify(s).replace(/'/g, "\\'")}'>
-                    ${badgeHTML}
-                    <div class="summary-row">
-                        <div class="main-info">
-                            <span class="name">${displayName}</span>
-                            <span class="phone">${displayPhone}</span>
-                            ${trackButton}
-                            <span class="amount">${displayAmount} ج.م</span>
-                        </div>
-                        <div class="last-update">${updateText}</div>
+                ${badgeHTML}
+                <div class="summary-row">
+                    <div class="main-info">
+                        <span class="name">${displayName}</span>
+                        <span class="phone">${displayPhone}</span>
+                        ${trackButton}
+                        <span class="amount">${displayAmount} ج.م</span>
                     </div>
-                    <div class="status-row">
-                        <span class="status-label">الحالة:</span>
-                        <span class="status-value">جاري التحميل...</span>
-                    </div>
-                    <div class="details">
-                        ${isAdmin ? `<div class="info"><strong>رقم العميل:</strong> ${s.clientPhone || 'غير معروف'}</div>` : ''}${adminDetails}
-                        ${s.receiverPhone2 ? `<div class="info"><strong>هاتف آخر:</strong> ${s.receiverPhone2}</div>` : ''}
-                        ${s.governorate ? `<div class="info"><strong>المحافظة:</strong> ${s.governorate}</div>` : ''}
-                        ${s.city ? `<div class="info"><strong>المدينة:</strong> ${s.city}</div>` : ''}
-                        <div class="info"><strong>العنوان:</strong> ${s.address || s.customerAddress || ''}</div>
-                        ${s.weight ? `<div class="info"><strong>الوزن:</strong> ${s.weight} كجم</div>` : ''}
-                        ${s.notes ? `<div class="info"><strong>ملاحظات:</strong> ${s.notes}</div>` : ''}
-                        ${actions ? `<div class="actions">${actions}</div>` : ''}
-                    </div>
-                </div>`;
+                    <div class="last-update">${updateText}</div>
+                </div>
+                <div class="status-row">
+                    <span class="status-label">الحالة:</span>
+                    <span class="status-value">جاري التحميل...</span>
+                </div>
+                <div class="details">
+                    ${isAdmin ? `<div class="info"><strong>رقم العميل:</strong> ${s.clientPhone || 'غير معروف'}</div>` : ''}${adminDetails}
+                    ${s.receiverPhone2 ? `<div class="info"><strong>هاتف آخر:</strong> ${s.receiverPhone2}</div>` : ''}
+                    ${s.governorate ? `<div class="info"><strong>المحافظة:</strong> ${s.governorate}</div>` : ''}
+                    ${s.city ? `<div class="info"><strong>المدينة:</strong> ${s.city}</div>` : ''}
+                    <div class="info"><strong>العنوان:</strong> ${s.address || s.customerAddress || ''}</div>
+                    ${s.weight ? `<div class="info"><strong>الوزن:</strong> ${s.weight} كجم</div>` : ''}
+                    ${s.notes ? `<div class="info"><strong>ملاحظات:</strong> ${s.notes}</div>` : ''}
+                    <div class="actions">${actions}</div>
+                </div>
+            </div>`;
         }
 
         function toggleDetails(element) { const details = element.querySelector('.details'); if (details) details.classList.toggle('open'); }
@@ -2604,13 +1001,11 @@
             } else {
                 const isAdmin = currentUser && currentUser.role === 'admin';
                 content.innerHTML = filtered.map(s => createShipmentCard(s, isAdmin)).join('');
-                // عرض حالات التتبع المخزنة للنتائج
+                setTimeout(addUpdateButtonsToCards, 100);
                 filtered.forEach(s => {
                     if (s.trackingNumber && s.trackingNumber.length > 3) {
                         const cachedStatus = getCachedTrackingStatus(s.trackingNumber);
-                        if (cachedStatus) {
-                            updateShipmentStatusCard(s.id, cachedStatus);
-                        }
+                        if (cachedStatus) updateShipmentStatusCard(s.id, cachedStatus);
                     }
                 });
             }
@@ -2629,11 +1024,7 @@
         // ============================================
 
         async function submitShipment() {
-            if (isSubmitting) {
-                showToast('يرجى الانتظار 10 ثوانٍ قبل إضافة شحنة أخرى', 'error');
-                return;
-            }
-
+            if (isSubmitting) { showToast('يرجى الانتظار 10 ثوانٍ', 'error'); return; }
             const receiverName = document.getElementById('f_receiverName').value.trim();
             const receiverPhone = document.getElementById('f_receiverPhone').value.trim();
             const receiverPhone2 = document.getElementById('f_receiverPhone2').value.trim();
@@ -2650,11 +1041,9 @@
 
             isSubmitting = true;
             const submitBtn = document.querySelector('.modal-content .btn-eux, .modal-content .btn-eux-orange');
-            if (submitBtn) {
-                submitBtn.disabled = true;
+            if (submitBtn) { submitBtn.disabled = true;
                 submitBtn.style.opacity = '0.6';
-                submitBtn.style.cursor = 'not-allowed';
-            }
+                submitBtn.style.cursor = 'not-allowed'; }
 
             try {
                 if (editingShipmentId) {
@@ -2663,18 +1052,10 @@
                     deleteParams.append('phone', currentUser.phone);
                     deleteParams.append('password', currentUser.password);
                     deleteParams.append('shipmentId', editingShipmentId);
-                    try {
-                        await fetch(API_URL, { method: 'POST', headers: { 'Content-Type': 'application/x-www-form-urlencoded' }, body: deleteParams.toString() });
-                    } catch (e) {
-                        errorDiv.textContent = 'فشل حذف الشحنة القديمة';
-                        isSubmitting = false;
-                        if (submitBtn) {
-                            submitBtn.disabled = false;
+                    try { await fetch(API_URL, { method: 'POST', body: deleteParams.toString() }); } catch (e) { errorDiv.textContent = 'فشل حذف الشحنة القديمة';
+                        isSubmitting = false; if (submitBtn) { submitBtn.disabled = false;
                             submitBtn.style.opacity = '1';
-                            submitBtn.style.cursor = 'pointer';
-                        }
-                        return;
-                    }
+                            submitBtn.style.cursor = 'pointer'; } return; }
                 }
 
                 const params = new URLSearchParams();
@@ -2690,7 +1071,7 @@
                 params.append('amount', amount);
                 params.append('weight', weight);
                 params.append('notes', notes);
-                const res = await fetch(API_URL, { method: 'POST', headers: { 'Content-Type': 'application/x-www-form-urlencoded' }, body: params.toString() });
+                const res = await fetch(API_URL, { method: 'POST', body: params.toString() });
                 const data = await res.json();
                 if (data.success) {
                     closeModal();
@@ -2706,7 +1087,7 @@
                         document.getElementById('totalCountSmall').textContent = newData.length;
                         const isAdminNow = currentUser && currentUser.role === 'admin';
                         document.getElementById('content').innerHTML = newData.map(s => createShipmentCard(s, isAdminNow)).join('');
-                        updateAllTrackingStatuses(newData);
+                        setTimeout(addUpdateButtonsToCards, 100);
                     }
                     showToast(wasEditing ? 'تم تحديث الشحنة بنجاح!' : 'تم اضافة الشحنة بنجاح!', 'success');
                 } else { errorDiv.textContent = data.msg || "فشل الاضافة"; }
@@ -2714,11 +1095,9 @@
 
             setTimeout(() => {
                 isSubmitting = false;
-                if (submitBtn) {
-                    submitBtn.disabled = false;
+                if (submitBtn) { submitBtn.disabled = false;
                     submitBtn.style.opacity = '1';
-                    submitBtn.style.cursor = 'pointer';
-                }
+                    submitBtn.style.cursor = 'pointer'; }
             }, 10000);
         }
 
@@ -2730,7 +1109,7 @@
             params.append('password', currentUser.password);
             params.append('shipmentId', shipmentId);
             try {
-                const res = await fetch(API_URL, { method: 'POST', headers: { 'Content-Type': 'application/x-www-form-urlencoded' }, body: params.toString() });
+                const res = await fetch(API_URL, { method: 'POST', body: params.toString() });
                 const data = await res.json();
                 if (data.success) {
                     trackingCache = {};
@@ -2744,15 +1123,13 @@
                         document.getElementById('totalCountSmall').textContent = newData.length;
                         const isAdminNow = currentUser && currentUser.role === 'admin';
                         document.getElementById('content').innerHTML = newData.map(s => createShipmentCard(s, isAdminNow)).join('');
-                        updateAllTrackingStatuses(newData);
+                        setTimeout(addUpdateButtonsToCards, 100);
                     } else {
                         document.getElementById('content').innerHTML = '<div class="empty-state"><div class="icon">📦</div><p>لا توجد شحنات حتى الآن</p></div>';
                         document.getElementById('totalCountSmall').textContent = '0';
                     }
                     showToast('تم حذف الشحنة بنجاح', 'success');
-                } else {
-                    showToast(data.msg || 'فشل الحذف', 'error');
-                }
+                } else { showToast(data.msg || 'فشل الحذف', 'error'); }
             } catch (e) { showToast('فشل الاتصال بالخادم', 'error'); }
         }
 
@@ -2767,9 +1144,9 @@
             params.append('shipmentId', shipmentId);
             params.append('trackingNumber', trackingNumber);
             try {
-                const res = await fetch(API_URL, { method: 'POST', headers: { 'Content-Type': 'application/x-www-form-urlencoded' }, body: params.toString() });
+                const res = await fetch(API_URL, { method: 'POST', body: params.toString() });
                 const data = await res.json();
-                if (data.success) { 
+                if (data.success) {
                     closeModal();
                     trackingCache = {};
                     const isAdmin = currentUser.role === 'admin';
@@ -2782,22 +1159,21 @@
                         document.getElementById('totalCountSmall').textContent = newData.length;
                         const isAdminNow = currentUser && currentUser.role === 'admin';
                         document.getElementById('content').innerHTML = newData.map(s => createShipmentCard(s, isAdminNow)).join('');
-                        updateAllTrackingStatuses(newData);
+                        setTimeout(addUpdateButtonsToCards, 100);
                     }
-                    showToast('تم اضافة رقم التتبع!', 'success'); 
+                    showToast('تم اضافة رقم التتبع!', 'success');
                 } else { errorDiv.textContent = data.msg; }
             } catch (e) { errorDiv.textContent = 'فشل الاتصال'; }
         }
 
         // ============================================
-        // دوال عامة (لم تتغير)
+        // دوال عامة
         // ============================================
 
         function openTrackingSystem() {
             document.getElementById('landingPage').classList.add('hidden');
             document.getElementById('trackingApp').classList.remove('hidden');
             document.body.style.background = 'linear-gradient(135deg, #e8f0fe, #d4e4f7)';
-
             if (!checkSession()) {
                 document.getElementById('loginPage').classList.remove('hidden');
                 document.getElementById('dashboard').classList.add('hidden');
@@ -2809,9 +1185,7 @@
             document.getElementById('trackingApp').classList.add('hidden');
             document.getElementById('landingPage').classList.remove('hidden');
             document.body.style.background = '#ffffff';
-            if (window.history && window.history.pushState) {
-                window.history.pushState({}, '', window.location.pathname);
-            }
+            if (window.history && window.history.pushState) window.history.pushState({}, '', window.location.pathname);
         }
 
         function saveUserSession(userData) {
@@ -2855,25 +1229,22 @@
         function checkSession() {
             const urlParams = new URLSearchParams(window.location.search);
             const refPhone = urlParams.get('ref');
-
             if (refPhone && refPhone.length === 11) {
                 publicClientPhone = refPhone;
                 showPublicOrderPage();
                 return true;
             }
-
             const savedUser = getSavedUser();
             if (savedUser && savedUser.phone && savedUser.password) {
                 currentUser = savedUser;
                 showDashboard();
                 return true;
             }
-
             return false;
         }
 
         const governorates = {
-            'الشرقية': ['بلبيس', 'انشاص الرمل', 'أولاد صقر', 'الحسينية', 'ديرب نجم', 'فاقوس', 'كفر صقر', 'مشتول السوق', 'منيا القمح', 'الصالحية القديمة', 'الصالحية الجديدة', 'صان الحجر', 'مدينة العاشر من رمضان'],
+            'الشرقية': ['بلبيس', 'انشاص الرمل', 'أولاد صقر', 'الحسينية', 'ديرب نجم', 'فاقوس', 'كفر صقر', 'مشتول السوق', 'منيا القمح', 'الصالحية القديمة', 'الصالحية الجديدة', 'صان الحجر', 'مدينة العاشر من رمضان', 'مركز ابو حماد'],
             'الجيزة': ['مدينة السادس من أكتوبر', 'مدينة الشيخ زايد', 'العياط', 'الحوامدية', 'البدرشين', 'الصف', 'العمرانية', 'أطفيح', 'الواحات البحرية', 'الجيزة', 'حدائق الاهرام', 'فيصل', 'الهرم', 'أبو النمرس', 'العجوزة', 'الوراق', 'أوسيم', 'بولاق الدكرور', 'الدقي', 'أرض اللواء', 'المهندسين', 'كرداسة', 'إمبابة', 'منشأة القناطر'],
             'الغربية': ['كفر الزيات', 'المحلة الكبرى', 'سمنود', 'بسيون', 'السنطة', 'زفتى', 'قطور', 'طنطا'],
             'الدقهلية': ['المنصورة', 'أجا', 'المنزلة', 'بلقاس', 'دكرنس', 'السنبلاوين', 'منية النصر', 'ميت غمر', 'شربين', 'طلخا'],
@@ -2935,16 +1306,11 @@
             document.getElementById('landingPage').classList.add('hidden');
             document.getElementById('loginPage').classList.add('hidden');
             document.getElementById('dashboard').classList.add('hidden');
-
             const publicPage = document.getElementById('publicOrderPage');
             publicPage.classList.remove('hidden');
-
             let govOptions = '<option value="">اختر المحافظة</option>';
-            Object.keys(governorates).forEach(gov => {
-                govOptions += `<option value="${gov}">${gov}</option>`;
-            });
+            Object.keys(governorates).forEach(gov => { govOptions += `<option value="${gov}">${gov}</option>`; });
             document.getElementById('pf_governorate').innerHTML = govOptions;
-
             document.body.style.background = 'linear-gradient(135deg, #e8f0fe, #d4e4f7)';
         }
 
@@ -2952,11 +1318,7 @@
         // دالة تسجيل الشحنة العامة
         // ============================================
         async function submitPublicOrder() {
-            if (isPublicSubmitting) {
-                showToast('يرجى الانتظار 10 ثوانٍ قبل تسجيل شحنة أخرى', 'error');
-                return;
-            }
-
+            if (isPublicSubmitting) { showToast('يرجى الانتظار 10 ثوانٍ', 'error'); return; }
             const receiverName = document.getElementById('pf_receiverName').value.trim();
             const receiverPhone = document.getElementById('pf_receiverPhone').value.trim();
             const receiverPhone2 = document.getElementById('pf_receiverPhone2').value.trim();
@@ -2967,29 +1329,16 @@
             const weight = document.getElementById('pf_weight').value.trim() || '1';
             const notes = document.getElementById('pf_notes').value.trim();
             const errorDiv = document.getElementById('publicError');
-            
-            if (!receiverName || !receiverPhone || !governorate || !city || !address || !amount) { 
-                errorDiv.textContent = "يرجى ملء جميع الحقول المطلوبة"; 
-                return; 
-            }
-            if (receiverPhone.length !== 11) { 
-                errorDiv.textContent = "رقم هاتف المستلم يجب أن يكون 11 رقم"; 
-                return; 
-            }
-            if (receiverPhone2 && receiverPhone2.length !== 11) { 
-                errorDiv.textContent = "رقم هاتف آخر يجب أن يكون 11 رقم"; 
-                return; 
-            }
+            if (!receiverName || !receiverPhone || !governorate || !city || !address || !amount) { errorDiv.textContent = "يرجى ملء جميع الحقول المطلوبة"; return; }
+            if (receiverPhone.length !== 11) { errorDiv.textContent = "رقم هاتف المستلم يجب أن يكون 11 رقم"; return; }
+            if (receiverPhone2 && receiverPhone2.length !== 11) { errorDiv.textContent = "رقم هاتف آخر يجب أن يكون 11 رقم"; return; }
 
             isPublicSubmitting = true;
             const submitBtn = document.getElementById('publicSubmitBtn');
-            if (submitBtn) {
-                submitBtn.disabled = true;
+            if (submitBtn) { submitBtn.disabled = true;
                 submitBtn.style.opacity = '0.6';
-                submitBtn.style.cursor = 'not-allowed';
-                const inner = submitBtn.querySelector('.inner');
-                if (inner) inner.innerHTML = '<i class="fas fa-spinner fa-spin"></i> جاري الإرسال...';
-            }
+                submitBtn.style.cursor = 'not-allowed'; const inner = submitBtn.querySelector('.inner'); if (inner) inner.innerHTML =
+                    '<i class="fas fa-spinner fa-spin"></i> جاري الإرسال...'; }
 
             const params = new URLSearchParams();
             params.append('action', 'addShipment');
@@ -3004,9 +1353,9 @@
             params.append('amount', amount);
             params.append('weight', weight);
             params.append('notes', notes);
-            
+
             try {
-                const res = await fetch(API_URL, { method: 'POST', headers: { 'Content-Type': 'application/x-www-form-urlencoded' }, body: params.toString() });
+                const res = await fetch(API_URL, { method: 'POST', body: params.toString() });
                 const data = await res.json();
                 if (data.success) {
                     showToast('تم تسجيل الشحنة بنجاح!', 'success');
@@ -3020,29 +1369,23 @@
                     document.getElementById('pf_weight').value = '1';
                     document.getElementById('pf_notes').value = '';
                     errorDiv.textContent = '';
-                } else { 
-                    errorDiv.textContent = data.msg || "فشل التسجيل"; 
-                }
-            } catch (e) { 
-                errorDiv.textContent = 'فشل الاتصال'; 
-            }
+                } else { errorDiv.textContent = data.msg || "فشل التسجيل"; }
+            } catch (e) { errorDiv.textContent = 'فشل الاتصال'; }
 
             setTimeout(() => {
                 isPublicSubmitting = false;
-                if (submitBtn) {
-                    submitBtn.disabled = false;
+                if (submitBtn) { submitBtn.disabled = false;
                     submitBtn.style.opacity = '1';
-                    submitBtn.style.cursor = 'pointer';
-                    const inner = submitBtn.querySelector('.inner');
-                    if (inner) inner.innerHTML = 'تسجيل الشحنة';
-                }
+                    submitBtn.style.cursor = 'pointer'; const inner = submitBtn.querySelector('.inner'); if (inner) inner.innerHTML =
+                        'تسجيل الشحنة'; }
             }, 10000);
         }
 
         function copyShareLink() {
             const shareUrl = `${BASE_URL}/?ref=${currentUser.phone}`;
             if (navigator.clipboard && navigator.clipboard.writeText) {
-                navigator.clipboard.writeText(shareUrl).then(() => showToast('تم نسخ رابط التسجيل!', 'success')).catch(() => fallbackCopy(shareUrl));
+                navigator.clipboard.writeText(shareUrl).then(() => showToast('تم نسخ رابط التسجيل!', 'success')).catch(() =>
+                    fallbackCopy(shareUrl));
             } else { fallbackCopy(shareUrl); }
         }
 
@@ -3077,15 +1420,15 @@
         function showModalWithLink(url) {
             document.getElementById('modal').classList.remove('hidden');
             document.getElementById('modalBody').innerHTML = `
-                    <h3><i class="fas fa-link"></i> رابط التسجيل</h3>
-                    <p style="margin-bottom:12px;color:#666;font-size:13px;">انسخ الرابط يدويا:</p>
-                    <div style="background:#f0f6fe;padding:14px;border-radius:10px;word-break:break-all;direction:ltr;text-align:left;margin-bottom:14px;font-size:13px;border:1px solid #dce8f5;">${url}</div>
-                    <button class="btn-eux" onclick="navigator.clipboard.writeText('${url.replace(/'/g, "\\'")}').then(()=>showToast('تم النسخ!','success')).catch(()=>showToast('فشل النسخ','error'))" style="width:100%;">
-                        <span class="inner">نسخ الرابط</span><span class="fold"></span>
-                        <div class="points_wrapper"><span class="point"></span><span class="point"></span><span class="point"></span><span class="point"></span><span class="point"></span><span class="point"></span><span class="point"></span><span class="point"></span><span class="point"></span><span class="point"></span></div>
-                    </button>
-                    <button class="btn-eux-outline" onclick="closeModal()" style="width:100%;margin-top:8px;"><span class="inner">اغلاق</span></button>
-                `;
+                <h3><i class="fas fa-link"></i> رابط التسجيل</h3>
+                <p style="margin-bottom:12px;color:#666;font-size:13px;">انسخ الرابط يدويا:</p>
+                <div style="background:#f0f6fe;padding:14px;border-radius:10px;word-break:break-all;direction:ltr;text-align:left;margin-bottom:14px;font-size:13px;border:1px solid #dce8f5;">${url}</div>
+                <button class="btn-eux" onclick="navigator.clipboard.writeText('${url.replace(/'/g, "\\'")}').then(()=>showToast('تم النسخ!','success')).catch(()=>showToast('فشل النسخ','error'))" style="width:100%;">
+                    <span class="inner">نسخ الرابط</span><span class="fold"></span>
+                    <div class="points_wrapper"><span class="point"></span><span class="point"></span><span class="point"></span><span class="point"></span><span class="point"></span><span class="point"></span><span class="point"></span><span class="point"></span><span class="point"></span><span class="point"></span></div>
+                </button>
+                <button class="btn-eux-outline" onclick="closeModal()" style="width:100%;margin-top:8px;"><span class="inner">اغلاق</span></button>
+            `;
         }
 
         async function doLogin() {
@@ -3111,7 +1454,7 @@
         function logout() {
             currentUser = null;
             trackingCache = {};
-            stopBackgroundTrackingUpdates();
+            stopAutoUpdate();
             clearUserSession();
             document.getElementById('loginPage').classList.remove('hidden');
             document.getElementById('dashboard').classList.add('hidden');
@@ -3130,43 +1473,33 @@
             Object.keys(governorates).forEach(gov => { govOptions += `<option value="${gov}">${gov}</option>`; });
             document.getElementById('modal').classList.remove('hidden');
             document.getElementById('modalBody').innerHTML = `
-                    <h3><i class="fas fa-box"></i> اضافة شحنة جديدة</h3>
-                    <div class="form-group"><label>اسم المستلم *</label><input id="f_receiverName" placeholder="اسم المستلم"></div>
-                    <div class="form-group"><label>هاتف المستلم *</label><input id="f_receiverPhone" placeholder="مثال: 010xxxxxxxx" dir="ltr" maxlength="11" oninput="this.value=this.value.replace(/[^0-9]/g,'')"></div>
-                    <div class="form-group"><label>هاتف آخر للمستلم</label><input id="f_receiverPhone2" placeholder="هاتف آخر (اختياري)" dir="ltr" maxlength="11" oninput="this.value=this.value.replace(/[^0-9]/g,'')"></div>
-                    <div class="two-columns"><div class="form-group"><label>المحافظة *</label><select id="f_governorate" onchange="updateCities()">${govOptions}</select></div><div class="form-group"><label>المدينة *</label><select id="f_city"><option value="">اختر المحافظة أولا</option></select></div></div>
-                    <div class="form-group"><label>العنوان التفصيلي *</label><input id="f_address" placeholder="العنوان بالتفصيل"></div>
-                    <div class="form-group"><label>المبلغ المطلوب تحصيله شامل الشحن *</label><input id="f_amount" type="number" placeholder="المبلغ بالجنيه" dir="ltr"></div>
-                    <div class="form-group"><label>وزن الشحنة *</label><input id="f_weight" type="number" placeholder="الوزن بالكيلو" dir="ltr" value="1"></div>
-                    <div class="form-group"><label>ملاحظات</label><textarea id="f_notes" placeholder="ملاحظات اضافية"></textarea></div>
-                    <button class="btn-eux" onclick="submitShipment()" style="width:100%;"><span class="inner">اضافة الشحنة</span><span class="fold"></span></button>
-                    <p id="shipError" style="color:red;margin-top:10px;"></p>
-                `;
+                <h3><i class="fas fa-box"></i> اضافة شحنة جديدة</h3>
+                <div class="form-group"><label>اسم المستلم *</label><input id="f_receiverName" placeholder="اسم المستلم"></div>
+                <div class="form-group"><label>هاتف المستلم *</label><input id="f_receiverPhone" placeholder="مثال: 010xxxxxxxx" dir="ltr" maxlength="11" oninput="this.value=this.value.replace(/[^0-9]/g,'')"></div>
+                <div class="form-group"><label>هاتف آخر للمستلم</label><input id="f_receiverPhone2" placeholder="هاتف آخر (اختياري)" dir="ltr" maxlength="11" oninput="this.value=this.value.replace(/[^0-9]/g,'')"></div>
+                <div class="two-columns"><div class="form-group"><label>المحافظة *</label><select id="f_governorate" onchange="updateCities()">${govOptions}</select></div><div class="form-group"><label>المدينة *</label><select id="f_city"><option value="">اختر المحافظة أولا</option></select></div></div>
+                <div class="form-group"><label>العنوان التفصيلي *</label><input id="f_address" placeholder="العنوان بالتفصيل"></div>
+                <div class="form-group"><label>المبلغ المطلوب تحصيله شامل الشحن *</label><input id="f_amount" type="number" placeholder="المبلغ بالجنيه" dir="ltr"></div>
+                <div class="form-group"><label>وزن الشحنة *</label><input id="f_weight" type="number" placeholder="الوزن بالكيلو" dir="ltr" value="1"></div>
+                <div class="form-group"><label>ملاحظات</label><textarea id="f_notes" placeholder="ملاحظات اضافية"></textarea></div>
+                <button class="btn-eux" onclick="submitShipment()" style="width:100%;"><span class="inner">اضافة الشحنة</span><span class="fold"></span></button>
+                <p id="shipError" style="color:red;margin-top:10px;"></p>
+            `;
         }
 
         function showEditShipmentForm(shipmentId) {
             const card = document.getElementById(`card-${shipmentId}`);
-            if (!card) {
-                showToast('لم يتم العثور على الشحنة', 'error');
-                return;
-            }
-
+            if (!card) { showToast('لم يتم العثور على الشحنة', 'error'); return; }
             const shipmentData = card.dataset.shipment;
-            if (!shipmentData) {
-                showToast('بيانات الشحنة غير متوفرة', 'error');
-                return;
-            }
-
+            if (!shipmentData) { showToast('بيانات الشحنة غير متوفرة', 'error'); return; }
             try {
                 const shipment = JSON.parse(shipmentData);
                 editingShipmentId = shipmentId;
-
                 let govOptions = '<option value="">اختر المحافظة</option>';
                 Object.keys(governorates).forEach(gov => {
                     const selected = gov === shipment.governorate ? 'selected' : '';
                     govOptions += `<option value="${gov}" ${selected}>${gov}</option>`;
                 });
-
                 let cityOptions = '<option value="">اختر المدينة</option>';
                 if (shipment.governorate && governorates[shipment.governorate]) {
                     governorates[shipment.governorate].forEach(city => {
@@ -3174,37 +1507,34 @@
                         cityOptions += `<option value="${city}" ${selected}>${city}</option>`;
                     });
                 }
-
                 document.getElementById('modal').classList.remove('hidden');
                 document.getElementById('modalBody').innerHTML = `
-                        <h3><i class="fas fa-edit"></i> تعديل الشحنة</h3>
-                        <p style="color:#888;font-size:13px;margin-bottom:12px;">سيتم حذف الشحنة القديمة وإنشاء شحنة جديدة بنفس البيانات بعد التعديل</p>
-                        <div class="form-group"><label>اسم المستلم *</label><input id="f_receiverName" value="${shipment.receiverName || ''}" placeholder="اسم المستلم"></div>
-                        <div class="form-group"><label>هاتف المستلم *</label><input id="f_receiverPhone" value="${shipment.receiverPhone || ''}" placeholder="مثال: 010xxxxxxxx" dir="ltr" maxlength="11" oninput="this.value=this.value.replace(/[^0-9]/g,'')"></div>
-                        <div class="form-group"><label>هاتف آخر للمستلم</label><input id="f_receiverPhone2" value="${shipment.receiverPhone2 || ''}" placeholder="هاتف آخر (اختياري)" dir="ltr" maxlength="11" oninput="this.value=this.value.replace(/[^0-9]/g,'')"></div>
-                        <div class="two-columns"><div class="form-group"><label>المحافظة *</label><select id="f_governorate" onchange="updateCities()">${govOptions}</select></div><div class="form-group"><label>المدينة *</label><select id="f_city">${cityOptions}</select></div></div>
-                        <div class="form-group"><label>العنوان التفصيلي *</label><input id="f_address" value="${shipment.address || ''}" placeholder="العنوان بالتفصيل"></div>
-                        <div class="form-group"><label>المبلغ المطلوب تحصيله شامل الشحن *</label><input id="f_amount" type="number" value="${shipment.amount || ''}" placeholder="المبلغ بالجنيه" dir="ltr"></div>
-                        <div class="form-group"><label>وزن الشحنة *</label><input id="f_weight" type="number" value="${shipment.weight || '1'}" placeholder="الوزن بالكيلو" dir="ltr"></div>
-                        <div class="form-group"><label>ملاحظات</label><textarea id="f_notes" placeholder="ملاحظات اضافية">${shipment.notes || ''}</textarea></div>
-                        <button class="btn-eux-orange" onclick="submitShipment()" style="width:100%;"><span class="inner">حفظ التعديلات (سيتم حذف القديمة)</span><span class="fold"></span></button>
-                        <p id="shipError" style="color:red;margin-top:10px;"></p>
-                    `;
-            } catch (e) {
-                showToast('خطأ في قراءة بيانات الشحنة', 'error');
-                console.error('Error parsing shipment data:', e);
-            }
+                    <h3><i class="fas fa-edit"></i> تعديل الشحنة</h3>
+                    <p style="color:#888;font-size:13px;margin-bottom:12px;">سيتم حذف الشحنة القديمة وإنشاء شحنة جديدة بنفس البيانات بعد التعديل</p>
+                    <div class="form-group"><label>اسم المستلم *</label><input id="f_receiverName" value="${shipment.receiverName || ''}" placeholder="اسم المستلم"></div>
+                    <div class="form-group"><label>هاتف المستلم *</label><input id="f_receiverPhone" value="${shipment.receiverPhone || ''}" placeholder="مثال: 010xxxxxxxx" dir="ltr" maxlength="11" oninput="this.value=this.value.replace(/[^0-9]/g,'')"></div>
+                    <div class="form-group"><label>هاتف آخر للمستلم</label><input id="f_receiverPhone2" value="${shipment.receiverPhone2 || ''}" placeholder="هاتف آخر (اختياري)" dir="ltr" maxlength="11" oninput="this.value=this.value.replace(/[^0-9]/g,'')"></div>
+                    <div class="two-columns"><div class="form-group"><label>المحافظة *</label><select id="f_governorate" onchange="updateCities()">${govOptions}</select></div><div class="form-group"><label>المدينة *</label><select id="f_city">${cityOptions}</select></div></div>
+                    <div class="form-group"><label>العنوان التفصيلي *</label><input id="f_address" value="${shipment.address || ''}" placeholder="العنوان بالتفصيل"></div>
+                    <div class="form-group"><label>المبلغ المطلوب تحصيله شامل الشحن *</label><input id="f_amount" type="number" value="${shipment.amount || ''}" placeholder="المبلغ بالجنيه" dir="ltr"></div>
+                    <div class="form-group"><label>وزن الشحنة *</label><input id="f_weight" type="number" value="${shipment.weight || '1'}" placeholder="الوزن بالكيلو" dir="ltr"></div>
+                    <div class="form-group"><label>ملاحظات</label><textarea id="f_notes" placeholder="ملاحظات اضافية">${shipment.notes || ''}</textarea></div>
+                    <button class="btn-eux-orange" onclick="submitShipment()" style="width:100%;"><span class="inner">حفظ التعديلات (سيتم حذف القديمة)</span><span class="fold"></span></button>
+                    <p id="shipError" style="color:red;margin-top:10px;"></p>
+                `;
+            } catch (e) { showToast('خطأ في قراءة بيانات الشحنة', 'error');
+                console.error('Error parsing shipment data:', e); }
         }
 
         function showAddTracking(shipmentId) {
             document.getElementById('modal').classList.remove('hidden');
             document.getElementById('modalBody').innerHTML = `
-                    <h3><i class="fas fa-qrcode"></i> اضافة رقم تتبع</h3>
-                    <p style="margin-bottom:12px;color:#666;">رقم الشحنة: <strong>${shipmentId}</strong></p>
-                    <div class="form-group"><label>رقم التتبع</label><input id="trackingNum" dir="ltr" placeholder="مثال: JEG000470355620"></div>
-                    <button class="btn-eux-green" onclick="submitTracking('${shipmentId}')" style="width:100%;"><span class="inner">حفظ</span><span class="fold"></span></button>
-                    <p id="trackError" style="color:red;margin-top:10px;"></p>
-                `;
+                <h3><i class="fas fa-qrcode"></i> اضافة رقم تتبع</h3>
+                <p style="margin-bottom:12px;color:#666;">رقم الشحنة: <strong>${shipmentId}</strong></p>
+                <div class="form-group"><label>رقم التتبع</label><input id="trackingNum" dir="ltr" placeholder="مثال: JEG000470355620"></div>
+                <button class="btn-eux-green" onclick="submitTracking('${shipmentId}')" style="width:100%;"><span class="inner">حفظ</span><span class="fold"></span></button>
+                <p id="trackError" style="color:red;margin-top:10px;"></p>
+            `;
         }
 
         async function translateProblemText(text) {
@@ -3212,7 +1542,7 @@
             if (/[\u0600-\u06FF]/.test(text) && !/[a-zA-Z]/.test(text)) return text;
             try {
                 const url =
-                `https://translate.googleapis.com/translate_a/single?client=gtx&sl=en&tl=ar&dt=t&q=${encodeURIComponent(text)}`;
+                    `https://translate.googleapis.com/translate_a/single?client=gtx&sl=en&tl=ar&dt=t&q=${encodeURIComponent(text)}`;
                 const response = await fetch(url);
                 const data = await response.json();
                 if (data && data[0]) {
@@ -3224,15 +1554,12 @@
                     return translated.trim() || text;
                 }
                 return text;
-            } catch (error) {
-                return fallbackTranslate(text);
-            }
+            } catch (error) { return fallbackTranslate(text); }
         }
 
         function fallbackTranslate(text) {
             let cleanText = text.replace(/\b\d{3,}\b/g, '').trim();
-            const translations = {
-                'Abnormal Parcel Registration': 'تسجيل طرد غير طبيعي',
+            const translations = { 'Abnormal Parcel Registration': 'تسجيل طرد غير طبيعي',
                 'Customer refuse by call': 'رفض العميل استلام الطرد عبر الهاتف',
                 'Customer refuse by': 'رفض العميل استلام الطرد عبر',
                 'Change The Delivery Address': 'تغيير عنوان التسليم',
@@ -3246,8 +1573,7 @@
                 'Customer': 'العميل',
                 'refuse': 'رفض',
                 'call': 'اتصال هاتفي',
-                'الغاء': 'الغاء'
-            };
+                'الغاء': 'الغاء' };
             let translated = cleanText;
             for (const [eng, arb] of Object.entries(translations)) {
                 const regex = new RegExp(eng.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'gi');
@@ -3298,9 +1624,7 @@
                             let locationText = city && !location.includes(city) ? city + ' - ' + location : location;
                             locationText = locationText.replace(/[0-9]/g, '').trim();
                             let problemText = d.probleDescription || '';
-                            if (problemText) {
-                                problemText = await translateProblemText(problemText);
-                            }
+                            if (problemText) { problemText = await translateProblemText(problemText); }
                             html +=
                                 `<div class="timeline-item"><div class="time">🕐 ${d.scanTime || ''}</div><div class="event">📌 ${desc}</div><div class="location">📍 ${locationText}</div>${problemText ? `<div class="problem">⚠️ ${problemText}</div>` : ''}</div>`;
                         }
@@ -3324,7 +1648,7 @@
                 params.append('action', 'allClients');
                 params.append('adminPhone', currentUser.phone);
                 params.append('adminPassword', currentUser.password);
-                const res = await fetch(API_URL, { method: 'POST', headers: { 'Content-Type': 'application/x-www-form-urlencoded' }, body: params.toString() });
+                const res = await fetch(API_URL, { method: 'POST', body: params.toString() });
                 const data = await res.json();
                 if (data.success) {
                     let html =
@@ -3343,14 +1667,14 @@
 
         function showAddClientForm() {
             document.getElementById('modalBody').innerHTML = `
-                    <h3><i class="fas fa-user-plus"></i> انشاء حساب عميل جديد</h3>
-                    <div class="form-group"><label>اسم العميل *</label><input id="newClientName" placeholder="الاسم الكامل"></div>
-                    <div class="form-group"><label>رقم الهاتف *</label><input id="newClientPhone" dir="ltr" placeholder="مثال: 011xxxxxxxx" maxlength="11" oninput="this.value=this.value.replace(/[^0-9]/g,'')"></div>
-                    <div class="form-group"><label>كلمة المرور *</label><input id="newClientPassword" type="password" dir="ltr" placeholder="كلمة المرور للدخول"></div>
-                    <button class="btn-eux-green" onclick="createClient()" style="width:100%;"><span class="inner">انشاء الحساب</span><span class="fold"></span></button>
-                    <button class="btn-eux-outline" onclick="showClients()" style="width:100%;margin-top:8px;"><span class="inner">رجوع</span></button>
-                    <p id="clientError" style="color:red;margin-top:10px;text-align:center;"></p>
-                `;
+                <h3><i class="fas fa-user-plus"></i> انشاء حساب عميل جديد</h3>
+                <div class="form-group"><label>اسم العميل *</label><input id="newClientName" placeholder="الاسم الكامل"></div>
+                <div class="form-group"><label>رقم الهاتف *</label><input id="newClientPhone" dir="ltr" placeholder="مثال: 011xxxxxxxx" maxlength="11" oninput="this.value=this.value.replace(/[^0-9]/g,'')"></div>
+                <div class="form-group"><label>كلمة المرور *</label><input id="newClientPassword" type="password" dir="ltr" placeholder="كلمة المرور للدخول"></div>
+                <button class="btn-eux-green" onclick="createClient()" style="width:100%;"><span class="inner">انشاء الحساب</span><span class="fold"></span></button>
+                <button class="btn-eux-outline" onclick="showClients()" style="width:100%;margin-top:8px;"><span class="inner">رجوع</span></button>
+                <p id="clientError" style="color:red;margin-top:10px;text-align:center;"></p>
+            `;
         }
 
         async function createClient() {
@@ -3368,7 +1692,7 @@
             params.append('clientPhone', phone);
             params.append('clientPassword', password);
             try {
-                const res = await fetch(API_URL, { method: 'POST', headers: { 'Content-Type': 'application/x-www-form-urlencoded' }, body: params.toString() });
+                const res = await fetch(API_URL, { method: 'POST', body: params.toString() });
                 const data = await res.json();
                 if (data.success) { showClients();
                     showToast('تم انشاء الحساب!', 'success'); } else { errorDiv.textContent = data.msg; }
@@ -3381,7 +1705,7 @@
                 const params = new URLSearchParams();
                 params.append('action', 'deleteClient');
                 params.append('phone', phone);
-                await fetch(API_URL, { method: 'POST', headers: { 'Content-Type': 'application/x-www-form-urlencoded' }, body: params.toString() });
+                await fetch(API_URL, { method: 'POST', body: params.toString() });
                 showClients();
                 showToast('تم حذف العميل', 'success');
             } catch (e) { showToast('فشل الحذف', 'error'); }
@@ -3419,7 +1743,8 @@
             submitBtn.disabled = true;
             const formData = new FormData(event.target);
             const params = new URLSearchParams(formData).toString();
-            const excelWebhookUrl = 'https://script.google.com/macros/s/AKfycbwiI6c4Kxh3EQxmCWwipr0MsAHgfPUadPqP9LqnUH9WGeGu0QuCXbl-sLTcS7l9NbJu/exec';
+            const excelWebhookUrl =
+                'https://script.google.com/macros/s/AKfycbwiI6c4Kxh3EQxmCWwipr0MsAHgfPUadPqP9LqnUH9WGeGu0QuCXbl-sLTcS7l9NbJu/exec';
             fetch(`${excelWebhookUrl}?action=openAccount&${params}`, { method: 'POST' })
                 .then(response => {
                     alert('تم إرسال طلبك بنجاح! سيتم التواصل معك خلال 5 ساعات لتفعيل الحساب.');
@@ -3447,7 +1772,6 @@
         document.addEventListener('DOMContentLoaded', function() {
             const urlParams = new URLSearchParams(window.location.search);
             const refPhone = urlParams.get('ref');
-
             if (refPhone && refPhone.length === 11) {
                 publicClientPhone = refPhone;
                 document.getElementById('landingPage').classList.add('hidden');
