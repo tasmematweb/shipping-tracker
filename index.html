@@ -1,3 +1,4 @@
+```html
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
@@ -1003,7 +1004,6 @@
             font-weight: 700;
             font-size: 15px;
         }
-        /* زر التحديث الفردي لكل شحنة */
         .update-single-btn {
             background: #0076ff;
             color: white;
@@ -1772,7 +1772,6 @@
         :focus-visible) .text_button {
             color: #0055b3;
         }
-        /* زر التحديث العام */
         .update-all-btn {
             background: linear-gradient(135deg, #0d2137, #1a3a5c);
             color: #fff;
@@ -2604,10 +2603,10 @@
                 // تحديث البطاقة
                 updateShipmentStatusCard(shipmentId, status);
                 
-                showToast('تم تحديث حالة الشحنة بنجاح', 'success');
+                return { success: true, shipmentId };
             } catch (e) {
-                showToast('فشل تحديث الشحنة', 'error');
                 console.error('خطأ في تحديث الشحنة:', e);
+                return { success: false, shipmentId, error: e };
             } finally {
                 if (btn) {
                     btn.classList.remove('updating');
@@ -2618,7 +2617,7 @@
         }
 
         // ============================================
-        // دالة الضغط على جميع أزرار التحديث (الزر العام)
+        // دالة الضغط على جميع أزرار التحديث في نفس الثانية (متوازي)
         // ============================================
         async function triggerAllUpdates() {
             if (isUpdatingAll) return;
@@ -2639,24 +2638,25 @@
                     return;
                 }
 
-                // محاكاة الضغط على كل زر
-                let successCount = 0;
-                let failCount = 0;
-                const totalButtons = updateButtons.length;
-
+                // تجميع جميع مهام التحديث في مصفوفة Promises
+                const updatePromises = [];
                 for (const button of updateButtons) {
                     const shipmentId = button.dataset.shipmentId;
                     const trackingNumber = button.dataset.trackingNumber;
                     
                     if (shipmentId && trackingNumber) {
-                        try {
-                            await updateSingleShipment(shipmentId, trackingNumber);
-                            successCount++;
-                        } catch (e) {
-                            failCount++;
-                        }
+                        // استدعاء التحديث لكل شحنة وإضافة Promise إلى المصفوفة
+                        updatePromises.push(updateSingleShipment(shipmentId, trackingNumber));
                     }
                 }
+
+                // تنفيذ جميع التحديثات في نفس الوقت (متوازي)
+                const results = await Promise.all(updatePromises);
+                
+                // حساب النتائج
+                const successCount = results.filter(r => r && r.success).length;
+                const failCount = results.filter(r => r && !r.success).length;
+                const totalButtons = updateButtons.length;
 
                 showToast(`تم تحديث ${successCount} من ${totalButtons} شحنة${failCount > 0 ? `، فشل ${failCount}` : ''}`, successCount > 0 ? 'success' : 'error');
             } catch (e) {
@@ -2672,17 +2672,17 @@
         }
 
         // ============================================
-        // دالة التحديث التلقائي عند الـ Refresh
+        // دالة التحديث التلقائي عند الـ Refresh (متوازي أيضاً)
         // ============================================
         function autoRefreshUpdates() {
             // الانتظار حتى تتحمّل الشحنات بالكامل
             setTimeout(() => {
                 const updateButtons = document.querySelectorAll('.update-single-btn');
                 if (updateButtons.length > 0) {
-                    // تنفيذ التحديث العام تلقائياً
+                    // تنفيذ التحديث العام تلقائياً (متوازي)
                     triggerAllUpdates();
                 }
-            }, 800); // نصف ثانية بعد التحميل
+            }, 800);
         }
 
         async function fetchTrackingStatus(trackingNumber) {
@@ -2755,7 +2755,7 @@
                     if (allShipmentsData.length === 0) { content.innerHTML = '<div class="empty-state"><div class="icon">📭</div><p>لا توجد شحنات حتى الآن</p></div>';
                         document.getElementById('totalCountSmall').textContent = '0'; } else { document.getElementById('totalCountSmall').textContent = allShipmentsData.length;
                         renderShipments(allShipmentsData);
-                        // التحديث التلقائي بعد التحميل
+                        // التحديث التلقائي بعد التحميل (متوازي)
                         autoRefreshUpdates();
                     }
                 } else { content.innerHTML = '<p style="color:red;">' + (data.msg || 'فشل التحميل') + '</p>'; }
@@ -2776,7 +2776,7 @@
                     allShipmentsData = data.shipments || [];
                     document.getElementById('totalCountSmall').textContent = allShipmentsData.length;
                     renderShipments(allShipmentsData);
-                    // التحديث التلقائي بعد التحميل
+                    // التحديث التلقائي بعد التحميل (متوازي)
                     autoRefreshUpdates();
                 } else { content.innerHTML = '<p style="color:red;">' + (data.msg || 'فشل التحميل') + '</p>'; }
             } catch (e) { content.innerHTML = '<p style="color:red;">فشل الاتصال</p>'; }
@@ -3413,3 +3413,4 @@
     </script>
 </body>
 </html>
+```
