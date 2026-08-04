@@ -1,4 +1,3 @@
-```html
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
@@ -45,9 +44,6 @@
             display: block;
         }
 
-        /* ============================================
-           الشريط العلوي الجديد - المتدرج العصري (النموذج 4)
-           ============================================ */
         .header-new {
             background: linear-gradient(135deg, #0a1628, #003d7a);
             padding: 18px 30px;
@@ -110,9 +106,6 @@
             50% { transform: scale(1.6); opacity: 1; }
         }
 
-        /* ============================================
-           الشريط القديم - نبقيه للتوافق
-           ============================================ */
         header {
             background-color: var(--secondary-color);
             padding: 35px 8%;
@@ -1010,6 +1003,36 @@
             font-weight: 700;
             font-size: 15px;
         }
+        /* زر التحديث الفردي لكل شحنة */
+        .update-single-btn {
+            background: #0076ff;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 34px;
+            height: 34px;
+            font-size: 14px;
+            cursor: pointer;
+            transition: 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 2px 8px rgba(0, 118, 255, 0.3);
+        }
+        .update-single-btn:hover {
+            transform: scale(1.1);
+            box-shadow: 0 4px 16px rgba(0, 118, 255, 0.5);
+        }
+        .update-single-btn:active {
+            transform: scale(0.9);
+        }
+        .update-single-btn.updating {
+            opacity: 0.6;
+            pointer-events: none;
+        }
+        .update-single-btn .fa-spinner {
+            animation: spin 0.8s linear infinite;
+        }
         .track-btn-spinner {
             position: relative;
             border-radius: 50%;
@@ -1749,6 +1772,53 @@
         :focus-visible) .text_button {
             color: #0055b3;
         }
+        /* زر التحديث العام */
+        .update-all-btn {
+            background: linear-gradient(135deg, #0d2137, #1a3a5c);
+            color: #fff;
+            border: none;
+            border-radius: 30px;
+            padding: 8px 20px;
+            font-size: 14px;
+            font-weight: 700;
+            cursor: pointer;
+            font-family: 'Cairo', sans-serif;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            transition: 0.3s ease;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        }
+        .update-all-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
+        }
+        .update-all-btn:active {
+            transform: scale(0.95);
+        }
+        .update-all-btn i {
+            font-size: 16px;
+        }
+        .update-all-btn.updating {
+            opacity: 0.7;
+            pointer-events: none;
+        }
+        .update-all-btn .spinner-small {
+            display: none;
+            width: 16px;
+            height: 16px;
+            border: 2px solid rgba(255,255,255,0.3);
+            border-top-color: #fff;
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+        .update-all-btn.updating .spinner-small {
+            display: inline-block;
+        }
+        .update-all-btn.updating .btn-text {
+            display: none;
+        }
+
         @media (max-width: 768px) {
             .header-new {
                 padding: 12px 16px;
@@ -1822,62 +1892,20 @@
             .track-btn-spinner .track-text {
                 font-size: 10px;
             }
-        }
-        /* زر التحديث اليدوي */
-        .update-all-btn {
-            background: linear-gradient(135deg, #0d2137, #1a3a5c);
-            color: #fff;
-            border: none;
-            border-radius: 30px;
-            padding: 10px 24px;
-            font-size: 14px;
-            font-weight: 700;
-            cursor: pointer;
-            font-family: 'Cairo', sans-serif;
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            transition: 0.3s ease;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-        }
-        .update-all-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
-        }
-        .update-all-btn:active {
-            transform: scale(0.95);
-        }
-        .update-all-btn i {
-            font-size: 18px;
-        }
-        .update-all-btn.updating {
-            opacity: 0.7;
-            pointer-events: none;
-        }
-        .update-all-btn .spinner-small {
-            display: none;
-            width: 18px;
-            height: 18px;
-            border: 2px solid rgba(255,255,255,0.3);
-            border-top-color: #fff;
-            border-radius: 50%;
-            animation: spin 0.8s linear infinite;
-        }
-        .update-all-btn.updating .spinner-small {
-            display: inline-block;
-        }
-        .update-all-btn.updating .btn-text {
-            display: none;
+            .update-single-btn {
+                width: 28px;
+                height: 28px;
+                font-size: 11px;
+            }
         }
     </style>
 </head>
 <body oncontextmenu="return false;">
 
     <!-- ============================================
-    صفحة الهبوط (Landing Page) مع الشريط الجديد
+    صفحة الهبوط (Landing Page)
     ============================================ -->
     <div id="landingPage">
-        <!-- الشريط العلوي الجديد -->
         <header class="header-new">
             <div class="logo-container">
                 <div class="divider"></div>
@@ -2008,11 +2036,7 @@
     <div id="trackingApp" class="hidden">
         <div class="tracking-container" id="app">
 
-            <!-- ==========================================
-            صفحة تسجيل الدخول (Login) مع الشريط الجديد
-            ========================================== -->
             <div id="loginPage" class="login-page">
-                <!-- الشريط العلوي الجديد -->
                 <header class="header-new" style="border-radius: 16px 16px 0 0; margin-bottom: 20px;">
                     <div class="logo-container">
                         <div class="divider"></div>
@@ -2064,11 +2088,7 @@
                 <p class="error-msg" id="loginError"></p>
             </div>
 
-            <!-- ==========================================
-            لوحة التحكم (Dashboard) مع الشريط الجديد
-            ========================================== -->
             <div id="dashboard" class="hidden">
-                <!-- الشريط العلوي الجديد -->
                 <header class="header-new" style="border-radius: 16px 16px 0 0; margin-bottom: 20px;">
                     <div class="logo-container">
                         <div class="divider"></div>
@@ -2083,10 +2103,11 @@
                         <span class="total-small">اجمالي الشحنات: <span class="count" id="totalCountSmall">0</span></span>
                     </div>
                     <div class="header-actions">
-                        <button class="update-all-btn" id="updateAllBtn" onclick="updateAllShipmentsManually()">
+                        <!-- الزر العام لتحديث الكل -->
+                        <button class="update-all-btn" id="updateAllBtn" onclick="triggerAllUpdates()">
                             <i class="fas fa-sync-alt"></i>
                             <span class="spinner-small"></span>
-                            <span class="btn-text">تحديث كل الشحنات</span>
+                            <span class="btn-text">تحديث الكل</span>
                         </button>
                         <div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap;background:#f0f4fa;padding:4px 8px;border-radius:30px;border:1px solid #dce5ed;">
                             <i class="fas fa-search" style="color:#888;font-size:14px;"></i>
@@ -2095,7 +2116,7 @@
                             <button onclick="clearSearch()" style="background:transparent;color:#888;border:none;border-radius:20px;padding:4px 10px;cursor:pointer;font-family:'Cairo',sans-serif;font-size:12px;">الغاء</button>
                         </div>
                         <button id="shareLinkBtn" class="btn-eux-orange hidden share-btn-text" onclick="copyShareLink()" style="font-size:12px;padding:8px 12px;border-radius:10px;">
-                            <span class="inner">يمكنك ارسال هذا الرابط للراسل ليقوم بتسجيل الشحنة بنفسه</span>
+                            <span class="inner">رابط التسجيل</span>
                             <span class="fold"></span>
                             <div class="points_wrapper">
                                 <span class="point"></span><span class="point"></span><span class="point"></span>
@@ -2142,12 +2163,7 @@
                 <div id="content"></div>
             </div>
 
-            <!-- ==========================================
-            صفحة تسجيل الشحنة العامة (Public Order Page)
-            مع الشريط الجديد وعداد منع التكرار
-            ========================================== -->
             <div id="publicOrderPage" class="hidden">
-                <!-- الشريط العلوي الجديد -->
                 <header class="header-new" style="border-radius: 16px 16px 0 0; margin-bottom: 20px;">
                     <div class="logo-container">
                         <div class="divider"></div>
@@ -2184,7 +2200,6 @@
                 <div class="form-group"><label>وزن الشحنة *</label><input id="pf_weight" type="number" placeholder="الوزن بالكيلو" dir="ltr" value="1"></div>
                 <div class="form-group"><label>ملاحظات</label><textarea id="pf_notes" placeholder="ملاحظات اضافية"></textarea></div>
                 
-                <!-- زر تسجيل الشحنة مع عداد منع التكرار -->
                 <button class="btn-eux" id="publicSubmitBtn" onclick="submitPublicOrder()" style="width:100%;padding:14px;border-radius:12px;font-size:16px;">
                     <span class="inner">تسجيل الشحنة</span>
                     <span class="fold"></span>
@@ -2222,6 +2237,7 @@
         let isSubmitting = false;
         let isPublicSubmitting = false;
         let isUpdatingAll = false;
+        let updateQueue = [];
 
         function openTrackingSystem() {
             document.getElementById('landingPage').classList.add('hidden');
@@ -2378,11 +2394,7 @@
             document.body.style.background = 'linear-gradient(135deg, #e8f0fe, #d4e4f7)';
         }
 
-        // ============================================
-        // دالة تسجيل الشحنة العامة مع عداد منع التكرار
-        // ============================================
         async function submitPublicOrder() {
-            // منع الضغط المتكرر
             if (isPublicSubmitting) {
                 showToast('يرجى الانتظار 10 ثوانٍ قبل تسجيل شحنة أخرى', 'error');
                 return;
@@ -2412,7 +2424,6 @@
                 return; 
             }
 
-            // تعطيل الزر
             isPublicSubmitting = true;
             const submitBtn = document.getElementById('publicSubmitBtn');
             if (submitBtn) {
@@ -2459,7 +2470,6 @@
                 errorDiv.textContent = 'فشل الاتصال'; 
             }
 
-            // إعادة تفعيل الزر بعد 10 ثوانٍ
             setTimeout(() => {
                 isPublicSubmitting = false;
                 if (submitBtn) {
@@ -2568,6 +2578,113 @@
             else loadMyShipments();
         }
 
+        // ============================================
+        // دالة تحديث شحنة فردية
+        // ============================================
+        async function updateSingleShipment(shipmentId, trackingNumber) {
+            if (!trackingNumber || trackingNumber.length < 3) {
+                showToast('لا يوجد رقم تتبع لهذه الشحنة', 'error');
+                return;
+            }
+
+            const btn = document.getElementById(`update-btn-${shipmentId}`);
+            if (btn) {
+                btn.classList.add('updating');
+                btn.disabled = true;
+                btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
+            }
+
+            try {
+                // مسح الكاش لهذا الرقم
+                delete trackingCache[trackingNumber];
+                
+                // جلب الحالة الجديدة
+                const status = await fetchTrackingStatus(trackingNumber);
+                
+                // تحديث البطاقة
+                updateShipmentStatusCard(shipmentId, status);
+                
+                showToast('تم تحديث حالة الشحنة بنجاح', 'success');
+            } catch (e) {
+                showToast('فشل تحديث الشحنة', 'error');
+                console.error('خطأ في تحديث الشحنة:', e);
+            } finally {
+                if (btn) {
+                    btn.classList.remove('updating');
+                    btn.disabled = false;
+                    btn.innerHTML = '<i class="fas fa-sync-alt"></i>';
+                }
+            }
+        }
+
+        // ============================================
+        // دالة الضغط على جميع أزرار التحديث (الزر العام)
+        // ============================================
+        async function triggerAllUpdates() {
+            if (isUpdatingAll) return;
+            
+            const btn = document.getElementById('updateAllBtn');
+            if (btn) {
+                btn.classList.add('updating');
+                btn.disabled = true;
+            }
+            isUpdatingAll = true;
+
+            try {
+                // البحث عن جميع أزرار التحديث الفردية في الصفحة
+                const updateButtons = document.querySelectorAll('.update-single-btn');
+                
+                if (updateButtons.length === 0) {
+                    showToast('لا توجد شحنات قابلة للتحديث', 'error');
+                    return;
+                }
+
+                // محاكاة الضغط على كل زر
+                let successCount = 0;
+                let failCount = 0;
+                const totalButtons = updateButtons.length;
+
+                for (const button of updateButtons) {
+                    const shipmentId = button.dataset.shipmentId;
+                    const trackingNumber = button.dataset.trackingNumber;
+                    
+                    if (shipmentId && trackingNumber) {
+                        try {
+                            await updateSingleShipment(shipmentId, trackingNumber);
+                            successCount++;
+                        } catch (e) {
+                            failCount++;
+                        }
+                    }
+                }
+
+                showToast(`تم تحديث ${successCount} من ${totalButtons} شحنة${failCount > 0 ? `، فشل ${failCount}` : ''}`, successCount > 0 ? 'success' : 'error');
+            } catch (e) {
+                showToast('حدث خطأ أثناء التحديث', 'error');
+                console.error('خطأ في التحديث العام:', e);
+            } finally {
+                if (btn) {
+                    btn.classList.remove('updating');
+                    btn.disabled = false;
+                }
+                isUpdatingAll = false;
+            }
+        }
+
+        // ============================================
+        // دالة التحديث التلقائي عند الـ Refresh
+        // ============================================
+        function autoRefreshUpdates() {
+            // الانتظار حتى تتحمّل الشحنات بالكامل
+            setTimeout(() => {
+                const updateButtons = document.querySelectorAll('.update-single-btn');
+                if (updateButtons.length > 0) {
+                    // تنفيذ التحديث العام تلقائياً
+                    triggerAllUpdates();
+                }
+            }, 800); // نصف ثانية بعد التحميل
+        }
+
         async function fetchTrackingStatus(trackingNumber) {
             if (!trackingNumber || trackingNumber.length < 3) return null;
             if (trackingCache[trackingNumber]) return trackingCache[trackingNumber];
@@ -2627,96 +2744,6 @@
             }
         }
 
-        async function updateAllTrackingStatuses(shipments) {
-            const shipmentsWithTracking = shipments.filter(s => s.trackingNumber && s.trackingNumber.length > 3);
-            if (shipmentsWithTracking.length === 0) return;
-            const chunkSize = 15;
-            const chunks = [];
-            for (let i = 0; i < shipmentsWithTracking.length; i += chunkSize) {
-                chunks.push(shipmentsWithTracking.slice(i, i + chunkSize));
-            }
-            for (const chunk of chunks) {
-                const promises = chunk.map(async (s) => {
-                    const status = await fetchTrackingStatus(s.trackingNumber);
-                    return { id: s.id, status };
-                });
-                const results = await Promise.all(promises);
-                results.forEach(({ id, status }) => {
-                    updateShipmentStatusCard(id, status);
-                });
-            }
-        }
-
-        // ============================================
-        // دالة التحديث اليدوي لكل الشحنات
-        // ============================================
-        async function updateAllShipmentsManually() {
-            if (isUpdatingAll) return;
-            if (!allShipmentsData || allShipmentsData.length === 0) {
-                showToast('لا توجد شحنات لتحديثها', 'error');
-                return;
-            }
-
-            const btn = document.getElementById('updateAllBtn');
-            if (btn) {
-                btn.classList.add('updating');
-                btn.disabled = true;
-            }
-            isUpdatingAll = true;
-
-            try {
-                // مسح الكاش المؤقت ليجلب بيانات جديدة
-                trackingCache = {};
-                
-                // جلب البيانات المحدثة من السيرفر أولاً
-                let refreshedData = [];
-                if (currentUser.role === 'admin') {
-                    const params = new URLSearchParams();
-                    params.append('action', 'allShipments');
-                    params.append('adminPhone', currentUser.phone);
-                    params.append('adminPassword', currentUser.password);
-                    const res = await fetch(API_URL, { method: 'POST', body: params });
-                    const data = await res.json();
-                    if (data.success) {
-                        refreshedData = data.shipments || [];
-                        allShipmentsData = refreshedData;
-                        document.getElementById('totalCountSmall').textContent = allShipmentsData.length;
-                    }
-                } else {
-                    const res = await fetch(`${API_URL}?action=myShipments&phone=${currentUser.phone}&password=${currentUser.password}`);
-                    const data = await res.json();
-                    if (data.success) {
-                        refreshedData = data.shipments || [];
-                        allShipmentsData = refreshedData;
-                        document.getElementById('totalCountSmall').textContent = allShipmentsData.length;
-                    }
-                }
-
-                // إعادة رسم البطاقات بالبيانات الجديدة
-                const isAdmin = currentUser.role === 'admin';
-                const content = document.getElementById('content');
-                if (refreshedData.length === 0) {
-                    content.innerHTML = '<div class="empty-state"><div class="icon">📦</div><p>لا توجد شحنات</p></div>';
-                } else {
-                    content.innerHTML = refreshedData.map(s => createShipmentCard(s, isAdmin)).join('');
-                }
-
-                // تحديث حالة كل شحنة عبر التتبع
-                await updateAllTrackingStatuses(refreshedData);
-
-                showToast('تم تحديث جميع الشحنات بنجاح!', 'success');
-            } catch (e) {
-                showToast('حدث خطأ أثناء التحديث', 'error');
-                console.error('خطأ في التحديث اليدوي:', e);
-            } finally {
-                if (btn) {
-                    btn.classList.remove('updating');
-                    btn.disabled = false;
-                }
-                isUpdatingAll = false;
-            }
-        }
-
         async function loadMyShipments() {
             const content = document.getElementById('content');
             content.innerHTML = '<div class="loading"><div class="spinner"></div>جاري التحميل...</div>';
@@ -2728,10 +2755,8 @@
                     if (allShipmentsData.length === 0) { content.innerHTML = '<div class="empty-state"><div class="icon">📭</div><p>لا توجد شحنات حتى الآن</p></div>';
                         document.getElementById('totalCountSmall').textContent = '0'; } else { document.getElementById('totalCountSmall').textContent = allShipmentsData.length;
                         renderShipments(allShipmentsData);
-                        // تحديث تلقائي بعد تحميل الشحنات
-                        setTimeout(() => {
-                            updateAllTrackingStatuses(allShipmentsData);
-                        }, 500);
+                        // التحديث التلقائي بعد التحميل
+                        autoRefreshUpdates();
                     }
                 } else { content.innerHTML = '<p style="color:red;">' + (data.msg || 'فشل التحميل') + '</p>'; }
             } catch (e) { content.innerHTML = '<p style="color:red;">فشل الاتصال</p>'; }
@@ -2751,10 +2776,8 @@
                     allShipmentsData = data.shipments || [];
                     document.getElementById('totalCountSmall').textContent = allShipmentsData.length;
                     renderShipments(allShipmentsData);
-                    // تحديث تلقائي بعد تحميل الشحنات
-                    setTimeout(() => {
-                        updateAllTrackingStatuses(allShipmentsData);
-                    }, 500);
+                    // التحديث التلقائي بعد التحميل
+                    autoRefreshUpdates();
                 } else { content.innerHTML = '<p style="color:red;">' + (data.msg || 'فشل التحميل') + '</p>'; }
             } catch (e) { content.innerHTML = '<p style="color:red;">فشل الاتصال</p>'; }
         }
@@ -2772,6 +2795,20 @@
             const trackingNum = s.trackingNumber || '';
             const hasTracking = trackingNum && trackingNum.length > 3;
 
+            // زر التحديث الفردي لكل شحنة
+            let updateBtn = '';
+            if (hasTracking) {
+                updateBtn = `
+                    <button class="update-single-btn" id="update-btn-${s.id}" 
+                            data-shipment-id="${s.id}" 
+                            data-tracking-number="${trackingNum}"
+                            onclick="event.stopPropagation(); updateSingleShipment('${s.id}', '${trackingNum}')"
+                            title="تحديث حالة الشحنة">
+                        <i class="fas fa-sync-alt"></i>
+                    </button>
+                `;
+            }
+
             let trackButton = '';
             if (hasTracking) {
                 trackButton = `
@@ -2787,7 +2824,6 @@
                     `;
             }
 
-            // For non-admin users (clients) - show edit and delete buttons only if no tracking number exists
             if (!isAdmin) {
                 if (!hasTracking) {
                     actions += `
@@ -2821,6 +2857,7 @@
                         <div class="main-info">
                             <span class="name">${displayName}</span>
                             <span class="phone">${displayPhone}</span>
+                            ${updateBtn}
                             ${trackButton}
                             <span class="amount">${displayAmount} ج.م</span>
                         </div>
@@ -2878,7 +2915,6 @@
             } else {
                 const isAdmin = currentUser && currentUser.role === 'admin';
                 content.innerHTML = filtered.map(s => createShipmentCard(s, isAdmin)).join('');
-                updateAllTrackingStatuses(filtered);
             }
         }
 
@@ -3377,4 +3413,3 @@
     </script>
 </body>
 </html>
-```
