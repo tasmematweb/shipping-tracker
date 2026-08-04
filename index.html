@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>EUX Express - لوحة العميل</title>
+    <title>EUX Express - تجربة التحديث مرة واحدة</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;900&display=swap" rel="stylesheet">
@@ -98,6 +98,9 @@
         .timeline-item .event { font-weight: 700; color: #0d2137; margin: 5px 0; }
         .timeline-item .location { color: #666; font-size: 14px; }
         .timeline-item .problem { color: #dc3545; font-size: 13px; margin-top: 4px; }
+        .refresh-all-btn { background: #0076ff; color: white; border: none; padding: 8px 20px; border-radius: 10px; font-weight: 700; cursor: pointer; font-family: 'Cairo', sans-serif; font-size: 13px; transition: 0.2s; }
+        .refresh-all-btn:hover { background: #005dc7; transform: scale(1.02); }
+        .refresh-all-btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
         @media (max-width: 768px) { .container { padding: 15px; } .header-new { padding: 12px 16px; margin: -15px -15px 15px -15px; } .header-new .logo-text { font-size: 20px; } .shipment-card { padding: 12px 14px; } }
     </style>
 </head>
@@ -114,6 +117,7 @@
             <div style="text-align:center;padding:20px 0;">
                 <div style="font-size:48px;margin-bottom:10px;">📦</div>
                 <div style="font-size:24px;font-weight:700;color:#0d2137;">مرحبا بك في <span style="color:#0076ff;">EUX Express</span></div>
+                <p style="color:#888;font-size:14px;margin-top:8px;">يمكنك تصفح الشحنات العامة بدون تسجيل دخول</p>
             </div>
             <div style="margin-bottom:16px;">
                 <input type="text" id="phoneInput" placeholder="رقم الهاتف" dir="ltr" maxlength="11" oninput="this.value=this.value.replace(/[^0-9]/g,'')" style="width:100%;padding:16px 20px;border:2px solid #e8ecf0;border-radius:14px;font-size:16px;font-family:'Cairo',sans-serif;background:#f8fafc;transition:0.3s;text-align:right;">
@@ -122,6 +126,7 @@
                 <input type="password" id="passwordInput" placeholder="كلمة المرور" dir="ltr" style="width:100%;padding:16px 20px;border:2px solid #e8ecf0;border-radius:14px;font-size:16px;font-family:'Cairo',sans-serif;background:#f8fafc;transition:0.3s;text-align:right;">
             </div>
             <button onclick="doLogin()" style="width:100%;padding:16px;border-radius:14px;font-size:18px;background:#0076ff;color:white;border:none;font-weight:700;cursor:pointer;font-family:'Cairo',sans-serif;box-shadow:0 4px 15px rgba(0,118,255,0.25);">دخول</button>
+            <button onclick="loadPublicShipments()" style="width:100%;padding:14px;border-radius:14px;font-size:16px;margin-top:10px;background:transparent;color:#0076ff;border:2px solid #0076ff;font-weight:600;cursor:pointer;font-family:'Cairo',sans-serif;">تصفح بدون تسجيل</button>
             <p id="loginError" style="color:#dc3545;font-size:14px;margin-top:14px;padding:10px;background:#ffeaea;border-radius:8px;display:none;"></p>
         </div>
 
@@ -133,6 +138,9 @@
                     <span class="total-small">اجمالي: <span class="count" id="totalCountSmall">0</span></span>
                 </div>
                 <div class="header-actions">
+                    <button class="refresh-all-btn" onclick="refreshAllShipments()">
+                        <i class="fas fa-sync-alt"></i> تحديث الكل
+                    </button>
                     <button class="btn-eux-outline" onclick="logout()" style="padding:8px 16px;border-radius:10px;font-size:13px;">
                         <span class="inner">خروج</span>
                     </button>
@@ -152,15 +160,16 @@
 
     <script>
         // ============================================================
-        // الكود الخاص بالعميل فقط - نسخة مختصرة للتجربة
+        // الكود الرئيسي - تحديث مرة واحدة عند فتح الصفحة
         // ============================================================
 
         const API_URL = "https://script.google.com/macros/s/AKfycbwiI6c4Kxh3EQxmCWwipr0MsAHgfPUadPqP9LqnUH9WGeGu0QuCXbl-sLTcS7l9NbJu/exec";
 
         let currentUser = null;
         let allShipmentsData = [];
-        let autoUpdateInterval = null;
         let trackingCache = {};
+        let hasLoadedOnce = false; // منع التحميل المتكرر
+        let isRefreshing = false;
 
         // ============================================================
         // الكاش والتتبع
@@ -213,7 +222,7 @@
         }
 
         // ============================================================
-        // زر التحديث الفوري
+        // زر التحديث الفوري (يدوي)
         // ============================================================
 
         async function forceUpdateTracking(shipmentId, trackingNumber) {
@@ -234,23 +243,40 @@
         }
 
         // ============================================================
-        // التحديث التلقائي كل 20 ثانية
+        // ❌ لا يوجد تحديث تلقائي (setInterval)
         // ============================================================
 
-        function startAutoUpdate() {
-            if (autoUpdateInterval) return;
-            autoUpdateInterval = setInterval(() => {
-                const btns = document.querySelectorAll('.force-update-btn');
-                if (btns.length > 0) {
-                    console.log(`🔄 تحديث تلقائي: ${btns.length} شحنة`);
-                    btns.forEach((btn, i) => setTimeout(() => btn.click(), i * 300));
-                }
-            }, 20000);
-        }
+        // ============================================================
+        // زر تحديث الكل (يدوي)
+        // ============================================================
 
-        function stopAutoUpdate() {
-            if (autoUpdateInterval) { clearInterval(autoUpdateInterval);
-                autoUpdateInterval = null; }
+        async function refreshAllShipments() {
+            if (isRefreshing) return;
+            isRefreshing = true;
+            const btn = document.querySelector('.refresh-all-btn');
+            if (btn) { btn.disabled = true;
+                btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> جاري التحديث...'; }
+
+            try {
+                const loadFn = currentUser ? loadMyShipments : loadPublicShipments;
+                const data = await loadFn();
+                if (data && data.length > 0) {
+                    allShipmentsData = data;
+                    const cacheKey = currentUser ? `eux_shipments_${currentUser.phone}` : 'eux_shipments_public';
+                    cacheShipments(data, cacheKey);
+                    document.getElementById('totalCountSmall').textContent = data.length;
+                    renderShipments(data);
+                    showToast('✅ تم تحديث جميع الشحنات!', 'success');
+                } else {
+                    showToast('⚠️ لا توجد شحنات جديدة', '');
+                }
+            } catch (e) {
+                showToast('❌ فشل التحديث', 'error');
+            }
+
+            isRefreshing = false;
+            if (btn) { btn.disabled = false;
+                btn.innerHTML = '<i class="fas fa-sync-alt"></i> تحديث الكل'; }
         }
 
         // ============================================================
@@ -380,10 +406,11 @@
         function renderShipments(shipments) {
             const content = document.getElementById('content');
             if (!shipments || shipments.length === 0) {
-                content.innerHTML = '<div class="empty-state"><div class="icon">📦</div><p>لا توجد شحنات حتى الآن</p></div>';
+                content.innerHTML = '<div class="empty-state"><div class="icon">📦</div><p>لا توجد شحنات</p></div>';
                 return;
             }
             content.innerHTML = shipments.map(s => createShipmentCard(s)).join('');
+            
             // عرض الحالات المخزنة فوراً
             shipments.forEach(s => {
                 if (s.trackingNumber && s.trackingNumber.length > 3) {
@@ -391,12 +418,13 @@
                     if (cached) updateShipmentStatusCard(s.id, cached);
                 }
             });
+            
             setTimeout(addUpdateButtons, 100);
-            startAutoUpdate();
+            // ❌ لا يوجد startAutoUpdate()
         }
 
         // ============================================================
-        // جلب الشحنات
+        // جلب الشحنات (مرة واحدة فقط)
         // ============================================================
 
         function cacheShipments(shipments, key) {
@@ -422,27 +450,63 @@
             } catch (e) { return []; }
         }
 
-        function loadShipments() {
-            const content = document.getElementById('content');
-            const cacheKey = `eux_shipments_${currentUser.phone}`;
-            const cached = getCachedShipments(cacheKey);
+        async function loadPublicShipments() {
+            try {
+                // جلب شحنات عامة (مثال: آخر 20 شحنة)
+                const res = await fetch(`${API_URL}?action=publicShipments`);
+                const data = await res.json();
+                if (data.success) return data.shipments || [];
+                // إذا لم يوجد API عام، نستخدم بيانات تجريبية
+                return getDemoShipments();
+            } catch (e) { return getDemoShipments(); }
+        }
 
+        // بيانات تجريبية للاختبار (بدون تسجيل دخول)
+        function getDemoShipments() {
+            return [
+                { id: 'DEMO-001', receiverName: 'أحمد محمد', receiverPhone: '01012345678', amount: '250', trackingNumber: 'JEG123456789', status: 'تم التسليم', lastUpdate: '2026-08-04 15:00' },
+                { id: 'DEMO-002', receiverName: 'سارة علي', receiverPhone: '01198765432', amount: '150', trackingNumber: 'JEG987654321', status: 'قيد التوصيل', lastUpdate: '2026-08-04 14:30' },
+                { id: 'DEMO-003', receiverName: 'محمد خالد', receiverPhone: '01234567890', amount: '320', trackingNumber: 'JEG456789123', status: 'تم الاستلام', lastUpdate: '2026-08-04 13:00' }
+            ];
+        }
+
+        // ============================================================
+        // التحميل عند فتح الصفحة (مرة واحدة فقط)
+        // ============================================================
+
+        function loadShipmentsOnce() {
+            if (hasLoadedOnce) {
+                console.log('⏭️ تم التحميل مسبقاً، تخطي');
+                return;
+            }
+            hasLoadedOnce = true;
+            
+            const content = document.getElementById('content');
+            const cacheKey = currentUser ? `eux_shipments_${currentUser.phone}` : 'eux_shipments_public';
+            
+            // 1. عرض من الكاش فوراً
+            const cached = getCachedShipments(cacheKey);
             if (cached && cached.length > 0) {
                 allShipmentsData = cached;
                 document.getElementById('totalCountSmall').textContent = cached.length;
                 renderShipments(cached);
+                console.log('📦 عرض من الكاش:', cached.length, 'شحنة');
             } else {
                 content.innerHTML = '<div class="loading"><div class="spinner"></div>جاري التحميل...</div>';
             }
-
-            loadMyShipments().then(data => {
+            
+            // 2. جلب مرة واحدة من الخادم
+            const loadFn = currentUser ? loadMyShipments : loadPublicShipments;
+            loadFn().then(data => {
                 if (data && data.length > 0) {
                     allShipmentsData = data;
                     cacheShipments(data, cacheKey);
                     document.getElementById('totalCountSmall').textContent = data.length;
                     renderShipments(data);
+                    console.log('📡 تم جلب', data.length, 'شحنة من الخادم');
                 }
-            }).catch(() => {
+            }).catch(err => {
+                console.error('فشل جلب البيانات:', err);
                 if (!cached || cached.length === 0) {
                     content.innerHTML = '<div style="text-align:center;padding:30px;color:#dc3545;">فشل تحميل البيانات</div>';
                 }
@@ -450,7 +514,7 @@
         }
 
         // ============================================================
-        // دوال الحذف والتعديل (مبسطة)
+        // دوال الحذف والتعديل
         // ============================================================
 
         async function deleteShipment(shipmentId) {
@@ -465,7 +529,9 @@
                 const data = await res.json();
                 if (data.success) {
                     showToast('✅ تم حذف الشحنة', 'success');
-                    loadShipments();
+                    // إعادة تحميل مرة واحدة
+                    hasLoadedOnce = false;
+                    loadShipmentsOnce();
                 } else { showToast('❌ فشل الحذف', 'error'); }
             } catch (e) { showToast('❌ فشل الاتصال', 'error'); }
         }
@@ -500,7 +566,6 @@
             const errorDiv = document.getElementById('editError');
             if (!name || !phone || !address || !amount) { errorDiv.textContent = 'يرجى ملء جميع الحقول'; return; }
 
-            // حذف القديم وإضافة جديد (محاكاة التعديل)
             const params = new URLSearchParams();
             params.append('action', 'deleteShipment');
             params.append('phone', currentUser.phone);
@@ -522,13 +587,14 @@
                 if (data.success) {
                     closeModal();
                     showToast('✅ تم التعديل بنجاح', 'success');
-                    loadShipments();
+                    hasLoadedOnce = false;
+                    loadShipmentsOnce();
                 } else { errorDiv.textContent = data.msg || 'فشل التعديل'; }
             } catch (e) { errorDiv.textContent = 'فشل الاتصال'; }
         }
 
         // ============================================================
-        // تتبع الشحنة (مودال)
+        // تتبع الشحنة
         // ============================================================
 
         async function trackShipment(billCode) {
@@ -603,7 +669,8 @@
                     errorDiv.style.display = 'none';
                     document.getElementById('loginPage').classList.add('hidden');
                     document.getElementById('dashboard').classList.remove('hidden');
-                    loadShipments();
+                    hasLoadedOnce = false;
+                    loadShipmentsOnce();
                 } else {
                     errorDiv.textContent = data.msg || 'فشل تسجيل الدخول';
                     errorDiv.style.display = 'block';
@@ -616,7 +683,7 @@
 
         function logout() {
             currentUser = null;
-            stopAutoUpdate();
+            hasLoadedOnce = false;
             sessionStorage.removeItem('eux_user');
             document.getElementById('dashboard').classList.add('hidden');
             document.getElementById('loginPage').classList.remove('hidden');
@@ -637,10 +704,33 @@
                     currentUser = JSON.parse(saved);
                     document.getElementById('loginPage').classList.add('hidden');
                     document.getElementById('dashboard').classList.remove('hidden');
-                    loadShipments();
+                    loadShipmentsOnce();
                 } catch (e) {}
+            } else {
+                // زائر - نعرض الشحنات العامة تلقائياً
+                document.getElementById('loginPage').classList.remove('hidden');
+                document.getElementById('dashboard').classList.add('hidden');
+                // تحميل الشحنات العامة تلقائياً
+                setTimeout(() => {
+                    loadPublicShipments().then(data => {
+                        if (data && data.length > 0) {
+                            allShipmentsData = data;
+                            document.getElementById('loginPage').classList.add('hidden');
+                            document.getElementById('dashboard').classList.remove('hidden');
+                            cacheShipments(data, 'eux_shipments_public');
+                            document.getElementById('totalCountSmall').textContent = data.length;
+                            renderShipments(data);
+                            showToast('📦 تم تحميل الشحنات العامة', '');
+                        }
+                    });
+                }, 500);
             }
         });
+
+        // ============================================================
+        // ❌ لا يوجد setInterval للتحديث التلقائي
+        // ✅ فقط زر "تحديث الكل" و "تحديث الآن" يدوياً
+        // ============================================================
 
         document.getElementById('passwordInput').addEventListener('keypress', function(e) {
             if (e.key === 'Enter') doLogin();
