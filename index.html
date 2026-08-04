@@ -1,284 +1,1253 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<meta name="description" content="شركة EUX للشحن السريع - الريادة في سرعة وحلول الشحن">
-<title>EUX Express - Motion Graphics Ad</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-<style>
-  :root {
-    --primary-blue: #0F3460;
-    --accent-red: #FF3366;
-    --teal-glow: #00F2FE;
-    --bg-light: #F5F7FA;
-    --white: #FFFFFF;
-  }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="description" content="شركة EUX للشحن تقدم خدمات الشحن السريع من مدينة العبور إلى جميع محافظات مصر بأسعار تنافسية وخدمة احترافية.">
+    <meta name="keywords" content="EUX, EUX Express, شركة شحن, شحن مصر, شحن سريع, شحن العبور">
+    <meta name="robots" content="index, follow">
+    <link rel="canonical" href="https://euxexpress.com/">
+    <title>شركة EUX للشحن | الريادة في سرعة وحلول الشحن</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #0076ff;
+            --secondary-color: #1a1a1a;
+            --light-bg: #f9f9f9;
+            --text-color: #333;
+            --white: #ffffff;
+        }
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Cairo', sans-serif;
+            scroll-behavior: smooth;
+        }
+        body {
+            color: var(--text-color);
+            line-height: 1.8;
+            background-color: var(--white);
+            overflow-x: hidden;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+        }
+        .hidden {
+            display: none !important;
+        }
+        #landingPage {
+            display: block;
+        }
 
-  * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Cairo', sans-serif; }
-  body { background: #0b0c10; display: flex; justify-content: center; align-items: center; min-height: 100vh; overflow: hidden; }
-  
-  /* 9:16 Vertical Phone Aspect Ratio */
-  .video-container {
-    width: 100vw;
-    height: 100vh;
-    max-width: 400px;
-    max-height: 711px;
-    background: var(--bg-light);
-    position: relative;
-    overflow: hidden;
-    box-shadow: 0 20px 50px rgba(0,0,0,0.8);
-    border-radius: 16px;
-  }
+        /* ============================================
+           الشريط العلوي الجديد - المتدرج العصري
+           ============================================ */
+        .header-new {
+            background: linear-gradient(135deg, #0a1628, #003d7a);
+            padding: 18px 30px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border-bottom: 2px solid rgba(0, 118, 255, 0.3);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            width: 100%;
+            margin: 0;
+            border-radius: 0;
+        }
+        .header-new .logo-container {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+        .header-new .divider {
+            width: 2px;
+            height: 35px;
+            background: linear-gradient(180deg, transparent, var(--primary-color), transparent);
+        }
+        .header-new .logo-text {
+            font-size: 28px;
+            font-weight: 900;
+            color: #fff;
+            letter-spacing: 3px;
+        }
+        .header-new .logo-text span {
+            color: var(--primary-color);
+            position: relative;
+        }
+        .header-new .logo-text span::before {
+            content: '';
+            position: absolute;
+            bottom: -4px;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: var(--primary-color);
+            animation: underlineSlide 2s ease-in-out infinite;
+        }
+        .header-new .dot {
+            width: 8px;
+            height: 8px;
+            background: var(--primary-color);
+            border-radius: 50%;
+            animation: dotPulse 2s ease-in-out infinite;
+            box-shadow: 0 0 20px rgba(0, 118, 255, 0.3);
+        }
+        @keyframes underlineSlide {
+            0% { transform: scaleX(0); transform-origin: right; }
+            50% { transform: scaleX(1); transform-origin: center; }
+            100% { transform: scaleX(0); transform-origin: left; }
+        }
+        @keyframes dotPulse {
+            0%, 100% { transform: scale(1); opacity: 0.4; }
+            50% { transform: scale(1.6); opacity: 1; }
+        }
 
-  .scene {
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    padding: 24px;
-    text-align: center;
-    opacity: 0;
-    pointer-events: none;
-    transition: opacity 0.4s ease-in-out, transform 0.4s ease-in-out;
-    transform: scale(0.95);
-  }
+        /* ============================================
+           عناصر الواجهة الرئيسية
+           ============================================ */
+        header {
+            background-color: var(--secondary-color);
+            padding: 35px 8%;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border-bottom-left-radius: 40px;
+            border-bottom-right-radius: 40px;
+            border-bottom: 2px solid rgba(0, 118, 255, 0.3);
+        }
+        .logo {
+            color: var(--primary-color);
+            font-size: 38px;
+            font-weight: 900;
+            text-decoration: none;
+            letter-spacing: 2px;
+        }
+        .hero {
+            background: linear-gradient(rgba(26, 26, 26, 0.88), rgba(26, 26, 26, 0.88)), url('https://images.unsplash.com/photo-1524661135-423995f22d0b?ixlib=rb-4.0.3') no-repeat center center/cover;
+            min-height: 85vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            color: var(--white);
+            padding: 60px 20px 180px 20px;
+            position: relative;
+        }
+        .sea-wave-divider {
+            position: absolute;
+            bottom: -1px;
+            left: 0;
+            width: 100%;
+            overflow: hidden;
+            line-height: 0;
+            z-index: 5;
+        }
+        .sea-wave-divider svg {
+            position: relative;
+            display: block;
+            width: calc(100% + 1.3px);
+            height: 110px;
+        }
+        .sea-wave-divider .wave-fill-white {
+            fill: var(--white);
+        }
+        .sea-wave-divider .wave-fill-light {
+            fill: var(--light-bg);
+        }
+        .showcase-wrapper {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 40px;
+            position: relative;
+            z-index: 10;
+        }
+        .cyber-node {
+            width: 160px;
+            height: 160px;
+            background: linear-gradient(135deg, #131c2e, #080d16);
+            border: 3px solid rgba(0, 210, 255, 0.6);
+            border-radius: 16px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 36px;
+            font-weight: 900;
+            color: var(--white);
+            position: relative;
+            animation: nodeFloat 2.6s ease-in-out infinite;
+        }
+        .cyber-node::after {
+            content: '';
+            position: absolute;
+            inset: -12px;
+            border: 3px dashed var(--primary-color);
+            border-radius: 24px;
+            opacity: 0.7;
+            animation: rotateDashed 15s linear infinite;
+        }
+        @keyframes nodeFloat {
+            0%, 100% {
+                transform: translateY(0);
+                box-shadow: 0 0 25px rgba(0, 210, 255, 0.25);
+            }
+            50% {
+                transform: translateY(-20px);
+                box-shadow: 0 0 50px rgba(0, 210, 255, 0.6);
+            }
+        }
+        @keyframes rotateDashed {
+            100% { transform: rotate(360deg); }
+        }
+        .cube-container {
+            width: 180px;
+            height: 170px;
+            perspective: 1000px;
+            animation: isometricFloat 3s ease-in-out infinite;
+        }
+        .iso-cube {
+            width: 130px;
+            height: 130px;
+            position: relative;
+            transform-style: preserve-3d;
+            transform: rotateX(-30deg) rotateY(45deg);
+            margin: auto;
+        }
+        .iso-face {
+            position: absolute;
+            width: 130px;
+            height: 130px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 32px;
+            font-weight: 900;
+            color: var(--white);
+            border: 1.5px solid rgba(255, 255, 255, 0.15);
+        }
+        .iso-front {
+            transform: rotateY(0deg) translateZ(65px);
+            background: linear-gradient(135deg, #0052cc, #002d80);
+        }
+        .iso-right {
+            transform: rotateY(90deg) translateZ(65px);
+            background: linear-gradient(135deg, #003399, #0a1329);
+        }
+        .iso-top {
+            transform: rotateX(90deg) translateZ(65px);
+            background: linear-gradient(135deg, #2575fc, #0052cc);
+        }
+        .iso-top::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 10px;
+            background: #ffb700;
+            box-shadow: 0 0 15px #ffb700;
+            animation: laserMove 2.5s linear infinite;
+        }
+        @keyframes isometricFloat {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-20px); }
+        }
+        @keyframes laserMove {
+            0% { top: 0; opacity: 0; }
+            50% { opacity: 1; }
+            100% { top: 100%; opacity: 0; }
+        }
+        .quantum-box {
+            width: 150px;
+            height: 150px;
+            background: rgba(10, 15, 24, 0.85);
+            border: 2px solid rgba(0, 118, 255, 0.4);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-radius: 28px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            animation: quantumFloat 2.8s ease-in-out infinite;
+            border-bottom: 4px solid var(--primary-color);
+        }
+        .quantum-box::before {
+            content: '';
+            position: absolute;
+            width: 220px;
+            height: 70px;
+            border: 3px solid #ffb700;
+            border-radius: 50%;
+            transform: rotateX(70deg) rotateY(15deg);
+            box-shadow: 0 0 20px #ffb700;
+            animation: orbitPulse 2.8s linear infinite;
+        }
+        @keyframes quantumFloat {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-20px); }
+        }
+        .glow-floor {
+            width: 110px;
+            height: 10px;
+            background: radial-gradient(var(--primary-color), transparent 70%);
+            border-radius: 50%;
+            margin-top: 20px;
+            opacity: 0.6;
+        }
+        .hero h1 {
+            font-size: 3rem;
+            margin-bottom: 15px;
+            font-weight: 700;
+        }
+        .hero h1 span {
+            color: var(--primary-color);
+        }
+        .hero p {
+            font-size: 1.3rem;
+            max-width: 700px;
+            margin-bottom: 30px;
+            color: #ddd;
+        }
+        .btn {
+            display: inline-block;
+            background-color: var(--primary-color);
+            color: var(--white);
+            padding: 12px 35px;
+            border: none;
+            border-radius: 30px;
+            font-size: 1.1rem;
+            font-weight: 700;
+            cursor: pointer;
+            text-decoration: none;
+            transition: 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0, 118, 255, 0.4);
+        }
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(0, 118, 255, 0.6);
+        }
+        .login-btn-hero {
+            display: inline-block;
+            background-color: transparent;
+            color: var(--white);
+            padding: 10px 28px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-radius: 30px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            text-decoration: none;
+            transition: 0.3s ease;
+            font-family: 'Cairo', sans-serif;
+            margin-top: 12px;
+        }
+        .login-btn-hero:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+            border-color: var(--primary-color);
+            transform: translateY(-2px);
+        }
+        .login-btn-hero i {
+            margin-left: 8px;
+        }
+        .popup-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.75);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 2000;
+            opacity: 0;
+            pointer-events: none;
+            transition: 0.4s ease;
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+        }
+        .popup-overlay.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+        .popup-box {
+            background: var(--white);
+            padding: 40px 30px;
+            border-radius: 24px;
+            max-width: 450px;
+            width: 90%;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+            position: relative;
+            transform: scale(0.8);
+            transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            text-align: center;
+            border-top: 6px solid var(--primary-color);
+        }
+        .popup-overlay.active .popup-box {
+            transform: scale(1);
+        }
+        .popup-close {
+            position: absolute;
+            top: 15px;
+            left: 20px;
+            font-size: 1.5rem;
+            color: #aaa;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+        .popup-close:hover {
+            color: var(--secondary-color);
+        }
+        .popup-title {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--primary-color);
+            margin-bottom: 25px;
+            background: rgba(0, 118, 255, 0.08);
+            padding: 10px;
+            border-radius: 12px;
+        }
+        .popup-form-group {
+            text-align: right;
+            margin-bottom: 20px;
+        }
+        .popup-form-group label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 8px;
+            font-size: 0.95rem;
+            color: var(--secondary-color);
+        }
+        .popup-form-group input {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #e1e1e1;
+            border-radius: 12px;
+            font-size: 1rem;
+            font-family: 'Cairo', sans-serif;
+            transition: 0.3s;
+            text-align: right;
+        }
+        .popup-form-group input:focus {
+            border-color: var(--primary-color);
+            outline: none;
+            box-shadow: 0 0 10px rgba(0, 118, 255, 0.15);
+        }
+        .popup-submit-btn {
+            width: 100%;
+            background: var(--primary-color);
+            color: var(--white);
+            border: none;
+            padding: 12px;
+            border-radius: 12px;
+            font-size: 1.1rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: 0.3s;
+            font-family: 'Cairo', sans-serif;
+            box-shadow: 0 4px 12px rgba(0, 118, 255, 0.3);
+        }
+        .popup-submit-btn:hover {
+            background: #005dc7;
+            transform: translateY(-2px);
+        }
+        .about {
+            padding: 40px 10% 180px 10%;
+            text-align: center;
+            background-color: var(--white);
+            position: relative;
+        }
+        .section-title {
+            font-size: 2.2rem;
+            margin-bottom: 40px;
+            position: relative;
+            display: inline-block;
+            font-weight: 700;
+        }
+        .section-title::after {
+            content: '';
+            width: 60%;
+            height: 4px;
+            background-color: var(--primary-color);
+            position: absolute;
+            bottom: -10px;
+            left: 20%;
+            border-radius: 2px;
+        }
+        .about-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-around;
+            margin-top: 40px;
+        }
+        .about-card {
+            flex: 1;
+            min-width: 250px;
+            margin: 15px;
+            padding: 30px;
+            background: var(--light-bg);
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            transition: 0.3s;
+        }
+        .about-card:hover {
+            transform: translateY(-5px);
+        }
+        .about-card i {
+            font-size: 3rem;
+            color: var(--primary-color);
+            margin-bottom: 20px;
+        }
+        .about-card h3 {
+            margin-bottom: 10px;
+            font-size: 1.4rem;
+        }
+        .services {
+            background-color: var(--secondary-color);
+            color: var(--white);
+            padding: 80px 10% 180px 10%;
+            text-align: center;
+            position: relative;
+        }
+        .services .section-title {
+            color: var(--white);
+        }
+        .services-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 25px;
+            margin-top: 50px;
+        }
+        .service-box {
+            background-color: rgba(255, 255, 255, 0.05);
+            padding: 30px 20px;
+            border-radius: 8px;
+            border-top: 4px solid var(--primary-color);
+            transition: 0.3s;
+        }
+        .service-box:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+            transform: scale(1.03);
+        }
+        .service-box i {
+            font-size: 2.5rem;
+            color: var(--primary-color);
+            margin-bottom: 15px;
+        }
+        .service-box h4 {
+            font-size: 1.25rem;
+            margin-bottom: 10px;
+        }
+        .contact {
+            padding: 80px 10%;
+            text-align: center;
+            background-color: var(--light-bg);
+        }
+        .contact-info {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 40px;
+            margin-top: 40px;
+        }
+        .info-item {
+            font-size: 1.2rem;
+            font-weight: 600;
+        }
+        .info-item i {
+            color: var(--primary-color);
+            margin-left: 10px;
+            font-size: 1.4rem;
+        }
+        footer {
+            background-color: #111;
+            color: #aaa;
+            text-align: center;
+            padding: 30px 20px;
+            border-top: 1px solid #222;
+        }
+        .footer-social {
+            margin-top: 15px;
+        }
+        .footer-social a {
+            color: var(--white);
+            font-size: 1.8rem;
+            transition: 0.3s;
+        }
+        .footer-social a:hover {
+            color: #1877f2;
+        }
+        #trackingApp {
+            background: linear-gradient(135deg, #e8f0fe, #d4e4f7);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        .tracking-container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 24px;
+            padding: 30px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.1);
+            position: relative;
+            overflow: hidden;
+        }
+        .tracking-container::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle at 30% 20%, rgba(0, 118, 255, 0.04), transparent 70%);
+            pointer-events: none;
+        }
+        .login-page {
+            text-align: center;
+            position: relative;
+            z-index: 1;
+            padding: 20px 0;
+        }
+        .login-page .logo-wrapper {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 25px;
+            position: relative;
+            height: 220px;
+        }
+        .civil-helo {
+            position: relative;
+            width: 180px;
+            height: 135px;
+            animation: hoverCivil 3s ease-in-out infinite;
+            margin-top: 40px;
+            transform: scale(0.85);
+            transform-origin: center center;
+        }
+        @keyframes hoverCivil {
+            0%, 100% { transform: scale(0.85) translateY(0px); }
+            50% { transform: scale(0.85) translateY(-8px); }
+        }
+        .civil-helo .body {
+            position: absolute;
+            width: 120px;
+            height: 28px;
+            background: linear-gradient(135deg, #ffffff, #e8ecf0);
+            border-radius: 60px 30px 15px 20px;
+            top: 55%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            border: 1px solid #c0c8d0;
+            box-shadow: 0 0 30px rgba(255, 255, 255, 0.05);
+        }
+        .civil-helo .body::before {
+            content: '';
+            position: absolute;
+            top: -8px;
+            left: 12px;
+            width: 48px;
+            height: 15px;
+            background: rgba(200, 210, 220, 0.3);
+            border-radius: 12px 12px 0 0;
+            border: 1px solid #c0c8d0;
+            border-bottom: none;
+        }
+        .civil-helo .body-stripe {
+            position: absolute;
+            bottom: 3px;
+            left: 10%;
+            width: 80%;
+            height: 2px;
+            background: linear-gradient(90deg, #0076ff, #4fc3f7, #0076ff);
+            border-radius: 4px;
+        }
+        .civil-helo .cockpit {
+            position: absolute;
+            top: 6px;
+            left: 8px;
+            width: 35px;
+            height: 15px;
+            background: linear-gradient(180deg, #81d4fa, #0288d1);
+            border-radius: 12px 8px 0 0;
+            border: 1px solid #4fc3f7;
+            box-shadow: inset 0 0 20px rgba(79, 195, 247, 0.15);
+        }
+        .civil-helo .cockpit::after {
+            content: '';
+            position: absolute;
+            top: 2px;
+            left: 4px;
+            width: 10px;
+            height: 6px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 50%;
+        }
+        .civil-helo .cockpit-wiper {
+            position: absolute;
+            top: 8px;
+            left: 16px;
+            width: 12px;
+            height: 2px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 2px;
+            transform: rotate(-15deg);
+        }
+        .civil-helo .tail {
+            position: absolute;
+            right: -44px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 52px;
+            height: 7px;
+            background: linear-gradient(135deg, #ffffff, #d0d8e0);
+            border-radius: 0 20px 20px 0;
+            border: 1px solid #c0c8d0;
+        }
+        .civil-helo .tail::after {
+            content: '';
+            position: absolute;
+            right: -4px;
+            top: -4px;
+            width: 8px;
+            height: 15px;
+            background: #ffffff;
+            border-radius: 4px;
+            border: 1px solid #c0c8d0;
+        }
+        .civil-helo .main-rotor {
+            position: absolute;
+            top: -20px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 110px;
+            height: 5px;
+            background: rgba(200, 200, 200, 0.25);
+            border-radius: 10px;
+            animation: spinRotor 0.45s linear infinite;
+            box-shadow: 0 0 40px rgba(200, 200, 200, 0.05);
+        }
+        .civil-helo .main-rotor::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 8px;
+            height: 8px;
+            background: #888;
+            border-radius: 50%;
+            border: 1px solid #aaa;
+        }
+        .civil-helo .main-rotor::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) rotate(72deg);
+            width: 110px;
+            height: 5px;
+            background: rgba(200, 200, 200, 0.15);
+            border-radius: 10px;
+        }
+        .civil-helo .tail-rotor {
+            position: absolute;
+            right: -56px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 24px;
+            height: 3px;
+            background: rgba(200, 200, 200, 0.2);
+            border-radius: 4px;
+            animation: spinRotor 0.3s linear infinite;
+        }
+        .civil-helo .tail-rotor::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 4px;
+            height: 4px;
+            background: #888;
+            border-radius: 50%;
+        }
+        .civil-helo .eux-logo {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: #0076ff;
+            font-weight: 900;
+            font-size: 13px;
+            letter-spacing: 2px;
+            text-shadow: 0 0 30px rgba(0, 118, 255, 0.2);
+            z-index: 5;
+        }
+        .civil-helo .nav-light {
+            position: absolute;
+            width: 5px;
+            height: 5px;
+            border-radius: 50%;
+            animation: blinkLight 1.5s ease-in-out infinite;
+        }
+        .civil-helo .nav-light.red {
+            background: #ff1744;
+            box-shadow: 0 0 15px rgba(255, 23, 68, 0.5);
+            right: 8px;
+            top: 30%;
+        }
+        .civil-helo .nav-light.green {
+            background: #00e676;
+            box-shadow: 0 0 15px rgba(0, 230, 118, 0.5);
+            left: 8px;
+            top: 30%;
+            animation-delay: 0.75s;
+        }
+        @keyframes blinkLight {
+            0%, 100% { opacity: 0.2; }
+            50% { opacity: 1; }
+        }
+        @keyframes spinRotor {
+            0% { transform: translateX(-50%) rotate(0deg); }
+            100% { transform: translateX(-50%) rotate(360deg); }
+        }
+        .login-page .brand {
+            color: #0d2137;
+            font-size: 28px;
+            font-weight: 900;
+            margin-bottom: 4px;
+        }
+        .login-page .brand span {
+            color: #0076ff;
+        }
+        .login-page .input-group {
+            position: relative;
+            margin-bottom: 16px;
+        }
+        .login-page .input-group input {
+            width: 100%;
+            padding: 16px 20px 16px 50px;
+            border: 2px solid #e8ecf0;
+            border-radius: 14px;
+            font-size: 16px;
+            font-family: 'Cairo', sans-serif;
+            background: #f8fafc;
+            transition: 0.3s;
+        }
+        .login-page .input-group input:focus {
+            border-color: #0076ff;
+            outline: none;
+            background: white;
+            box-shadow: 0 0 0 4px rgba(0, 118, 255, 0.08);
+        }
+        .login-page .input-group .input-icon {
+            position: absolute;
+            right: 18px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #999;
+            font-size: 18px;
+        }
+        .login-page .error-msg {
+            color: #dc3545;
+            font-size: 14px;
+            margin-top: 14px;
+            padding: 10px;
+            background: #ffeaea;
+            border-radius: 8px;
+        }
+        .tracking-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #eef3f8;
+            flex-wrap: wrap;
+            gap: 10px;
+            position: relative;
+            z-index: 1;
+        }
+        .tracking-header h2 {
+            color: #0d2137;
+            font-weight: 700;
+            font-size: 18px;
+        }
+        .tracking-header h2 i {
+            color: #0076ff;
+            margin-left: 8px;
+        }
+        .header-actions {
+            display: flex;
+            gap: 6px;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+        .total-small {
+            font-size: 13px;
+            color: #888;
+            margin-right: 12px;
+            font-weight: 600;
+            white-space: nowrap;
+        }
+        .total-small .count {
+            color: #0076ff;
+            font-weight: 900;
+            font-size: 16px;
+        }
 
-  .scene.active {
-    opacity: 1;
-    pointer-events: auto;
-    transform: scale(1);
-  }
+        /* الأزرار المخصصة */
+        .btn-eux, .btn-eux-green, .btn-eux-orange, .btn-eux-red, .btn-eux-outline {
+            --round: 0.75rem;
+            cursor: pointer;
+            position: relative;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            transition: all 0.25s ease;
+            border-radius: var(--round);
+            border: none;
+            outline: none;
+            padding: 12px 18px;
+            font-family: 'Cairo', sans-serif;
+            font-weight: 600;
+            font-size: 14px;
+            color: white;
+        }
+        .btn-eux {
+            background: radial-gradient(65.28% 65.28% at 50% 100%, rgba(0, 118, 255, 0.6) 0%, rgba(0, 118, 255, 0) 100%), linear-gradient(0deg, #0076ff, #0076ff);
+            box-shadow: 0 4px 15px rgba(0, 118, 255, 0.25);
+        }
+        .btn-eux-green {
+            background: radial-gradient(65.28% 65.28% at 50% 100%, rgba(40, 167, 69, 0.6) 0%, rgba(40, 167, 69, 0) 100%), linear-gradient(0deg, #28a745, #28a745);
+            box-shadow: 0 4px 15px rgba(40, 167, 69, 0.25);
+        }
+        .btn-eux-orange {
+            background: radial-gradient(65.28% 65.28% at 50% 100%, rgba(255, 152, 0, 0.6) 0%, rgba(255, 152, 0, 0) 100%), linear-gradient(0deg, #ff9800, #ff9800);
+            box-shadow: 0 4px 15px rgba(255, 152, 0, 0.25);
+        }
+        .btn-eux-red {
+            background: radial-gradient(65.28% 65.28% at 50% 100%, rgba(220, 53, 69, 0.6) 0%, rgba(220, 53, 69, 0) 100%), linear-gradient(0deg, #dc3545, #dc3545);
+            box-shadow: 0 4px 15px rgba(220, 53, 69, 0.25);
+        }
+        .btn-eux-outline {
+            background: transparent;
+            border: 1.5px solid #ddd;
+            color: #0d2137;
+            box-shadow: none;
+        }
+        .btn-eux-outline:hover { background: #f5f5f5; }
+        .btn-eux:active, .btn-eux-green:active, .btn-eux-orange:active, .btn-eux-red:active, .btn-eux-outline:active {
+            transform: scale(0.95);
+        }
+        .btn-eux .inner, .btn-eux-green .inner, .btn-eux-orange .inner, .btn-eux-red .inner, .btn-eux-outline .inner {
+            z-index: 2;
+            gap: 6px;
+            position: relative;
+            width: 100%;
+            color: inherit;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+            font-weight: 500;
+            line-height: 1.5;
+        }
+        .btn-eux .fold, .btn-eux-green .fold, .btn-eux-orange .fold, .btn-eux-red .fold, .btn-eux-outline .fold {
+            z-index: 1;
+            position: absolute;
+            top: 0;
+            right: 0;
+            height: 1rem;
+            width: 1rem;
+            display: inline-block;
+            transition: all 0.5s ease-in-out;
+            border-bottom-left-radius: 0.5rem;
+            border-top-right-radius: var(--round);
+        }
+        .btn-eux .fold { background: radial-gradient(100% 75% at 55%, rgba(0, 118, 255, 0.6) 0%, rgba(0, 118, 255, 0) 100%); box-shadow: 0 0 3px rgba(0, 0, 0, 0.2); }
+        .btn-eux-green .fold { background: radial-gradient(100% 75% at 55%, rgba(40, 167, 69, 0.6) 0%, rgba(40, 167, 69, 0) 100%); box-shadow: 0 0 3px rgba(0, 0, 0, 0.2); }
+        .btn-eux-orange .fold { background: radial-gradient(100% 75% at 55%, rgba(255, 152, 0, 0.6) 0%, rgba(255, 152, 0, 0) 100%); box-shadow: 0 0 3px rgba(0, 0, 0, 0.2); }
+        .btn-eux-red .fold { background: radial-gradient(100% 75% at 55%, rgba(220, 53, 69, 0.6) 0%, rgba(220, 53, 69, 0) 100%); box-shadow: 0 0 3px rgba(0, 0, 0, 0.2); }
+        .btn-eux-outline .fold { background: radial-gradient(100% 75% at 55%, rgba(13, 33, 55, 0.1) 0%, rgba(13, 33, 55, 0) 100%); box-shadow: 0 0 3px rgba(0, 0, 0, 0.1); }
+        .btn-eux:hover .fold, .btn-eux-green:hover .fold, .btn-eux-orange:hover .fold, .btn-eux-red:hover .fold, .btn-eux-outline:hover .fold {
+            margin-top: -1rem;
+            margin-right: -1rem;
+        }
 
-  /* Shared Typography */
-  .hero-title { font-size: 28px; font-weight: 900; color: var(--primary-blue); margin-bottom: 8px; }
-  .punch-title { font-size: 24px; font-weight: 900; color: var(--accent-red); margin-bottom: 12px; }
-  .sub-title { font-size: 16px; font-weight: 600; color: #555; }
+        .points_wrapper {
+            overflow: hidden;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            position: absolute;
+            z-index: 1;
+        }
+        .points_wrapper .point {
+            bottom: -10px;
+            position: absolute;
+            animation: floating-points infinite ease-in-out;
+            pointer-events: none;
+            width: 2px;
+            height: 2px;
+            background-color: #fff;
+            border-radius: 9999px;
+        }
+        @keyframes floating-points {
+            0% { transform: translateY(0); }
+            85% { opacity: 0; }
+            100% { transform: translateY(-55px); opacity: 0; }
+        }
+        .points_wrapper .point:nth-child(1) { left: 10%; opacity: 1; animation-duration: 2.35s; animation-delay: 0.2s; }
+        .points_wrapper .point:nth-child(2) { left: 30%; opacity: 0.7; animation-duration: 2.5s; animation-delay: 0.5s; }
+        .points_wrapper .point:nth-child(3) { left: 25%; opacity: 0.8; animation-duration: 2.2s; animation-delay: 0.1s; }
+        .points_wrapper .point:nth-child(4) { left: 44%; opacity: 0.6; animation-duration: 2.05s; }
+        .points_wrapper .point:nth-child(5) { left: 50%; opacity: 1; animation-duration: 1.9s; }
+        .points_wrapper .point:nth-child(6) { left: 75%; opacity: 0.5; animation-duration: 1.5s; animation-delay: 1.5s; }
+        .points_wrapper .point:nth-child(7) { left: 88%; opacity: 0.9; animation-duration: 2.2s; animation-delay: 0.2s; }
+        .points_wrapper .point:nth-child(8) { left: 58%; opacity: 0.8; animation-duration: 2.25s; animation-delay: 0.2s; }
+        .points_wrapper .point:nth-child(9) { left: 98%; opacity: 0.6; animation-duration: 2.6s; animation-delay: 0.1s; }
+        .points_wrapper .point:nth-child(10) { left: 65%; opacity: 1; animation-duration: 2.5s; animation-delay: 0.2s; }
+        .btn-eux-outline .points_wrapper .point { background-color: #0d2137; }
 
-  /* Scene 1: Branding */
-  .brand-badge {
-    background: linear-gradient(135deg, #0F3460 0%, #16213E 100%);
-    color: var(--white);
-    padding: 16px 36px;
-    border-radius: 20px;
-    font-size: 36px;
-    font-weight: 900;
-    box-shadow: 0 12px 30px rgba(15,52,96,0.4);
-    animation: popIn 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
-  }
+        .form-group { margin-bottom: 16px; text-align: right; }
+        .form-group label { display: block; margin-bottom: 5px; font-weight: 700; color: #0d2137; font-size: 14px; }
+        .form-group input, .form-group textarea, .form-group select {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #e8ecf0;
+            border-radius: 10px;
+            font-size: 14px;
+            font-family: 'Cairo', sans-serif;
+            background: #f8fafc;
+            transition: 0.3s;
+        }
+        .form-group input:focus, .form-group textarea:focus, .form-group select:focus {
+            border-color: #0076ff; outline: none; background: white; box-shadow: 0 0 0 4px rgba(0, 118, 255, 0.08);
+        }
+        .form-group textarea { height: 80px; resize: vertical; }
+        .two-columns { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
 
-  /* Scene 2: Coverage */
-  .card-box {
-    background: var(--white);
-    padding: 24px;
-    border-radius: 20px;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.06);
-    width: 100%;
-  }
-  .direction-icon { font-size: 32px; color: var(--accent-red); margin: 12px 0; animation: bounce 1s infinite; }
-
-  /* Scene 3: Hand Delivery (3D Phone Handoff) */
-  .phone-mockup {
-    position: relative;
-    width: 220px;
-    height: 320px;
-    background: linear-gradient(180deg, #00F2FE 0%, #4FACFE 100%);
-    border-radius: 28px;
-    border: 8px solid #1a1a1a;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    box-shadow: 0 20px 40px rgba(0,0,0,0.2);
-  }
-  
-  .hand-box {
-    position: absolute;
-    font-size: 64px;
-    transition: transform 0.8s cubic-bezier(0.34, 1.56, 0.64, 1);
-  }
-
-  .notification-chip {
-    position: absolute;
-    top: -20px;
-    background: var(--white);
-    padding: 8px 16px;
-    border-radius: 30px;
-    font-size: 13px;
-    font-weight: 700;
-    color: var(--primary-blue);
-    box-shadow: 0 6px 16px rgba(0,0,0,0.12);
-  }
-
-  /* Scene 4: Services List */
-  .services-grid {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-    width: 100%;
-  }
-  .service-card {
-    background: var(--white);
-    padding: 12px 16px;
-    border-radius: 12px;
-    font-size: 14px;
-    font-weight: 700;
-    color: var(--primary-blue);
-    text-align: right;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.04);
-    border-right: 5px solid var(--primary-blue);
-    display: flex;
-    align-items: center;
-    gap: 10px;
-  }
-
-  /* Scene 5: Location & Call to Action */
-  .address-card {
-    background: var(--white);
-    padding: 16px;
-    border-radius: 16px;
-    font-size: 14px;
-    font-weight: 700;
-    color: #333;
-    margin-bottom: 20px;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.05);
-  }
-  .cta-button {
-    background: var(--accent-red);
-    color: var(--white);
-    padding: 14px 28px;
-    border-radius: 30px;
-    font-weight: 900;
-    font-size: 16px;
-    box-shadow: 0 8px 25px rgba(255,51,102,0.4);
-    animation: pulse 1.5s infinite;
-  }
-
-  /* Controls Overlay */
-  .replay-btn {
-    position: absolute;
-    bottom: 15px;
-    left: 50%;
-    transform: translateX(-50%);
-    background: rgba(15, 52, 96, 0.9);
-    color: #fff;
-    border: none;
-    padding: 8px 18px;
-    border-radius: 20px;
-    font-size: 12px;
-    font-weight: 700;
-    cursor: pointer;
-    z-index: 10;
-  }
-
-  /* Keyframe Animations */
-  @keyframes popIn {
-    0% { transform: scale(0.5); opacity: 0; }
-    100% { transform: scale(1); opacity: 1; }
-  }
-  @keyframes bounce {
-    0%, 100% { transform: translateY(0); }
-    50% { transform: translateY(6px); }
-  }
-  @keyframes pulse {
-    0% { transform: scale(1); }
-    50% { transform: scale(1.05); }
-    100% { transform: scale(1); }
-  }
-</style>
+        @media (max-width: 768px) {
+            .header-new { padding: 12px 16px; }
+            .header-new .logo-text { font-size: 20px; letter-spacing: 1px; }
+            .header-new .divider { height: 25px; }
+            .header-new .dot { width: 6px; height: 6px; }
+            header { padding: 20px 5%; }
+            .logo { font-size: 24px; }
+            .hero h1 { font-size: 2rem; }
+            .hero p { font-size: 1rem; }
+            .cyber-node { width: 120px; height: 120px; font-size: 28px; }
+            .cube-container { width: 130px; height: 120px; }
+            .iso-cube { width: 90px; height: 90px; }
+            .iso-face { width: 90px; height: 90px; font-size: 24px; }
+            .iso-front { transform: rotateY(0deg) translateZ(45px); }
+            .iso-right { transform: rotateY(90deg) translateZ(45px); }
+            .iso-top { transform: rotateX(90deg) translateZ(45px); }
+            .quantum-box { width: 120px; height: 120px; }
+            .two-columns { grid-template-columns: 1fr; }
+        }
+    </style>
 </head>
-<body>
+<body oncontextmenu="return false;">
 
-<div class="video-container">
-  
-  <!-- SCENE 1: HOOK -->
-  <div class="scene active" id="scene1">
-    <div class="brand-badge">EUX Express</div>
-    <div class="sub-title" style="margin-top: 20px;">الريادة في سرعة وحلول الشحن</div>
-  </div>
+    <!-- ============================================
+    صفحة الهبوط (Landing Page)
+    ============================================ -->
+    <div id="landingPage">
+        <header class="header-new">
+            <div class="logo-container">
+                <div class="divider"></div>
+                <div class="logo-text"><span>EUX</span> EXPRESS</div>
+                <div class="dot"></div>
+            </div>
+        </header>
 
-  <!-- SCENE 2: COVERAGE -->
-  <div class="scene" id="scene2">
-    <div class="card-box">
-      <h3 class="hero-title">القاهرة والجيزة</h3>
-      <div class="direction-icon"><i class="fa-solid fa-circle-arrow-down"></i></div>
-      <h2 class="punch-title">إلى جميع المحافظات</h2>
-      <p class="sub-title">أسرع استلام وأفضل سعر داخل القاهرة والجيزة</p>
+        <section class="hero">
+            <div class="showcase-wrapper">
+                <div class="cyber-node">EUX</div>
+                <div class="glow-floor"></div>
+            </div>
+            <h1>شركة <span>EUX</span> للشحن</h1>
+            <p>الريادة في سرعة وحلول الشحن نقدم خدماتنا الاحترافية من مدينة العبور (11828) وإلى جميع محافظات جمهورية مصر العربية بأفضل الأسعار وأعلى كفاءة.</p>
+            <button onclick="togglePopup(true)" class="btn"><i class="fas fa-user-plus"></i> افتح حساب الآن</button>
+            <a href="#" class="login-btn-hero" onclick="openTrackingSystem(); return false;">
+                <i class="fas fa-sign-in-alt"></i> تسجيل الدخول
+            </a>
+            <div class="sea-wave-divider">
+                <svg viewBox="0 0 1200 120" preserveAspectRatio="none">
+                    <path d="M321.39,56.44c58-10.79,114.16-30.13,172-41.86,82.39-16.72,168.19-17.73,250.45-.39C823.78,31,906.67,72,985.66,92.83c70.05,18.48,146.53,26.09,214.34,3V120H0V0C26.9,4.75,55.05,16.33,81.11,25.09,151,48.56,224.4,74.48,321.39,56.44Z" class="wave-fill-white"></path>
+                </svg>
+            </div>
+        </section>
+
+        <div class="popup-overlay" id="accountPopup" onclick="closePopupOutside(event)">
+            <div class="popup-box">
+                <span class="popup-close" onclick="togglePopup(false)">&times;</span>
+                <div class="popup-title"><i class="far fa-clock"></i> سيتم التواصل خلال 5 ساعات لتفعيل الحساب</div>
+                <form id="excelForm" onsubmit="submitToExcel(event)">
+                    <div class="popup-form-group">
+                        <label for="userName">الاسم</label>
+                        <input type="text" id="userName" name="name" placeholder="أدخل الاسم" required>
+                    </div>
+                    <div class="popup-form-group">
+                        <label for="userPhone">رقم الهاتف</label>
+                        <input type="tel" id="userPhone" name="phone" placeholder="أدخل رقم الهاتف" required>
+                    </div>
+                    <button type="submit" class="popup-submit-btn">إرسال</button>
+                </form>
+            </div>
+        </div>
+
+        <section id="about" class="about">
+            <div class="showcase-wrapper" style="margin-bottom: 50px; margin-top: 20px;">
+                <div class="cube-container">
+                    <div class="iso-cube">
+                        <div class="iso-face iso-front">EUX</div>
+                        <div class="iso-face iso-right"></div>
+                        <div class="iso-face iso-top"></div>
+                    </div>
+                </div>
+                <div class="glow-floor" style="margin-top: 25px;"></div>
+            </div>
+            <h2 class="section-title">لماذا شركة EUX؟</h2>
+            <p style="max-width: 800px; margin: 0 auto 30px; color: #666;">نعمل في مجال الشحن منذ 3 أعوام متتالية حققنا فيها نجاحا باهرا، وقدمنا حلولا مبتكرة لجميع مشاكل الشحن التي تواجه التجار لأننا ندرك تماما ما يهمك:</p>
+            <div class="about-container">
+                <div class="about-card">
+                    <i class="fas fa-shipping-fast"></i>
+                    <h3>سرعة التسليم والاستلام</h3>
+                    <p>الأفضل والأسرع في استلام الشحنات من مدينة العبور وتسليم الشحنات لجميع المحافظات</p>
+                </div>
+                <div class="about-card">
+                    <i class="fas fa-shield-alt"></i>
+                    <h3>الحفاظ على الشحنات</h3>
+                    <p>أمان كامل لمنتجاتك وضمان وصولها بحالتها الأصلية للعميل</p>
+                </div>
+                <div class="about-card">
+                    <i class="fas fa-hand-holding-usd"></i>
+                    <h3>سعر اقتصادي مميز</h3>
+                    <p>نقدم أفضل معادلة بين السعر الاقتصادي والجودة العالية لدعم تجارتك</p>
+                </div>
+            </div>
+        </section>
+
+        <footer>
+            <p>&copy; 2026 جميع الحقوق محفوظة لشركة EUX للشحن</p>
+            <div class="footer-social">
+                <a href="https://www.facebook.com/share/1JBqQgjooM/" target="_blank"><i class="fab fa-facebook"></i></a>
+            </div>
+        </footer>
     </div>
-  </div>
 
-  <!-- SCENE 3: PHONE HANDOFF -->
-  <div class="scene" id="scene3">
-    <div class="notification-chip"><i class="fa-solid fa-circle-check" style="color:#00C853;"></i> الطلب جاهز للشحن</div>
-    <div class="phone-mockup">
-      <div class="hand-box" id="deliveryHand">📦🤳</div>
+    <!-- ============================================
+    نظام التتبع (Tracking App)
+    ============================================ -->
+    <div id="trackingApp" class="hidden">
+        <div class="tracking-container" id="app">
+
+            <div id="loginPage" class="login-page">
+                <header class="header-new" style="border-radius: 16px 16px 0 0; margin-bottom: 20px;">
+                    <div class="logo-container">
+                        <div class="divider"></div>
+                        <div class="logo-text"><span>EUX</span> EXPRESS</div>
+                        <div class="dot"></div>
+                    </div>
+                </header>
+
+                <div class="brand">مرحبا بك في <span>EUX Express</span></div>
+
+                <div class="input-group">
+                    <span class="input-icon"><i class="fas fa-phone"></i></span>
+                    <input type="text" id="phoneInput" placeholder="رقم الهاتف" dir="ltr" maxlength="11" oninput="this.value=this.value.replace(/[^0-9]/g,'')">
+                </div>
+                <div class="input-group">
+                    <span class="input-icon"><i class="fas fa-lock"></i></span>
+                    <input type="password" id="passwordInput" placeholder="كلمة المرور" dir="ltr">
+                </div>
+
+                <button class="btn-eux" onclick="doLogin()" style="width:100%;padding:16px;font-size:18px;border-radius:14px;">
+                    <span class="inner"><i class="fas fa-sign-in-alt"></i> دخول</span>
+                </button>
+                <button class="btn-eux-outline" onclick="backToLanding()" style="width:100%;margin-top:10px;padding:14px;border-radius:12px;font-size:15px;">
+                    <span class="inner">العودة للصفحة الرئيسية</span>
+                </button>
+            </div>
+
+            <div id="publicOrderPage" class="hidden">
+                <header class="header-new" style="border-radius: 16px 16px 0 0; margin-bottom: 20px;">
+                    <div class="logo-container">
+                        <div class="divider"></div>
+                        <div class="logo-text"><span>EUX</span> EXPRESS</div>
+                        <div class="dot"></div>
+                    </div>
+                </header>
+
+                <div class="form-group"><label>اسم المستلم *</label><input id="pf_receiverName" placeholder="اسم المستلم"></div>
+                <div class="form-group"><label>هاتف المستلم *</label><input id="pf_receiverPhone" placeholder="مثال: 010xxxxxxxx" dir="ltr" maxlength="11" oninput="this.value=this.value.replace(/[^0-9]/g,'')"></div>
+                <div class="form-group"><label>العنوان التفصيلي *</label><input id="pf_address" placeholder="العنوان بالتفصيل"></div>
+                <div class="form-group"><label>المبلغ المطلوب تحصيله شامل الشحن *</label><input id="pf_amount" type="number" placeholder="المبلغ بالجنيه" dir="ltr"></div>
+                
+                <button class="btn-eux" id="publicSubmitBtn" onclick="submitPublicOrder()" style="width:100%;padding:14px;border-radius:12px;font-size:16px;">
+                    <span class="inner">تسجيل الشحنة</span>
+                </button>
+                <button class="btn-eux-outline" onclick="backToLanding()" style="width:100%;margin-top:8px;padding:12px;border-radius:10px;font-size:14px;">
+                    <span class="inner">العودة للرئيسية</span>
+                </button>
+            </div>
+
+        </div>
     </div>
-    <h3 class="hero-title" style="margin-top:24px;">استلام ➔ شحن ➔ <span style="color:var(--accent-red);">تسليم</span></h3>
-  </div>
 
-  <!-- SCENE 4: SERVICES -->
-  <div class="scene" id="scene4">
-    <h3 class="hero-title" style="margin-bottom:16px;">خدماتنا المميزة</h3>
-    <div class="services-grid">
-      <div class="service-card"><i class="fa-solid fa-mobile-screen brand-blue"></i> تطبيق متابعة خاص وجروب دعم</div>
-      <div class="service-card"><i class="fa-solid fa-truck-fast brand-blue"></i> خدمة بيكب مجاني</div>
-      <div class="service-card"><i class="fa-solid fa-money-bill-wave brand-blue"></i> تحصيل 3 أيام أسبوعياً</div>
-      <div class="service-card"><i class="fa-solid fa-magnifying-glass brand-blue"></i> خدمة معاينة واستبدال</div>
-      <div class="service-card"><i class="fa-solid fa-arrows-rotate brand-blue"></i> 3 محاولات تسليم للشحنة</div>
-      <div class="service-card"><i class="fa-solid fa-chart-line brand-blue"></i> نسبة تسليم عالية جداً</div>
-    </div>
-  </div>
+    <!-- JavaScript الأساسي للتنقل -->
+    <script>
+        function togglePopup(show) {
+            const popup = document.getElementById('accountPopup');
+            if (show) popup.classList.add('active');
+            else popup.classList.remove('active');
+        }
 
-  <!-- SCENE 5: LOCATION & CTA -->
-  <div class="scene" id="scene5">
-    <h3 class="hero-title" style="margin-bottom:12px;">مقر الشركة</h3>
-    <div class="address-card">
-      <i class="fa-solid fa-location-dot" style="color:var(--accent-red); font-size:20px; margin-bottom:6px;"></i><br>
-      مدينة العبور، الشباب، بجوار كشري الوالي
-    </div>
-    <div class="cta-button">
-      كن أحد عملائنا المميزين اليوم!
-    </div>
-  </div>
+        function closePopupOutside(e) {
+            if (e.target.id === 'accountPopup') togglePopup(false);
+        }
 
-  <button class="replay-btn" onclick="playAd()"><i class="fa-solid fa-rotate-right"></i> إعادة التشغيل</button>
+        function openTrackingSystem() {
+            document.getElementById('landingPage').style.display = 'none';
+            document.getElementById('trackingApp').classList.remove('hidden');
+        }
 
-</div>
+        function backToLanding() {
+            document.getElementById('trackingApp').classList.add('hidden');
+            document.getElementById('landingPage').style.display = 'block';
+        }
 
-<script>
-  let currentScene = 1;
-  let timer;
+        function submitToExcel(e) {
+            e.preventDefault();
+            alert("تم إرسال طلبك بنجاح، وسيتم التواصل معك قريباً.");
+            togglePopup(false);
+        }
 
-  function setScene(num) {
-    document.querySelectorAll('.scene').forEach(s => s.classList.remove('active'));
-    const target = document.getElementById('scene' + num);
-    if(target) target.classList.add('active');
+        function submitPublicOrder() {
+            alert("تم تسجيل الشحنة بنجاح.");
+        }
 
-    if(num === 3) {
-      const hand = document.getElementById('deliveryHand');
-      hand.style.transform = 'translateY(-30px) scale(1.1)';
-      setTimeout(() => {
-        hand.style.transform = 'translateY(80px) scale(1.3)';
-      }, 800);
-    }
-  }
-
-  function playAd() {
-    clearTimeout(timer);
-    setScene(1);
-    timer = setTimeout(() => { setScene(2); }, 3000);
-    timer = setTimeout(() => { setScene(3); }, 6500);
-    timer = setTimeout(() => { setScene(4); }, 10000);
-    timer = setTimeout(() => { setScene(5); }, 15000);
-  }
-
-  window.onload = playAd;
-</script>
-
+        function doLogin() {
+            alert("تسجيل الدخول...");
+        }
+    </script>
 </body>
 </html>
