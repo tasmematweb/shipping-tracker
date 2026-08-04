@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>EUX Express - تجربة التحديث مرة واحدة</title>
+    <title>EUX Express - لوحة العميل</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;900&display=swap" rel="stylesheet">
@@ -168,8 +168,9 @@
         let currentUser = null;
         let allShipmentsData = [];
         let trackingCache = {};
-        let hasLoadedOnce = false; // منع التحميل المتكرر
+        let hasLoadedOnce = false;
         let isRefreshing = false;
+        let isAutoRefreshing = false;
 
         // ============================================================
         // الكاش والتتبع
@@ -243,7 +244,7 @@
         }
 
         // ============================================================
-        // ❌ لا يوجد تحديث تلقائي (setInterval)
+        // ❌ لا يوجد تحديث تلقائي (setInterval) - تم إزالته بالكامل
         // ============================================================
 
         // ============================================================
@@ -277,7 +278,30 @@
             isRefreshing = false;
             if (btn) { btn.disabled = false;
                 btn.innerHTML = '<i class="fas fa-sync-alt"></i> تحديث الكل'; }
+            
+            setTimeout(() => { isAutoRefreshing = false; }, 3000);
         }
+
+        // ============================================================
+        // التحديث التلقائي عند أي Refresh للصفحة
+        // ============================================================
+
+        function autoRefreshAll() {
+            if (isAutoRefreshing) return;
+            const btn = document.querySelector('.refresh-all-btn');
+            if (btn && !btn.disabled) {
+                isAutoRefreshing = true;
+                btn.click();
+                console.log('🔄 تحديث تلقائي بعد Refresh');
+                setTimeout(() => { isAutoRefreshing = false; }, 5000);
+            }
+        }
+
+        // أحداث التحديث التلقائي
+        document.addEventListener('DOMContentLoaded', () => setTimeout(autoRefreshAll, 1500));
+        window.addEventListener('load', () => setTimeout(autoRefreshAll, 2000));
+        window.addEventListener('pageshow', (e) => { if (e.persisted) setTimeout(autoRefreshAll, 1500); });
+        window.addEventListener('hashchange', () => setTimeout(autoRefreshAll, 1000));
 
         // ============================================================
         // إضافة أزرار التحديث للبطاقات
@@ -411,7 +435,6 @@
             }
             content.innerHTML = shipments.map(s => createShipmentCard(s)).join('');
             
-            // عرض الحالات المخزنة فوراً
             shipments.forEach(s => {
                 if (s.trackingNumber && s.trackingNumber.length > 3) {
                     const cached = getCachedTrackingStatus(s.trackingNumber);
@@ -452,16 +475,13 @@
 
         async function loadPublicShipments() {
             try {
-                // جلب شحنات عامة (مثال: آخر 20 شحنة)
                 const res = await fetch(`${API_URL}?action=publicShipments`);
                 const data = await res.json();
                 if (data.success) return data.shipments || [];
-                // إذا لم يوجد API عام، نستخدم بيانات تجريبية
                 return getDemoShipments();
             } catch (e) { return getDemoShipments(); }
         }
 
-        // بيانات تجريبية للاختبار (بدون تسجيل دخول)
         function getDemoShipments() {
             return [
                 { id: 'DEMO-001', receiverName: 'أحمد محمد', receiverPhone: '01012345678', amount: '250', trackingNumber: 'JEG123456789', status: 'تم التسليم', lastUpdate: '2026-08-04 15:00' },
@@ -484,7 +504,6 @@
             const content = document.getElementById('content');
             const cacheKey = currentUser ? `eux_shipments_${currentUser.phone}` : 'eux_shipments_public';
             
-            // 1. عرض من الكاش فوراً
             const cached = getCachedShipments(cacheKey);
             if (cached && cached.length > 0) {
                 allShipmentsData = cached;
@@ -495,7 +514,6 @@
                 content.innerHTML = '<div class="loading"><div class="spinner"></div>جاري التحميل...</div>';
             }
             
-            // 2. جلب مرة واحدة من الخادم
             const loadFn = currentUser ? loadMyShipments : loadPublicShipments;
             loadFn().then(data => {
                 if (data && data.length > 0) {
@@ -529,7 +547,6 @@
                 const data = await res.json();
                 if (data.success) {
                     showToast('✅ تم حذف الشحنة', 'success');
-                    // إعادة تحميل مرة واحدة
                     hasLoadedOnce = false;
                     loadShipmentsOnce();
                 } else { showToast('❌ فشل الحذف', 'error'); }
@@ -707,10 +724,8 @@
                     loadShipmentsOnce();
                 } catch (e) {}
             } else {
-                // زائر - نعرض الشحنات العامة تلقائياً
                 document.getElementById('loginPage').classList.remove('hidden');
                 document.getElementById('dashboard').classList.add('hidden');
-                // تحميل الشحنات العامة تلقائياً
                 setTimeout(() => {
                     loadPublicShipments().then(data => {
                         if (data && data.length > 0) {
@@ -730,6 +745,7 @@
         // ============================================================
         // ❌ لا يوجد setInterval للتحديث التلقائي
         // ✅ فقط زر "تحديث الكل" و "تحديث الآن" يدوياً
+        // ✅ تحديث تلقائي عند Refresh الصفحة فقط
         // ============================================================
 
         document.getElementById('passwordInput').addEventListener('keypress', function(e) {
