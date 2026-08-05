@@ -1,4 +1,3 @@
-```html
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
@@ -2185,7 +2184,6 @@
         let editingShipmentId = null;
         let isSubmitting = false;
         let isPublicSubmitting = false;
-        let refreshInterval = null;
 
         // ============================================
         // إضافة مركز "أبو حماد" في محافظة الشرقية
@@ -2237,10 +2235,6 @@
             document.body.style.background = '#ffffff';
             if (window.history && window.history.pushState) {
                 window.history.pushState({}, '', window.location.pathname);
-            }
-            if (refreshInterval) {
-                clearInterval(refreshInterval);
-                refreshInterval = null;
             }
         }
 
@@ -2353,6 +2347,7 @@
         // دالة تسجيل الشحنة العامة مع عداد منع التكرار
         // ============================================
         async function submitPublicOrder() {
+            // منع الضغط المتكرر
             if (isPublicSubmitting) {
                 showToast('يرجى الانتظار 10 ثوانٍ قبل تسجيل شحنة أخرى', 'error');
                 return;
@@ -2382,6 +2377,7 @@
                 return; 
             }
 
+            // تعطيل الزر
             isPublicSubmitting = true;
             const submitBtn = document.getElementById('publicSubmitBtn');
             if (submitBtn) {
@@ -2428,6 +2424,7 @@
                 errorDiv.textContent = 'فشل الاتصال'; 
             }
 
+            // إعادة تفعيل الزر بعد 10 ثوانٍ
             setTimeout(() => {
                 isPublicSubmitting = false;
                 if (submitBtn) {
@@ -2512,10 +2509,6 @@
         function logout() {
             currentUser = null;
             clearUserSession();
-            if (refreshInterval) {
-                clearInterval(refreshInterval);
-                refreshInterval = null;
-            }
             document.getElementById('loginPage').classList.remove('hidden');
             document.getElementById('dashboard').classList.add('hidden');
             document.getElementById('publicOrderPage').classList.add('hidden');
@@ -2535,76 +2528,12 @@
             document.getElementById('addShipmentBtn').classList.toggle('hidden', isAdmin);
             document.getElementById('clientsBtn').classList.toggle('hidden', !isAdmin);
             document.getElementById('allShipmentsBtn').classList.toggle('hidden', !isAdmin);
-            
-            startAutoRefresh();
-            
             if (isAdmin) loadAllShipments();
             else loadMyShipments();
         }
 
         // ============================================
-        // بدء التحديث التلقائي كل 5 ثواني
-        // ============================================
-        function startAutoRefresh() {
-            if (refreshInterval) {
-                clearInterval(refreshInterval);
-                refreshInterval = null;
-            }
-            
-            refreshInterval = setInterval(function() {
-                refreshLoadingShipments();
-            }, 5000);
-        }
-
-        // ============================================
-        // تحديث الشحنات التي حالتها "جاري التحميل"
-        // ============================================
-        async function refreshLoadingShipments() {
-            const cards = document.querySelectorAll('.shipment-card');
-            const loadingCards = [];
-            
-            for (const card of cards) {
-                const statusBadge = card.querySelector('.status-badge');
-                if (statusBadge && statusBadge.textContent.includes('جاري التحميل')) {
-                    loadingCards.push(card);
-                }
-            }
-            
-            if (loadingCards.length === 0) return;
-            
-            const shipmentsToRefresh = [];
-            for (const card of loadingCards) {
-                const shipmentData = card.dataset.shipment;
-                if (shipmentData) {
-                    try {
-                        const s = JSON.parse(shipmentData);
-                        if (s.trackingNumber && s.trackingNumber.length > 3) {
-                            shipmentsToRefresh.push({
-                                id: s.id,
-                                trackingNumber: s.trackingNumber,
-                                card: card
-                            });
-                        }
-                    } catch (e) {}
-                }
-            }
-            
-            if (shipmentsToRefresh.length === 0) return;
-            
-            for (const item of shipmentsToRefresh) {
-                try {
-                    const status = await fetchTrackingStatusDirect(item.trackingNumber);
-                    if (status) {
-                        updateShipmentStatusCard(item.id, status);
-                    }
-                } catch (e) {
-                    console.error('خطأ في تحديث الشحنة:', item.id, e);
-                }
-            }
-        }
-
-        // ============================================
-        // جلب حالة الشحنة مباشرة من API
+        // جلب حالة الشحنة مباشرة من API (بدون كاش)
         // ============================================
         async function fetchTrackingStatusDirect(trackingNumber) {
             if (!trackingNumber || trackingNumber.length < 3) return null;
@@ -2612,19 +2541,27 @@
                 const res = await fetch(`${API_URL}?action=track&billCode=${trackingNumber}`);
                 const data = await res.json();
                 if (data.code === "1" && data.data && data.data[0]) {
-                    // نجيب الحالة الأساسية من API
                     let finalStatus = data.data[0].status || null;
+                    const details = data.data[0].details || [];
+                    for (const d of details) { 
+                        const desc = d.desc || '';
+                        if (desc.includes('تم التسليم')) { 
+                            finalStatus = 'تم التسليم'; 
+                            break; 
+                        }
+                    }
+                    if (!finalStatus || !finalStatus.includes('تم التسليم')) {
+                        if (finalStatus && finalStatus.includes('تم التسليم')) finalStatus = 'تم التسليم';
+                    }
                     return finalStatus;
                 }
                 return null;
-            } catch (e) { 
-                console.error('فشل تتبع:', trackingNumber, e);
-                return null; 
-            }
+            } catch (e) { console.error('فشل تتبع:', trackingNumber, e);
+                return null; }
         }
 
         // ============================================
-        // تحديث حالة الشحنة في البطاقة
+        // تحديث حالة الشحنة في البطاقة (مباشر)
         // ============================================
         function updateShipmentStatusCard(shipmentId, newStatus) {
             const card = document.getElementById(`card-${shipmentId}`);
@@ -2651,11 +2588,13 @@
             if (newStatus) {
                 let displayStatus = newStatus;
                 let isSuccess = false;
-                if (newStatus.includes('تم التسليم') || newStatus.includes('Delivered')) {
+                if (newStatus.includes('تم التسليم')) {
+                    isSuccess = true;
+                    displayStatus = 'تم التسليم';
+                } else if (newStatus.includes('Delivered')) {
                     isSuccess = true;
                     displayStatus = 'تم التسليم';
                 } else if (newStatus.includes('تم الاستلام')) {
-                    isSuccess = true;
                     displayStatus = 'تم الاستلام';
                 } else {
                     displayStatus = newStatus;
@@ -2687,6 +2626,31 @@
         }
 
         // ============================================
+        // تحديث جميع حالات الشحنات دفعة واحدة (مباشر) - 50 شحنة لكل دفعة
+        // ============================================
+        async function updateAllTrackingStatuses(shipments) {
+            const shipmentsWithTracking = shipments.filter(s => s.trackingNumber && s.trackingNumber.length > 3);
+            if (shipmentsWithTracking.length === 0) return;
+
+            const chunkSize = 50;
+            const chunks = [];
+            for (let i = 0; i < shipmentsWithTracking.length; i += chunkSize) {
+                chunks.push(shipmentsWithTracking.slice(i, i + chunkSize));
+            }
+
+            for (const chunk of chunks) {
+                const promises = chunk.map(async (s) => {
+                    const status = await fetchTrackingStatusDirect(s.trackingNumber);
+                    return { id: s.id, status };
+                });
+                const results = await Promise.all(promises);
+                results.forEach(({ id, status }) => {
+                    updateShipmentStatusCard(id, status);
+                });
+            }
+        }
+
+        // ============================================
         // تحميل الشحنات
         // ============================================
         async function loadMyShipments() {
@@ -2703,6 +2667,7 @@
                     } else { 
                         document.getElementById('totalCountSmall').textContent = allShipmentsData.length;
                         renderShipments(allShipmentsData);
+                        await updateAllTrackingStatuses(allShipmentsData);
                     }
                 } else { content.innerHTML = '<p style="color:red;">' + (data.msg || 'فشل التحميل') + '</p>'; }
             } catch (e) { content.innerHTML = '<p style="color:red;">فشل الاتصال</p>'; }
@@ -2722,14 +2687,18 @@
                     allShipmentsData = data.shipments || [];
                     document.getElementById('totalCountSmall').textContent = allShipmentsData.length;
                     renderShipments(allShipmentsData);
+                    await updateAllTrackingStatuses(allShipmentsData);
                 } else { content.innerHTML = '<p style="color:red;">' + (data.msg || 'فشل التحميل') + '</p>'; }
             } catch (e) { content.innerHTML = '<p style="color:red;">فشل الاتصال</p>'; }
         }
 
         // ============================================
-        // إنشاء بطاقة الشحنة - بدون معرف (#)
+        // إنشاء بطاقة الشحنة - بدون معرف (#) وبدون "في الانتظار"
         // ============================================
         function createShipmentCard(s, isAdmin = false) {
+            let lastUpdate = s.lastUpdate || s.date || '';
+            let updateText = lastUpdate ? 'آخر تحديث: ' + lastUpdate : '';
+
             let actions = '';
             const trackingNum = s.trackingNumber || '';
             const hasTracking = trackingNum && trackingNum.length > 3;
@@ -2770,7 +2739,7 @@
             const displayPhone = s.receiverPhone || s.customerPhone || '';
             const displayAmount = s.amount || '0';
 
-            // الحالة من API أو "جاري التحميل"
+            // ✅ الحالة الافتراضية = "جاري التحميل..." بدلاً من "في الانتظار"
             let defaultStatus = 'جاري التحميل...';
             let statusClass = 'pending';
             let statusIcon = 'fa-hourglass-half';
@@ -2802,6 +2771,7 @@
                 </span>
             `;
 
+            // ✅ تم إزالة order-id-badge بالكامل
             return `
                 <div class="shipment-card" id="card-${s.id}" data-shipment='${JSON.stringify(s).replace(/'/g, "\\'")}'>
                     <div class="card-header">
@@ -2809,6 +2779,7 @@
                             <div class="customer-name">${displayName}</div>
                             <div class="customer-phone"><i class="fas fa-phone-alt"></i> ${displayPhone}</div>
                         </div>
+                        <!-- تم إزالة المعرف (#) بالكامل -->
                     </div>
 
                     <div class="details-grid">
@@ -2883,6 +2854,7 @@
             } else {
                 const isAdmin = currentUser && currentUser.role === 'admin';
                 content.innerHTML = filtered.map(s => createShipmentCard(s, isAdmin)).join('');
+                updateAllTrackingStatuses(filtered);
             }
         }
 
@@ -3115,7 +3087,7 @@
         }
 
         // ============================================
-        // دالة الترجمة
+        // دالة الترجمة - إزالة الأرقام المكونة من 3 أرقام أو أكثر
         // ============================================
         async function translateProblemText(text) {
             if (!text) return text;
@@ -3368,4 +3340,3 @@
     </script>
 </body>
 </html>
-```
