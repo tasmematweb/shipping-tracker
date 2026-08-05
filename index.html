@@ -4,1049 +4,517 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>تصميمات بطاقات الشحن - EUX</title>
+    <title>تصميم كارت الشحن الاحترافي - EUX</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
+        /* ===== إعادة تعيين وتنسيق عام ===== */
         * {
+            box-sizing: border-box;
             margin: 0;
             padding: 0;
-            box-sizing: border-box;
-            font-family: 'Cairo', sans-serif;
-        }
-        body {
-            background: #f0f2f5;
-            padding: 30px 20px;
-            direction: rtl;
-        }
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-        }
-        h1 {
-            text-align: center;
-            color: #1a1a2e;
-            margin-bottom: 40px;
-            font-size: 28px;
-            font-weight: 900;
-        }
-        h1 span {
-            color: #0076ff;
-        }
-        .grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
-            gap: 30px;
-        }
-        
-        /* ============================================
-           التصميم 1 - كلاسيكي أنيق
-           ============================================ */
-        .design-1 {
-            background: white;
-            border-radius: 16px;
-            padding: 20px;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.06);
-            border-right: 6px solid #0076ff;
-            transition: 0.3s;
-            cursor: pointer;
-        }
-        .design-1:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 8px 30px rgba(0,118,255,0.12);
-        }
-        .design-1 .status {
-            display: inline-block;
-            background: #e8f5e9;
-            color: #2e7d32;
-            padding: 4px 16px;
-            border-radius: 20px;
-            font-size: 13px;
-            font-weight: 700;
-            margin-bottom: 12px;
-        }
-        .design-1 .status.delivered { background: #e8f5e9; color: #2e7d32; }
-        .design-1 .status.pending { background: #fff8e1; color: #f9a825; }
-        .design-1 .row {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            flex-wrap: wrap;
-            gap: 8px;
-        }
-        .design-1 .name {
-            font-size: 18px;
-            font-weight: 700;
-            color: #1a1a2e;
-        }
-        .design-1 .phone {
-            color: #666;
-            font-size: 14px;
-            direction: ltr;
-        }
-        .design-1 .amount {
-            color: #0076ff;
-            font-weight: 700;
-            font-size: 16px;
-        }
-        .design-1 .track-btn {
-            background: #0076ff;
-            color: white;
-            border: none;
-            border-radius: 20px;
-            padding: 4px 16px;
-            font-size: 13px;
-            font-weight: 600;
-            cursor: pointer;
-            font-family: 'Cairo', sans-serif;
-            transition: 0.2s;
-        }
-        .design-1 .track-btn:hover {
-            background: #005dc7;
-            transform: scale(1.05);
-        }
-        .design-1 .meta {
-            font-size: 12px;
-            color: #999;
-            margin-top: 8px;
         }
 
-        /* ============================================
-           التصميم 2 - عصري بظل
-           ============================================ */
-        .design-2 {
-            background: linear-gradient(135deg, #ffffff 0%, #f8faff 100%);
+        body {
+            background-color: #080a11;
+            font-family: 'Cairo', sans-serif;
+            direction: rtl;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        /* ===== الكارت الرئيسي ===== */
+        .shipment-card {
+            width: 100%;
+            max-width: 850px;
+            background: linear-gradient(135deg, #0b111e 0%, #05070d 100%);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-right: 3px solid #0066ff;
             border-radius: 20px;
-            padding: 22px;
-            box-shadow: 0 8px 32px rgba(0,0,0,0.07);
-            border: 1px solid rgba(0,118,255,0.08);
-            transition: 0.3s;
-            cursor: pointer;
+            padding: 24px 28px;
+            display: flex;
+            gap: 25px;
+            color: #ffffff;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5),
+                        0 0 20px rgba(0, 102, 255, 0.15);
             position: relative;
             overflow: hidden;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
         }
-        .design-2::before {
+
+        .shipment-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 16px 48px rgba(0, 0, 0, 0.6),
+                        0 0 30px rgba(0, 102, 255, 0.2);
+        }
+
+        /* تأثير خلفية متحركة خفيفة */
+        .shipment-card::before {
             content: '';
             position: absolute;
-            top: 0;
-            right: 0;
-            width: 80px;
-            height: 80px;
-            background: radial-gradient(circle, rgba(0,118,255,0.04) 0%, transparent 70%);
+            top: -50%;
+            right: -30%;
+            width: 300px;
+            height: 300px;
+            background: radial-gradient(circle, rgba(0, 102, 255, 0.05) 0%, transparent 70%);
             border-radius: 50%;
+            pointer-events: none;
         }
-        .design-2:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 12px 40px rgba(0,118,255,0.12);
-        }
-        .design-2 .status {
-            display: inline-block;
-            background: #e8f5e9;
-            color: #2e7d32;
-            padding: 4px 16px;
-            border-radius: 20px;
-            font-size: 13px;
-            font-weight: 700;
-            margin-bottom: 12px;
-        }
-        .design-2 .status.delivered { background: #e8f5e9; color: #2e7d32; }
-        .design-2 .status.pending { background: #fff8e1; color: #f9a825; }
-        .design-2 .main-row {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            flex-wrap: wrap;
-        }
-        .design-2 .info {
+
+        /* ===== القسم الأيسر: الصورة والزر ===== */
+        .card-left {
+            flex: 0 0 180px;
             display: flex;
             flex-direction: column;
-            gap: 4px;
-        }
-        .design-2 .name {
-            font-size: 18px;
-            font-weight: 700;
-            color: #1a1a2e;
-        }
-        .design-2 .phone {
-            color: #666;
-            font-size: 14px;
-            direction: ltr;
-        }
-        .design-2 .right {
-            display: flex;
+            justify-content: space-between;
             align-items: center;
+            gap: 16px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .truck-wrapper {
+            position: relative;
+            width: 100%;
+            height: 120px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .truck-img {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+            filter: drop-shadow(0 5px 15px rgba(0, 102, 255, 0.4));
+            animation: floatTruck 3s ease-in-out infinite;
+        }
+
+        @keyframes floatTruck {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-6px); }
+        }
+
+        .location-pin {
+            position: absolute;
+            bottom: 10px;
+            right: 15px;
+            font-size: 1.2rem;
+            filter: drop-shadow(0 0 8px #00a2ff);
+            animation: pulsePin 2s ease-in-out infinite;
+        }
+
+        @keyframes pulsePin {
+            0%, 100% { opacity: 0.6; transform: scale(1); }
+            50% { opacity: 1; transform: scale(1.1); }
+        }
+
+        .track-btn {
+            width: 100%;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: #3b82f6;
+            padding: 10px 16px;
+            border-radius: 12px;
+            font-family: 'Cairo', sans-serif;
+            font-weight: 600;
+            font-size: 0.95rem;
+            cursor: pointer;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.3s ease;
+        }
+
+        .track-btn i {
+            font-size: 0.9rem;
+        }
+
+        .track-btn:hover {
+            background: #0066ff;
+            color: #fff;
+            box-shadow: 0 4px 15px rgba(0, 102, 255, 0.4);
+            border-color: #0066ff;
+            transform: scale(1.02);
+        }
+
+        /* ===== القسم الأيمن: البيانات التفصيلية ===== */
+        .card-right {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* ===== الهيدر ===== */
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 18px;
+            flex-wrap: wrap;
             gap: 12px;
         }
-        .design-2 .amount {
-            background: rgba(0,118,255,0.08);
-            padding: 4px 14px;
-            border-radius: 20px;
-            color: #0076ff;
-            font-weight: 700;
-            font-size: 15px;
-        }
-        .design-2 .track-btn {
-            background: #0076ff;
-            color: white;
-            border: none;
-            border-radius: 20px;
-            padding: 6px 18px;
-            font-size: 13px;
-            font-weight: 600;
-            cursor: pointer;
-            font-family: 'Cairo', sans-serif;
-            transition: 0.2s;
-        }
-        .design-2 .track-btn:hover {
-            background: #005dc7;
-        }
-        .design-2 .meta {
-            font-size: 12px;
-            color: #aaa;
-            margin-top: 10px;
-            border-top: 1px solid #f0f2f5;
-            padding-top: 10px;
-        }
 
-        /* ============================================
-           التصميم 3 - كارت بحدود ملونة
-           ============================================ */
-        .design-3 {
-            background: white;
-            border-radius: 16px;
-            padding: 20px;
-            box-shadow: 0 4px 16px rgba(0,0,0,0.05);
-            border: 2px solid #eef3f8;
-            transition: 0.3s;
-            cursor: pointer;
-        }
-        .design-3:hover {
-            border-color: #0076ff;
-            transform: translateY(-4px);
-            box-shadow: 0 8px 28px rgba(0,118,255,0.08);
-        }
-        .design-3 .top {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 10px;
-        }
-        .design-3 .status {
-            display: inline-block;
-            background: #e8f5e9;
-            color: #2e7d32;
-            padding: 4px 16px;
-            border-radius: 20px;
-            font-size: 12px;
-            font-weight: 700;
-        }
-        .design-3 .status.delivered { background: #e8f5e9; color: #2e7d32; }
-        .design-3 .status.pending { background: #fff8e1; color: #f9a825; }
-        .design-3 .badge {
-            background: #0076ff;
-            color: white;
-            padding: 2px 12px;
-            border-radius: 12px;
-            font-size: 11px;
-            font-weight: 700;
-        }
-        .design-3 .name {
-            font-size: 18px;
-            font-weight: 700;
-            color: #1a1a2e;
-            margin-bottom: 4px;
-        }
-        .design-3 .phone {
-            color: #666;
-            font-size: 14px;
-            direction: ltr;
-        }
-        .design-3 .bottom {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-top: 12px;
-            padding-top: 12px;
-            border-top: 1px solid #f0f2f5;
-        }
-        .design-3 .amount {
-            color: #0076ff;
-            font-weight: 700;
-            font-size: 16px;
-        }
-        .design-3 .track-btn {
-            background: #0076ff;
-            color: white;
-            border: none;
-            border-radius: 20px;
-            padding: 4px 16px;
-            font-size: 13px;
-            font-weight: 600;
-            cursor: pointer;
-            font-family: 'Cairo', sans-serif;
-            transition: 0.2s;
-        }
-        .design-3 .track-btn:hover {
-            background: #005dc7;
-        }
-
-        /* ============================================
-           التصميم 4 - مودرن مع شريط جانبي
-           ============================================ */
-        .design-4 {
-            background: white;
-            border-radius: 16px;
-            padding: 0;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.06);
-            transition: 0.3s;
-            cursor: pointer;
-            display: flex;
-            overflow: hidden;
-        }
-        .design-4:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 8px 30px rgba(0,118,255,0.10);
-        }
-        .design-4 .side {
-            width: 8px;
-            background: #0076ff;
-            flex-shrink: 0;
-        }
-        .design-4 .side.delivered { background: #2e7d32; }
-        .design-4 .side.pending { background: #f9a825; }
-        .design-4 .content {
-            padding: 18px 20px;
-            flex: 1;
-        }
-        .design-4 .status {
-            display: inline-block;
-            background: #e8f5e9;
-            color: #2e7d32;
-            padding: 2px 14px;
-            border-radius: 20px;
-            font-size: 12px;
-            font-weight: 700;
-            margin-bottom: 6px;
-        }
-        .design-4 .status.delivered { background: #e8f5e9; color: #2e7d32; }
-        .design-4 .status.pending { background: #fff8e1; color: #f9a825; }
-        .design-4 .name {
-            font-size: 18px;
-            font-weight: 700;
-            color: #1a1a2e;
-        }
-        .design-4 .phone {
-            color: #666;
-            font-size: 14px;
-            direction: ltr;
-        }
-        .design-4 .row {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-top: 8px;
-        }
-        .design-4 .amount {
-            color: #0076ff;
-            font-weight: 700;
-            font-size: 16px;
-        }
-        .design-4 .track-btn {
-            background: #0076ff;
-            color: white;
-            border: none;
-            border-radius: 20px;
-            padding: 4px 16px;
-            font-size: 13px;
-            font-weight: 600;
-            cursor: pointer;
-            font-family: 'Cairo', sans-serif;
-            transition: 0.2s;
-        }
-        .design-4 .track-btn:hover {
-            background: #005dc7;
-        }
-
-        /* ============================================
-           التصميم 5 - كارت شفاف مع خلفية
-           ============================================ */
-        .design-5 {
-            background: linear-gradient(135deg, #ffffff 0%, #f8faff 100%);
-            border-radius: 20px;
-            padding: 22px;
-            box-shadow: 0 8px 32px rgba(0,0,0,0.05);
-            border: 1px solid rgba(0,118,255,0.06);
-            transition: 0.3s;
-            cursor: pointer;
-            backdrop-filter: blur(4px);
-        }
-        .design-5:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 12px 40px rgba(0,118,255,0.08);
-            border-color: rgba(0,118,255,0.15);
-        }
-        .design-5 .status {
-            display: inline-block;
-            background: #e8f5e9;
-            color: #2e7d32;
-            padding: 4px 16px;
-            border-radius: 20px;
-            font-size: 13px;
-            font-weight: 700;
-            margin-bottom: 10px;
-        }
-        .design-5 .status.delivered { background: #e8f5e9; color: #2e7d32; }
-        .design-5 .status.pending { background: #fff8e1; color: #f9a825; }
-        .design-5 .main {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            flex-wrap: wrap;
-        }
-        .design-5 .info {
+        .customer-info {
             display: flex;
             flex-direction: column;
             gap: 2px;
         }
-        .design-5 .name {
-            font-size: 18px;
+
+        .customer-name {
+            font-size: 1.4rem;
             font-weight: 700;
-            color: #1a1a2e;
+            color: #ffffff;
+            letter-spacing: 0.5px;
         }
-        .design-5 .phone {
-            color: #666;
-            font-size: 14px;
+
+        .customer-phone {
+            font-size: 0.95rem;
+            color: #8a99ad;
+            letter-spacing: 0.5px;
             direction: ltr;
         }
-        .design-5 .right {
+
+        .customer-phone i {
+            margin-left: 6px;
+            color: #3b82f6;
+        }
+
+        .order-id-badge {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 6px 16px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-weight: 600;
+            color: #a0aec0;
+            font-size: 0.85rem;
+            white-space: nowrap;
+        }
+
+        .order-id-badge i {
+            color: #3b82f6;
+            font-size: 0.9rem;
+        }
+
+        .copy-btn {
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 0.85rem;
+            opacity: 0.5;
+            transition: opacity 0.2s;
+            color: #a0aec0;
+            padding: 0 4px;
+        }
+
+        .copy-btn:hover {
+            opacity: 1;
+            color: #3b82f6;
+        }
+
+        /* ===== شبكة البيانات التفصيلية ===== */
+        .details-grid {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 14px;
+            padding: 14px 20px;
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px 20px;
+            align-items: center;
+        }
+
+        .detail-item {
             display: flex;
             align-items: center;
             gap: 12px;
-        }
-        .design-5 .amount {
-            background: rgba(0,118,255,0.06);
-            padding: 4px 16px;
-            border-radius: 20px;
-            color: #0076ff;
-            font-weight: 700;
-            font-size: 15px;
-        }
-        .design-5 .track-btn {
-            background: #0076ff;
-            color: white;
-            border: none;
-            border-radius: 20px;
-            padding: 6px 18px;
-            font-size: 13px;
-            font-weight: 600;
-            cursor: pointer;
-            font-family: 'Cairo', sans-serif;
-            transition: 0.2s;
-        }
-        .design-5 .track-btn:hover {
-            background: #005dc7;
-            transform: scale(1.05);
-        }
-
-        /* ============================================
-           التصميم 6 - مع أيقونات
-           ============================================ */
-        .design-6 {
-            background: white;
-            border-radius: 16px;
-            padding: 20px;
-            box-shadow: 0 4px 16px rgba(0,0,0,0.05);
-            transition: 0.3s;
-            cursor: pointer;
-        }
-        .design-6:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 8px 28px rgba(0,0,0,0.08);
-        }
-        .design-6 .header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 10px;
-        }
-        .design-6 .status {
-            display: inline-block;
-            background: #e8f5e9;
-            color: #2e7d32;
-            padding: 4px 16px;
-            border-radius: 20px;
-            font-size: 12px;
-            font-weight: 700;
-        }
-        .design-6 .status.delivered { background: #e8f5e9; color: #2e7d32; }
-        .design-6 .status.pending { background: #fff8e1; color: #f9a825; }
-        .design-6 .icon-row {
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            color: #999;
-            font-size: 13px;
-        }
-        .design-6 .icon-row i {
-            color: #0076ff;
-        }
-        .design-6 .name {
-            font-size: 18px;
-            font-weight: 700;
-            color: #1a1a2e;
-        }
-        .design-6 .phone {
-            color: #666;
-            font-size: 14px;
-            direction: ltr;
-        }
-        .design-6 .bottom {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-top: 12px;
-            padding-top: 12px;
-            border-top: 1px solid #f0f2f5;
-        }
-        .design-6 .amount {
-            color: #0076ff;
-            font-weight: 700;
-            font-size: 16px;
-        }
-        .design-6 .track-btn {
-            background: #0076ff;
-            color: white;
-            border: none;
-            border-radius: 20px;
-            padding: 4px 16px;
-            font-size: 13px;
-            font-weight: 600;
-            cursor: pointer;
-            font-family: 'Cairo', sans-serif;
-            transition: 0.2s;
-        }
-        .design-6 .track-btn:hover {
-            background: #005dc7;
-        }
-
-        /* ============================================
-           التصميم 7 - كارت مع صورة رمزية
-           ============================================ */
-        .design-7 {
-            background: white;
-            border-radius: 20px;
-            padding: 20px;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.05);
-            transition: 0.3s;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            gap: 16px;
-        }
-        .design-7:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 8px 30px rgba(0,0,0,0.08);
-        }
-        .design-7 .avatar {
-            width: 52px;
-            height: 52px;
-            background: linear-gradient(135deg, #0076ff, #4fc3f7);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-size: 20px;
-            font-weight: 700;
-            flex-shrink: 0;
-        }
-        .design-7 .info {
-            flex: 1;
-        }
-        .design-7 .status {
-            display: inline-block;
-            background: #e8f5e9;
-            color: #2e7d32;
-            padding: 2px 14px;
-            border-radius: 20px;
-            font-size: 11px;
-            font-weight: 700;
-            margin-bottom: 4px;
-        }
-        .design-7 .status.delivered { background: #e8f5e9; color: #2e7d32; }
-        .design-7 .status.pending { background: #fff8e1; color: #f9a825; }
-        .design-7 .name {
-            font-size: 17px;
-            font-weight: 700;
-            color: #1a1a2e;
-        }
-        .design-7 .phone {
-            color: #666;
-            font-size: 13px;
-            direction: ltr;
-        }
-        .design-7 .row {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-top: 6px;
-        }
-        .design-7 .amount {
-            color: #0076ff;
-            font-weight: 700;
-            font-size: 15px;
-        }
-        .design-7 .track-btn {
-            background: #0076ff;
-            color: white;
-            border: none;
-            border-radius: 20px;
-            padding: 4px 16px;
-            font-size: 12px;
-            font-weight: 600;
-            cursor: pointer;
-            font-family: 'Cairo', sans-serif;
-            transition: 0.2s;
-        }
-        .design-7 .track-btn:hover {
-            background: #005dc7;
-        }
-
-        /* ============================================
-           التصميم 8 - بسيط وأنيق
-           ============================================ */
-        .design-8 {
-            background: white;
-            border-radius: 16px;
-            padding: 20px;
-            box-shadow: 0 4px 16px rgba(0,0,0,0.04);
-            border-bottom: 4px solid #0076ff;
-            transition: 0.3s;
-            cursor: pointer;
-        }
-        .design-8:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 8px 28px rgba(0,0,0,0.07);
-        }
-        .design-8 .status {
-            display: inline-block;
-            background: #e8f5e9;
-            color: #2e7d32;
-            padding: 2px 14px;
-            border-radius: 20px;
-            font-size: 12px;
-            font-weight: 700;
-            margin-bottom: 8px;
-        }
-        .design-8 .status.delivered { background: #e8f5e9; color: #2e7d32; }
-        .design-8 .status.pending { background: #fff8e1; color: #f9a825; }
-        .design-8 .name {
-            font-size: 18px;
-            font-weight: 700;
-            color: #1a1a2e;
-        }
-        .design-8 .phone {
-            color: #666;
-            font-size: 14px;
-            direction: ltr;
-        }
-        .design-8 .bottom {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-top: 10px;
-        }
-        .design-8 .amount {
-            color: #0076ff;
-            font-weight: 700;
-            font-size: 16px;
-        }
-        .design-8 .track-btn {
-            background: #0076ff;
-            color: white;
-            border: none;
-            border-radius: 20px;
-            padding: 4px 16px;
-            font-size: 13px;
-            font-weight: 600;
-            cursor: pointer;
-            font-family: 'Cairo', sans-serif;
-            transition: 0.2s;
-        }
-        .design-8 .track-btn:hover {
-            background: #005dc7;
-        }
-
-        /* ============================================
-           التصميم 9 - مودرن مع خلفية متدرجة
-           ============================================ */
-        .design-9 {
-            background: linear-gradient(135deg, #ffffff 0%, #f5f8ff 100%);
-            border-radius: 20px;
-            padding: 22px;
-            box-shadow: 0 4px 24px rgba(0,0,0,0.04);
-            border: 1px solid rgba(0,118,255,0.06);
-            transition: 0.3s;
-            cursor: pointer;
             position: relative;
-            overflow: hidden;
+            padding: 4px 0;
         }
-        .design-9::after {
-            content: '';
+
+        /* خط فاصل بين العناصر */
+        .detail-item:not(:last-child)::after {
+            content: "";
             position: absolute;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            height: 4px;
-            background: linear-gradient(90deg, #0076ff, #4fc3f7, #0076ff);
-        }
-        .design-9:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 8px 32px rgba(0,118,255,0.08);
-        }
-        .design-9 .status {
-            display: inline-block;
-            background: #e8f5e9;
-            color: #2e7d32;
-            padding: 4px 16px;
-            border-radius: 20px;
-            font-size: 13px;
-            font-weight: 700;
-            margin-bottom: 10px;
-        }
-        .design-9 .status.delivered { background: #e8f5e9; color: #2e7d32; }
-        .design-9 .status.pending { background: #fff8e1; color: #f9a825; }
-        .design-9 .top {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        .design-9 .name {
-            font-size: 18px;
-            font-weight: 700;
-            color: #1a1a2e;
-        }
-        .design-9 .phone {
-            color: #666;
-            font-size: 14px;
-            direction: ltr;
-        }
-        .design-9 .bottom {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-top: 12px;
-        }
-        .design-9 .amount {
-            background: rgba(0,118,255,0.06);
-            padding: 4px 16px;
-            border-radius: 20px;
-            color: #0076ff;
-            font-weight: 700;
-            font-size: 15px;
-        }
-        .design-9 .track-btn {
-            background: #0076ff;
-            color: white;
-            border: none;
-            border-radius: 20px;
-            padding: 6px 18px;
-            font-size: 13px;
-            font-weight: 600;
-            cursor: pointer;
-            font-family: 'Cairo', sans-serif;
-            transition: 0.2s;
-        }
-        .design-9 .track-btn:hover {
-            background: #005dc7;
+            left: -10px;
+            top: 15%;
+            height: 70%;
+            width: 1px;
+            background: rgba(255, 255, 255, 0.06);
         }
 
-        /* ============================================
-           التصميم 10 - كارت مع border-radius مميز
-           ============================================ */
-        .design-10 {
-            background: white;
-            border-radius: 24px 24px 24px 24px;
-            padding: 22px;
-            box-shadow: 0 8px 32px rgba(0,0,0,0.04);
-            transition: 0.3s;
-            cursor: pointer;
-            border: 1px solid #f0f2f5;
-        }
-        .design-10:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 12px 40px rgba(0,118,255,0.08);
-            border-color: #0076ff;
-        }
-        .design-10 .status {
-            display: inline-block;
-            background: #e8f5e9;
-            color: #2e7d32;
-            padding: 4px 18px;
-            border-radius: 30px;
-            font-size: 13px;
-            font-weight: 700;
-            margin-bottom: 10px;
-        }
-        .design-10 .status.delivered { background: #e8f5e9; color: #2e7d32; }
-        .design-10 .status.pending { background: #fff8e1; color: #f9a825; }
-        .design-10 .row {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            flex-wrap: wrap;
-            gap: 6px;
-        }
-        .design-10 .name {
-            font-size: 18px;
-            font-weight: 700;
-            color: #1a1a2e;
-        }
-        .design-10 .phone {
-            color: #666;
-            font-size: 14px;
-            direction: ltr;
-        }
-        .design-10 .bottom {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-top: 12px;
-            padding-top: 12px;
-            border-top: 2px dashed #f0f2f5;
-        }
-        .design-10 .amount {
-            color: #0076ff;
-            font-weight: 700;
-            font-size: 16px;
-        }
-        .design-10 .track-btn {
-            background: #0076ff;
-            color: white;
-            border: none;
-            border-radius: 30px;
-            padding: 4px 20px;
-            font-size: 13px;
-            font-weight: 600;
-            cursor: pointer;
-            font-family: 'Cairo', sans-serif;
-            transition: 0.2s;
-        }
-        .design-10 .track-btn:hover {
-            background: #005dc7;
-        }
-
-        /* ============================================
-           تذييل
-           ============================================ */
-        .footer-note {
+        .detail-icon {
+            font-size: 1.1rem;
+            opacity: 0.7;
+            width: 24px;
             text-align: center;
-            margin-top: 40px;
-            color: #999;
-            font-size: 14px;
+            color: #3b82f6;
         }
-        .badge-label {
-            position: absolute;
-            top: 12px;
-            left: 12px;
-            background: rgba(0,0,0,0.05);
-            color: #666;
-            font-size: 10px;
-            padding: 2px 10px;
-            border-radius: 12px;
+
+        .detail-text {
+            display: flex;
+            flex-direction: column;
+            line-height: 1.3;
+        }
+
+        .detail-title {
+            font-size: 0.95rem;
+            color: #e2e8f0;
             font-weight: 600;
         }
-        .design-wrapper {
-            position: relative;
+
+        .detail-title.price {
+            color: #38bdf8;
+            font-size: 1.1rem;
+            font-weight: 700;
+        }
+
+        .detail-label {
+            font-size: 0.7rem;
+            color: #64748b;
+            margin-top: 1px;
+            letter-spacing: 0.3px;
+        }
+
+        /* ===== حالة الشحنة ===== */
+        .status-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: rgba(46, 125, 50, 0.15);
+            border: 1px solid rgba(46, 125, 50, 0.25);
+            padding: 4px 14px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: #4caf50;
+            margin-top: 4px;
+        }
+
+        .status-badge i {
+            font-size: 0.7rem;
+        }
+
+        .status-badge.pending {
+            background: rgba(255, 152, 0, 0.12);
+            border-color: rgba(255, 152, 0, 0.2);
+            color: #ffa726;
+        }
+
+        /* ===== زر تتبع بديل (للشاشات الصغيرة) ===== */
+        .track-btn-mobile {
+            display: none;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: #3b82f6;
+            padding: 10px;
+            border-radius: 12px;
+            font-family: 'Cairo', sans-serif;
+            font-weight: 600;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            justify-content: center;
+            align-items: center;
+            gap: 8px;
+            margin-top: 12px;
+            width: 100%;
+        }
+
+        .track-btn-mobile:hover {
+            background: #0066ff;
+            color: #fff;
+            border-color: #0066ff;
+        }
+
+        /* ===== استجابة للشاشات الصغيرة ===== */
+        @media (max-width: 768px) {
+            .shipment-card {
+                flex-direction: column;
+                padding: 20px;
+                gap: 16px;
+            }
+
+            .card-left {
+                flex: 1;
+                flex-direction: row;
+                justify-content: space-between;
+                align-items: center;
+                width: 100%;
+            }
+
+            .truck-wrapper {
+                height: 80px;
+                width: 120px;
+            }
+
+            .track-btn {
+                display: none;
+            }
+
+            .track-btn-mobile {
+                display: flex;
+            }
+
+            .card-header {
+                flex-direction: column;
+                align-items: stretch;
+                gap: 10px;
+            }
+
+            .order-id-badge {
+                align-self: flex-start;
+            }
+
+            .details-grid {
+                grid-template-columns: 1fr 1fr;
+                gap: 10px;
+                padding: 12px 16px;
+            }
+
+            .detail-item:not(:last-child)::after {
+                display: none;
+            }
+
+            .detail-item:nth-child(2)::after {
+                display: block;
+                left: -10px;
+                top: 15%;
+                height: 70%;
+                width: 1px;
+                background: rgba(255, 255, 255, 0.06);
+            }
+
+            .customer-name {
+                font-size: 1.2rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .details-grid {
+                grid-template-columns: 1fr;
+                gap: 8px;
+            }
+
+            .detail-item:not(:last-child)::after {
+                display: none;
+            }
+
+            .shipment-card {
+                padding: 16px;
+                border-radius: 16px;
+            }
+
+            .card-left {
+                flex-direction: column;
+                align-items: center;
+                gap: 10px;
+            }
+
+            .truck-wrapper {
+                height: 70px;
+                width: 100px;
+            }
+
+            .order-id-badge {
+                font-size: 0.75rem;
+                padding: 4px 12px;
+            }
         }
     </style>
 </head>
 <body>
 
-<div class="container">
-    <h1>🏆 <span>EUX</span> | 10 تصاميم احترافية لبطاقات الشحن</h1>
-    <p style="text-align:center;color:#888;margin-bottom:30px;">اختر التصميم المناسب لك - كل تصميم يعكس خبرة 30 عاماً في التصميم</p>
-    
-    <div class="grid">
+    <!-- ===== كارت الشحن الاحترافي ===== -->
+    <div class="shipment-card">
 
-        <!-- ===== التصميم 1 ===== -->
-        <div class="design-wrapper">
-            <div class="design-1">
-                <span class="badge-label">#1 كلاسيكي أنيق</span>
-                <div class="status delivered">✅ تم التسليم</div>
-                <div class="row">
-                    <span class="name">أحمد محمد</span>
-                    <span class="phone">01001234567</span>
-                </div>
-                <div class="row">
-                    <span class="amount">2,370 ج.م</span>
-                    <button class="track-btn">🔍 تتبع</button>
-                </div>
-                <div class="meta">🕐 آخر تحديث: اليوم 14:30</div>
+        <!-- ===== القسم الأيسر ===== -->
+        <div class="card-left">
+            <div class="truck-wrapper">
+                <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 400 200'%3E%3Crect width='400' height='200' fill='none'/%3E%3Cg transform='translate(20,30)'%3E%3Crect x='0' y='60' width='180' height='70' rx='12' fill='%231a2338' stroke='%233b82f6' stroke-width='1.5'/%3E%3Crect x='20' y='40' width='100' height='35' rx='8' fill='%231a2338' stroke='%233b82f6' stroke-width='1.5'/%3E%3Crect x='60' y='55' width='50' height='25' rx='4' fill='%232a3a5a' opacity='0.5'/%3E%3Ccircle cx='50' cy='130' r='18' fill='%231a2338' stroke='%233b82f6' stroke-width='2'/%3E%3Ccircle cx='50' cy='130' r='8' fill='%233b82f6' opacity='0.6'/%3E%3Ccircle cx='150' cy='130' r='18' fill='%231a2338' stroke='%233b82f6' stroke-width='2'/%3E%3Ccircle cx='150' cy='130' r='8' fill='%233b82f6' opacity='0.6'/%3E%3Crect x='20' y='68' width='25' height='8' rx='2' fill='%233b82f6' opacity='0.5'/%3E%3C/svg%3E"
+                     alt="شاحنة التوصيل"
+                     class="truck-img">
+                <span class="location-pin">📍</span>
             </div>
+            <button class="track-btn">
+                <i class="fas fa-search"></i> تتبع الشحنة
+            </button>
         </div>
 
-        <!-- ===== التصميم 2 ===== -->
-        <div class="design-wrapper">
-            <div class="design-2">
-                <span class="badge-label">#2 عصري بظل</span>
-                <div class="status delivered">✅ تم التسليم</div>
-                <div class="main-row">
-                    <div class="info">
-                        <span class="name">أحمد محمد</span>
-                        <span class="phone">01001234567</span>
-                    </div>
-                    <div class="right">
-                        <span class="amount">2,370 ج.م</span>
-                        <button class="track-btn">🔍 تتبع</button>
+        <!-- ===== القسم الأيمن ===== -->
+        <div class="card-right">
+
+            <!-- الهيدر -->
+            <div class="card-header">
+                <div class="customer-info">
+                    <div class="customer-name">حسن سعد حسن</div>
+                    <div class="customer-phone">
+                        <i class="fas fa-phone-alt"></i> 01550131474
                     </div>
                 </div>
-                <div class="meta">🕐 آخر تحديث: اليوم 14:30</div>
-            </div>
-        </div>
-
-        <!-- ===== التصميم 3 ===== -->
-        <div class="design-wrapper">
-            <div class="design-3">
-                <span class="badge-label">#3 كارت بحدود ملونة</span>
-                <div class="top">
-                    <span class="status delivered">✅ تم التسليم</span>
-                    <span class="badge">شحنة #12345</span>
-                </div>
-                <div class="name">أحمد محمد</div>
-                <div class="phone">01001234567</div>
-                <div class="bottom">
-                    <span class="amount">2,370 ج.م</span>
-                    <button class="track-btn">🔍 تتبع</button>
+                <div class="order-id-badge">
+                    <i class="fas fa-hashtag"></i>
+                    <span>شحنة #EUX-2026-0847</span>
+                    <button class="copy-btn" onclick="navigator.clipboard.writeText('EUX-2026-0847')" title="نسخ الرقم">
+                        <i class="fas fa-copy"></i>
+                    </button>
                 </div>
             </div>
-        </div>
 
-        <!-- ===== التصميم 4 ===== -->
-        <div class="design-wrapper">
-            <div class="design-4">
-                <span class="badge-label">#4 مودرن مع شريط جانبي</span>
-                <div class="side delivered"></div>
-                <div class="content">
-                    <span class="status delivered">✅ تم التسليم</span>
-                    <div class="name">أحمد محمد</div>
-                    <div class="phone">01001234567</div>
-                    <div class="row">
-                        <span class="amount">2,370 ج.م</span>
-                        <button class="track-btn">🔍 تتبع</button>
+            <!-- شبكة البيانات -->
+            <div class="details-grid">
+                <!-- المبلغ -->
+                <div class="detail-item">
+                    <span class="detail-icon"><i class="fas fa-money-bill-wave"></i></span>
+                    <div class="detail-text">
+                        <span class="detail-title price">2,370 ج.م</span>
+                        <span class="detail-label">المبلغ الإجمالي</span>
+                    </div>
+                </div>
+
+                <!-- الحالة -->
+                <div class="detail-item">
+                    <span class="detail-icon"><i class="fas fa-check-circle"></i></span>
+                    <div class="detail-text">
+                        <span class="detail-title" style="color:#4caf50;">
+                            <span class="status-badge">
+                                <i class="fas fa-check"></i> تم التسليم
+                            </span>
+                        </span>
+                        <span class="detail-label">آخر تحديث</span>
+                    </div>
+                </div>
+
+                <!-- الوزن -->
+                <div class="detail-item">
+                    <span class="detail-icon"><i class="fas fa-weight-scale"></i></span>
+                    <div class="detail-text">
+                        <span class="detail-title">1.5 كجم</span>
+                        <span class="detail-label">وزن الشحنة</span>
                     </div>
                 </div>
             </div>
-        </div>
 
-        <!-- ===== التصميم 5 ===== -->
-        <div class="design-wrapper">
-            <div class="design-5">
-                <span class="badge-label">#5 شفاف مع خلفية</span>
-                <div class="status delivered">✅ تم التسليم</div>
-                <div class="main">
-                    <div class="info">
-                        <span class="name">أحمد محمد</span>
-                        <span class="phone">01001234567</span>
-                    </div>
-                    <div class="right">
-                        <span class="amount">2,370 ج.م</span>
-                        <button class="track-btn">🔍 تتبع</button>
-                    </div>
-                </div>
-            </div>
-        </div>
+            <!-- زر تتبع للشاشات الصغيرة -->
+            <button class="track-btn-mobile">
+                <i class="fas fa-search"></i> تتبع الشحنة
+            </button>
 
-        <!-- ===== التصميم 6 ===== -->
-        <div class="design-wrapper">
-            <div class="design-6">
-                <span class="badge-label">#6 مع أيقونات</span>
-                <div class="header">
-                    <span class="status delivered">✅ تم التسليم</span>
-                    <span class="icon-row"><i class="fas fa-truck"></i> شحنة #12345</span>
-                </div>
-                <div class="name">أحمد محمد</div>
-                <div class="phone">01001234567</div>
-                <div class="bottom">
-                    <span class="amount">2,370 ج.م</span>
-                    <button class="track-btn">🔍 تتبع</button>
-                </div>
-            </div>
-        </div>
-
-        <!-- ===== التصميم 7 ===== -->
-        <div class="design-wrapper">
-            <div class="design-7">
-                <span class="badge-label">#7 مع صورة رمزية</span>
-                <div class="avatar">أ</div>
-                <div class="info">
-                    <span class="status delivered">✅ تم التسليم</span>
-                    <div class="name">أحمد محمد</div>
-                    <div class="phone">01001234567</div>
-                    <div class="row">
-                        <span class="amount">2,370 ج.م</span>
-                        <button class="track-btn">🔍 تتبع</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- ===== التصميم 8 ===== -->
-        <div class="design-wrapper">
-            <div class="design-8">
-                <span class="badge-label">#8 بسيط وأنيق</span>
-                <span class="status delivered">✅ تم التسليم</span>
-                <div class="name">أحمد محمد</div>
-                <div class="phone">01001234567</div>
-                <div class="bottom">
-                    <span class="amount">2,370 ج.م</span>
-                    <button class="track-btn">🔍 تتبع</button>
-                </div>
-            </div>
-        </div>
-
-        <!-- ===== التصميم 9 ===== -->
-        <div class="design-wrapper">
-            <div class="design-9">
-                <span class="badge-label">#9 مودرن مع خلفية متدرجة</span>
-                <div class="status delivered">✅ تم التسليم</div>
-                <div class="top">
-                    <div>
-                        <div class="name">أحمد محمد</div>
-                        <div class="phone">01001234567</div>
-                    </div>
-                </div>
-                <div class="bottom">
-                    <span class="amount">2,370 ج.م</span>
-                    <button class="track-btn">🔍 تتبع</button>
-                </div>
-            </div>
-        </div>
-
-        <!-- ===== التصميم 10 ===== -->
-        <div class="design-wrapper">
-            <div class="design-10">
-                <span class="badge-label">#10 كارت مميز</span>
-                <span class="status delivered">✅ تم التسليم</span>
-                <div class="row">
-                    <span class="name">أحمد محمد</span>
-                    <span class="phone">01001234567</span>
-                </div>
-                <div class="bottom">
-                    <span class="amount">2,370 ج.م</span>
-                    <button class="track-btn">🔍 تتبع</button>
-                </div>
-            </div>
         </div>
 
     </div>
-
-    <div class="footer-note">
-        <i class="fas fa-arrow-left"></i> اختر التصميم المناسب لبطاقات الشحن الخاصة بك <i class="fas fa-arrow-right"></i>
-    </div>
-</div>
 
 </body>
 </html>
