@@ -2099,13 +2099,11 @@
         const BASE_URL = "https://euxexpress.com";
 
         let currentUser = null;
-        let trackingCache = {};
         let publicClientPhone = null;
         let allShipmentsData = [];
         let editingShipmentId = null;
         let isSubmitting = false;
         let isPublicSubmitting = false;
-        let statusCache = {}; // لحفظ الحالات السابقة لكل شحنة
 
         function openTrackingSystem() {
             document.getElementById('landingPage').classList.add('hidden');
@@ -2427,7 +2425,6 @@
 
         function logout() {
             currentUser = null;
-            trackingCache = {};
             clearUserSession();
             document.getElementById('loginPage').classList.remove('hidden');
             document.getElementById('dashboard').classList.add('hidden');
@@ -2453,11 +2450,10 @@
         }
 
         // ============================================
-        // دالة جلب حالة الشحنة من التتبع (مع التخزين المؤقت)
+        // جلب حالة الشحنة مباشرة من API (بدون كاش)
         // ============================================
-        async function fetchTrackingStatus(trackingNumber) {
+        async function fetchTrackingStatusDirect(trackingNumber) {
             if (!trackingNumber || trackingNumber.length < 3) return null;
-            if (trackingCache[trackingNumber]) return trackingCache[trackingNumber];
             try {
                 const res = await fetch(`${API_URL}?action=track&billCode=${trackingNumber}`);
                 const data = await res.json();
@@ -2474,30 +2470,19 @@
                     if (!finalStatus || !finalStatus.includes('تم التسليم')) {
                         if (finalStatus && finalStatus.includes('تم التسليم')) finalStatus = 'تم التسليم';
                     }
-                    trackingCache[trackingNumber] = finalStatus;
                     return finalStatus;
                 }
-                trackingCache[trackingNumber] = null;
                 return null;
             } catch (e) { console.error('فشل تتبع:', trackingNumber, e);
                 return null; }
         }
 
         // ============================================
-        // دالة تحديث حالة الشحنة في البطاقة (فقط إذا تغيرت)
+        // تحديث حالة الشحنة في البطاقة (مباشر)
         // ============================================
         function updateShipmentStatusCard(shipmentId, newStatus) {
             const card = document.getElementById(`card-${shipmentId}`);
             if (!card) return;
-
-            // الحصول على الحالة المخزنة سابقاً
-            const oldStatus = statusCache[shipmentId] || null;
-
-            // إذا كانت الحالة الجديدة مساوية للقديمة، لا نقوم بأي تغيير
-            if (oldStatus === newStatus) return;
-
-            // تحديث الكاش بالحالة الجديدة
-            statusCache[shipmentId] = newStatus;
 
             // إزالة أي عنصر حالة سابق
             const existingStatus = card.querySelector('.delivery-status');
@@ -2552,33 +2537,14 @@
         }
 
         // ============================================
-        // تحديث جميع حالات الشحنات دفعة واحدة (فقط المتغيرة)
+        // تحديث جميع حالات الشحنات دفعة واحدة (مباشر)
         // ============================================
         async function updateAllTrackingStatuses(shipments) {
             const shipmentsWithTracking = shipments.filter(s => s.trackingNumber && s.trackingNumber.length > 3);
             if (shipmentsWithTracking.length === 0) return;
 
-            // تهيئة الكاش للحالات القديمة (إذا لم تكن موجودة)
-            shipmentsWithTracking.forEach(s => {
-                if (!statusCache[s.id]) {
-                    const card = document.getElementById(`card-${s.id}`);
-                    if (card) {
-                        const existingStatus = card.querySelector('.delivery-status');
-                        if (existingStatus) {
-                            const text = existingStatus.textContent.trim();
-                            if (text.includes('تم التسليم')) statusCache[s.id] = 'تم التسليم';
-                            else if (text.includes('خطأ')) statusCache[s.id] = 'خطأ';
-                            else if (text.includes('تم الاستلام')) statusCache[s.id] = 'تم الاستلام';
-                            else if (text.includes('في الانتظار')) statusCache[s.id] = null;
-                            else statusCache[s.id] = text;
-                        } else {
-                            statusCache[s.id] = null;
-                        }
-                    }
-                }
-            });
-
-            const chunkSize = 15;
+            // جلب الحالات لجميع الشحنات دفعة واحدة (مع التقسيم لتجنب الضغط على API)
+            const chunkSize = 10;
             const chunks = [];
             for (let i = 0; i < shipmentsWithTracking.length; i += chunkSize) {
                 chunks.push(shipmentsWithTracking.slice(i, i + chunkSize));
@@ -2586,34 +2552,13 @@
 
             for (const chunk of chunks) {
                 const promises = chunk.map(async (s) => {
-                    const status = await fetchTrackingStatus(s.trackingNumber);
+                    const status = await fetchTrackingStatusDirect(s.trackingNumber);
                     return { id: s.id, status };
                 });
                 const results = await Promise.all(promises);
                 results.forEach(({ id, status }) => {
                     updateShipmentStatusCard(id, status);
                 });
-            }
-        }
-
-        // ============================================
-        // تحديث دوري كل 30 ثانية (اختياري)
-        // ============================================
-        let autoUpdateInterval = null;
-
-        function startAutoUpdate() {
-            if (autoUpdateInterval) clearInterval(autoUpdateInterval);
-            autoUpdateInterval = setInterval(() => {
-                if (allShipmentsData.length > 0) {
-                    updateAllTrackingStatuses(allShipmentsData);
-                }
-            }, 30000); // كل 30 ثانية
-        }
-
-        function stopAutoUpdate() {
-            if (autoUpdateInterval) {
-                clearInterval(autoUpdateInterval);
-                autoUpdateInterval = null;
             }
         }
 
@@ -2631,13 +2576,11 @@
                     if (allShipmentsData.length === 0) { 
                         content.innerHTML = '<div class="empty-state"><div class="icon">📭</div><p>لا توجد شحنات حتى الآن</p></div>';
                         document.getElementById('totalCountSmall').textContent = '0';
-                        stopAutoUpdate();
                     } else { 
                         document.getElementById('totalCountSmall').textContent = allShipmentsData.length;
                         renderShipments(allShipmentsData);
-                        // تحديث الحالات فوراً مع الاحتفاظ بالقديم
+                        // تحديث الحالات فوراً
                         await updateAllTrackingStatuses(allShipmentsData);
-                        startAutoUpdate();
                     }
                 } else { content.innerHTML = '<p style="color:red;">' + (data.msg || 'فشل التحميل') + '</p>'; }
             } catch (e) { content.innerHTML = '<p style="color:red;">فشل الاتصال</p>'; }
@@ -2658,7 +2601,6 @@
                     document.getElementById('totalCountSmall').textContent = allShipmentsData.length;
                     renderShipments(allShipmentsData);
                     await updateAllTrackingStatuses(allShipmentsData);
-                    startAutoUpdate();
                 } else { content.innerHTML = '<p style="color:red;">' + (data.msg || 'فشل التحميل') + '</p>'; }
             } catch (e) { content.innerHTML = '<p style="color:red;">فشل الاتصال</p>'; }
         }
@@ -2710,7 +2652,7 @@
             const displayAmount = s.amount || '0';
 
             // نضع حالة افتراضية "في الانتظار" لحين التحديث
-            const defaultStatus = hasTracking ? 'في الانتظار ⏳' : 'لا يوجد تتبع';
+            const defaultStatus = hasTracking ? 'جاري التحميل...' : 'لا يوجد تتبع';
 
             return `<div class="shipment-card" onclick="toggleDetails(this)" id="card-${s.id}" data-shipment='${JSON.stringify(s).replace(/'/g, "\\'")}'>
                     <div class="delivery-status pending">${defaultStatus}</div>
@@ -2970,8 +2912,6 @@
                 const data = await res.json();
                 if (data.success) { 
                     closeModal();
-                    trackingCache = {};
-                    statusCache = {}; // إعادة تعيين الكاش
                     if (currentUser.role === 'admin') {
                         loadAllShipments();
                     } else {
@@ -2993,8 +2933,6 @@
                 const res = await fetch(API_URL, { method: 'POST', headers: { 'Content-Type': 'application/x-www-form-urlencoded' }, body: params.toString() });
                 const data = await res.json();
                 if (data.success) {
-                    trackingCache = {};
-                    statusCache = {};
                     if (currentUser.role === 'admin') {
                         loadAllShipments();
                     } else {
