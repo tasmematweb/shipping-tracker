@@ -2105,6 +2105,7 @@
         let editingShipmentId = null;
         let isSubmitting = false;
         let isPublicSubmitting = false;
+        let statusCache = {}; // لحفظ الحالات السابقة لكل شحنة
 
         function openTrackingSystem() {
             document.getElementById('landingPage').classList.add('hidden');
@@ -2483,36 +2484,47 @@
         }
 
         // ============================================
-        // دالة تحديث حالة الشحنة في البطاقة (بدلاً من "جاري التحميل")
+        // دالة تحديث حالة الشحنة في البطاقة (فقط إذا تغيرت)
         // ============================================
-        function updateShipmentStatusCard(shipmentId, status) {
+        function updateShipmentStatusCard(shipmentId, newStatus) {
             const card = document.getElementById(`card-${shipmentId}`);
             if (!card) return;
 
+            // الحصول على الحالة المخزنة سابقاً
+            const oldStatus = statusCache[shipmentId] || null;
+
+            // إذا كانت الحالة الجديدة مساوية للقديمة، لا نقوم بأي تغيير
+            if (oldStatus === newStatus) return;
+
+            // تحديث الكاش بالحالة الجديدة
+            statusCache[shipmentId] = newStatus;
+
+            // إزالة أي عنصر حالة سابق
             const existingStatus = card.querySelector('.delivery-status');
             if (existingStatus) existingStatus.remove();
 
+            // إنشاء عنصر الحالة الجديد
             const statusEl = document.createElement('div');
             statusEl.className = 'delivery-status';
 
-            if (status) {
-                let displayStatus = status;
+            if (newStatus) {
+                let displayStatus = newStatus;
                 let isSuccess = false, isError = false, isInfo = false;
-                if (status.includes('تم التسليم')) {
+                if (newStatus.includes('تم التسليم')) {
                     isSuccess = true;
                     displayStatus = 'تم التسليم ✅';
-                } else if (status.includes('خطأ') || status.includes('Error')) {
+                } else if (newStatus.includes('خطأ') || newStatus.includes('Error')) {
                     isError = true;
                     displayStatus = 'خطأ ❌';
-                } else if (status.includes('تم الاستلام')) {
+                } else if (newStatus.includes('تم الاستلام')) {
                     isInfo = true;
                     displayStatus = 'تم الاستلام 📦';
-                } else if (status.includes('Delivered')) {
+                } else if (newStatus.includes('Delivered')) {
                     isSuccess = true;
                     displayStatus = 'تم التسليم ✅';
                 } else {
                     isInfo = true;
-                    displayStatus = status;
+                    displayStatus = newStatus;
                 }
 
                 statusEl.textContent = displayStatus;
@@ -2530,6 +2542,7 @@
                 statusEl.classList.add('pending');
             }
 
+            // إدراج الحالة في مكان "تم الاستلام" (أعلى البطاقة)
             const summaryRow = card.querySelector('.summary-row');
             if (summaryRow) {
                 summaryRow.parentNode.insertBefore(statusEl, summaryRow);
@@ -2539,11 +2552,31 @@
         }
 
         // ============================================
-        // تحديث جميع حالات الشحنات دفعة واحدة
+        // تحديث جميع حالات الشحنات دفعة واحدة (فقط المتغيرة)
         // ============================================
         async function updateAllTrackingStatuses(shipments) {
             const shipmentsWithTracking = shipments.filter(s => s.trackingNumber && s.trackingNumber.length > 3);
             if (shipmentsWithTracking.length === 0) return;
+
+            // تهيئة الكاش للحالات القديمة (إذا لم تكن موجودة)
+            shipmentsWithTracking.forEach(s => {
+                if (!statusCache[s.id]) {
+                    const card = document.getElementById(`card-${s.id}`);
+                    if (card) {
+                        const existingStatus = card.querySelector('.delivery-status');
+                        if (existingStatus) {
+                            const text = existingStatus.textContent.trim();
+                            if (text.includes('تم التسليم')) statusCache[s.id] = 'تم التسليم';
+                            else if (text.includes('خطأ')) statusCache[s.id] = 'خطأ';
+                            else if (text.includes('تم الاستلام')) statusCache[s.id] = 'تم الاستلام';
+                            else if (text.includes('في الانتظار')) statusCache[s.id] = null;
+                            else statusCache[s.id] = text;
+                        } else {
+                            statusCache[s.id] = null;
+                        }
+                    }
+                }
+            });
 
             const chunkSize = 15;
             const chunks = [];
@@ -2563,6 +2596,30 @@
             }
         }
 
+        // ============================================
+        // تحديث دوري كل 30 ثانية (اختياري)
+        // ============================================
+        let autoUpdateInterval = null;
+
+        function startAutoUpdate() {
+            if (autoUpdateInterval) clearInterval(autoUpdateInterval);
+            autoUpdateInterval = setInterval(() => {
+                if (allShipmentsData.length > 0) {
+                    updateAllTrackingStatuses(allShipmentsData);
+                }
+            }, 30000); // كل 30 ثانية
+        }
+
+        function stopAutoUpdate() {
+            if (autoUpdateInterval) {
+                clearInterval(autoUpdateInterval);
+                autoUpdateInterval = null;
+            }
+        }
+
+        // ============================================
+        // تحميل الشحنات
+        // ============================================
         async function loadMyShipments() {
             const content = document.getElementById('content');
             content.innerHTML = '<div class="loading"><div class="spinner"></div>جاري التحميل...</div>';
@@ -2571,10 +2628,17 @@
                 const data = await res.json();
                 if (data.success) {
                     allShipmentsData = data.shipments || [];
-                    if (allShipmentsData.length === 0) { content.innerHTML = '<div class="empty-state"><div class="icon">📭</div><p>لا توجد شحنات حتى الآن</p></div>';
-                        document.getElementById('totalCountSmall').textContent = '0'; } else { document.getElementById('totalCountSmall').textContent = allShipmentsData.length;
+                    if (allShipmentsData.length === 0) { 
+                        content.innerHTML = '<div class="empty-state"><div class="icon">📭</div><p>لا توجد شحنات حتى الآن</p></div>';
+                        document.getElementById('totalCountSmall').textContent = '0';
+                        stopAutoUpdate();
+                    } else { 
+                        document.getElementById('totalCountSmall').textContent = allShipmentsData.length;
                         renderShipments(allShipmentsData);
-                        updateAllTrackingStatuses(allShipmentsData); }
+                        // تحديث الحالات فوراً مع الاحتفاظ بالقديم
+                        await updateAllTrackingStatuses(allShipmentsData);
+                        startAutoUpdate();
+                    }
                 } else { content.innerHTML = '<p style="color:red;">' + (data.msg || 'فشل التحميل') + '</p>'; }
             } catch (e) { content.innerHTML = '<p style="color:red;">فشل الاتصال</p>'; }
         }
@@ -2593,7 +2657,8 @@
                     allShipmentsData = data.shipments || [];
                     document.getElementById('totalCountSmall').textContent = allShipmentsData.length;
                     renderShipments(allShipmentsData);
-                    updateAllTrackingStatuses(allShipmentsData);
+                    await updateAllTrackingStatuses(allShipmentsData);
+                    startAutoUpdate();
                 } else { content.innerHTML = '<p style="color:red;">' + (data.msg || 'فشل التحميل') + '</p>'; }
             } catch (e) { content.innerHTML = '<p style="color:red;">فشل الاتصال</p>'; }
         }
@@ -2602,12 +2667,6 @@
         // إنشاء بطاقة الشحنة (بدون زر "تتبع" القديم وحقل الحالة القديم)
         // ============================================
         function createShipmentCard(s, isAdmin = false) {
-            let statusClass = 'status-waiting',
-                statusText = s.status || '';
-            if (statusText.includes('انتظار التتبع') || statusText.includes('في انتظار')) statusText = '';
-            if (statusText.includes('تتبع')) statusClass = 'status-tracking';
-            else if (statusText.includes('تم')) statusClass = 'status-done';
-            else if (!statusText) statusClass = 'status-waiting';
             let lastUpdate = s.lastUpdate || s.date || '';
             let updateText = lastUpdate ? 'آخر تحديث: ' + lastUpdate : '';
 
@@ -2650,7 +2709,11 @@
             const displayPhone = s.receiverPhone || s.customerPhone || '';
             const displayAmount = s.amount || '0';
 
+            // نضع حالة افتراضية "في الانتظار" لحين التحديث
+            const defaultStatus = hasTracking ? 'في الانتظار ⏳' : 'لا يوجد تتبع';
+
             return `<div class="shipment-card" onclick="toggleDetails(this)" id="card-${s.id}" data-shipment='${JSON.stringify(s).replace(/'/g, "\\'")}'>
+                    <div class="delivery-status pending">${defaultStatus}</div>
                     <div class="summary-row">
                         <div class="main-info">
                             <span class="name">${displayName}</span>
@@ -2908,6 +2971,7 @@
                 if (data.success) { 
                     closeModal();
                     trackingCache = {};
+                    statusCache = {}; // إعادة تعيين الكاش
                     if (currentUser.role === 'admin') {
                         loadAllShipments();
                     } else {
@@ -2930,6 +2994,7 @@
                 const data = await res.json();
                 if (data.success) {
                     trackingCache = {};
+                    statusCache = {};
                     if (currentUser.role === 'admin') {
                         loadAllShipments();
                     } else {
