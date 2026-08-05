@@ -1,3 +1,4 @@
+```html
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
@@ -2091,7 +2092,7 @@
                             <button onclick="clearSearch()" style="background:transparent;color:#888;border:none;border-radius:20px;padding:4px 10px;cursor:pointer;font-family:'Cairo',sans-serif;font-size:12px;">الغاء</button>
                         </div>
                         <button id="shareLinkBtn" class="btn-eux-orange hidden share-btn-text" onclick="copyShareLink()" style="font-size:12px;padding:8px 12px;border-radius:10px;">
-                            <span class="inner">يمكن إرسال هذا الرابط للمستلم ليقوم بتسجيل الشحنه بنفسه</span>
+                            <span class="inner">يمكن إرسال هذا الرابط للراسل ليقوم بتسجيل الشحنه بنفسه</span>
                             <span class="fold"></span>
                             <div class="points_wrapper">
                                 <span class="point"></span><span class="point"></span><span class="point"></span>
@@ -2216,9 +2217,10 @@
         let editingShipmentId = null;
         let isSubmitting = false;
         let isPublicSubmitting = false;
+        let autoUpdateInterval = null;
 
         // ============================================
-        // إضافة مركز "أبو حماد" في محافظة الشرقية
+        // 1. إضافة مركز "أبو حماد" في محافظة الشرقية
         // ============================================
         const governorates = {
             'الشرقية': ['بلبيس', 'انشاص الرمل', 'أولاد صقر', 'الحسينية', 'ديرب نجم', 'فاقوس', 'كفر صقر', 'مشتول السوق', 'منيا القمح', 'الصالحية القديمة', 'الصالحية الجديدة', 'صان الحجر', 'مدينة العاشر من رمضان', 'أبو حماد'],
@@ -2268,6 +2270,11 @@
             if (window.history && window.history.pushState) {
                 window.history.pushState({}, '', window.location.pathname);
             }
+            // إيقاف التحديث التلقائي عند الخروج
+            if (autoUpdateInterval) {
+                clearInterval(autoUpdateInterval);
+                autoUpdateInterval = null;
+            }
         }
 
         function saveUserSession(userData) {
@@ -2306,6 +2313,10 @@
             sessionStorage.removeItem('eux_user');
             localStorage.removeItem('eux_user_data');
             localStorage.removeItem('eux_login_count');
+            if (autoUpdateInterval) {
+                clearInterval(autoUpdateInterval);
+                autoUpdateInterval = null;
+            }
         }
 
         function checkSession() {
@@ -2379,7 +2390,6 @@
         // دالة تسجيل الشحنة العامة مع عداد منع التكرار
         // ============================================
         async function submitPublicOrder() {
-            // منع الضغط المتكرر
             if (isPublicSubmitting) {
                 showToast('يرجى الانتظار 10 ثوانٍ قبل تسجيل شحنة أخرى', 'error');
                 return;
@@ -2409,7 +2419,6 @@
                 return; 
             }
 
-            // تعطيل الزر
             isPublicSubmitting = true;
             const submitBtn = document.getElementById('publicSubmitBtn');
             if (submitBtn) {
@@ -2456,7 +2465,6 @@
                 errorDiv.textContent = 'فشل الاتصال'; 
             }
 
-            // إعادة تفعيل الزر بعد 10 ثوانٍ
             setTimeout(() => {
                 isPublicSubmitting = false;
                 if (submitBtn) {
@@ -2548,6 +2556,10 @@
             document.getElementById('passwordInput').value = '';
             document.getElementById('loginError').classList.add('hidden');
             if (window.history && window.history.pushState) window.history.pushState({}, '', window.location.pathname);
+            if (autoUpdateInterval) {
+                clearInterval(autoUpdateInterval);
+                autoUpdateInterval = null;
+            }
             showToast('تم تسجيل الخروج', '');
         }
 
@@ -2565,7 +2577,7 @@
         }
 
         // ============================================
-        // جلب حالة الشحنة مباشرة من API (بدون كاش)
+        // 2. جلب حالة الشحنة مباشرة من API
         // ============================================
         async function fetchTrackingStatusDirect(trackingNumber) {
             if (!trackingNumber || trackingNumber.length < 3) return null;
@@ -2593,7 +2605,7 @@
         }
 
         // ============================================
-        // تحديث حالة الشحنة في البطاقة (مباشر)
+        // تحديث حالة الشحنة في البطاقة
         // ============================================
         function updateShipmentStatusCard(shipmentId, newStatus) {
             const card = document.getElementById(`card-${shipmentId}`);
@@ -2658,28 +2670,41 @@
         }
 
         // ============================================
-        // تحديث جميع حالات الشحنات دفعة واحدة (مباشر) - 50 شحنة لكل دفعة
+        // 2. تحديث تلقائي كل 5 ثوانٍ للشحنات "في الانتظار"
         // ============================================
-        async function updateAllTrackingStatuses(shipments) {
-            const shipmentsWithTracking = shipments.filter(s => s.trackingNumber && s.trackingNumber.length > 3);
-            if (shipmentsWithTracking.length === 0) return;
+        async function updatePendingShipments() {
+            // البحث عن الشحنات التي حالتها "في الانتظار"
+            const pendingShipments = allShipmentsData.filter(s => {
+                const status = s.status || 'في الانتظار';
+                return status === 'في الانتظار' && s.trackingNumber && s.trackingNumber.length > 3;
+            });
 
-            const chunkSize = 50;
-            const chunks = [];
-            for (let i = 0; i < shipmentsWithTracking.length; i += chunkSize) {
-                chunks.push(shipmentsWithTracking.slice(i, i + chunkSize));
-            }
+            if (pendingShipments.length === 0) return;
 
-            for (const chunk of chunks) {
-                const promises = chunk.map(async (s) => {
-                    const status = await fetchTrackingStatusDirect(s.trackingNumber);
-                    return { id: s.id, status };
-                });
-                const results = await Promise.all(promises);
-                results.forEach(({ id, status }) => {
-                    updateShipmentStatusCard(id, status);
-                });
+            // تحديث كل شحنة على حدة
+            for (const shipment of pendingShipments) {
+                const newStatus = await fetchTrackingStatusDirect(shipment.trackingNumber);
+                if (newStatus && newStatus !== shipment.status) {
+                    // تحديث الحالة في البيانات
+                    shipment.status = newStatus;
+                    // تحديث البطاقة في الواجهة
+                    updateShipmentStatusCard(shipment.id, newStatus);
+                }
             }
+        }
+
+        // ============================================
+        // بدء التحديث التلقائي كل 5 ثوانٍ
+        // ============================================
+        function startAutoUpdate() {
+            if (autoUpdateInterval) {
+                clearInterval(autoUpdateInterval);
+                autoUpdateInterval = null;
+            }
+            // تشغيل التحديث كل 5 ثوانٍ
+            autoUpdateInterval = setInterval(() => {
+                updatePendingShipments();
+            }, 5000);
         }
 
         // ============================================
@@ -2699,7 +2724,8 @@
                     } else { 
                         document.getElementById('totalCountSmall').textContent = allShipmentsData.length;
                         renderShipments(allShipmentsData);
-                        await updateAllTrackingStatuses(allShipmentsData);
+                        // بدء التحديث التلقائي
+                        startAutoUpdate();
                     }
                 } else { content.innerHTML = '<p style="color:red;">' + (data.msg || 'فشل التحميل') + '</p>'; }
             } catch (e) { content.innerHTML = '<p style="color:red;">فشل الاتصال</p>'; }
@@ -2719,18 +2745,16 @@
                     allShipmentsData = data.shipments || [];
                     document.getElementById('totalCountSmall').textContent = allShipmentsData.length;
                     renderShipments(allShipmentsData);
-                    await updateAllTrackingStatuses(allShipmentsData);
+                    // بدء التحديث التلقائي
+                    startAutoUpdate();
                 } else { content.innerHTML = '<p style="color:red;">' + (data.msg || 'فشل التحميل') + '</p>'; }
             } catch (e) { content.innerHTML = '<p style="color:red;">فشل الاتصال</p>'; }
         }
 
         // ============================================
-        // إنشاء بطاقة الشحنة بالتصميم الجديد - بدون أرقام (#)
+        // 3. إنشاء بطاقة الشحنة - إزالة الأرقام المكونة من 3 أرقام أو أكثر
         // ============================================
         function createShipmentCard(s, isAdmin = false) {
-            let lastUpdate = s.lastUpdate || s.date || '';
-            let updateText = lastUpdate ? 'آخر تحديث: ' + lastUpdate : '';
-
             let actions = '';
             const trackingNum = s.trackingNumber || '';
             const hasTracking = trackingNum && trackingNum.length > 3;
@@ -2771,22 +2795,29 @@
             const displayPhone = s.receiverPhone || s.customerPhone || '';
             const displayAmount = s.amount || '0';
 
+            // تحديد الحالة - إزالة الأرقام من النص
             let defaultStatus = 'في الانتظار';
             let statusClass = 'pending';
             let statusIcon = 'fa-hourglass-half';
 
             const shipmentStatus = s.status || null;
             if (shipmentStatus) {
-                if (shipmentStatus.includes('تم التسليم') || shipmentStatus.includes('Delivered')) {
+                // إزالة الأرقام المكونة من 3 أرقام أو أكثر من الحالة
+                let cleanStatus = shipmentStatus.replace(/\b\d{3,}\b/g, '').trim();
+                if (cleanStatus.includes('تم التسليم') || cleanStatus.includes('Delivered')) {
                     defaultStatus = 'تم التسليم';
                     statusClass = '';
                     statusIcon = 'fa-check';
-                } else if (shipmentStatus.includes('تم الاستلام')) {
+                } else if (cleanStatus.includes('تم الاستلام')) {
                     defaultStatus = 'تم الاستلام';
                     statusClass = '';
                     statusIcon = 'fa-check';
+                } else if (cleanStatus.length > 0) {
+                    defaultStatus = cleanStatus;
+                    statusClass = 'pending';
+                    statusIcon = 'fa-hourglass-half';
                 } else {
-                    defaultStatus = shipmentStatus;
+                    defaultStatus = 'في الانتظار';
                     statusClass = 'pending';
                     statusIcon = 'fa-hourglass-half';
                 }
@@ -2887,7 +2918,6 @@
             } else {
                 const isAdmin = currentUser && currentUser.role === 'admin';
                 content.innerHTML = filtered.map(s => createShipmentCard(s, isAdmin)).join('');
-                updateAllTrackingStatuses(filtered);
             }
         }
 
@@ -3135,7 +3165,7 @@
                     translated = translated.replace(/،\s*،/g, '،');
                     translated = translated.replace(/\s{2,}/g, ' ');
                     translated = translated.replace(/،\s*$/, '');
-                    translated = translated.replace(/\b\d{3,}\b/g, ''); // ✅ إزالة الأرقام المكونة من 3 أرقام أو أكثر
+                    translated = translated.replace(/\b\d{3,}\b/g, '');
                     return translated.trim() || text;
                 }
                 return text;
@@ -3145,7 +3175,7 @@
         }
 
         function fallbackTranslate(text) {
-            let cleanText = text.replace(/\b\d{3,}\b/g, '').trim(); // ✅ إزالة الأرقام المكونة من 3 أرقام أو أكثر
+            let cleanText = text.replace(/\b\d{3,}\b/g, '').trim();
             const translations = {
                 'Abnormal Parcel Registration': 'تسجيل طرد غير طبيعي',
                 'Customer refuse by call': 'رفض العميل استلام الطرد عبر الهاتف',
@@ -3172,7 +3202,7 @@
             translated = translated.replace(/,\s*$/, '');
             translated = translated.replace(/\s{2,}/g, ' ');
             translated = translated.replace(/،\s*،/g, '،');
-            translated = translated.replace(/\b\d+\b/g, ''); // ✅ إزالة جميع الأرقام المتبقية
+            translated = translated.replace(/\b\d+\b/g, '');
             return translated.trim() || text;
         }
 
@@ -3373,3 +3403,4 @@
     </script>
 </body>
 </html>
+```
