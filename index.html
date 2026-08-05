@@ -1,3 +1,4 @@
+```html
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
@@ -2184,6 +2185,7 @@
         let editingShipmentId = null;
         let isSubmitting = false;
         let isPublicSubmitting = false;
+        let autoUpdateInterval = null;
 
         // ============================================
         // إضافة مركز "أبو حماد" في محافظة الشرقية
@@ -2236,6 +2238,7 @@
             if (window.history && window.history.pushState) {
                 window.history.pushState({}, '', window.location.pathname);
             }
+            stopAutoUpdate();
         }
 
         function saveUserSession(userData) {
@@ -2341,6 +2344,7 @@
             document.getElementById('pf_governorate').innerHTML = govOptions;
 
             document.body.style.background = 'linear-gradient(135deg, #e8f0fe, #d4e4f7)';
+            stopAutoUpdate();
         }
 
         // ============================================
@@ -2509,6 +2513,7 @@
         function logout() {
             currentUser = null;
             clearUserSession();
+            stopAutoUpdate();
             document.getElementById('loginPage').classList.remove('hidden');
             document.getElementById('dashboard').classList.add('hidden');
             document.getElementById('publicOrderPage').classList.add('hidden');
@@ -2565,50 +2570,56 @@
         // ============================================
         function updateShipmentStatusCard(shipmentId, newStatus) {
             const card = document.getElementById(`card-${shipmentId}`);
-            if (!card) return;
+            if (!card) return false;
 
             const detailItems = card.querySelectorAll('.detail-item');
             let statusItem = null;
             for (const item of detailItems) {
                 const icon = item.querySelector('.detail-icon i');
-                if (icon && (icon.classList.contains('fa-check-circle') || icon.classList.contains('fa-clock'))) {
+                if (icon && (icon.classList.contains('fa-check-circle') || icon.classList.contains('fa-clock') || icon.classList.contains('fa-spinner'))) {
                     statusItem = item;
                     break;
                 }
             }
 
-            if (!statusItem) return;
+            if (!statusItem) return false;
 
             const detailText = statusItem.querySelector('.detail-text');
-            if (!detailText) return;
+            if (!detailText) return false;
 
             const statusSpan = document.createElement('span');
             statusSpan.className = 'status-badge';
 
-            if (newStatus) {
-                let displayStatus = newStatus;
-                let isSuccess = false;
-                if (newStatus.includes('تم التسليم')) {
-                    isSuccess = true;
-                    displayStatus = 'تم التسليم';
-                } else if (newStatus.includes('Delivered')) {
-                    isSuccess = true;
+            let isLoading = false;
+            let isDelivered = false;
+            let displayStatus = '';
+
+            if (newStatus === null || newStatus === undefined) {
+                isLoading = true;
+                displayStatus = 'جاري التحميل...';
+            } else if (newStatus === 'loading') {
+                isLoading = true;
+                displayStatus = 'جاري التحميل...';
+            } else if (typeof newStatus === 'string') {
+                if (newStatus.includes('تم التسليم') || newStatus.includes('Delivered')) {
+                    isDelivered = true;
                     displayStatus = 'تم التسليم';
                 } else if (newStatus.includes('تم الاستلام')) {
+                    isDelivered = true;
                     displayStatus = 'تم الاستلام';
                 } else {
                     displayStatus = newStatus;
                 }
+            }
 
-                if (isSuccess) {
-                    statusSpan.innerHTML = `<i class="fas fa-check"></i> ${displayStatus}`;
-                    statusSpan.className = 'status-badge';
-                } else {
-                    statusSpan.innerHTML = `<i class="fas fa-hourglass-half"></i> ${displayStatus}`;
-                    statusSpan.className = 'status-badge pending';
-                }
+            if (isLoading) {
+                statusSpan.innerHTML = `<i class="fas fa-spinner fa-spin"></i> جاري التحميل...`;
+                statusSpan.className = 'status-badge pending';
+            } else if (isDelivered) {
+                statusSpan.innerHTML = `<i class="fas fa-check"></i> ${displayStatus}`;
+                statusSpan.className = 'status-badge';
             } else {
-                statusSpan.innerHTML = `<i class="fas fa-hourglass-half"></i> جاري التحميل...`;
+                statusSpan.innerHTML = `<i class="fas fa-hourglass-half"></i> ${displayStatus}`;
                 statusSpan.className = 'status-badge pending';
             }
 
@@ -2623,14 +2634,37 @@
                 label.textContent = 'آخر تحديث';
                 detailText.appendChild(label);
             }
+
+            // تحديث الأيقونة
+            const icon = statusItem.querySelector('.detail-icon i');
+            if (icon) {
+                if (isLoading) {
+                    icon.className = 'fas fa-spinner fa-spin';
+                } else if (isDelivered) {
+                    icon.className = 'fas fa-check-circle';
+                } else {
+                    icon.className = 'fas fa-clock';
+                }
+            }
+
+            return !isLoading;
         }
 
         // ============================================
-        // تحديث جميع حالات الشحنات دفعة واحدة (مباشر) - 50 شحنة لكل دفعة
+        // تحديث جميع حالات الشحنات دفعة واحدة مع التكرار التلقائي للشحنات التي تحمل "جاري التحميل..."
         // ============================================
-        async function updateAllTrackingStatuses(shipments) {
+        async function updateAllTrackingStatuses(shipments, isAutoUpdate = false) {
+            if (!shipments || shipments.length === 0) return;
+
+            // تصفية الشحنات التي لها رقم تتبع
             const shipmentsWithTracking = shipments.filter(s => s.trackingNumber && s.trackingNumber.length > 3);
-            if (shipmentsWithTracking.length === 0) return;
+            if (shipmentsWithTracking.length === 0) {
+                // إيقاف التحديث التلقائي إذا لم توجد شحنات لها تتبع
+                if (isAutoUpdate) {
+                    stopAutoUpdate();
+                }
+                return;
+            }
 
             const chunkSize = 50;
             const chunks = [];
@@ -2638,15 +2672,101 @@
                 chunks.push(shipmentsWithTracking.slice(i, i + chunkSize));
             }
 
+            let allDone = true;
+
             for (const chunk of chunks) {
                 const promises = chunk.map(async (s) => {
                     const status = await fetchTrackingStatusDirect(s.trackingNumber);
                     return { id: s.id, status };
                 });
                 const results = await Promise.all(promises);
-                results.forEach(({ id, status }) => {
-                    updateShipmentStatusCard(id, status);
-                });
+                for (const { id, status } of results) {
+                    const isDone = updateShipmentStatusCard(id, status);
+                    if (!isDone) {
+                        allDone = false;
+                    }
+                }
+            }
+
+            // إيقاف التحديث التلقائي إذا تم الانتهاء من تحديث جميع الشحنات
+            if (isAutoUpdate && allDone) {
+                stopAutoUpdate();
+                showToast('تم تحديث جميع حالات الشحنات', 'success');
+            }
+        }
+
+        // ============================================
+        // بدء التحديث التلقائي كل 5 ثوانٍ للشحنات التي تحمل "جاري التحميل..."
+        // ============================================
+        function startAutoUpdateForPendingShipments() {
+            // إيقاف أي تحديث سابق
+            stopAutoUpdate();
+
+            // البحث عن الشحنات التي تحمل "جاري التحميل..."
+            const cards = document.querySelectorAll('.shipment-card');
+            let hasPending = false;
+
+            for (const card of cards) {
+                const badge = card.querySelector('.status-badge');
+                if (badge && badge.textContent.trim().includes('جاري التحميل')) {
+                    hasPending = true;
+                    break;
+                }
+            }
+
+            if (!hasPending) {
+                // لا توجد شحنات بحالة "جاري التحميل..."، لا حاجة للتحديث التلقائي
+                return;
+            }
+
+            // بدء التحديث التلقائي كل 5 ثوانٍ
+            autoUpdateInterval = setInterval(async () => {
+                // التحقق من وجود شحنات لا تزال بحالة "جاري التحميل..."
+                const currentCards = document.querySelectorAll('.shipment-card');
+                let stillPending = false;
+
+                for (const card of currentCards) {
+                    const badge = card.querySelector('.status-badge');
+                    if (badge && badge.textContent.trim().includes('جاري التحميل')) {
+                        stillPending = true;
+                        break;
+                    }
+                }
+
+                if (!stillPending) {
+                    // جميع الشحنات تم تحديثها، إيقاف التحديث التلقائي
+                    stopAutoUpdate();
+                    showToast('تم تحديث جميع حالات الشحنات', 'success');
+                    return;
+                }
+
+                // تحديث الشحنات التي لا تزال بحالة "جاري التحميل..."
+                const shipmentsToUpdate = [];
+                for (const card of currentCards) {
+                    const badge = card.querySelector('.status-badge');
+                    if (badge && badge.textContent.trim().includes('جاري التحميل')) {
+                        const shipmentId = card.id.replace('card-', '');
+                        // البحث عن الشحنة في البيانات
+                        const shipment = allShipmentsData.find(s => s.id === shipmentId);
+                        if (shipment && shipment.trackingNumber) {
+                            shipmentsToUpdate.push(shipment);
+                        }
+                    }
+                }
+
+                if (shipmentsToUpdate.length > 0) {
+                    await updateAllTrackingStatuses(shipmentsToUpdate, true);
+                } else {
+                    // لا توجد شحنات للتحديث، إيقاف التحديث
+                    stopAutoUpdate();
+                }
+            }, 5000); // 5 ثوانٍ
+        }
+
+        function stopAutoUpdate() {
+            if (autoUpdateInterval) {
+                clearInterval(autoUpdateInterval);
+                autoUpdateInterval = null;
             }
         }
 
@@ -2654,6 +2774,7 @@
         // تحميل الشحنات
         // ============================================
         async function loadMyShipments() {
+            stopAutoUpdate();
             const content = document.getElementById('content');
             content.innerHTML = '<div class="loading"><div class="spinner"></div>جاري التحميل...</div>';
             try {
@@ -2668,12 +2789,15 @@
                         document.getElementById('totalCountSmall').textContent = allShipmentsData.length;
                         renderShipments(allShipmentsData);
                         await updateAllTrackingStatuses(allShipmentsData);
+                        // بدء التحديث التلقائي للشحنات التي لا تزال "جاري التحميل..."
+                        startAutoUpdateForPendingShipments();
                     }
                 } else { content.innerHTML = '<p style="color:red;">' + (data.msg || 'فشل التحميل') + '</p>'; }
             } catch (e) { content.innerHTML = '<p style="color:red;">فشل الاتصال</p>'; }
         }
 
         async function loadAllShipments() {
+            stopAutoUpdate();
             const content = document.getElementById('content');
             content.innerHTML = '<div class="loading"><div class="spinner"></div>جاري التحميل...</div>';
             try {
@@ -2688,6 +2812,8 @@
                     document.getElementById('totalCountSmall').textContent = allShipmentsData.length;
                     renderShipments(allShipmentsData);
                     await updateAllTrackingStatuses(allShipmentsData);
+                    // بدء التحديث التلقائي للشحنات التي لا تزال "جاري التحميل..."
+                    startAutoUpdateForPendingShipments();
                 } else { content.innerHTML = '<p style="color:red;">' + (data.msg || 'فشل التحميل') + '</p>'; }
             } catch (e) { content.innerHTML = '<p style="color:red;">فشل الاتصال</p>'; }
         }
@@ -2742,7 +2868,7 @@
             // ✅ الحالة الافتراضية = "جاري التحميل..." بدلاً من "في الانتظار"
             let defaultStatus = 'جاري التحميل...';
             let statusClass = 'pending';
-            let statusIcon = 'fa-hourglass-half';
+            let statusIcon = 'fa-spinner fa-spin';
 
             const shipmentStatus = s.status || null;
             if (shipmentStatus) {
@@ -2762,7 +2888,7 @@
             } else if (hasTracking) {
                 defaultStatus = 'جاري التحميل...';
                 statusClass = 'pending';
-                statusIcon = 'fa-hourglass-half';
+                statusIcon = 'fa-spinner fa-spin';
             }
 
             const statusBadge = `
@@ -2779,7 +2905,6 @@
                             <div class="customer-name">${displayName}</div>
                             <div class="customer-phone"><i class="fas fa-phone-alt"></i> ${displayPhone}</div>
                         </div>
-                        <!-- تم إزالة المعرف (#) بالكامل -->
                     </div>
 
                     <div class="details-grid">
@@ -2791,7 +2916,7 @@
                             </div>
                         </div>
                         <div class="detail-item">
-                            <span class="detail-icon"><i class="fas ${hasTracking ? 'fa-check-circle' : 'fa-clock'}"></i></span>
+                            <span class="detail-icon"><i class="fas ${hasTracking ? 'fa-spinner fa-spin' : 'fa-clock'}"></i></span>
                             <div class="detail-text">
                                 ${statusBadge}
                                 <span class="detail-label">آخر تحديث</span>
@@ -2842,6 +2967,7 @@
                 return;
             }
 
+            stopAutoUpdate();
             const content = document.getElementById('content');
             const filtered = allShipmentsData.filter(s => {
                 const name = (s.receiverName || s.customerName || '').toLowerCase();
@@ -2855,6 +2981,7 @@
                 const isAdmin = currentUser && currentUser.role === 'admin';
                 content.innerHTML = filtered.map(s => createShipmentCard(s, isAdmin)).join('');
                 updateAllTrackingStatuses(filtered);
+                startAutoUpdateForPendingShipments();
             }
         }
 
@@ -3340,3 +3467,4 @@
     </script>
 </body>
 </html>
+```
