@@ -1004,6 +1004,7 @@
             font-weight: 700;
             font-size: 15px;
         }
+        /* زر التحديث الفردي - مخفي عن العميل */
         .update-single-btn {
             background: #0076ff;
             color: white;
@@ -1018,6 +1019,8 @@
             align-items: center;
             justify-content: center;
             box-shadow: 0 2px 8px rgba(0, 118, 255, 0.3);
+            /* إخفاء الزر عن العميل */
+            display: none !important;
         }
         .update-single-btn:hover {
             transform: scale(1.1);
@@ -1891,11 +1894,6 @@
             .track-btn-spinner .track-text {
                 font-size: 10px;
             }
-            .update-single-btn {
-                width: 28px;
-                height: 28px;
-                font-size: 11px;
-            }
         }
     </style>
 </head>
@@ -2102,7 +2100,6 @@
                         <span class="total-small">اجمالي الشحنات: <span class="count" id="totalCountSmall">0</span></span>
                     </div>
                     <div class="header-actions">
-                        <!-- الزر العام لتحديث الكل -->
                         <button class="update-all-btn" id="updateAllBtn" onclick="triggerAllUpdates()">
                             <i class="fas fa-sync-alt"></i>
                             <span class="spinner-small"></span>
@@ -2115,7 +2112,7 @@
                             <button onclick="clearSearch()" style="background:transparent;color:#888;border:none;border-radius:20px;padding:4px 10px;cursor:pointer;font-family:'Cairo',sans-serif;font-size:12px;">الغاء</button>
                         </div>
                         <button id="shareLinkBtn" class="btn-eux-orange hidden share-btn-text" onclick="copyShareLink()" style="font-size:12px;padding:8px 12px;border-radius:10px;">
-                            <span class="inner">رابط التسجيل</span>
+                            <span class="inner">يمكنك ارسال هذا الرابط للراسل ليقوم بتسجيل الشحنة بنفسه</span>
                             <span class="fold"></span>
                             <div class="points_wrapper">
                                 <span class="point"></span><span class="point"></span><span class="point"></span>
@@ -2317,8 +2314,9 @@
             return false;
         }
 
+        // إضافة مركز أبو حماد في محافظة الشرقية
         const governorates = {
-            'الشرقية': ['بلبيس', 'انشاص الرمل', 'أولاد صقر', 'الحسينية', 'ديرب نجم', 'فاقوس', 'كفر صقر', 'مشتول السوق', 'منيا القمح', 'الصالحية القديمة', 'الصالحية الجديدة', 'صان الحجر', 'مدينة العاشر من رمضان'],
+            'الشرقية': ['بلبيس', 'انشاص الرمل', 'أولاد صقر', 'الحسينية', 'ديرب نجم', 'فاقوس', 'كفر صقر', 'مشتول السوق', 'منيا القمح', 'الصالحية القديمة', 'الصالحية الجديدة', 'صان الحجر', 'مدينة العاشر من رمضان', 'أبو حماد'],
             'الجيزة': ['مدينة السادس من أكتوبر', 'مدينة الشيخ زايد', 'العياط', 'الحوامدية', 'البدرشين', 'الصف', 'العمرانية', 'أطفيح', 'الواحات البحرية', 'الجيزة', 'حدائق الاهرام', 'فيصل', 'الهرم', 'أبو النمرس', 'العجوزة', 'الوراق', 'أوسيم', 'بولاق الدكرور', 'الدقي', 'أرض اللواء', 'المهندسين', 'كرداسة', 'إمبابة', 'منشأة القناطر'],
             'الغربية': ['كفر الزيات', 'المحلة الكبرى', 'سمنود', 'بسيون', 'السنطة', 'زفتى', 'قطور', 'طنطا'],
             'الدقهلية': ['المنصورة', 'أجا', 'المنزلة', 'بلقاس', 'دكرنس', 'السنبلاوين', 'منية النصر', 'ميت غمر', 'شربين', 'طلخا'],
@@ -2586,13 +2584,7 @@
                 return;
             }
 
-            const btn = document.getElementById(`update-btn-${shipmentId}`);
-            if (btn) {
-                btn.classList.add('updating');
-                btn.disabled = true;
-                btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
-            }
-
+            // الزر مخفي ولكن يتم تنفيذ التحديث في الخلفية
             try {
                 // مسح الكاش لهذا الرقم
                 delete trackingCache[trackingNumber];
@@ -2607,17 +2599,11 @@
             } catch (e) {
                 console.error('خطأ في تحديث الشحنة:', e);
                 return { success: false, shipmentId, error: e };
-            } finally {
-                if (btn) {
-                    btn.classList.remove('updating');
-                    btn.disabled = false;
-                    btn.innerHTML = '<i class="fas fa-sync-alt"></i>';
-                }
             }
         }
 
         // ============================================
-        // دالة الضغط على جميع أزرار التحديث في نفس الثانية (متوازي)
+        // دالة الضغط على جميع أزرار التحديث (مرتين متتاليتين)
         // ============================================
         async function triggerAllUpdates() {
             if (isUpdatingAll) return;
@@ -2638,27 +2624,48 @@
                     return;
                 }
 
-                // تجميع جميع مهام التحديث في مصفوفة Promises
-                const updatePromises = [];
+                // الدورة الأولى
+                let updatePromises = [];
                 for (const button of updateButtons) {
                     const shipmentId = button.dataset.shipmentId;
                     const trackingNumber = button.dataset.trackingNumber;
                     
                     if (shipmentId && trackingNumber) {
-                        // استدعاء التحديث لكل شحنة وإضافة Promise إلى المصفوفة
                         updatePromises.push(updateSingleShipment(shipmentId, trackingNumber));
                     }
                 }
 
-                // تنفيذ جميع التحديثات في نفس الوقت (متوازي)
-                const results = await Promise.all(updatePromises);
-                
-                // حساب النتائج
-                const successCount = results.filter(r => r && r.success).length;
-                const failCount = results.filter(r => r && !r.success).length;
-                const totalButtons = updateButtons.length;
+                // تنفيذ الدورة الأولى (متوازي)
+                let results = await Promise.all(updatePromises);
+                let successCount1 = results.filter(r => r && r.success).length;
+                let failCount1 = results.filter(r => r && !r.success).length;
 
-                showToast(`تم تحديث ${successCount} من ${totalButtons} شحنة${failCount > 0 ? `، فشل ${failCount}` : ''}`, successCount > 0 ? 'success' : 'error');
+                // الدورة الثانية (مرة أخرى)
+                // نعيد مسح الكاش ليجلب بيانات جديدة
+                for (const button of updateButtons) {
+                    const trackingNumber = button.dataset.trackingNumber;
+                    if (trackingNumber) {
+                        delete trackingCache[trackingNumber];
+                    }
+                }
+
+                // إعادة تنفيذ التحديثات للمرة الثانية
+                updatePromises = [];
+                for (const button of updateButtons) {
+                    const shipmentId = button.dataset.shipmentId;
+                    const trackingNumber = button.dataset.trackingNumber;
+                    
+                    if (shipmentId && trackingNumber) {
+                        updatePromises.push(updateSingleShipment(shipmentId, trackingNumber));
+                    }
+                }
+
+                results = await Promise.all(updatePromises);
+                let successCount2 = results.filter(r => r && r.success).length;
+                let failCount2 = results.filter(r => r && !r.success).length;
+
+                const totalButtons = updateButtons.length;
+                showToast(`تم التحديث مرتين: الأولى ${successCount1}/${totalButtons}، الثانية ${successCount2}/${totalButtons}`, successCount2 > 0 ? 'success' : 'error');
             } catch (e) {
                 showToast('حدث خطأ أثناء التحديث', 'error');
                 console.error('خطأ في التحديث العام:', e);
@@ -2672,14 +2679,14 @@
         }
 
         // ============================================
-        // دالة التحديث التلقائي عند الـ Refresh (متوازي أيضاً)
+        // دالة التحديث التلقائي عند الـ Refresh (مرتين متتاليتين)
         // ============================================
         function autoRefreshUpdates() {
             // الانتظار حتى تتحمّل الشحنات بالكامل
             setTimeout(() => {
                 const updateButtons = document.querySelectorAll('.update-single-btn');
                 if (updateButtons.length > 0) {
-                    // تنفيذ التحديث العام تلقائياً (متوازي)
+                    // تنفيذ التحديث العام تلقائياً (مرتين)
                     triggerAllUpdates();
                 }
             }, 800);
@@ -2755,7 +2762,7 @@
                     if (allShipmentsData.length === 0) { content.innerHTML = '<div class="empty-state"><div class="icon">📭</div><p>لا توجد شحنات حتى الآن</p></div>';
                         document.getElementById('totalCountSmall').textContent = '0'; } else { document.getElementById('totalCountSmall').textContent = allShipmentsData.length;
                         renderShipments(allShipmentsData);
-                        // التحديث التلقائي بعد التحميل (متوازي)
+                        // التحديث التلقائي بعد التحميل (مرتين)
                         autoRefreshUpdates();
                     }
                 } else { content.innerHTML = '<p style="color:red;">' + (data.msg || 'فشل التحميل') + '</p>'; }
@@ -2776,7 +2783,7 @@
                     allShipmentsData = data.shipments || [];
                     document.getElementById('totalCountSmall').textContent = allShipmentsData.length;
                     renderShipments(allShipmentsData);
-                    // التحديث التلقائي بعد التحميل (متوازي)
+                    // التحديث التلقائي بعد التحميل (مرتين)
                     autoRefreshUpdates();
                 } else { content.innerHTML = '<p style="color:red;">' + (data.msg || 'فشل التحميل') + '</p>'; }
             } catch (e) { content.innerHTML = '<p style="color:red;">فشل الاتصال</p>'; }
@@ -2795,7 +2802,7 @@
             const trackingNum = s.trackingNumber || '';
             const hasTracking = trackingNum && trackingNum.length > 3;
 
-            // زر التحديث الفردي لكل شحنة
+            // زر التحديث الفردي لكل شحنة - مخفي عن العميل (display: none في الـ CSS)
             let updateBtn = '';
             if (hasTracking) {
                 updateBtn = `
