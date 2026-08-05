@@ -2463,7 +2463,6 @@
                 if (data.code === "1" && data.data && data.data[0]) {
                     let finalStatus = data.data[0].status || null;
                     const details = data.data[0].details || [];
-                    // نبحث عن "تم التسليم" في التفاصيل
                     for (const d of details) { 
                         const desc = d.desc || '';
                         if (desc.includes('تم التسليم')) { 
@@ -2471,7 +2470,6 @@
                             break; 
                         }
                     }
-                    // إذا لم نجد "تم التسليم" نأخذ الحالة من أعلى
                     if (!finalStatus || !finalStatus.includes('تم التسليم')) {
                         if (finalStatus && finalStatus.includes('تم التسليم')) finalStatus = 'تم التسليم';
                     }
@@ -2491,11 +2489,9 @@
             const card = document.getElementById(`card-${shipmentId}`);
             if (!card) return;
 
-            // إزالة أي عنصر حالة سابق (تم الاستلام)
             const existingStatus = card.querySelector('.delivery-status');
             if (existingStatus) existingStatus.remove();
 
-            // إنشاء عنصر الحالة الجديد
             const statusEl = document.createElement('div');
             statusEl.className = 'delivery-status';
 
@@ -2534,12 +2530,10 @@
                 statusEl.classList.add('pending');
             }
 
-            // إدراج الحالة في مكان "تم الاستلام" (أعلى البطاقة)
             const summaryRow = card.querySelector('.summary-row');
             if (summaryRow) {
                 summaryRow.parentNode.insertBefore(statusEl, summaryRow);
             } else {
-                // إذا لم يوجد summaryRow، نضعه في بداية البطاقة
                 card.prepend(statusEl);
             }
         }
@@ -2621,7 +2615,6 @@
             const trackingNum = s.trackingNumber || '';
             const hasTracking = trackingNum && trackingNum.length > 3;
 
-            // زر تتبع جديد (بسيط بدون دائرة)
             let trackButton = '';
             if (hasTracking) {
                 trackButton = `
@@ -2631,7 +2624,6 @@
                 `;
             }
 
-            // أزرار التعديل والحذف (للعملاء غير الإداريين بدون رقم تتبع)
             if (!isAdmin) {
                 if (!hasTracking) {
                     actions += `
@@ -2658,9 +2650,6 @@
             const displayPhone = s.receiverPhone || s.customerPhone || '';
             const displayAmount = s.amount || '0';
 
-            // لا نضيف status-badge القديم ولا status-row
-            // الحالة ستظهر في الأعلى عبر updateShipmentStatusCard
-
             return `<div class="shipment-card" onclick="toggleDetails(this)" id="card-${s.id}" data-shipment='${JSON.stringify(s).replace(/'/g, "\\'")}'>
                     <div class="summary-row">
                         <div class="main-info">
@@ -2671,7 +2660,6 @@
                         </div>
                         <div class="last-update">${updateText}</div>
                     </div>
-                    <!-- الحالة ستظهر هنا عبر JavaScript -->
                     <div class="details">
                         ${isAdmin ? `<div class="info"><strong>رقم العميل:</strong> ${s.clientPhone || 'غير معروف'}</div>` : ''}${adminDetails}
                         ${s.receiverPhone2 ? `<div class="info"><strong>هاتف آخر:</strong> ${s.receiverPhone2}</div>` : ''}
@@ -3012,7 +3000,7 @@
         }
 
         // ============================================
-        // دالة التتبع (نافذة منبثقة)
+        // دالة التتبع (نافذة منبثقة) - تم إزالة "مسار الشحنة" و"الحالة الحالية"
         // ============================================
         async function trackShipment(billCode) {
             document.getElementById('modal').classList.remove('hidden');
@@ -3021,28 +3009,11 @@
                 const res = await fetch(`${API_URL}?action=track&billCode=${billCode}`);
                 const data = await res.json();
                 if (data.code === "1" && data.data && data.data[0]) {
-                    let html = `<h3><i class="fas fa-map-marked-alt"></i> مسار الشحنة</h3>`;
-                    const currentStatus = data.data[0].status || '';
+                    let html = `<h3><i class="fas fa-map-marked-alt"></i> تتبع الشحنة</h3>`;
                     const details = data.data[0].details || [];
-                    let foundDelivered = false;
-                    for (const d of details) { if ((d.desc || '').includes('تم التسليم')) { foundDelivered = true; break; } }
-                    let displayStatus = currentStatus,
-                        statusBgColor = '#e8f5e9',
-                        statusBorderColor = '#2e7d32',
-                        statusTextColor = '#2e7d32';
-                    if (foundDelivered || currentStatus.includes('تم التسليم')) displayStatus = 'تم التسليم';
-                    else if (currentStatus.includes('خطأ') || currentStatus.includes('Error')) {
-                        displayStatus = 'خطأ ' + currentStatus.replace(/خطأ/g, '').trim();
-                        if (!displayStatus || displayStatus === 'خطأ') displayStatus = 'خطأ في التوصيل';
-                        statusBgColor = '#ffeaea';
-                        statusBorderColor = '#dc3545';
-                        statusTextColor = '#dc3545';
-                    }
-                    html +=
-                        `<div style="background:${statusBgColor};padding:10px 16px;border-radius:10px;margin-bottom:16px;border-right:4px solid ${statusBorderColor};"><strong style="color:${statusTextColor};font-size:15px;">الحالة الحالية:</strong><span style="color:${statusTextColor};font-weight:700;font-size:16px;margin-right:8px;">${displayStatus}</span></div>`;
-                    if (details.length === 0) html +=
-                    `<p style="text-align:center;color:#999;padding:20px;">لا توجد تفاصيل تتبع متاحة</p>`;
-                    else {
+                    if (details.length === 0) {
+                        html += `<p style="text-align:center;color:#999;padding:20px;">لا توجد تفاصيل تتبع متاحة</p>`;
+                    } else {
                         for (const d of details) {
                             let desc = (d.desc || '').replace(/\([0-9]{10,11}\)/g, '').replace(/[0-9]{10,11}/g, '').replace(
                                 /J&T/gi, '').replace(/courier/gi, '').replace(/Express/gi, '');
