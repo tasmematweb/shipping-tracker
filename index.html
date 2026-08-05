@@ -1,4 +1,3 @@
-```html
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
@@ -614,180 +613,509 @@
             color: #1877f2;
         }
         #trackingApp {
-            background: linear-gradient(135deg, #0a0e17, #141b2b);
+            background: linear-gradient(135deg, #e8f0fe, #d4e4f7);
             min-height: 100vh;
             padding: 20px;
         }
         .tracking-container {
-            max-width: 1200px;
+            max-width: 900px;
             margin: 0 auto;
-            padding: 20px;
+            background: white;
+            border-radius: 24px;
+            padding: 30px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.1);
+            position: relative;
+            overflow: hidden;
+        }
+        .tracking-container::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle at 30% 20%, rgba(0, 118, 255, 0.04), transparent 70%);
+            pointer-events: none;
+        }
+        .login-page {
+            text-align: center;
+            position: relative;
+            z-index: 1;
+            padding: 20px 0;
+        }
+        .login-page .logo-wrapper {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 25px;
+            position: relative;
+            height: 220px;
+        }
+        .civil-helo {
+            position: relative;
+            width: 180px;
+            height: 135px;
+            animation: hoverCivil 3s ease-in-out infinite;
+            margin-top: 40px;
+            transform: scale(0.85);
+            transform-origin: center center;
+        }
+        @keyframes hoverCivil {
+            0%,
+            100% {
+                transform: scale(0.85) translateY(0px);
+            }
+            50% {
+                transform: scale(0.85) translateY(-8px);
+            }
+        }
+        .civil-helo .body {
+            position: absolute;
+            width: 120px;
+            height: 28px;
+            background: linear-gradient(135deg, #ffffff, #e8ecf0);
+            border-radius: 60px 30px 15px 20px;
+            top: 55%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            border: 1px solid #c0c8d0;
+            box-shadow: 0 0 30px rgba(255, 255, 255, 0.05);
+        }
+        .civil-helo .body::before {
+            content: '';
+            position: absolute;
+            top: -8px;
+            left: 12px;
+            width: 48px;
+            height: 15px;
+            background: rgba(200, 210, 220, 0.3);
+            border-radius: 12px 12px 0 0;
+            border: 1px solid #c0c8d0;
+            border-bottom: none;
+        }
+        .civil-helo .body-stripe {
+            position: absolute;
+            bottom: 3px;
+            left: 10%;
+            width: 80%;
+            height: 2px;
+            background: linear-gradient(90deg, #0076ff, #4fc3f7, #0076ff);
+            border-radius: 4px;
+        }
+        .civil-helo .cockpit {
+            position: absolute;
+            top: 6px;
+            left: 8px;
+            width: 35px;
+            height: 15px;
+            background: linear-gradient(180deg, #81d4fa, #0288d1);
+            border-radius: 12px 8px 0 0;
+            border: 1px solid #4fc3f7;
+            box-shadow: inset 0 0 20px rgba(79, 195, 247, 0.15);
+        }
+        .civil-helo .cockpit::after {
+            content: '';
+            position: absolute;
+            top: 2px;
+            left: 4px;
+            width: 10px;
+            height: 6px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 50%;
+        }
+        .civil-helo .cockpit-wiper {
+            position: absolute;
+            top: 8px;
+            left: 16px;
+            width: 12px;
+            height: 2px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 2px;
+            transform: rotate(-15deg);
+        }
+        .civil-helo .tail {
+            position: absolute;
+            right: -44px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 52px;
+            height: 7px;
+            background: linear-gradient(135deg, #ffffff, #d0d8e0);
+            border-radius: 0 20px 20px 0;
+            border: 1px solid #c0c8d0;
+        }
+        .civil-helo .tail::after {
+            content: '';
+            position: absolute;
+            right: -4px;
+            top: -4px;
+            width: 8px;
+            height: 15px;
+            background: #ffffff;
+            border-radius: 4px;
+            border: 1px solid #c0c8d0;
+        }
+        .civil-helo .main-rotor {
+            position: absolute;
+            top: -20px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 110px;
+            height: 5px;
+            background: rgba(200, 200, 200, 0.25);
+            border-radius: 10px;
+            animation: spinRotor 0.45s linear infinite;
+            box-shadow: 0 0 40px rgba(200, 200, 200, 0.05);
+        }
+        .civil-helo .main-rotor::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 8px;
+            height: 8px;
+            background: #888;
+            border-radius: 50%;
+            border: 1px solid #aaa;
+        }
+        .civil-helo .main-rotor::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) rotate(72deg);
+            width: 110px;
+            height: 5px;
+            background: rgba(200, 200, 200, 0.15);
+            border-radius: 10px;
+        }
+        .civil-helo .tail-rotor {
+            position: absolute;
+            right: -56px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 24px;
+            height: 3px;
+            background: rgba(200, 200, 200, 0.2);
+            border-radius: 4px;
+            animation: spinRotor 0.3s linear infinite;
+        }
+        .civil-helo .tail-rotor::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 4px;
+            height: 4px;
+            background: #888;
+            border-radius: 50%;
+        }
+        .civil-helo .eux-logo {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: #0076ff;
+            font-weight: 900;
+            font-size: 13px;
+            letter-spacing: 2px;
+            text-shadow: 0 0 30px rgba(0, 118, 255, 0.2);
+            z-index: 5;
+        }
+        .civil-helo .nav-light {
+            position: absolute;
+            width: 5px;
+            height: 5px;
+            border-radius: 50%;
+            animation: blinkLight 1.5s ease-in-out infinite;
+        }
+        .civil-helo .nav-light.red {
+            background: #ff1744;
+            box-shadow: 0 0 15px rgba(255, 23, 68, 0.5);
+            right: 8px;
+            top: 30%;
+        }
+        .civil-helo .nav-light.green {
+            background: #00e676;
+            box-shadow: 0 0 15px rgba(0, 230, 118, 0.5);
+            left: 8px;
+            top: 30%;
+            animation-delay: 0.75s;
+        }
+        @keyframes blinkLight {
+            0%,
+            100% {
+                opacity: 0.2;
+            }
+            50% {
+                opacity: 1;
+            }
+        }
+        @keyframes spinRotor {
+            0% {
+                transform: translateX(-50%) rotate(0deg);
+            }
+            100% {
+                transform: translateX(-50%) rotate(360deg);
+            }
+        }
+        .login-page .brand {
+            color: #0d2137;
+            font-size: 28px;
+            font-weight: 900;
+            margin-bottom: 4px;
+        }
+        .login-page .brand span {
+            color: #0076ff;
+        }
+        .login-page .input-group {
+            position: relative;
+            margin-bottom: 16px;
+        }
+        .login-page .input-group input {
+            width: 100%;
+            padding: 16px 20px 16px 50px;
+            border: 2px solid #e8ecf0;
+            border-radius: 14px;
+            font-size: 16px;
+            font-family: 'Cairo', sans-serif;
+            background: #f8fafc;
+            transition: 0.3s;
+        }
+        .login-page .input-group input:focus {
+            border-color: #0076ff;
+            outline: none;
+            background: white;
+            box-shadow: 0 0 0 4px rgba(0, 118, 255, 0.08);
+        }
+        .login-page .input-group .input-icon {
+            position: absolute;
+            right: 18px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #999;
+            font-size: 18px;
+        }
+        .login-page .error-msg {
+            color: #dc3545;
+            font-size: 14px;
+            margin-top: 14px;
+            padding: 10px;
+            background: #ffeaea;
+            border-radius: 8px;
+        }
+        .tracking-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #eef3f8;
+            flex-wrap: wrap;
+            gap: 10px;
+            position: relative;
+            z-index: 1;
+        }
+        .tracking-header h2 {
+            color: #0d2137;
+            font-weight: 700;
+            font-size: 18px;
+        }
+        .tracking-header h2 i {
+            color: #0076ff;
+            margin-left: 8px;
+        }
+        .header-actions {
+            display: flex;
+            gap: 6px;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+        .total-small {
+            font-size: 13px;
+            color: #888;
+            margin-right: 12px;
+            font-weight: 600;
+            white-space: nowrap;
+        }
+        .total-small .count {
+            color: #0076ff;
+            font-weight: 900;
+            font-size: 16px;
         }
 
         /* ============================================
-           تصميم البطاقات الاحترافي الجديد
+           تصميم كارت الطلب الجديد - EUX
            ============================================ */
-        .cards-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
-            gap: 24px;
-        }
-
         .shipment-card {
-            background: linear-gradient(145deg, #0b111e, #060a14);
-            border: 1px solid rgba(255, 255, 255, 0.06);
+            width: 100%;
+            background: linear-gradient(135deg, #0b111e 0%, #05070d 100%);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-right: 3px solid #0066ff;
             border-radius: 20px;
-            padding: 22px 24px 20px;
-            transition: all 0.35s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            padding: 20px 22px;
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+            color: #ffffff;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5),
+                        0 0 20px rgba(0, 102, 255, 0.08);
             position: relative;
             overflow: hidden;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            margin-bottom: 16px;
         }
-
+        .shipment-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 16px 48px rgba(0, 0, 0, 0.6),
+                        0 0 30px rgba(0, 102, 255, 0.12);
+        }
         .shipment-card::before {
             content: '';
             position: absolute;
-            top: 0;
-            right: 0;
-            width: 100%;
-            height: 3px;
-            background: linear-gradient(90deg, transparent, #0066ff, #4fc3f7, #0066ff);
-            background-size: 300% 100%;
-            animation: shimmerBorder 4s ease-in-out infinite;
+            top: -50%;
+            right: -30%;
+            width: 200px;
+            height: 200px;
+            background: radial-gradient(circle, rgba(0, 102, 255, 0.04) 0%, transparent 70%);
+            border-radius: 50%;
+            pointer-events: none;
         }
-
-        @keyframes shimmerBorder {
-            0% { background-position: 0% 0%; }
-            50% { background-position: 100% 0%; }
-            100% { background-position: 0% 0%; }
-        }
-
-        .shipment-card:hover {
-            transform: translateY(-6px);
-            border-color: rgba(0, 102, 255, 0.2);
-            box-shadow: 0 16px 48px rgba(0, 0, 0, 0.6), 0 0 40px rgba(0, 102, 255, 0.06);
-        }
-
-        .card-header {
+        .shipment-card .card-header {
             display: flex;
             justify-content: space-between;
             align-items: flex-start;
-            margin-bottom: 14px;
             gap: 10px;
+            position: relative;
+            z-index: 1;
         }
-
-        .customer-name {
-            font-size: 1.2rem;
+        .shipment-card .customer-info {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+        .shipment-card .customer-name {
+            font-size: 1.15rem;
             font-weight: 700;
             color: #ffffff;
             letter-spacing: 0.3px;
         }
-
-        .customer-phone {
+        .shipment-card .customer-phone {
             font-size: 0.85rem;
             color: #8a99ad;
             direction: ltr;
+            letter-spacing: 0.3px;
         }
-
-        .customer-phone i {
-            color: #3b82f6;
+        .shipment-card .customer-phone i {
             margin-left: 6px;
+            color: #3b82f6;
+            font-size: 0.8rem;
         }
-
-        .order-id {
+        .shipment-card .order-id-badge {
             background: rgba(255, 255, 255, 0.04);
             border: 1px solid rgba(255, 255, 255, 0.06);
-            padding: 3px 12px;
+            padding: 4px 12px;
             border-radius: 8px;
-            font-size: 0.7rem;
-            color: #8a99ad;
             display: flex;
             align-items: center;
             gap: 6px;
+            font-weight: 600;
+            color: #8a99ad;
+            font-size: 0.7rem;
             white-space: nowrap;
+            flex-shrink: 0;
         }
-
-        .order-id i {
+        .shipment-card .order-id-badge i {
             color: #3b82f6;
             font-size: 0.7rem;
         }
-
-        .details-grid {
+        .shipment-card .copy-btn {
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 0.7rem;
+            opacity: 0.4;
+            transition: opacity 0.2s;
+            color: #a0aec0;
+            padding: 0 2px;
+        }
+        .shipment-card .copy-btn:hover {
+            opacity: 1;
+            color: #3b82f6;
+        }
+        .shipment-card .details-grid {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 12px;
+            padding: 10px 14px;
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 10px 16px;
-            background: rgba(255, 255, 255, 0.02);
-            border: 1px solid rgba(255, 255, 255, 0.04);
-            border-radius: 12px;
-            padding: 12px 14px;
-            margin-bottom: 14px;
+            gap: 6px 16px;
+            align-items: center;
+            position: relative;
+            z-index: 1;
         }
-
-        .detail-item {
+        .shipment-card .detail-item {
             display: flex;
             align-items: center;
             gap: 10px;
+            padding: 3px 0;
         }
-
-        .detail-icon {
-            color: #3b82f6;
+        .shipment-card .detail-icon {
             font-size: 0.9rem;
-            opacity: 0.7;
+            opacity: 0.6;
             width: 20px;
             text-align: center;
+            color: #3b82f6;
+            flex-shrink: 0;
         }
-
-        .detail-title {
+        .shipment-card .detail-text {
+            display: flex;
+            flex-direction: column;
+            line-height: 1.2;
+        }
+        .shipment-card .detail-title {
             font-size: 0.85rem;
-            font-weight: 600;
             color: #e2e8f0;
+            font-weight: 600;
         }
-
-        .detail-title.price {
+        .shipment-card .detail-title.price {
             color: #38bdf8;
             font-size: 0.95rem;
             font-weight: 700;
         }
-
-        .detail-label {
+        .shipment-card .detail-label {
             font-size: 0.6rem;
             color: #64748b;
-            display: block;
-            margin-top: 1px;
+            letter-spacing: 0.2px;
         }
-
-        .status-badge {
+        .shipment-card .status-badge {
             display: inline-flex;
             align-items: center;
             gap: 4px;
-            padding: 2px 12px;
+            background: rgba(46, 125, 50, 0.12);
+            border: 1px solid rgba(46, 125, 50, 0.2);
+            padding: 2px 10px;
             border-radius: 16px;
             font-size: 0.7rem;
             font-weight: 600;
-        }
-
-        .status-badge.delivered {
-            background: rgba(46, 125, 50, 0.15);
-            border: 1px solid rgba(46, 125, 50, 0.2);
             color: #4caf50;
         }
-
-        .status-badge.pending {
-            background: rgba(255, 152, 0, 0.1);
-            border: 1px solid rgba(255, 152, 0, 0.15);
-            color: #ffa726;
-        }
-
-        .status-badge i {
+        .shipment-card .status-badge i {
             font-size: 0.6rem;
         }
-
-        .track-btn {
+        .shipment-card .status-badge.pending {
+            background: rgba(255, 152, 0, 0.1);
+            border-color: rgba(255, 152, 0, 0.15);
+            color: #ffa726;
+        }
+        .shipment-card .track-btn {
             width: 100%;
             background: rgba(255, 255, 255, 0.03);
             border: 1px solid rgba(255, 255, 255, 0.06);
             color: #3b82f6;
-            padding: 9px 12px;
+            padding: 8px 12px;
             border-radius: 10px;
             font-family: 'Cairo', sans-serif;
             font-weight: 600;
@@ -798,62 +1126,308 @@
             align-items: center;
             gap: 8px;
             transition: all 0.3s ease;
+            position: relative;
+            z-index: 1;
         }
-
-        .track-btn:hover {
+        .shipment-card .track-btn i {
+            font-size: 0.8rem;
+        }
+        .shipment-card .track-btn:hover {
             background: #0066ff;
             color: #fff;
+            box-shadow: 0 4px 15px rgba(0, 102, 255, 0.3);
             border-color: #0066ff;
-            box-shadow: 0 4px 20px rgba(0, 102, 255, 0.3);
             transform: scale(1.02);
         }
 
-        .track-btn i {
-            font-size: 0.8rem;
+        /* ===== التعديلات على العناصر القديمة في البطاقة ===== */
+        .shipment-card .delivery-status {
+            display: none;
         }
-
-        /* ============================================
-           باقي الأنماط القديمة محتفظ بها للتوافق
-           ============================================ */
-        .tracking-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 25px;
-            padding-bottom: 15px;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.06);
-            flex-wrap: wrap;
-            gap: 10px;
+        .shipment-card .summary-row {
+            display: none;
         }
-
-        .tracking-header h2 {
-            color: #ffffff;
-            font-weight: 700;
-            font-size: 1.2rem;
+        .shipment-card .details {
+            margin-top: 0;
+            padding-top: 0;
+            border-top: none;
+            background: transparent;
+            border-radius: 0;
+            padding: 0;
         }
-
-        .tracking-header h2 i {
-            color: #3b82f6;
-            margin-left: 8px;
+        .shipment-card .details.open {
+            display: block;
         }
-
-        .total-small {
-            font-size: 0.85rem;
-            color: #8a99ad;
+        .shipment-card .details .info {
+            font-size: 13px;
+            color: #a0aec0;
+            margin: 4px 0;
         }
-
-        .total-small .count {
-            color: #3b82f6;
-            font-weight: 900;
+        .shipment-card .details .info strong {
+            color: #e2e8f0;
         }
-
-        .header-actions {
+        .shipment-card .actions {
+            margin-top: 12px;
             display: flex;
             gap: 8px;
             flex-wrap: wrap;
-            align-items: center;
+        }
+        .shipment-card .actions button {
+            padding: 6px 16px;
+            border-radius: 8px;
+            font-size: 13px;
+            border: none;
+            cursor: pointer;
+            font-family: 'Cairo', sans-serif;
+            font-weight: 600;
+            transition: 0.2s;
+        }
+        .shipment-card .actions .btn-edit {
+            background: #ff9800;
+            color: #fff;
+        }
+        .shipment-card .actions .btn-edit:hover {
+            background: #e68900;
+        }
+        .shipment-card .actions .btn-delete {
+            background: #dc3545;
+            color: #fff;
+        }
+        .shipment-card .actions .btn-delete:hover {
+            background: #c82333;
+        }
+        .shipment-card .actions .btn-track-add {
+            background: #28a745;
+            color: #fff;
+        }
+        .shipment-card .actions .btn-track-add:hover {
+            background: #218838;
         }
 
+        /* ===== استجابة ===== */
+        @media (max-width: 700px) {
+            .shipment-card {
+                padding: 16px 18px;
+            }
+            .shipment-card .customer-name {
+                font-size: 1rem;
+            }
+        }
+        @media (max-width: 480px) {
+            .shipment-card .details-grid {
+                grid-template-columns: 1fr;
+                gap: 4px;
+            }
+            .shipment-card {
+                padding: 14px 16px;
+                border-radius: 16px;
+            }
+        }
+
+        /* ===== باقي الأنماط ===== */
+        .shipment-card .last-update {
+            font-size: 12px;
+            color: #888;
+            direction: ltr;
+            background: #eef3f8;
+            padding: 4px 14px;
+            border-radius: 20px;
+        }
+        .modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 2000;
+            padding: 16px;
+            backdrop-filter: blur(6px);
+            -webkit-backdrop-filter: blur(6px);
+        }
+        .modal-content {
+            background: white;
+            border-radius: 20px;
+            padding: 28px 25px 25px;
+            max-width: 600px;
+            width: 100%;
+            max-height: 85vh;
+            overflow-y: auto;
+            position: relative;
+            animation: modalIn 0.3s ease;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.2);
+        }
+        @keyframes modalIn {
+            from {
+                opacity: 0;
+                transform: translateY(30px) scale(0.96);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+        .modal-content h3 {
+            margin-bottom: 20px;
+            text-align: center;
+            font-size: 22px;
+            font-weight: 700;
+            color: #0d2137;
+        }
+        .modal-content h3 i {
+            color: #0076ff;
+            margin-left: 8px;
+        }
+        .close-btn {
+            position: absolute;
+            top: 16px;
+            left: 20px;
+            font-size: 28px;
+            cursor: pointer;
+            color: #aaa;
+            line-height: 1;
+            transition: 0.2s;
+        }
+        .close-btn:hover {
+            color: #333;
+            transform: rotate(90deg);
+        }
+        .form-group {
+            margin-bottom: 16px;
+            text-align: right;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 700;
+            color: #0d2137;
+            font-size: 14px;
+        }
+        .form-group input,
+        .form-group textarea,
+        .form-group select {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #e8ecf0;
+            border-radius: 10px;
+            font-size: 14px;
+            font-family: 'Cairo', sans-serif;
+            background: #f8fafc;
+            transition: 0.3s;
+        }
+        .form-group input:focus,
+        .form-group textarea:focus,
+        .form-group select:focus {
+            border-color: #0076ff;
+            outline: none;
+            background: white;
+            box-shadow: 0 0 0 4px rgba(0, 118, 255, 0.08);
+        }
+        .form-group textarea {
+            height: 80px;
+            resize: vertical;
+        }
+        .timeline-item {
+            border-right: 3px solid #0076ff;
+            padding: 12px 16px 12px 0;
+            margin-right: 10px;
+            margin-bottom: 14px;
+            background: #f8fafc;
+            border-radius: 0 10px 10px 0;
+            transition: 0.2s;
+        }
+        .timeline-item:hover {
+            background: #f0f6fe;
+        }
+        .timeline-item .time {
+            color: #999;
+            font-size: 13px;
+        }
+        .timeline-item .event {
+            font-weight: 700;
+            color: #0d2137;
+            margin: 5px 0;
+        }
+        .timeline-item .location {
+            color: #666;
+            font-size: 14px;
+        }
+        .timeline-item .problem {
+            color: #dc3545;
+            font-size: 13px;
+            margin-top: 4px;
+        }
+        .client-card {
+            background: #f8fafc;
+            padding: 14px 18px;
+            border-radius: 10px;
+            margin-bottom: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border: 1px solid #e8ecf0;
+            transition: 0.2s;
+        }
+        .client-card:hover {
+            background: #f0f4fa;
+        }
+        .client-card .client-info {
+            flex: 1;
+        }
+        .client-card .client-info strong {
+            font-size: 16px;
+            color: #0d2137;
+        }
+        .client-card .client-info .phone {
+            color: #666;
+            font-size: 14px;
+            direction: ltr;
+        }
+        .client-card .client-info .created {
+            font-size: 12px;
+            color: #aaa;
+        }
+        .loading {
+            text-align: center;
+            padding: 30px 0;
+        }
+        .spinner {
+            border: 4px solid #e8ecf0;
+            border-top: 4px solid #0076ff;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 10px;
+        }
+        @keyframes spin {
+            0% {
+                transform: rotate(0deg);
+            }
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+        .empty-state {
+            text-align: center;
+            padding: 40px 20px;
+            color: #aaa;
+        }
+        .empty-state .icon {
+            font-size: 56px;
+            margin-bottom: 12px;
+        }
+        .two-columns {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
+        .text-center {
+            text-align: center;
+        }
         .btn-eux,
         .btn-eux-green,
         .btn-eux-orange,
@@ -870,45 +1444,44 @@
             border-radius: var(--round);
             border: none;
             outline: none;
-            padding: 8px 16px;
+            padding: 12px 18px;
             font-family: 'Cairo', sans-serif;
             font-weight: 600;
-            font-size: 0.8rem;
+            font-size: 14px;
             color: white;
         }
-
         .btn-eux {
             background: radial-gradient(65.28% 65.28% at 50% 100%, rgba(0, 118, 255, 0.6) 0%, rgba(0, 118, 255, 0) 100%), linear-gradient(0deg, #0076ff, #0076ff);
             box-shadow: 0 4px 15px rgba(0, 118, 255, 0.25);
         }
-
         .btn-eux-green {
             background: radial-gradient(65.28% 65.28% at 50% 100%, rgba(40, 167, 69, 0.6) 0%, rgba(40, 167, 69, 0) 100%), linear-gradient(0deg, #28a745, #28a745);
             box-shadow: 0 4px 15px rgba(40, 167, 69, 0.25);
         }
-
         .btn-eux-orange {
             background: radial-gradient(65.28% 65.28% at 50% 100%, rgba(255, 152, 0, 0.6) 0%, rgba(255, 152, 0, 0) 100%), linear-gradient(0deg, #ff9800, #ff9800);
             box-shadow: 0 4px 15px rgba(255, 152, 0, 0.25);
         }
-
         .btn-eux-red {
             background: radial-gradient(65.28% 65.28% at 50% 100%, rgba(220, 53, 69, 0.6) 0%, rgba(220, 53, 69, 0) 100%), linear-gradient(0deg, #dc3545, #dc3545);
             box-shadow: 0 4px 15px rgba(220, 53, 69, 0.25);
         }
-
         .btn-eux-outline {
             background: transparent;
-            border: 1.5px solid rgba(255, 255, 255, 0.1);
-            color: #8a99ad;
+            border: 1.5px solid #ddd;
+            color: #0d2137;
             box-shadow: none;
         }
-
         .btn-eux-outline:hover {
-            background: rgba(255, 255, 255, 0.05);
-            color: #fff;
+            background: #f5f5f5;
         }
-
+        .btn-eux:active,
+        .btn-eux-green:active,
+        .btn-eux-orange:active,
+        .btn-eux-red:active,
+        .btn-eux-outline:active {
+            transform: scale(0.95);
+        }
         .btn-eux .inner,
         .btn-eux-green .inner,
         .btn-eux-orange .inner,
@@ -922,11 +1495,10 @@
             display: inline-flex;
             align-items: center;
             justify-content: center;
-            font-size: 0.85rem;
+            font-size: 16px;
             font-weight: 500;
             line-height: 1.5;
         }
-
         .btn-eux .fold,
         .btn-eux-green .fold,
         .btn-eux-orange .fold,
@@ -943,32 +1515,26 @@
             border-bottom-left-radius: 0.5rem;
             border-top-right-radius: var(--round);
         }
-
         .btn-eux .fold {
             background: radial-gradient(100% 75% at 55%, rgba(0, 118, 255, 0.6) 0%, rgba(0, 118, 255, 0) 100%);
             box-shadow: 0 0 3px rgba(0, 0, 0, 0.2);
         }
-
         .btn-eux-green .fold {
             background: radial-gradient(100% 75% at 55%, rgba(40, 167, 69, 0.6) 0%, rgba(40, 167, 69, 0) 100%);
             box-shadow: 0 0 3px rgba(0, 0, 0, 0.2);
         }
-
         .btn-eux-orange .fold {
             background: radial-gradient(100% 75% at 55%, rgba(255, 152, 0, 0.6) 0%, rgba(255, 152, 0, 0) 100%);
             box-shadow: 0 0 3px rgba(0, 0, 0, 0.2);
         }
-
         .btn-eux-red .fold {
             background: radial-gradient(100% 75% at 55%, rgba(220, 53, 69, 0.6) 0%, rgba(220, 53, 69, 0) 100%);
             box-shadow: 0 0 3px rgba(0, 0, 0, 0.2);
         }
-
         .btn-eux-outline .fold {
-            background: radial-gradient(100% 75% at 55%, rgba(255, 255, 255, 0.05) 0%, rgba(255, 255, 255, 0) 100%);
+            background: radial-gradient(100% 75% at 55%, rgba(13, 33, 55, 0.1) 0%, rgba(13, 33, 55, 0) 100%);
             box-shadow: 0 0 3px rgba(0, 0, 0, 0.1);
         }
-
         .btn-eux:hover .fold,
         .btn-eux-green:hover .fold,
         .btn-eux-orange:hover .fold,
@@ -977,7 +1543,6 @@
             margin-top: -1rem;
             margin-right: -1rem;
         }
-
         .points_wrapper {
             overflow: hidden;
             width: 100%;
@@ -986,7 +1551,6 @@
             position: absolute;
             z-index: 1;
         }
-
         .points_wrapper .point {
             bottom: -10px;
             position: absolute;
@@ -997,135 +1561,307 @@
             background-color: #fff;
             border-radius: 9999px;
         }
-
         @keyframes floating-points {
-            0% { transform: translateY(0); }
-            85% { opacity: 0; }
-            100% { transform: translateY(-55px); opacity: 0; }
+            0% {
+                transform: translateY(0);
+            }
+            85% {
+                opacity: 0;
+            }
+            100% {
+                transform: translateY(-55px);
+                opacity: 0;
+            }
         }
-
-        .points_wrapper .point:nth-child(1) { left: 10%; opacity: 1; animation-duration: 2.35s; animation-delay: 0.2s; }
-        .points_wrapper .point:nth-child(2) { left: 30%; opacity: 0.7; animation-duration: 2.5s; animation-delay: 0.5s; }
-        .points_wrapper .point:nth-child(3) { left: 25%; opacity: 0.8; animation-duration: 2.2s; animation-delay: 0.1s; }
-        .points_wrapper .point:nth-child(4) { left: 44%; opacity: 0.6; animation-duration: 2.05s; }
-        .points_wrapper .point:nth-child(5) { left: 50%; opacity: 1; animation-duration: 1.9s; }
-        .points_wrapper .point:nth-child(6) { left: 75%; opacity: 0.5; animation-duration: 1.5s; animation-delay: 1.5s; }
-        .points_wrapper .point:nth-child(7) { left: 88%; opacity: 0.9; animation-duration: 2.2s; animation-delay: 0.2s; }
-        .points_wrapper .point:nth-child(8) { left: 58%; opacity: 0.8; animation-duration: 2.25s; animation-delay: 0.2s; }
-        .points_wrapper .point:nth-child(9) { left: 98%; opacity: 0.6; animation-duration: 2.6s; animation-delay: 0.1s; }
-        .points_wrapper .point:nth-child(10) { left: 65%; opacity: 1; animation-duration: 2.5s; animation-delay: 0.2s; }
-
-        .btn-eux-outline .points_wrapper .point {
-            background-color: #8a99ad;
+        .points_wrapper .point:nth-child(1) {
+            left: 10%;
+            opacity: 1;
+            animation-duration: 2.35s;
+            animation-delay: 0.2s;
         }
-
-        .loading {
-            text-align: center;
-            padding: 40px 0;
-            color: #8a99ad;
+        .points_wrapper .point:nth-child(2) {
+            left: 30%;
+            opacity: 0.7;
+            animation-duration: 2.5s;
+            animation-delay: 0.5s;
         }
-
-        .spinner {
-            border: 3px solid rgba(255, 255, 255, 0.06);
-            border-top: 3px solid #3b82f6;
-            border-radius: 50%;
-            width: 36px;
-            height: 36px;
-            animation: spin 0.8s linear infinite;
-            margin: 0 auto 12px;
+        .points_wrapper .point:nth-child(3) {
+            left: 25%;
+            opacity: 0.8;
+            animation-duration: 2.2s;
+            animation-delay: 0.1s;
         }
-
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
+        .points_wrapper .point:nth-child(4) {
+            left: 44%;
+            opacity: 0.6;
+            animation-duration: 2.05s;
         }
-
-        .empty-state {
-            text-align: center;
-            padding: 60px 20px;
-            color: #8a99ad;
+        .points_wrapper .point:nth-child(5) {
+            left: 50%;
+            opacity: 1;
+            animation-duration: 1.9s;
         }
-
-        .empty-state .icon {
-            font-size: 48px;
-            margin-bottom: 12px;
+        .points_wrapper .point:nth-child(6) {
+            left: 75%;
             opacity: 0.5;
+            animation-duration: 1.5s;
+            animation-delay: 1.5s;
         }
-
-        .search-box {
+        .points_wrapper .point:nth-child(7) {
+            left: 88%;
+            opacity: 0.9;
+            animation-duration: 2.2s;
+            animation-delay: 0.2s;
+        }
+        .points_wrapper .point:nth-child(8) {
+            left: 58%;
+            opacity: 0.8;
+            animation-duration: 2.25s;
+            animation-delay: 0.2s;
+        }
+        .points_wrapper .point:nth-child(9) {
+            left: 98%;
+            opacity: 0.6;
+            animation-duration: 2.6s;
+            animation-delay: 0.1s;
+        }
+        .points_wrapper .point:nth-child(10) {
+            left: 65%;
+            opacity: 1;
+            animation-duration: 2.5s;
+            animation-delay: 0.2s;
+        }
+        .btn-eux-outline .points_wrapper .point {
+            background-color: #0d2137;
+        }
+        .toast {
+            position: fixed;
+            bottom: 24px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #0d2137;
+            color: white;
+            padding: 12px 28px;
+            border-radius: 14px;
+            font-size: 14px;
+            z-index: 9999;
+            animation: toastIn 0.3s ease;
+            max-width: 90%;
+            text-align: center;
+            font-family: 'Cairo', sans-serif;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.2);
+        }
+        .toast.success {
+            background: #28a745;
+        }
+        .toast.error {
+            background: #dc3545;
+        }
+        @keyframes toastIn {
+            from {
+                opacity: 0;
+                transform: translateX(-50%) translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(-50%) translateY(0);
+            }
+        }
+        .public-page-header {
+            text-align: center;
+            padding: 10px 0 5px 0;
+        }
+        .public-page-header .helo-wrapper {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 5px;
+        }
+        .public-page-header .helo-wrapper .civil-helo {
+            margin-top: 0;
+            transform: scale(0.75);
+            animation: hoverCivilSmall 3s ease-in-out infinite;
+        }
+        @keyframes hoverCivilSmall {
+            0%,
+            100% {
+                transform: scale(0.75) translateY(0px);
+            }
+            50% {
+                transform: scale(0.75) translateY(-6px);
+            }
+        }
+        .site-link-wrapper {
+            display: flex;
+            justify-content: center;
+            margin: 2px 0 16px 0;
+        }
+        .site-link-btn {
+            --black-700: hsla(210, 97%, 50%, 0.15);
+            --border_radius: 9999px;
+            --transtion: 0.3s ease-in-out;
+            --offset: 2px;
+            cursor: pointer;
+            position: relative;
             display: flex;
             align-items: center;
-            gap: 8px;
-            background: rgba(255, 255, 255, 0.04);
-            border: 1px solid rgba(255, 255, 255, 0.06);
-            border-radius: 30px;
-            padding: 4px 8px 4px 4px;
-            flex-wrap: wrap;
-        }
-
-        .search-box input {
-            background: transparent;
+            gap: 0.5rem;
+            transform-origin: center;
+            padding: 0.6rem 1.8rem;
+            background-color: transparent;
             border: none;
-            padding: 6px 12px;
-            color: #e2e8f0;
+            border-radius: var(--border_radius);
+            transform: scale(calc(1 + (var(--active, 0) * 0.05)));
+            transition: transform var(--transtion);
+            text-decoration: none;
             font-family: 'Cairo', sans-serif;
-            font-size: 0.85rem;
-            min-width: 140px;
-            outline: none;
         }
-
-        .search-box input::placeholder {
-            color: #64748b;
+        .site-link-btn::before {
+            content: "";
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 100%;
+            height: 100%;
+            background-color: var(--black-700);
+            border-radius: var(--border_radius);
+            box-shadow: inset 0 0.5px hsla(0, 0%, 100%, 0.3), inset 0 -1px 2px 0 hsla(0, 0%, 0%, 0.1), 0px 4px 10px -4px hsla(0, 0%, 0%, 0.1);
+            transition: all var(--transtion);
+            z-index: 0;
         }
-
-        .search-box button {
-            background: #3b82f6;
-            color: white;
-            border: none;
-            border-radius: 20px;
-            padding: 4px 14px;
-            font-weight: 600;
-            cursor: pointer;
+        .site-link-btn::after {
+            content: "";
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 100%;
+            height: 100%;
+            background-color: hsla(210, 97%, 61%, 0.15);
+            background-image: radial-gradient(at 51% 89%, hsla(210, 45%, 74%, 0.3) 0px, transparent 50%), radial-gradient(at 0% 0%, hsla(210, 45%, 74%, 0.3) 0px, transparent 50%);
+            background-position: top;
+            opacity: var(--active, 0);
+            border-radius: var(--border_radius);
+            transition: opacity var(--transtion);
+            z-index: 2;
+        }
+        .site-link-btn:is(:hover,
+        :focus-visible) {
+            --active: 1;
+        }
+        .site-link-btn:active {
+            transform: scale(1);
+        }
+        .site-link-btn .dots_border {
+            --size_border: calc(100% + 2px);
+            overflow: hidden;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: var(--size_border);
+            height: var(--size_border);
+            background-color: transparent;
+            border-radius: var(--border_radius);
+            z-index: -10;
+        }
+        .site-link-btn .dots_border::before {
+            content: "";
+            position: absolute;
+            top: 30%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            transform-origin: left;
+            transform: rotate(0deg);
+            width: 100%;
+            height: 2rem;
+            background: linear-gradient(90deg, transparent, #0076ff, transparent);
+            mask: linear-gradient(transparent 0%, white 120%);
+            animation: rotate 3s linear infinite;
+        }
+        @keyframes rotate {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+        .site-link-btn .text_button {
+            position: relative;
+            z-index: 10;
+            font-size: 1rem;
+            color: #0076ff;
+            font-weight: 700;
             font-family: 'Cairo', sans-serif;
-            font-size: 0.75rem;
-            transition: 0.2s;
+            transition: color var(--transtion);
         }
-
-        .search-box button:hover {
-            background: #2563eb;
+        .site-link-btn:is(:hover,
+        :focus-visible) .text_button {
+            color: #0055b3;
         }
-
-        .search-box .clear-btn {
-            background: transparent;
-            color: #64748b;
-            padding: 4px 8px;
-            font-size: 0.7rem;
-        }
-
-        .search-box .clear-btn:hover {
-            color: #e2e8f0;
-        }
-
         @media (max-width: 768px) {
-            .cards-grid {
+            .header-new {
+                padding: 12px 16px;
+            }
+            .header-new .logo-text {
+                font-size: 20px;
+                letter-spacing: 1px;
+            }
+            .header-new .divider {
+                height: 25px;
+            }
+            .header-new .dot {
+                width: 6px;
+                height: 6px;
+            }
+            header {
+                padding: 20px 5%;
+            }
+            .logo {
+                font-size: 24px;
+            }
+            .hero h1 {
+                font-size: 2rem;
+            }
+            .hero p {
+                font-size: 1rem;
+            }
+            .cyber-node {
+                width: 120px;
+                height: 120px;
+                font-size: 28px;
+            }
+            .cube-container {
+                width: 130px;
+                height: 120px;
+            }
+            .iso-cube {
+                width: 90px;
+                height: 90px;
+            }
+            .iso-face {
+                width: 90px;
+                height: 90px;
+                font-size: 24px;
+            }
+            .iso-front {
+                transform: rotateY(0deg) translateZ(45px);
+            }
+            .iso-right {
+                transform: rotateY(90deg) translateZ(45px);
+            }
+            .iso-top {
+                transform: rotateX(90deg) translateZ(45px);
+            }
+            .quantum-box {
+                width: 120px;
+                height: 120px;
+            }
+            .two-columns {
                 grid-template-columns: 1fr;
             }
-            .tracking-header {
-                flex-direction: column;
-                align-items: stretch;
-            }
-            .header-actions {
-                justify-content: center;
-            }
-            .shipment-card {
-                padding: 16px 18px;
-            }
-        }
-
-        @media (max-width: 480px) {
-            .details-grid {
-                grid-template-columns: 1fr;
-                gap: 6px;
+            .header-actions .share-btn-text {
+                font-size: 11px;
+                max-width: 180px;
+                padding: 6px 10px;
             }
         }
     </style>
@@ -1342,14 +2078,14 @@
                         <span class="total-small">اجمالي الشحنات: <span class="count" id="totalCountSmall">0</span></span>
                     </div>
                     <div class="header-actions">
-                        <div class="search-box">
-                            <i class="fas fa-search" style="color:#64748b;font-size:0.85rem;"></i>
-                            <input type="text" id="searchShipmentInput" placeholder="بحث باسم أو رقم هاتف..." dir="rtl">
-                            <button onclick="searchShipments()">بحث</button>
-                            <button class="clear-btn" onclick="clearSearch()">الغاء</button>
+                        <div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap;background:#f0f4fa;padding:4px 8px;border-radius:30px;border:1px solid #dce5ed;">
+                            <i class="fas fa-search" style="color:#888;font-size:14px;"></i>
+                            <input type="text" id="searchShipmentInput" placeholder="بحث باسم أو رقم هاتف..." style="border:none;background:transparent;padding:6px 10px;font-family:'Cairo',sans-serif;font-size:14px;min-width:150px;outline:none;" dir="rtl">
+                            <button onclick="searchShipments()" style="background:#0076ff;color:white;border:none;border-radius:20px;padding:4px 16px;font-weight:600;cursor:pointer;font-family:'Cairo',sans-serif;font-size:13px;transition:0.2s;">بحث</button>
+                            <button onclick="clearSearch()" style="background:transparent;color:#888;border:none;border-radius:20px;padding:4px 10px;cursor:pointer;font-family:'Cairo',sans-serif;font-size:12px;">الغاء</button>
                         </div>
-                        <button id="shareLinkBtn" class="btn-eux-orange hidden" onclick="copyShareLink()" style="font-size:0.75rem;padding:6px 12px;border-radius:10px;">
-                            <span class="inner">ارسال رابط التسجيل</span>
+                        <button id="shareLinkBtn" class="btn-eux-orange hidden share-btn-text" onclick="copyShareLink()" style="font-size:12px;padding:8px 12px;border-radius:10px;">
+                            <span class="inner">يمكنك ارسال هذا الرابط للراسل ليقوم بتسجيل الشحنة بنفسه</span>
                             <span class="fold"></span>
                             <div class="points_wrapper">
                                 <span class="point"></span><span class="point"></span><span class="point"></span>
@@ -1358,7 +2094,7 @@
                                 <span class="point"></span>
                             </div>
                         </button>
-                        <button id="addShipmentBtn" class="btn-eux-green hidden" onclick="showAddShipmentForm()" style="font-size:0.75rem;padding:6px 12px;border-radius:10px;">
+                        <button id="addShipmentBtn" class="btn-eux-green hidden" onclick="showAddShipmentForm()" style="padding:10px 16px;border-radius:10px;font-size:13px;">
                             <span class="inner">اضافة شحنة</span>
                             <span class="fold"></span>
                             <div class="points_wrapper">
@@ -1368,7 +2104,7 @@
                                 <span class="point"></span>
                             </div>
                         </button>
-                        <button id="clientsBtn" class="btn-eux hidden" onclick="showClients()" style="font-size:0.75rem;padding:6px 12px;border-radius:10px;">
+                        <button id="clientsBtn" class="btn-eux hidden" onclick="showClients()" style="padding:10px 16px;border-radius:10px;font-size:13px;">
                             <span class="inner">عملاء</span>
                             <span class="fold"></span>
                             <div class="points_wrapper">
@@ -1378,7 +2114,7 @@
                                 <span class="point"></span>
                             </div>
                         </button>
-                        <button id="allShipmentsBtn" class="btn-eux-orange hidden" onclick="loadAllShipments()" style="font-size:0.75rem;padding:6px 12px;border-radius:10px;">
+                        <button id="allShipmentsBtn" class="btn-eux-orange hidden" onclick="loadAllShipments()" style="padding:10px 16px;border-radius:10px;font-size:13px;">
                             <span class="inner">الكل</span>
                             <span class="fold"></span>
                             <div class="points_wrapper">
@@ -1388,18 +2124,17 @@
                                 <span class="point"></span>
                             </div>
                         </button>
-                        <button class="btn-eux-outline" onclick="logout()" style="font-size:0.75rem;padding:6px 12px;border-radius:10px;">
+                        <button class="btn-eux-outline" onclick="logout()" style="padding:10px 16px;border-radius:10px;font-size:13px;">
                             <span class="inner">خروج</span>
                         </button>
                     </div>
                 </div>
-                <div id="content">
-                    <div class="cards-grid" id="cardsContainer"></div>
-                </div>
+                <div id="content"></div>
             </div>
 
             <!-- ==========================================
             صفحة تسجيل الشحنة العامة (Public Order Page)
+            مع الشريط الجديد وعداد منع التكرار
             ========================================== -->
             <div id="publicOrderPage" class="hidden">
                 <!-- الشريط العلوي الجديد -->
@@ -1439,6 +2174,7 @@
                 <div class="form-group"><label>وزن الشحنة *</label><input id="pf_weight" type="number" placeholder="الوزن بالكيلو" dir="ltr" value="1"></div>
                 <div class="form-group"><label>ملاحظات</label><textarea id="pf_notes" placeholder="ملاحظات اضافية"></textarea></div>
                 
+                <!-- زر تسجيل الشحنة مع عداد منع التكرار -->
                 <button class="btn-eux" id="publicSubmitBtn" onclick="submitPublicOrder()" style="width:100%;padding:14px;border-radius:12px;font-size:16px;">
                     <span class="inner">تسجيل الشحنة</span>
                     <span class="fold"></span>
@@ -1478,7 +2214,7 @@
         function openTrackingSystem() {
             document.getElementById('landingPage').classList.add('hidden');
             document.getElementById('trackingApp').classList.remove('hidden');
-            document.body.style.background = 'linear-gradient(135deg, #0a0e17, #141b2b)';
+            document.body.style.background = 'linear-gradient(135deg, #e8f0fe, #d4e4f7)';
 
             if (!checkSession()) {
                 document.getElementById('loginPage').classList.remove('hidden');
@@ -1627,10 +2363,14 @@
             });
             document.getElementById('pf_governorate').innerHTML = govOptions;
 
-            document.body.style.background = 'linear-gradient(135deg, #0a0e17, #141b2b)';
+            document.body.style.background = 'linear-gradient(135deg, #e8f0fe, #d4e4f7)';
         }
 
+        // ============================================
+        // دالة تسجيل الشحنة العامة مع عداد منع التكرار
+        // ============================================
         async function submitPublicOrder() {
+            // منع الضغط المتكرر
             if (isPublicSubmitting) {
                 showToast('يرجى الانتظار 10 ثوانٍ قبل تسجيل شحنة أخرى', 'error');
                 return;
@@ -1660,6 +2400,7 @@
                 return; 
             }
 
+            // تعطيل الزر
             isPublicSubmitting = true;
             const submitBtn = document.getElementById('publicSubmitBtn');
             if (submitBtn) {
@@ -1706,6 +2447,7 @@
                 errorDiv.textContent = 'فشل الاتصال'; 
             }
 
+            // إعادة تفعيل الزر بعد 10 ثوانٍ
             setTimeout(() => {
                 isPublicSubmitting = false;
                 if (submitBtn) {
@@ -1848,54 +2590,70 @@
             const card = document.getElementById(`card-${shipmentId}`);
             if (!card) return;
 
-            const existingStatus = card.querySelector('.status-badge');
-            
-            let statusEl;
-            if (existingStatus) {
-                statusEl = existingStatus;
-            } else {
-                const detailsGrid = card.querySelector('.details-grid');
-                if (!detailsGrid) return;
-                const statusItem = document.createElement('div');
-                statusItem.className = 'detail-item';
-                statusItem.innerHTML = `<span class="detail-icon"><i class="fas fa-circle"></i></span><div class="detail-text"></div>`;
-                const textDiv = statusItem.querySelector('.detail-text');
-                statusEl = document.createElement('span');
-                statusEl.className = 'status-badge';
-                textDiv.appendChild(statusEl);
-                detailsGrid.appendChild(statusItem);
+            // البحث عن عنصر الحالة في details-grid (status-badge)
+            const detailItems = card.querySelectorAll('.detail-item');
+            let statusItem = null;
+            for (const item of detailItems) {
+                const icon = item.querySelector('.detail-icon i');
+                if (icon && (icon.classList.contains('fa-check-circle') || icon.classList.contains('fa-clock'))) {
+                    statusItem = item;
+                    break;
+                }
             }
+
+            if (!statusItem) return;
+
+            const detailText = statusItem.querySelector('.detail-text');
+            if (!detailText) return;
+
+            // إنشاء عنصر الحالة الجديد
+            const statusSpan = document.createElement('span');
+            statusSpan.className = 'status-badge';
 
             if (newStatus) {
                 let displayStatus = newStatus;
-                let isSuccess = false, isError = false;
-                if (newStatus.includes('تم التسليم') || newStatus.includes('Delivered')) {
+                let isSuccess = false;
+                if (newStatus.includes('تم التسليم')) {
                     isSuccess = true;
-                    displayStatus = 'تم التسليم ✅';
-                } else if (newStatus.includes('خطأ') || newStatus.includes('Error')) {
-                    isError = true;
-                    displayStatus = 'خطأ ❌';
+                    displayStatus = 'تم التسليم';
+                } else if (newStatus.includes('Delivered')) {
+                    isSuccess = true;
+                    displayStatus = 'تم التسليم';
+                } else if (newStatus.includes('تم الاستلام')) {
+                    displayStatus = 'تم الاستلام';
                 } else {
                     displayStatus = newStatus;
                 }
 
-                statusEl.textContent = displayStatus;
-                statusEl.className = 'status-badge';
                 if (isSuccess) {
-                    statusEl.classList.add('delivered');
-                } else if (isError) {
-                    statusEl.classList.add('pending');
+                    statusSpan.innerHTML = `<i class="fas fa-check"></i> ${displayStatus}`;
+                    statusSpan.className = 'status-badge';
                 } else {
-                    statusEl.classList.add('pending');
+                    statusSpan.innerHTML = `<i class="fas fa-hourglass-half"></i> ${displayStatus}`;
+                    statusSpan.className = 'status-badge pending';
                 }
             } else {
-                statusEl.textContent = 'في الانتظار ⏳';
-                statusEl.className = 'status-badge pending';
+                statusSpan.innerHTML = `<i class="fas fa-hourglass-half"></i> في الانتظار`;
+                statusSpan.className = 'status-badge pending';
+            }
+
+            // إزالة المحتوى القديم وإضافة الجديد
+            const oldContent = detailText.querySelector('.status-badge');
+            if (oldContent) {
+                oldContent.replaceWith(statusSpan);
+            } else {
+                detailText.innerHTML = '';
+                detailText.appendChild(statusSpan);
+                // إضافة detail-label
+                const label = document.createElement('span');
+                label.className = 'detail-label';
+                label.textContent = 'آخر تحديث';
+                detailText.appendChild(label);
             }
         }
 
         // ============================================
-        // تحديث جميع حالات الشحنات دفعة واحدة - 50 شحنة لكل دفعة
+        // تحديث جميع حالات الشحنات دفعة واحدة (مباشر) - 50 شحنة لكل دفعة
         // ============================================
         async function updateAllTrackingStatuses(shipments) {
             const shipmentsWithTracking = shipments.filter(s => s.trackingNumber && s.trackingNumber.length > 3);
@@ -1923,28 +2681,29 @@
         // تحميل الشحنات
         // ============================================
         async function loadMyShipments() {
-            const container = document.getElementById('cardsContainer');
-            container.innerHTML = '<div class="loading"><div class="spinner"></div>جاري التحميل...</div>';
+            const content = document.getElementById('content');
+            content.innerHTML = '<div class="loading"><div class="spinner"></div>جاري التحميل...</div>';
             try {
                 const res = await fetch(`${API_URL}?action=myShipments&phone=${currentUser.phone}&password=${currentUser.password}`);
                 const data = await res.json();
                 if (data.success) {
                     allShipmentsData = data.shipments || [];
                     if (allShipmentsData.length === 0) { 
-                        container.innerHTML = '<div class="empty-state"><div class="icon">📭</div><p>لا توجد شحنات حتى الآن</p></div>';
+                        content.innerHTML = '<div class="empty-state"><div class="icon">📭</div><p>لا توجد شحنات حتى الآن</p></div>';
                         document.getElementById('totalCountSmall').textContent = '0';
                     } else { 
                         document.getElementById('totalCountSmall').textContent = allShipmentsData.length;
                         renderShipments(allShipmentsData);
+                        // تحديث الحالات فوراً
                         await updateAllTrackingStatuses(allShipmentsData);
                     }
-                } else { container.innerHTML = '<p style="color:red;">' + (data.msg || 'فشل التحميل') + '</p>'; }
-            } catch (e) { container.innerHTML = '<p style="color:red;">فشل الاتصال</p>'; }
+                } else { content.innerHTML = '<p style="color:red;">' + (data.msg || 'فشل التحميل') + '</p>'; }
+            } catch (e) { content.innerHTML = '<p style="color:red;">فشل الاتصال</p>'; }
         }
 
         async function loadAllShipments() {
-            const container = document.getElementById('cardsContainer');
-            container.innerHTML = '<div class="loading"><div class="spinner"></div>جاري التحميل...</div>';
+            const content = document.getElementById('content');
+            content.innerHTML = '<div class="loading"><div class="spinner"></div>جاري التحميل...</div>';
             try {
                 const params = new URLSearchParams();
                 params.append('action', 'allShipments');
@@ -1957,126 +2716,153 @@
                     document.getElementById('totalCountSmall').textContent = allShipmentsData.length;
                     renderShipments(allShipmentsData);
                     await updateAllTrackingStatuses(allShipmentsData);
-                } else { container.innerHTML = '<p style="color:red;">' + (data.msg || 'فشل التحميل') + '</p>'; }
-            } catch (e) { container.innerHTML = '<p style="color:red;">فشل الاتصال</p>'; }
+                } else { content.innerHTML = '<p style="color:red;">' + (data.msg || 'فشل التحميل') + '</p>'; }
+            } catch (e) { content.innerHTML = '<p style="color:red;">فشل الاتصال</p>'; }
         }
 
         // ============================================
-        // إنشاء بطاقة الشحنة الجديدة (التصميم الاحترافي)
+        // إنشاء بطاقة الشحنة بالتصميم الجديد
         // ============================================
         function createShipmentCard(s, isAdmin = false) {
             let lastUpdate = s.lastUpdate || s.date || '';
-            let updateText = lastUpdate ? '🕐 ' + lastUpdate : '';
+            let updateText = lastUpdate ? 'آخر تحديث: ' + lastUpdate : '';
 
+            let actions = '';
             const trackingNum = s.trackingNumber || '';
             const hasTracking = trackingNum && trackingNum.length > 3;
 
-            let statusDisplay = hasTracking ? 'جاري التحميل...' : 'في الانتظار ⏳';
-            let statusClass = 'pending';
-            
-            const displayName = s.receiverName || s.customerName || 'غير معروف';
-            const displayPhone = s.receiverPhone || s.customerPhone || '';
-            const displayAmount = s.amount || '0';
+            // زر التتبع
+            let trackButton = '';
+            if (hasTracking) {
+                trackButton = `
+                    <button class="track-btn" onclick="event.stopPropagation(); trackShipment('${trackingNum}')">
+                        <i class="fas fa-search"></i> تتبع الشحنة
+                    </button>
+                `;
+            }
 
-            let actions = '';
+            // أزرار الإجراءات
             if (!isAdmin) {
                 if (!hasTracking) {
-                    actions = `
-                        <div style="display:flex;gap:6px;margin-top:8px;flex-wrap:wrap;">
-                            <button class="btn-eux-orange" onclick="event.stopPropagation(); showEditShipmentForm('${s.id}')" style="padding:4px 12px;border-radius:8px;font-size:0.7rem;">
-                                <span class="inner">تعديل</span><span class="fold"></span>
-                            </button>
-                            <button class="btn-eux-red" onclick="event.stopPropagation(); deleteShipment('${s.id}')" style="padding:4px 12px;border-radius:8px;font-size:0.7rem;">
-                                <span class="inner">حذف</span><span class="fold"></span>
-                            </button>
-                        </div>
+                    actions += `
+                        <button class="btn-edit" onclick="event.stopPropagation(); showEditShipmentForm('${s.id}')">
+                            <i class="fas fa-edit"></i> تعديل
+                        </button>
+                        <button class="btn-delete" onclick="event.stopPropagation(); deleteShipment('${s.id}')">
+                            <i class="fas fa-trash"></i> حذف
+                        </button>
                     `;
                 }
             }
 
             if (isAdmin) {
                 if (!hasTracking) {
-                    actions += `<button class="btn-eux-green" onclick="event.stopPropagation(); showAddTracking('${s.id}')" style="padding:4px 12px;border-radius:8px;font-size:0.7rem;margin-right:4px;"><span class="inner">اضافة تتبع</span><span class="fold"></span></button>`;
+                    actions += `<button class="btn-track-add" onclick="event.stopPropagation(); showAddTracking('${s.id}')"><i class="fas fa-qrcode"></i> اضافة تتبع</button>`;
                 }
-                actions += `<button class="btn-eux-red" onclick="event.stopPropagation(); deleteShipment('${s.id}')" style="padding:4px 12px;border-radius:8px;font-size:0.7rem;margin-right:4px;"><span class="inner">حذف</span><span class="fold"></span></button>`;
-                var adminDetails = `<div style="font-size:0.7rem;color:#64748b;margin-top:4px;">رقم الشحنة: ${s.id}</div>`;
+                actions += `<button class="btn-delete" onclick="event.stopPropagation(); deleteShipment('${s.id}')"><i class="fas fa-trash"></i> حذف</button>`;
+                var adminDetails = `
+                    <div class="info"><strong>رقم الشحنة:</strong> ${s.id}</div>
+                    ${hasTracking ? `<div class="info"><strong>رقم التتبع:</strong> ${trackingNum}</div>` : ''}
+                `;
             } else { var adminDetails = ''; }
 
-            let trackButton = '';
-            if (hasTracking) {
-                trackButton = `
-                    <button class="track-btn" onclick="event.stopPropagation(); trackShipment('${trackingNum}')">
-                        <i class="fas fa-search"></i> تتبع
-                    </button>
-                `;
+            const displayName = s.receiverName || s.customerName || 'غير معروف';
+            const displayPhone = s.receiverPhone || s.customerPhone || '';
+            const displayAmount = s.amount || '0';
+
+            // تحديد الحالة الافتراضية
+            let defaultStatus = 'في الانتظار';
+            let statusClass = 'pending';
+            let statusIcon = 'fa-hourglass-half';
+
+            // جلب حالة الشحنة من البيانات المخزنة (سيتم تحديثها لاحقاً)
+            const shipmentStatus = s.status || null;
+            if (shipmentStatus) {
+                if (shipmentStatus.includes('تم التسليم') || shipmentStatus.includes('Delivered')) {
+                    defaultStatus = 'تم التسليم';
+                    statusClass = '';
+                    statusIcon = 'fa-check';
+                } else if (shipmentStatus.includes('تم الاستلام')) {
+                    defaultStatus = 'تم الاستلام';
+                    statusClass = '';
+                    statusIcon = 'fa-check';
+                } else {
+                    defaultStatus = shipmentStatus;
+                    statusClass = 'pending';
+                    statusIcon = 'fa-hourglass-half';
+                }
+            } else if (hasTracking) {
+                defaultStatus = 'جاري التحميل...';
+                statusClass = 'pending';
+                statusIcon = 'fa-hourglass-half';
             }
+
+            const statusBadge = `
+                <span class="status-badge ${statusClass}">
+                    <i class="fas ${statusIcon}"></i> ${defaultStatus}
+                </span>
+            `;
 
             return `
                 <div class="shipment-card" id="card-${s.id}" data-shipment='${JSON.stringify(s).replace(/'/g, "\\'")}'>
                     <div class="card-header">
-                        <div>
+                        <div class="customer-info">
                             <div class="customer-name">${displayName}</div>
                             <div class="customer-phone"><i class="fas fa-phone-alt"></i> ${displayPhone}</div>
                         </div>
-                        <div class="order-id">
-                            <i class="fas fa-hashtag"></i>
-                            ${s.id ? s.id.substring(0, 8) : '---'}
+                        <div class="order-id-badge">
+                            <i class="fas fa-hashtag"></i> #${s.id || 'EUX-0000'}
+                            <button class="copy-btn" onclick="event.stopPropagation(); navigator.clipboard.writeText('${s.id || ''}')"><i class="fas fa-copy"></i></button>
                         </div>
                     </div>
-                    
+
                     <div class="details-grid">
                         <div class="detail-item">
                             <span class="detail-icon"><i class="fas fa-money-bill-wave"></i></span>
-                            <div>
+                            <div class="detail-text">
                                 <span class="detail-title price">${displayAmount} ج.م</span>
                                 <span class="detail-label">المبلغ</span>
                             </div>
                         </div>
                         <div class="detail-item">
-                            <span class="detail-icon"><i class="fas fa-circle"></i></span>
-                            <div>
-                                <span class="status-badge ${statusClass}">${statusDisplay}</span>
-                                <span class="detail-label">${updateText || 'آخر تحديث'}</span>
+                            <span class="detail-icon"><i class="fas ${hasTracking ? 'fa-check-circle' : 'fa-clock'}"></i></span>
+                            <div class="detail-text">
+                                ${statusBadge}
+                                <span class="detail-label">آخر تحديث</span>
                             </div>
                         </div>
-                        ${s.weight ? `
-                        <div class="detail-item">
-                            <span class="detail-icon"><i class="fas fa-weight-scale"></i></span>
-                            <div>
-                                <span class="detail-title">${s.weight} كجم</span>
-                                <span class="detail-label">الوزن</span>
-                            </div>
-                        </div>` : ''}
-                        ${s.governorate ? `
-                        <div class="detail-item">
-                            <span class="detail-icon"><i class="fas fa-map-marker-alt"></i></span>
-                            <div>
-                                <span class="detail-title">${s.governorate}</span>
-                                <span class="detail-label">${s.city || ''}</span>
-                            </div>
-                        </div>` : ''}
                     </div>
 
-                    ${trackButton}
-                    ${adminDetails}
-                    ${actions}
-                    
-                    <div style="margin-top:8px;font-size:0.7rem;color:#64748b;border-top:1px solid rgba(255,255,255,0.04);padding-top:8px;display:flex;flex-wrap:wrap;gap:4px;">
-                        ${s.address ? `<span><i class="fas fa-home"></i> ${s.address}</span>` : ''}
-                        ${s.notes ? `<span><i class="fas fa-comment"></i> ${s.notes}</span>` : ''}
+                    ${hasTracking ? trackButton : ''}
+
+                    <div class="details">
+                        ${isAdmin ? `<div class="info"><strong>رقم العميل:</strong> ${s.clientPhone || 'غير معروف'}</div>` : ''}
+                        ${adminDetails}
+                        ${s.receiverPhone2 ? `<div class="info"><strong>هاتف آخر:</strong> ${s.receiverPhone2}</div>` : ''}
+                        ${s.governorate ? `<div class="info"><strong>المحافظة:</strong> ${s.governorate}</div>` : ''}
+                        ${s.city ? `<div class="info"><strong>المدينة:</strong> ${s.city}</div>` : ''}
+                        <div class="info"><strong>العنوان:</strong> ${s.address || s.customerAddress || ''}</div>
+                        ${s.weight ? `<div class="info"><strong>الوزن:</strong> ${s.weight} كجم</div>` : ''}
+                        ${s.notes ? `<div class="info"><strong>ملاحظات:</strong> ${s.notes}</div>` : ''}
+                        ${actions ? `<div class="actions">${actions}</div>` : ''}
                     </div>
                 </div>
             `;
         }
 
+        function toggleDetails(element) { 
+            const details = element.querySelector('.details'); 
+            if (details) details.classList.toggle('open'); 
+        }
+
         function renderShipments(shipments) {
-            const container = document.getElementById('cardsContainer');
+            const content = document.getElementById('content');
             if (shipments.length === 0) {
-                container.innerHTML = '<div class="empty-state"><div class="icon">📦</div><p>لا توجد شحنات حتى الآن</p></div>';
+                content.innerHTML = '<div class="empty-state"><div class="icon">📦</div><p>لا توجد شحنات حتى الآن</p></div>';
                 return;
             }
             const isAdmin = currentUser && currentUser.role === 'admin';
-            container.innerHTML = shipments.map(s => createShipmentCard(s, isAdmin)).join('');
+            content.innerHTML = shipments.map(s => createShipmentCard(s, isAdmin)).join('');
         }
 
         function searchShipments() {
@@ -2090,18 +2876,18 @@
                 return;
             }
 
+            const content = document.getElementById('content');
             const filtered = allShipmentsData.filter(s => {
                 const name = (s.receiverName || s.customerName || '').toLowerCase();
                 const phone = (s.receiverPhone || s.customerPhone || '').toLowerCase();
                 return name.includes(query) || phone.includes(query);
             });
 
-            const container = document.getElementById('cardsContainer');
             if (filtered.length === 0) {
-                container.innerHTML = `<div class="empty-state"><div class="icon">🔍</div><p>لا توجد نتائج مطابقة لـ "${query}"</p></div>`;
+                content.innerHTML = `<div class="empty-state"><div class="icon">🔍</div><p>لا توجد نتائج مطابقة لـ "${query}"</p></div>`;
             } else {
                 const isAdmin = currentUser && currentUser.role === 'admin';
-                container.innerHTML = filtered.map(s => createShipmentCard(s, isAdmin)).join('');
+                content.innerHTML = filtered.map(s => createShipmentCard(s, isAdmin)).join('');
                 updateAllTrackingStatuses(filtered);
             }
         }
@@ -2568,7 +3354,7 @@
                 publicClientPhone = refPhone;
                 document.getElementById('landingPage').classList.add('hidden');
                 document.getElementById('trackingApp').classList.remove('hidden');
-                document.body.style.background = 'linear-gradient(135deg, #0a0e17, #141b2b)';
+                document.body.style.background = 'linear-gradient(135deg, #e8f0fe, #d4e4f7)';
                 showPublicOrderPage();
             } else {
                 const savedUser = getSavedUser();
@@ -2576,7 +3362,7 @@
                     currentUser = savedUser;
                     document.getElementById('landingPage').classList.add('hidden');
                     document.getElementById('trackingApp').classList.remove('hidden');
-                    document.body.style.background = 'linear-gradient(135deg, #0a0e17, #141b2b)';
+                    document.body.style.background = 'linear-gradient(135deg, #e8f0fe, #d4e4f7)';
                     showDashboard();
                 } else {
                     document.getElementById('landingPage').classList.remove('hidden');
@@ -2588,4 +3374,3 @@
     </script>
 </body>
 </html>
-```
