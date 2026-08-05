@@ -2238,7 +2238,6 @@
             if (window.history && window.history.pushState) {
                 window.history.pushState({}, '', window.location.pathname);
             }
-            // إيقاف التحديث التلقائي عند العودة للصفحة الرئيسية
             if (refreshInterval) {
                 clearInterval(refreshInterval);
                 refreshInterval = null;
@@ -2354,7 +2353,6 @@
         // دالة تسجيل الشحنة العامة مع عداد منع التكرار
         // ============================================
         async function submitPublicOrder() {
-            // منع الضغط المتكرر
             if (isPublicSubmitting) {
                 showToast('يرجى الانتظار 10 ثوانٍ قبل تسجيل شحنة أخرى', 'error');
                 return;
@@ -2384,7 +2382,6 @@
                 return; 
             }
 
-            // تعطيل الزر
             isPublicSubmitting = true;
             const submitBtn = document.getElementById('publicSubmitBtn');
             if (submitBtn) {
@@ -2431,7 +2428,6 @@
                 errorDiv.textContent = 'فشل الاتصال'; 
             }
 
-            // إعادة تفعيل الزر بعد 10 ثوانٍ
             setTimeout(() => {
                 isPublicSubmitting = false;
                 if (submitBtn) {
@@ -2516,7 +2512,6 @@
         function logout() {
             currentUser = null;
             clearUserSession();
-            // إيقاف التحديث التلقائي
             if (refreshInterval) {
                 clearInterval(refreshInterval);
                 refreshInterval = null;
@@ -2541,7 +2536,6 @@
             document.getElementById('clientsBtn').classList.toggle('hidden', !isAdmin);
             document.getElementById('allShipmentsBtn').classList.toggle('hidden', !isAdmin);
             
-            // بدء التحديث التلقائي كل 5 ثواني
             startAutoRefresh();
             
             if (isAdmin) loadAllShipments();
@@ -2552,13 +2546,11 @@
         // بدء التحديث التلقائي كل 5 ثواني
         // ============================================
         function startAutoRefresh() {
-            // إيقاف أي مؤقت سابق
             if (refreshInterval) {
                 clearInterval(refreshInterval);
                 refreshInterval = null;
             }
             
-            // بدء مؤقت جديد كل 5 ثواني
             refreshInterval = setInterval(function() {
                 refreshLoadingShipments();
             }, 5000);
@@ -2568,7 +2560,6 @@
         // تحديث الشحنات التي حالتها "جاري التحميل"
         // ============================================
         async function refreshLoadingShipments() {
-            // البحث عن جميع البطاقات التي تحتوي على "جاري التحميل"
             const cards = document.querySelectorAll('.shipment-card');
             const loadingCards = [];
             
@@ -2581,7 +2572,6 @@
             
             if (loadingCards.length === 0) return;
             
-            // استخراج أرقام التتبع من البطاقات التي تحتاج تحديث
             const shipmentsToRefresh = [];
             for (const card of loadingCards) {
                 const shipmentData = card.dataset.shipment;
@@ -2601,12 +2591,10 @@
             
             if (shipmentsToRefresh.length === 0) return;
             
-            // جلب الحالة الفعلية لكل شحنة
             for (const item of shipmentsToRefresh) {
                 try {
                     const status = await fetchTrackingStatusDirect(item.trackingNumber);
                     if (status) {
-                        // تحديث البطاقة مباشرة
                         updateShipmentStatusCard(item.id, status);
                     }
                 } catch (e) {
@@ -2616,7 +2604,7 @@
         }
 
         // ============================================
-        // جلب حالة الشحنة مباشرة من API (بدون كاش)
+        // جلب حالة الشحنة مباشرة من API
         // ============================================
         async function fetchTrackingStatusDirect(trackingNumber) {
             if (!trackingNumber || trackingNumber.length < 3) return null;
@@ -2624,25 +2612,8 @@
                 const res = await fetch(`${API_URL}?action=track&billCode=${trackingNumber}`);
                 const data = await res.json();
                 if (data.code === "1" && data.data && data.data[0]) {
+                    // نجيب الحالة الأساسية من API
                     let finalStatus = data.data[0].status || null;
-                    const details = data.data[0].details || [];
-                    
-                    // البحث عن "تم التسليم" في التفاصيل
-                    let isDelivered = false;
-                    for (const d of details) {
-                        const desc = d.desc || '';
-                        if (desc.includes('تم التسليم') || 
-                            desc.includes('Delivered') || 
-                            desc.includes('تم الاستلام')) {
-                            isDelivered = true;
-                            break;
-                        }
-                    }
-                    
-                    if (isDelivered) {
-                        finalStatus = 'تم التسليم';
-                    }
-                    
                     return finalStatus;
                 }
                 return null;
@@ -2653,7 +2624,7 @@
         }
 
         // ============================================
-        // تحديث حالة الشحنة في البطاقة (مباشر)
+        // تحديث حالة الشحنة في البطاقة
         // ============================================
         function updateShipmentStatusCard(shipmentId, newStatus) {
             const card = document.getElementById(`card-${shipmentId}`);
@@ -2680,10 +2651,7 @@
             if (newStatus) {
                 let displayStatus = newStatus;
                 let isSuccess = false;
-                if (newStatus.includes('تم التسليم')) {
-                    isSuccess = true;
-                    displayStatus = 'تم التسليم';
-                } else if (newStatus.includes('Delivered')) {
+                if (newStatus.includes('تم التسليم') || newStatus.includes('Delivered')) {
                     isSuccess = true;
                     displayStatus = 'تم التسليم';
                 } else if (newStatus.includes('تم الاستلام')) {
@@ -2735,7 +2703,6 @@
                     } else { 
                         document.getElementById('totalCountSmall').textContent = allShipmentsData.length;
                         renderShipments(allShipmentsData);
-                        // التحديث التلقائي سيتولى تحديث الحالات
                     }
                 } else { content.innerHTML = '<p style="color:red;">' + (data.msg || 'فشل التحميل') + '</p>'; }
             } catch (e) { content.innerHTML = '<p style="color:red;">فشل الاتصال</p>'; }
@@ -2755,18 +2722,14 @@
                     allShipmentsData = data.shipments || [];
                     document.getElementById('totalCountSmall').textContent = allShipmentsData.length;
                     renderShipments(allShipmentsData);
-                    // التحديث التلقائي سيتولى تحديث الحالات
                 } else { content.innerHTML = '<p style="color:red;">' + (data.msg || 'فشل التحميل') + '</p>'; }
             } catch (e) { content.innerHTML = '<p style="color:red;">فشل الاتصال</p>'; }
         }
 
         // ============================================
-        // إنشاء بطاقة الشحنة - بدون معرف (#) وبدون "في الانتظار"
+        // إنشاء بطاقة الشحنة - بدون معرف (#)
         // ============================================
         function createShipmentCard(s, isAdmin = false) {
-            let lastUpdate = s.lastUpdate || s.date || '';
-            let updateText = lastUpdate ? 'آخر تحديث: ' + lastUpdate : '';
-
             let actions = '';
             const trackingNum = s.trackingNumber || '';
             const hasTracking = trackingNum && trackingNum.length > 3;
@@ -2807,7 +2770,7 @@
             const displayPhone = s.receiverPhone || s.customerPhone || '';
             const displayAmount = s.amount || '0';
 
-            // ✅ الحالة الافتراضية = "جاري التحميل..." بدلاً من "في الانتظار"
+            // الحالة من API أو "جاري التحميل"
             let defaultStatus = 'جاري التحميل...';
             let statusClass = 'pending';
             let statusIcon = 'fa-hourglass-half';
@@ -2839,7 +2802,6 @@
                 </span>
             `;
 
-            // ✅ تم إزالة order-id-badge بالكامل
             return `
                 <div class="shipment-card" id="card-${s.id}" data-shipment='${JSON.stringify(s).replace(/'/g, "\\'")}'>
                     <div class="card-header">
@@ -2847,7 +2809,6 @@
                             <div class="customer-name">${displayName}</div>
                             <div class="customer-phone"><i class="fas fa-phone-alt"></i> ${displayPhone}</div>
                         </div>
-                        <!-- تم إزالة المعرف (#) بالكامل -->
                     </div>
 
                     <div class="details-grid">
@@ -3154,7 +3115,7 @@
         }
 
         // ============================================
-        // دالة الترجمة - إزالة الأرقام المكونة من 3 أرقام أو أكثر
+        // دالة الترجمة
         // ============================================
         async function translateProblemText(text) {
             if (!text) return text;
