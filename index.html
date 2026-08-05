@@ -2537,14 +2537,14 @@
         }
 
         // ============================================
-        // تحديث جميع حالات الشحنات دفعة واحدة (مباشر)
+        // تحديث جميع حالات الشحنات دفعة واحدة (مباشر) - 50 شحنة لكل دفعة
         // ============================================
         async function updateAllTrackingStatuses(shipments) {
             const shipmentsWithTracking = shipments.filter(s => s.trackingNumber && s.trackingNumber.length > 3);
             if (shipmentsWithTracking.length === 0) return;
 
-            // جلب الحالات لجميع الشحنات دفعة واحدة (مع التقسيم لتجنب الضغط على API)
-            const chunkSize = 10;
+            // تغيير حجم الدفعة من 10 إلى 50
+            const chunkSize = 50;
             const chunks = [];
             for (let i = 0; i < shipmentsWithTracking.length; i += chunkSize) {
                 chunks.push(shipmentsWithTracking.slice(i, i + chunkSize));
