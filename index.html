@@ -1,3484 +1,695 @@
-
+```html
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <meta name="description" content="شركة EUX للشحن تقدم خدمات الشحن السريع من مدينة العبور إلى جميع محافظات مصر بأسعار تنافسية وخدمة احترافية.">
-    <meta name="keywords" content="EUX, EUX Express, شركة شحن, شحن مصر, شحن سريع, شحن العبور">
-    <meta name="robots" content="index, follow">
-    <link rel="canonical" href="https://euxexpress.com/">
-    <title>شركة EUX للشحن | الريادة في سرعة وحلول الشحن</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;900&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <style>
-        :root {
-            --primary-color: #0076ff;
-            --secondary-color: #1a1a1a;
-            --light-bg: #f9f9f9;
-            --text-color: #333;
-            --white: #ffffff;
-        }
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-            font-family: 'Cairo', sans-serif;
-            scroll-behavior: smooth;
-        }
-        body {
-            color: var(--text-color);
-            line-height: 1.8;
-            background-color: var(--white);
-            overflow-x: hidden;
-            -webkit-user-select: none;
-            -moz-user-select: none;
-            -ms-user-select: none;
-            user-select: none;
-        }
-        .hidden {
-            display: none !important;
-        }
-        #landingPage {
-            display: block;
-        }
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>LeVance · بشمهندسه هديل</title>
+  <!-- Font Awesome & Google Font (Tajawal) -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800&display=swap" rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Tajawal', sans-serif;
+    }
 
-        /* ============================================
-           الشريط العلوي الجديد - المتدرج العصري (النموذج 4)
-           ============================================ */
-        .header-new {
-            background: linear-gradient(135deg, #0a1628, #003d7a);
-            padding: 18px 30px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            border-bottom: 2px solid rgba(0, 118, 255, 0.3);
-            position: sticky;
-            top: 0;
-            z-index: 1000;
-            width: 100%;
-            margin: 0;
-            border-radius: 0;
-        }
-        .header-new .logo-container {
-            display: flex;
-            align-items: center;
-            gap: 14px;
-        }
-        .header-new .divider {
-            width: 2px;
-            height: 35px;
-            background: linear-gradient(180deg, transparent, var(--primary-color), transparent);
-        }
-        .header-new .logo-text {
-            font-size: 28px;
-            font-weight: 900;
-            color: #fff;
-            letter-spacing: 3px;
-        }
-        .header-new .logo-text span {
-            color: var(--primary-color);
-            position: relative;
-        }
-        .header-new .logo-text span::before {
-            content: '';
-            position: absolute;
-            bottom: -4px;
-            left: 0;
-            width: 100%;
-            height: 2px;
-            background: var(--primary-color);
-            animation: underlineSlide 2s ease-in-out infinite;
-        }
-        .header-new .dot {
-            width: 8px;
-            height: 8px;
-            background: var(--primary-color);
-            border-radius: 50%;
-            animation: dotPulse 2s ease-in-out infinite;
-            box-shadow: 0 0 20px rgba(0, 118, 255, 0.3);
-        }
-        @keyframes underlineSlide {
-            0% { transform: scaleX(0); transform-origin: right; }
-            50% { transform: scaleX(1); transform-origin: center; }
-            100% { transform: scaleX(0); transform-origin: left; }
-        }
-        @keyframes dotPulse {
-            0%, 100% { transform: scale(1); opacity: 0.4; }
-            50% { transform: scale(1.6); opacity: 1; }
-        }
+    body {
+      background: #fff8e7;
+      color: #3d2b1a;
+      min-height: 100vh;
+    }
 
-        /* ============================================
-           الشريط القديم - نبقيه للتوافق
-           ============================================ */
-        header {
-            background-color: var(--secondary-color);
-            padding: 35px 8%;
-            position: sticky;
-            top: 0;
-            z-index: 1000;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            border-bottom-left-radius: 40px;
-            border-bottom-right-radius: 40px;
-            border-bottom: 2px solid rgba(0, 118, 255, 0.3);
-        }
-        .logo {
-            color: var(--primary-color);
-            font-size: 38px;
-            font-weight: 900;
-            text-decoration: none;
-            letter-spacing: 2px;
-        }
-        .hero {
-            background: linear-gradient(rgba(26, 26, 26, 0.88), rgba(26, 26, 26, 0.88)), url('https://images.unsplash.com/photo-1524661135-423995f22d0b?ixlib=rb-4.0.3') no-repeat center center/cover;
-            min-height: 85vh;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            text-align: center;
-            color: var(--white);
-            padding: 60px 20px 180px 20px;
-            position: relative;
-        }
-        .sea-wave-divider {
-            position: absolute;
-            bottom: -1px;
-            left: 0;
-            width: 100%;
-            overflow: hidden;
-            line-height: 0;
-            z-index: 5;
-        }
-        .sea-wave-divider svg {
-            position: relative;
-            display: block;
-            width: calc(100% + 1.3px);
-            height: 110px;
-        }
-        .sea-wave-divider .wave-fill-white {
-            fill: var(--white);
-        }
-        .sea-wave-divider .wave-fill-light {
-            fill: var(--light-bg);
-        }
-        .showcase-wrapper {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            margin-bottom: 40px;
-            position: relative;
-            z-index: 10;
-        }
-        .cyber-node {
-            width: 160px;
-            height: 160px;
-            background: linear-gradient(135deg, #131c2e, #080d16);
-            border: 3px solid rgba(0, 210, 255, 0.6);
-            border-radius: 16px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            font-size: 36px;
-            font-weight: 900;
-            color: var(--white);
-            position: relative;
-            animation: nodeFloat 2.6s ease-in-out infinite;
-        }
-        .cyber-node::after {
-            content: '';
-            position: absolute;
-            inset: -12px;
-            border: 3px dashed var(--primary-color);
-            border-radius: 24px;
-            opacity: 0.7;
-            animation: rotateDashed 15s linear infinite;
-        }
-        @keyframes nodeFloat {
-            0%,
-            100% {
-                transform: translateY(0);
-                box-shadow: 0 0 25px rgba(0, 210, 255, 0.25);
-            }
-            50% {
-                transform: translateY(-20px);
-                box-shadow: 0 0 50px rgba(0, 210, 255, 0.6);
-            }
-        }
-        @keyframes rotateDashed {
-            100% {
-                transform: rotate(360deg);
-            }
-        }
-        .cube-container {
-            width: 180px;
-            height: 170px;
-            perspective: 1000px;
-            animation: isometricFloat 3s ease-in-out infinite;
-        }
-        .iso-cube {
-            width: 130px;
-            height: 130px;
-            position: relative;
-            transform-style: preserve-3d;
-            transform: rotateX(-30deg) rotateY(45deg);
-            margin: auto;
-        }
-        .iso-face {
-            position: absolute;
-            width: 130px;
-            height: 130px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            font-size: 32px;
-            font-weight: 900;
-            color: var(--white);
-            border: 1.5px solid rgba(255, 255, 255, 0.15);
-        }
-        .iso-front {
-            transform: rotateY(0deg) translateZ(65px);
-            background: linear-gradient(135deg, #0052cc, #002d80);
-        }
-        .iso-right {
-            transform: rotateY(90deg) translateZ(65px);
-            background: linear-gradient(135deg, #003399, #0a1329);
-        }
-        .iso-top {
-            transform: rotateX(90deg) translateZ(65px);
-            background: linear-gradient(135deg, #2575fc, #0052cc);
-        }
-        .iso-top::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 10px;
-            background: #ffb700;
-            box-shadow: 0 0 15px #ffb700;
-            animation: laserMove 2.5s linear infinite;
-        }
-        @keyframes isometricFloat {
-            0%,
-            100% {
-                transform: translateY(0);
-            }
-            50% {
-                transform: translateY(-20px);
-            }
-        }
-        @keyframes laserMove {
-            0% {
-                top: 0;
-                opacity: 0;
-            }
-            50% {
-                opacity: 1;
-            }
-            100% {
-                top: 100%;
-                opacity: 0;
-            }
-        }
-        .quantum-box {
-            width: 150px;
-            height: 150px;
-            background: rgba(10, 15, 24, 0.85);
-            border: 2px solid rgba(0, 118, 255, 0.4);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-            border-radius: 28px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            position: relative;
-            animation: quantumFloat 2.8s ease-in-out infinite;
-            border-bottom: 4px solid var(--primary-color);
-        }
-        .quantum-box::before {
-            content: '';
-            position: absolute;
-            width: 220px;
-            height: 70px;
-            border: 3px solid #ffb700;
-            border-radius: 50%;
-            transform: rotateX(70deg) rotateY(15deg);
-            box-shadow: 0 0 20px #ffb700;
-            animation: orbitPulse 2.8s linear infinite;
-        }
-        @keyframes quantumFloat {
-            0%,
-            100% {
-                transform: translateY(0);
-            }
-            50% {
-                transform: translateY(-20px);
-            }
-        }
-        .glow-floor {
-            width: 110px;
-            height: 10px;
-            background: radial-gradient(var(--primary-color), transparent 70%);
-            border-radius: 50%;
-            margin-top: 20px;
-            opacity: 0.6;
-        }
-        .hero h1 {
-            font-size: 3rem;
-            margin-bottom: 15px;
-            font-weight: 700;
-        }
-        .hero h1 span {
-            color: var(--primary-color);
-        }
-        .hero p {
-            font-size: 1.3rem;
-            max-width: 700px;
-            margin-bottom: 30px;
-            color: #ddd;
-        }
-        .btn {
-            display: inline-block;
-            background-color: var(--primary-color);
-            color: var(--white);
-            padding: 12px 35px;
-            border: none;
-            border-radius: 30px;
-            font-size: 1.1rem;
-            font-weight: 700;
-            cursor: pointer;
-            text-decoration: none;
-            transition: 0.3s ease;
-            box-shadow: 0 4px 15px rgba(0, 118, 255, 0.4);
-        }
-        .btn:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 6px 20px rgba(0, 118, 255, 0.6);
-        }
-        .login-btn-hero {
-            display: inline-block;
-            background-color: transparent;
-            color: var(--white);
-            padding: 10px 28px;
-            border: 2px solid rgba(255, 255, 255, 0.3);
-            border-radius: 30px;
-            font-size: 1rem;
-            font-weight: 600;
-            cursor: pointer;
-            text-decoration: none;
-            transition: 0.3s ease;
-            font-family: 'Cairo', sans-serif;
-            margin-top: 12px;
-        }
-        .login-btn-hero:hover {
-            background-color: rgba(255, 255, 255, 0.1);
-            border-color: var(--primary-color);
-            transform: translateY(-2px);
-        }
-        .login-btn-hero i {
-            margin-left: 8px;
-        }
-        .popup-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.75);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            z-index: 2000;
-            opacity: 0;
-            pointer-events: none;
-            transition: 0.4s ease;
-            backdrop-filter: blur(8px);
-            -webkit-backdrop-filter: blur(8px);
-        }
-        .popup-overlay.active {
-            opacity: 1;
-            pointer-events: auto;
-        }
-        .popup-box {
-            background: var(--white);
-            padding: 40px 30px;
-            border-radius: 24px;
-            max-width: 450px;
-            width: 90%;
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
-            position: relative;
-            transform: scale(0.8);
-            transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            text-align: center;
-            border-top: 6px solid var(--primary-color);
-        }
-        .popup-overlay.active .popup-box {
-            transform: scale(1);
-        }
-        .popup-close {
-            position: absolute;
-            top: 15px;
-            left: 20px;
-            font-size: 1.5rem;
-            color: #aaa;
-            cursor: pointer;
-            transition: 0.3s;
-        }
-        .popup-close:hover {
-            color: var(--secondary-color);
-        }
-        .popup-title {
-            font-size: 1.25rem;
-            font-weight: 700;
-            color: var(--primary-color);
-            margin-bottom: 25px;
-            background: rgba(0, 118, 255, 0.08);
-            padding: 10px;
-            border-radius: 12px;
-        }
-        .popup-form-group {
-            text-align: right;
-            margin-bottom: 20px;
-        }
-        .popup-form-group label {
-            display: block;
-            font-weight: 600;
-            margin-bottom: 8px;
-            font-size: 0.95rem;
-            color: var(--secondary-color);
-        }
-        .popup-form-group input {
-            width: 100%;
-            padding: 12px 15px;
-            border: 2px solid #e1e1e1;
-            border-radius: 12px;
-            font-size: 1rem;
-            font-family: 'Cairo', sans-serif;
-            transition: 0.3s;
-            text-align: right;
-        }
-        .popup-form-group input:focus {
-            border-color: var(--primary-color);
-            outline: none;
-            box-shadow: 0 0 10px rgba(0, 118, 255, 0.15);
-        }
-        .popup-submit-btn {
-            width: 100%;
-            background: var(--primary-color);
-            color: var(--white);
-            border: none;
-            padding: 12px;
-            border-radius: 12px;
-            font-size: 1.1rem;
-            font-weight: 700;
-            cursor: pointer;
-            transition: 0.3s;
-            font-family: 'Cairo', sans-serif;
-            box-shadow: 0 4px 12px rgba(0, 118, 255, 0.3);
-        }
-        .popup-submit-btn:hover {
-            background: #005dc7;
-            transform: translateY(-2px);
-        }
-        .about {
-            padding: 40px 10% 180px 10%;
-            text-align: center;
-            background-color: var(--white);
-            position: relative;
-        }
-        .section-title {
-            font-size: 2.2rem;
-            margin-bottom: 40px;
-            position: relative;
-            display: inline-block;
-            font-weight: 700;
-        }
-        .section-title::after {
-            content: '';
-            width: 60%;
-            height: 4px;
-            background-color: var(--primary-color);
-            position: absolute;
-            bottom: -10px;
-            left: 20%;
-            border-radius: 2px;
-        }
-        .about-container {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: space-around;
-            margin-top: 40px;
-        }
-        .about-card {
-            flex: 1;
-            min-width: 250px;
-            margin: 15px;
-            padding: 30px;
-            background: var(--light-bg);
-            border-radius: 10px;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
-            transition: 0.3s;
-        }
-        .about-card:hover {
-            transform: translateY(-5px);
-        }
-        .about-card i {
-            font-size: 3rem;
-            color: var(--primary-color);
-            margin-bottom: 20px;
-        }
-        .about-card h3 {
-            margin-bottom: 10px;
-            font-size: 1.4rem;
-        }
-        .services {
-            background-color: var(--secondary-color);
-            color: var(--white);
-            padding: 80px 10% 180px 10%;
-            text-align: center;
-            position: relative;
-        }
-        .services .section-title {
-            color: var(--white);
-        }
-        .services-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 25px;
-            margin-top: 50px;
-        }
-        .service-box {
-            background-color: rgba(255, 255, 255, 0.05);
-            padding: 30px 20px;
-            border-radius: 8px;
-            border-top: 4px solid var(--primary-color);
-            transition: 0.3s;
-        }
-        .service-box:hover {
-            background-color: rgba(255, 255, 255, 0.1);
-            transform: scale(1.03);
-        }
-        .service-box i {
-            font-size: 2.5rem;
-            color: var(--primary-color);
-            margin-bottom: 15px;
-        }
-        .service-box h4 {
-            font-size: 1.25rem;
-            margin-bottom: 10px;
-        }
-        .contact {
-            padding: 80px 10%;
-            text-align: center;
-            background-color: var(--light-bg);
-        }
-        .contact-info {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
-            gap: 40px;
-            margin-top: 40px;
-        }
-        .info-item {
-            font-size: 1.2rem;
-            font-weight: 600;
-        }
-        .info-item i {
-            color: var(--primary-color);
-            margin-left: 10px;
-            font-size: 1.4rem;
-        }
-        footer {
-            background-color: #111;
-            color: #aaa;
-            text-align: center;
-            padding: 30px 20px;
-            border-top: 1px solid #222;
-        }
-        .footer-social {
-            margin-top: 15px;
-        }
-        .footer-social a {
-            color: var(--white);
-            font-size: 1.8rem;
-            transition: 0.3s;
-        }
-        .footer-social a:hover {
-            color: #1877f2;
-        }
-        #trackingApp {
-            background: linear-gradient(135deg, #e8f0fe, #d4e4f7);
-            min-height: 100vh;
-            padding: 20px;
-        }
-        .tracking-container {
-            max-width: 900px;
-            margin: 0 auto;
-            background: white;
-            border-radius: 24px;
-            padding: 30px;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.1);
-            position: relative;
-            overflow: hidden;
-        }
-        .tracking-container::before {
-            content: '';
-            position: absolute;
-            top: -50%;
-            right: -50%;
-            width: 200%;
-            height: 200%;
-            background: radial-gradient(circle at 30% 20%, rgba(0, 118, 255, 0.04), transparent 70%);
-            pointer-events: none;
-        }
-        .login-page {
-            text-align: center;
-            position: relative;
-            z-index: 1;
-            padding: 20px 0;
-        }
-        .login-page .logo-wrapper {
-            display: flex;
-            justify-content: center;
-            margin-bottom: 25px;
-            position: relative;
-            height: 220px;
-        }
-        .civil-helo {
-            position: relative;
-            width: 180px;
-            height: 135px;
-            animation: hoverCivil 3s ease-in-out infinite;
-            margin-top: 40px;
-            transform: scale(0.85);
-            transform-origin: center center;
-        }
-        @keyframes hoverCivil {
-            0%,
-            100% {
-                transform: scale(0.85) translateY(0px);
-            }
-            50% {
-                transform: scale(0.85) translateY(-8px);
-            }
-        }
-        .civil-helo .body {
-            position: absolute;
-            width: 120px;
-            height: 28px;
-            background: linear-gradient(135deg, #ffffff, #e8ecf0);
-            border-radius: 60px 30px 15px 20px;
-            top: 55%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            border: 1px solid #c0c8d0;
-            box-shadow: 0 0 30px rgba(255, 255, 255, 0.05);
-        }
-        .civil-helo .body::before {
-            content: '';
-            position: absolute;
-            top: -8px;
-            left: 12px;
-            width: 48px;
-            height: 15px;
-            background: rgba(200, 210, 220, 0.3);
-            border-radius: 12px 12px 0 0;
-            border: 1px solid #c0c8d0;
-            border-bottom: none;
-        }
-        .civil-helo .body-stripe {
-            position: absolute;
-            bottom: 3px;
-            left: 10%;
-            width: 80%;
-            height: 2px;
-            background: linear-gradient(90deg, #0076ff, #4fc3f7, #0076ff);
-            border-radius: 4px;
-        }
-        .civil-helo .cockpit {
-            position: absolute;
-            top: 6px;
-            left: 8px;
-            width: 35px;
-            height: 15px;
-            background: linear-gradient(180deg, #81d4fa, #0288d1);
-            border-radius: 12px 8px 0 0;
-            border: 1px solid #4fc3f7;
-            box-shadow: inset 0 0 20px rgba(79, 195, 247, 0.15);
-        }
-        .civil-helo .cockpit::after {
-            content: '';
-            position: absolute;
-            top: 2px;
-            left: 4px;
-            width: 10px;
-            height: 6px;
-            background: rgba(255, 255, 255, 0.2);
-            border-radius: 50%;
-        }
-        .civil-helo .cockpit-wiper {
-            position: absolute;
-            top: 8px;
-            left: 16px;
-            width: 12px;
-            height: 2px;
-            background: rgba(255, 255, 255, 0.2);
-            border-radius: 2px;
-            transform: rotate(-15deg);
-        }
-        .civil-helo .tail {
-            position: absolute;
-            right: -44px;
-            top: 50%;
-            transform: translateY(-50%);
-            width: 52px;
-            height: 7px;
-            background: linear-gradient(135deg, #ffffff, #d0d8e0);
-            border-radius: 0 20px 20px 0;
-            border: 1px solid #c0c8d0;
-        }
-        .civil-helo .tail::after {
-            content: '';
-            position: absolute;
-            right: -4px;
-            top: -4px;
-            width: 8px;
-            height: 15px;
-            background: #ffffff;
-            border-radius: 4px;
-            border: 1px solid #c0c8d0;
-        }
-        .civil-helo .main-rotor {
-            position: absolute;
-            top: -20px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 110px;
-            height: 5px;
-            background: rgba(200, 200, 200, 0.25);
-            border-radius: 10px;
-            animation: spinRotor 0.45s linear infinite;
-            box-shadow: 0 0 40px rgba(200, 200, 200, 0.05);
-        }
-        .civil-helo .main-rotor::after {
-            content: '';
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            width: 8px;
-            height: 8px;
-            background: #888;
-            border-radius: 50%;
-            border: 1px solid #aaa;
-        }
-        .civil-helo .main-rotor::before {
-            content: '';
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%) rotate(72deg);
-            width: 110px;
-            height: 5px;
-            background: rgba(200, 200, 200, 0.15);
-            border-radius: 10px;
-        }
-        .civil-helo .tail-rotor {
-            position: absolute;
-            right: -56px;
-            top: 50%;
-            transform: translateY(-50%);
-            width: 24px;
-            height: 3px;
-            background: rgba(200, 200, 200, 0.2);
-            border-radius: 4px;
-            animation: spinRotor 0.3s linear infinite;
-        }
-        .civil-helo .tail-rotor::after {
-            content: '';
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            width: 4px;
-            height: 4px;
-            background: #888;
-            border-radius: 50%;
-        }
-        .civil-helo .eux-logo {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            color: #0076ff;
-            font-weight: 900;
-            font-size: 13px;
-            letter-spacing: 2px;
-            text-shadow: 0 0 30px rgba(0, 118, 255, 0.2);
-            z-index: 5;
-        }
-        .civil-helo .nav-light {
-            position: absolute;
-            width: 5px;
-            height: 5px;
-            border-radius: 50%;
-            animation: blinkLight 1.5s ease-in-out infinite;
-        }
-        .civil-helo .nav-light.red {
-            background: #ff1744;
-            box-shadow: 0 0 15px rgba(255, 23, 68, 0.5);
-            right: 8px;
-            top: 30%;
-        }
-        .civil-helo .nav-light.green {
-            background: #00e676;
-            box-shadow: 0 0 15px rgba(0, 230, 118, 0.5);
-            left: 8px;
-            top: 30%;
-            animation-delay: 0.75s;
-        }
-        @keyframes blinkLight {
-            0%,
-            100% {
-                opacity: 0.2;
-            }
-            50% {
-                opacity: 1;
-            }
-        }
-        @keyframes spinRotor {
-            0% {
-                transform: translateX(-50%) rotate(0deg);
-            }
-            100% {
-                transform: translateX(-50%) rotate(360deg);
-            }
-        }
-        .login-page .brand {
-            color: #0d2137;
-            font-size: 28px;
-            font-weight: 900;
-            margin-bottom: 4px;
-        }
-        .login-page .brand span {
-            color: #0076ff;
-        }
-        .login-page .input-group {
-            position: relative;
-            margin-bottom: 16px;
-        }
-        .login-page .input-group input {
-            width: 100%;
-            padding: 16px 20px 16px 50px;
-            border: 2px solid #e8ecf0;
-            border-radius: 14px;
-            font-size: 16px;
-            font-family: 'Cairo', sans-serif;
-            background: #f8fafc;
-            transition: 0.3s;
-        }
-        .login-page .input-group input:focus {
-            border-color: #0076ff;
-            outline: none;
-            background: white;
-            box-shadow: 0 0 0 4px rgba(0, 118, 255, 0.08);
-        }
-        .login-page .input-group .input-icon {
-            position: absolute;
-            right: 18px;
-            top: 50%;
-            transform: translateY(-50%);
-            color: #999;
-            font-size: 18px;
-        }
-        .login-page .error-msg {
-            color: #dc3545;
-            font-size: 14px;
-            margin-top: 14px;
-            padding: 10px;
-            background: #ffeaea;
-            border-radius: 8px;
-        }
-        .tracking-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 20px;
-            padding-bottom: 15px;
-            border-bottom: 2px solid #eef3f8;
-            flex-wrap: wrap;
-            gap: 10px;
-            position: relative;
-            z-index: 1;
-        }
-        .tracking-header h2 {
-            color: #0d2137;
-            font-weight: 700;
-            font-size: 18px;
-        }
-        .tracking-header h2 i {
-            color: #0076ff;
-            margin-left: 8px;
-        }
-        .header-actions {
-            display: flex;
-            gap: 6px;
-            flex-wrap: wrap;
-            align-items: center;
-        }
-        .total-small {
-            font-size: 13px;
-            color: #888;
-            margin-right: 12px;
-            font-weight: 600;
-            white-space: nowrap;
-        }
-        .total-small .count {
-            color: #0076ff;
-            font-weight: 900;
-            font-size: 16px;
-        }
+    /* ألوان صفراء ونبيتي */
+    :root {
+      --gold: #f5b81b;
+      --gold-light: #ffe28a;
+      --gold-dark: #c28f0e;
+      --brown: #3d2b1a;
+      --brown-light: #5a3f2a;
+      --cream: #fff6e0;
+      --shadow: 0 8px 20px rgba(0,0,0,0.08);
+    }
 
-        /* ============================================
-           تصميم كارت الطلب الجديد - EUX (أفقي - بطاقتين بجانب بعض)
-           ============================================ */
-        .cards-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 20px;
-        }
+    /* Landing page (صفحة هبوط) */
+    .landing {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      background: linear-gradient(145deg, #fce9b1, #f7d97e);
+      text-align: center;
+      padding: 2rem;
+    }
+    .landing h1 {
+      font-size: 4.5rem;
+      font-weight: 800;
+      color: var(--brown);
+      text-shadow: 3px 3px 0 var(--gold-light);
+      letter-spacing: 2px;
+      background: rgba(255, 255, 220, 0.6);
+      padding: 0.8rem 3rem;
+      border-radius: 60px;
+      backdrop-filter: blur(4px);
+      box-shadow: var(--shadow);
+    }
+    .landing p {
+      margin-top: 1.5rem;
+      font-size: 1.3rem;
+      color: var(--brown);
+      background: var(--gold-light);
+      padding: 0.5rem 2.5rem;
+      border-radius: 40px;
+      font-weight: 500;
+    }
+    .landing .enter-btn {
+      margin-top: 2.8rem;
+      background: var(--brown);
+      color: var(--gold);
+      border: none;
+      padding: 0.9rem 3.5rem;
+      font-size: 1.8rem;
+      font-weight: 700;
+      border-radius: 60px;
+      cursor: pointer;
+      box-shadow: 0 4px 0 #1f130a;
+      transition: 0.15s;
+    }
+    .landing .enter-btn:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 8px 0 #1f130a;
+      background: #4d3520;
+    }
 
-        .shipment-card {
-            width: 100%;
-            background: linear-gradient(135deg, #0b111e 0%, #05070d 100%);
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            border-right: 3px solid #0066ff;
-            border-radius: 20px;
-            padding: 20px 22px;
-            display: flex;
-            flex-direction: column;
-            gap: 14px;
-            color: #ffffff;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5),
-                        0 0 20px rgba(0, 102, 255, 0.08);
-            position: relative;
-            overflow: hidden;
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-            margin-bottom: 0;
-        }
-        .shipment-card:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 16px 48px rgba(0, 0, 0, 0.6),
-                        0 0 30px rgba(0, 102, 255, 0.12);
-        }
-        .shipment-card::before {
-            content: '';
-            position: absolute;
-            top: -50%;
-            right: -30%;
-            width: 200px;
-            height: 200px;
-            background: radial-gradient(circle, rgba(0, 102, 255, 0.04) 0%, transparent 70%);
-            border-radius: 50%;
-            pointer-events: none;
-        }
-        .shipment-card .card-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-start;
-            gap: 10px;
-            position: relative;
-            z-index: 1;
-        }
-        .shipment-card .customer-info {
-            display: flex;
-            flex-direction: column;
-            gap: 2px;
-        }
-        .shipment-card .customer-name {
-            font-size: 1.15rem;
-            font-weight: 700;
-            color: #ffffff;
-            letter-spacing: 0.3px;
-        }
-        .shipment-card .customer-phone {
-            font-size: 0.85rem;
-            color: #8a99ad;
-            direction: ltr;
-            letter-spacing: 0.3px;
-        }
-        .shipment-card .customer-phone i {
-            margin-left: 6px;
-            color: #3b82f6;
-            font-size: 0.8rem;
-        }
-        .shipment-card .details-grid {
-            background: rgba(255, 255, 255, 0.02);
-            border: 1px solid rgba(255, 255, 255, 0.05);
-            border-radius: 12px;
-            padding: 10px 14px;
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 6px 16px;
-            align-items: center;
-            position: relative;
-            z-index: 1;
-        }
-        .shipment-card .detail-item {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            padding: 3px 0;
-        }
-        .shipment-card .detail-icon {
-            font-size: 0.9rem;
-            opacity: 0.6;
-            width: 20px;
-            text-align: center;
-            color: #3b82f6;
-            flex-shrink: 0;
-        }
-        .shipment-card .detail-text {
-            display: flex;
-            flex-direction: column;
-            line-height: 1.2;
-        }
-        .shipment-card .detail-title {
-            font-size: 0.85rem;
-            color: #e2e8f0;
-            font-weight: 600;
-        }
-        .shipment-card .detail-title.price {
-            color: #38bdf8;
-            font-size: 0.95rem;
-            font-weight: 700;
-        }
-        .shipment-card .detail-label {
-            font-size: 0.6rem;
-            color: #64748b;
-            letter-spacing: 0.2px;
-        }
-        .shipment-card .status-badge {
-            display: inline-flex;
-            align-items: center;
-            gap: 4px;
-            background: rgba(46, 125, 50, 0.12);
-            border: 1px solid rgba(46, 125, 50, 0.2);
-            padding: 2px 10px;
-            border-radius: 16px;
-            font-size: 0.7rem;
-            font-weight: 600;
-            color: #4caf50;
-        }
-        .shipment-card .status-badge i {
-            font-size: 0.6rem;
-        }
-        .shipment-card .status-badge.pending {
-            background: rgba(255, 152, 0, 0.1);
-            border-color: rgba(255, 152, 0, 0.15);
-            color: #ffa726;
-        }
-        .shipment-card .track-btn {
-            width: 100%;
-            background: rgba(255, 255, 255, 0.03);
-            border: 1px solid rgba(255, 255, 255, 0.06);
-            color: #3b82f6;
-            padding: 8px 12px;
-            border-radius: 10px;
-            font-family: 'Cairo', sans-serif;
-            font-weight: 600;
-            font-size: 0.85rem;
-            cursor: pointer;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            gap: 8px;
-            transition: all 0.3s ease;
-            position: relative;
-            z-index: 1;
-        }
-        .shipment-card .track-btn i {
-            font-size: 0.8rem;
-        }
-        .shipment-card .track-btn:hover {
-            background: #0066ff;
-            color: #fff;
-            box-shadow: 0 4px 15px rgba(0, 102, 255, 0.3);
-            border-color: #0066ff;
-            transform: scale(1.02);
-        }
+    /* الموقع الرئيسي (مخفي في البداية) */
+    .main-app {
+      display: none;
+      max-width: 1300px;
+      margin: 0 auto;
+      padding: 0 1.5rem 3rem;
+    }
 
-        /* ===== التعديلات على العناصر القديمة في البطاقة ===== */
-        .shipment-card .delivery-status {
-            display: none;
-        }
-        .shipment-card .summary-row {
-            display: none;
-        }
-        .shipment-card .details {
-            margin-top: 0;
-            padding-top: 0;
-            border-top: none;
-            background: transparent;
-            border-radius: 0;
-            padding: 0;
-        }
-        .shipment-card .details.open {
-            display: block;
-        }
-        .shipment-card .details .info {
-            font-size: 13px;
-            color: #a0aec0;
-            margin: 4px 0;
-        }
-        .shipment-card .details .info strong {
-            color: #e2e8f0;
-        }
-        .shipment-card .actions {
-            margin-top: 12px;
-            display: flex;
-            gap: 8px;
-            flex-wrap: wrap;
-        }
-        .shipment-card .actions button {
-            padding: 6px 16px;
-            border-radius: 8px;
-            font-size: 13px;
-            border: none;
-            cursor: pointer;
-            font-family: 'Cairo', sans-serif;
-            font-weight: 600;
-            transition: 0.2s;
-        }
-        .shipment-card .actions .btn-edit {
-            background: #ff9800;
-            color: #fff;
-        }
-        .shipment-card .actions .btn-edit:hover {
-            background: #e68900;
-        }
-        .shipment-card .actions .btn-delete {
-            background: #dc3545;
-            color: #fff;
-        }
-        .shipment-card .actions .btn-delete:hover {
-            background: #c82333;
-        }
-        .shipment-card .actions .btn-track-add {
-            background: #28a745;
-            color: #fff;
-        }
-        .shipment-card .actions .btn-track-add:hover {
-            background: #218838;
-        }
+    /* الشريط العلوي */
+    .top-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: var(--gold);
+      padding: 0.8rem 2.2rem;
+      border-radius: 0 0 40px 40px;
+      box-shadow: 0 6px 14px rgba(190, 140, 20, 0.25);
+      margin-bottom: 2.5rem;
+      flex-wrap: wrap;
+      position: relative;
+    }
+    .top-bar .brand {
+      display: flex;
+      align-items: baseline;
+      gap: 0.4rem;
+    }
+    .top-bar .brand .hl {
+      font-size: 1.9rem;
+      font-weight: 800;
+      color: var(--brown);
+      background: var(--cream);
+      padding: 0.1rem 0.9rem;
+      border-radius: 40px;
+      letter-spacing: 1px;
+    }
+    .top-bar .brand .levance {
+      font-size: 2.3rem;
+      font-weight: 800;
+      color: var(--brown);
+      letter-spacing: 2px;
+    }
+    .top-bar .login-btn {
+      background: var(--brown);
+      color: var(--gold);
+      border: none;
+      padding: 0.5rem 1.8rem;
+      font-size: 1.2rem;
+      font-weight: 700;
+      border-radius: 40px;
+      cursor: pointer;
+      box-shadow: 0 3px 0 #1f130a;
+      transition: 0.1s;
+    }
+    .top-bar .login-btn:hover {
+      background: #2d1d10;
+      transform: scale(0.97);
+    }
 
-        /* ===== استجابة ===== */
-        @media (max-width: 768px) {
-            .cards-grid {
-                grid-template-columns: 1fr;
-            }
-        }
-        @media (max-width: 480px) {
-            .shipment-card .details-grid {
-                grid-template-columns: 1fr;
-                gap: 4px;
-            }
-            .shipment-card {
-                padding: 14px 16px;
-                border-radius: 16px;
-            }
-        }
+    /* لوحة المنتجات */
+    .products-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+      gap: 2rem;
+      margin-top: 1rem;
+    }
+    .product-card {
+      background: white;
+      border-radius: 32px;
+      padding: 1rem 1rem 1.5rem;
+      box-shadow: var(--shadow);
+      border: 2px solid var(--gold-light);
+      transition: 0.2s;
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    .product-card:hover {
+      border-color: var(--gold);
+      transform: scale(1.01);
+      box-shadow: 0 10px 25px rgba(200, 150, 20, 0.2);
+    }
+    .product-card img {
+      width: 100%;
+      height: 180px;
+      object-fit: cover;
+      border-radius: 24px;
+      background: #f5e7ce;
+      border: 1px solid #eacd91;
+    }
+    .product-card h3 {
+      margin: 0.8rem 0 0.2rem;
+      font-size: 1.4rem;
+      color: var(--brown);
+    }
+    .product-card .price {
+      font-weight: 700;
+      color: #b8860b;
+      font-size: 1.2rem;
+    }
+    .product-card .colors {
+      font-size: 0.9rem;
+      background: var(--cream);
+      padding: 0.2rem 1rem;
+      border-radius: 40px;
+      color: var(--brown-light);
+      margin: 0.3rem 0;
+    }
+    .product-card .sizes {
+      font-size: 0.9rem;
+      background: #f5e7ce;
+      padding: 0.1rem 1rem;
+      border-radius: 40px;
+      margin-bottom: 0.7rem;
+    }
+    .product-card .add-btn {
+      background: var(--gold);
+      border: none;
+      padding: 0.5rem 2.2rem;
+      border-radius: 40px;
+      font-weight: 700;
+      color: var(--brown);
+      cursor: pointer;
+      box-shadow: 0 3px 0 #b8860b;
+      transition: 0.1s;
+      margin-top: auto;
+      width: 100%;
+    }
+    .product-card .add-btn:hover {
+      background: #e5a90e;
+      transform: scale(0.96);
+    }
+    .discount-badge {
+      background: #c0392b;
+      color: white;
+      font-weight: 700;
+      padding: 0.2rem 1rem;
+      border-radius: 40px;
+      font-size: 0.9rem;
+      display: inline-block;
+      margin-bottom: 0.3rem;
+    }
 
-        /* ===== باقي الأنماط ===== */
-        .shipment-card .last-update {
-            font-size: 12px;
-            color: #888;
-            direction: ltr;
-            background: #eef3f8;
-            padding: 4px 14px;
-            border-radius: 20px;
-        }
-        .modal {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.5);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            z-index: 2000;
-            padding: 16px;
-            backdrop-filter: blur(6px);
-            -webkit-backdrop-filter: blur(6px);
-        }
-        .modal-content {
-            background: white;
-            border-radius: 20px;
-            padding: 28px 25px 25px;
-            max-width: 600px;
-            width: 100%;
-            max-height: 85vh;
-            overflow-y: auto;
-            position: relative;
-            animation: modalIn 0.3s ease;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.2);
-        }
-        @keyframes modalIn {
-            from {
-                opacity: 0;
-                transform: translateY(30px) scale(0.96);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0) scale(1);
-            }
-        }
-        .modal-content h3 {
-            margin-bottom: 20px;
-            text-align: center;
-            font-size: 22px;
-            font-weight: 700;
-            color: #0d2137;
-        }
-        .modal-content h3 i {
-            color: #0076ff;
-            margin-left: 8px;
-        }
-        .close-btn {
-            position: absolute;
-            top: 16px;
-            left: 20px;
-            font-size: 28px;
-            cursor: pointer;
-            color: #aaa;
-            line-height: 1;
-            transition: 0.2s;
-        }
-        .close-btn:hover {
-            color: #333;
-            transform: rotate(90deg);
-        }
-        .form-group {
-            margin-bottom: 16px;
-            text-align: right;
-        }
-        .form-group label {
-            display: block;
-            margin-bottom: 5px;
-            font-weight: 700;
-            color: #0d2137;
-            font-size: 14px;
-        }
-        .form-group input,
-        .form-group textarea,
-        .form-group select {
-            width: 100%;
-            padding: 12px 15px;
-            border: 2px solid #e8ecf0;
-            border-radius: 10px;
-            font-size: 14px;
-            font-family: 'Cairo', sans-serif;
-            background: #f8fafc;
-            transition: 0.3s;
-        }
-        .form-group input:focus,
-        .form-group textarea:focus,
-        .form-group select:focus {
-            border-color: #0076ff;
-            outline: none;
-            background: white;
-            box-shadow: 0 0 0 4px rgba(0, 118, 255, 0.08);
-        }
-        .form-group textarea {
-            height: 80px;
-            resize: vertical;
-        }
-        .timeline-item {
-            border-right: 3px solid #0076ff;
-            padding: 12px 16px 12px 0;
-            margin-right: 10px;
-            margin-bottom: 14px;
-            background: #f8fafc;
-            border-radius: 0 10px 10px 0;
-            transition: 0.2s;
-        }
-        .timeline-item:hover {
-            background: #f0f6fe;
-        }
-        .timeline-item .time {
-            color: #999;
-            font-size: 13px;
-        }
-        .timeline-item .event {
-            font-weight: 700;
-            color: #0d2137;
-            margin: 5px 0;
-        }
-        .timeline-item .location {
-            color: #666;
-            font-size: 14px;
-        }
-        .timeline-item .problem {
-            color: #dc3545;
-            font-size: 13px;
-            margin-top: 4px;
-        }
-        .client-card {
-            background: #f8fafc;
-            padding: 14px 18px;
-            border-radius: 10px;
-            margin-bottom: 10px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            border: 1px solid #e8ecf0;
-            transition: 0.2s;
-        }
-        .client-card:hover {
-            background: #f0f4fa;
-        }
-        .client-card .client-info {
-            flex: 1;
-        }
-        .client-card .client-info strong {
-            font-size: 16px;
-            color: #0d2137;
-        }
-        .client-card .client-info .phone {
-            color: #666;
-            font-size: 14px;
-            direction: ltr;
-        }
-        .client-card .client-info .created {
-            font-size: 12px;
-            color: #aaa;
-        }
-        .loading {
-            text-align: center;
-            padding: 30px 0;
-        }
-        .spinner {
-            border: 4px solid #e8ecf0;
-            border-top: 4px solid #0076ff;
-            border-radius: 50%;
-            width: 40px;
-            height: 40px;
-            animation: spin 1s linear infinite;
-            margin: 0 auto 10px;
-        }
-        @keyframes spin {
-            0% {
-                transform: rotate(0deg);
-            }
-            100% {
-                transform: rotate(360deg);
-            }
-        }
-        .empty-state {
-            text-align: center;
-            padding: 40px 20px;
-            color: #aaa;
-        }
-        .empty-state .icon {
-            font-size: 56px;
-            margin-bottom: 12px;
-        }
-        .two-columns {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 12px;
-        }
-        .text-center {
-            text-align: center;
-        }
-        .btn-eux,
-        .btn-eux-green,
-        .btn-eux-orange,
-        .btn-eux-red,
-        .btn-eux-outline {
-            --round: 0.75rem;
-            cursor: pointer;
-            position: relative;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            overflow: hidden;
-            transition: all 0.25s ease;
-            border-radius: var(--round);
-            border: none;
-            outline: none;
-            padding: 12px 18px;
-            font-family: 'Cairo', sans-serif;
-            font-weight: 600;
-            font-size: 14px;
-            color: white;
-        }
-        .btn-eux {
-            background: radial-gradient(65.28% 65.28% at 50% 100%, rgba(0, 118, 255, 0.6) 0%, rgba(0, 118, 255, 0) 100%), linear-gradient(0deg, #0076ff, #0076ff);
-            box-shadow: 0 4px 15px rgba(0, 118, 255, 0.25);
-        }
-        .btn-eux-green {
-            background: radial-gradient(65.28% 65.28% at 50% 100%, rgba(40, 167, 69, 0.6) 0%, rgba(40, 167, 69, 0) 100%), linear-gradient(0deg, #28a745, #28a745);
-            box-shadow: 0 4px 15px rgba(40, 167, 69, 0.25);
-        }
-        .btn-eux-orange {
-            background: radial-gradient(65.28% 65.28% at 50% 100%, rgba(255, 152, 0, 0.6) 0%, rgba(255, 152, 0, 0) 100%), linear-gradient(0deg, #ff9800, #ff9800);
-            box-shadow: 0 4px 15px rgba(255, 152, 0, 0.25);
-        }
-        .btn-eux-red {
-            background: radial-gradient(65.28% 65.28% at 50% 100%, rgba(220, 53, 69, 0.6) 0%, rgba(220, 53, 69, 0) 100%), linear-gradient(0deg, #dc3545, #dc3545);
-            box-shadow: 0 4px 15px rgba(220, 53, 69, 0.25);
-        }
-        .btn-eux-outline {
-            background: transparent;
-            border: 1.5px solid #ddd;
-            color: #0d2137;
-            box-shadow: none;
-        }
-        .btn-eux-outline:hover {
-            background: #f5f5f5;
-        }
-        .btn-eux:active,
-        .btn-eux-green:active,
-        .btn-eux-orange:active,
-        .btn-eux-red:active,
-        .btn-eux-outline:active {
-            transform: scale(0.95);
-        }
-        .btn-eux .inner,
-        .btn-eux-green .inner,
-        .btn-eux-orange .inner,
-        .btn-eux-red .inner,
-        .btn-eux-outline .inner {
-            z-index: 2;
-            gap: 6px;
-            position: relative;
-            width: 100%;
-            color: inherit;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 16px;
-            font-weight: 500;
-            line-height: 1.5;
-        }
-        .btn-eux .fold,
-        .btn-eux-green .fold,
-        .btn-eux-orange .fold,
-        .btn-eux-red .fold,
-        .btn-eux-outline .fold {
-            z-index: 1;
-            position: absolute;
-            top: 0;
-            right: 0;
-            height: 1rem;
-            width: 1rem;
-            display: inline-block;
-            transition: all 0.5s ease-in-out;
-            border-bottom-left-radius: 0.5rem;
-            border-top-right-radius: var(--round);
-        }
-        .btn-eux .fold {
-            background: radial-gradient(100% 75% at 55%, rgba(0, 118, 255, 0.6) 0%, rgba(0, 118, 255, 0) 100%);
-            box-shadow: 0 0 3px rgba(0, 0, 0, 0.2);
-        }
-        .btn-eux-green .fold {
-            background: radial-gradient(100% 75% at 55%, rgba(40, 167, 69, 0.6) 0%, rgba(40, 167, 69, 0) 100%);
-            box-shadow: 0 0 3px rgba(0, 0, 0, 0.2);
-        }
-        .btn-eux-orange .fold {
-            background: radial-gradient(100% 75% at 55%, rgba(255, 152, 0, 0.6) 0%, rgba(255, 152, 0, 0) 100%);
-            box-shadow: 0 0 3px rgba(0, 0, 0, 0.2);
-        }
-        .btn-eux-red .fold {
-            background: radial-gradient(100% 75% at 55%, rgba(220, 53, 69, 0.6) 0%, rgba(220, 53, 69, 0) 100%);
-            box-shadow: 0 0 3px rgba(0, 0, 0, 0.2);
-        }
-        .btn-eux-outline .fold {
-            background: radial-gradient(100% 75% at 55%, rgba(13, 33, 55, 0.1) 0%, rgba(13, 33, 55, 0) 100%);
-            box-shadow: 0 0 3px rgba(0, 0, 0, 0.1);
-        }
-        .btn-eux:hover .fold,
-        .btn-eux-green:hover .fold,
-        .btn-eux-orange:hover .fold,
-        .btn-eux-red:hover .fold,
-        .btn-eux-outline:hover .fold {
-            margin-top: -1rem;
-            margin-right: -1rem;
-        }
-        .points_wrapper {
-            overflow: hidden;
-            width: 100%;
-            height: 100%;
-            pointer-events: none;
-            position: absolute;
-            z-index: 1;
-        }
-        .points_wrapper .point {
-            bottom: -10px;
-            position: absolute;
-            animation: floating-points infinite ease-in-out;
-            pointer-events: none;
-            width: 2px;
-            height: 2px;
-            background-color: #fff;
-            border-radius: 9999px;
-        }
-        @keyframes floating-points {
-            0% {
-                transform: translateY(0);
-            }
-            85% {
-                opacity: 0;
-            }
-            100% {
-                transform: translateY(-55px);
-                opacity: 0;
-            }
-        }
-        .points_wrapper .point:nth-child(1) {
-            left: 10%;
-            opacity: 1;
-            animation-duration: 2.35s;
-            animation-delay: 0.2s;
-        }
-        .points_wrapper .point:nth-child(2) {
-            left: 30%;
-            opacity: 0.7;
-            animation-duration: 2.5s;
-            animation-delay: 0.5s;
-        }
-        .points_wrapper .point:nth-child(3) {
-            left: 25%;
-            opacity: 0.8;
-            animation-duration: 2.2s;
-            animation-delay: 0.1s;
-        }
-        .points_wrapper .point:nth-child(4) {
-            left: 44%;
-            opacity: 0.6;
-            animation-duration: 2.05s;
-        }
-        .points_wrapper .point:nth-child(5) {
-            left: 50%;
-            opacity: 1;
-            animation-duration: 1.9s;
-        }
-        .points_wrapper .point:nth-child(6) {
-            left: 75%;
-            opacity: 0.5;
-            animation-duration: 1.5s;
-            animation-delay: 1.5s;
-        }
-        .points_wrapper .point:nth-child(7) {
-            left: 88%;
-            opacity: 0.9;
-            animation-duration: 2.2s;
-            animation-delay: 0.2s;
-        }
-        .points_wrapper .point:nth-child(8) {
-            left: 58%;
-            opacity: 0.8;
-            animation-duration: 2.25s;
-            animation-delay: 0.2s;
-        }
-        .points_wrapper .point:nth-child(9) {
-            left: 98%;
-            opacity: 0.6;
-            animation-duration: 2.6s;
-            animation-delay: 0.1s;
-        }
-        .points_wrapper .point:nth-child(10) {
-            left: 65%;
-            opacity: 1;
-            animation-duration: 2.5s;
-            animation-delay: 0.2s;
-        }
-        .btn-eux-outline .points_wrapper .point {
-            background-color: #0d2137;
-        }
-        .toast {
-            position: fixed;
-            bottom: 24px;
-            left: 50%;
-            transform: translateX(-50%);
-            background: #0d2137;
-            color: white;
-            padding: 12px 28px;
-            border-radius: 14px;
-            font-size: 14px;
-            z-index: 9999;
-            animation: toastIn 0.3s ease;
-            max-width: 90%;
-            text-align: center;
-            font-family: 'Cairo', sans-serif;
-            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.2);
-        }
-        .toast.success {
-            background: #28a745;
-        }
-        .toast.error {
-            background: #dc3545;
-        }
-        @keyframes toastIn {
-            from {
-                opacity: 0;
-                transform: translateX(-50%) translateY(20px);
-            }
-            to {
-                opacity: 1;
-                transform: translateX(-50%) translateY(0);
-            }
-        }
-        .public-page-header {
-            text-align: center;
-            padding: 10px 0 5px 0;
-        }
-        .public-page-header .helo-wrapper {
-            display: flex;
-            justify-content: center;
-            margin-bottom: 5px;
-        }
-        .public-page-header .helo-wrapper .civil-helo {
-            margin-top: 0;
-            transform: scale(0.75);
-            animation: hoverCivilSmall 3s ease-in-out infinite;
-        }
-        @keyframes hoverCivilSmall {
-            0%,
-            100% {
-                transform: scale(0.75) translateY(0px);
-            }
-            50% {
-                transform: scale(0.75) translateY(-6px);
-            }
-        }
-        .site-link-wrapper {
-            display: flex;
-            justify-content: center;
-            margin: 2px 0 16px 0;
-        }
-        .site-link-btn {
-            --black-700: hsla(210, 97%, 50%, 0.15);
-            --border_radius: 9999px;
-            --transtion: 0.3s ease-in-out;
-            --offset: 2px;
-            cursor: pointer;
-            position: relative;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            transform-origin: center;
-            padding: 0.6rem 1.8rem;
-            background-color: transparent;
-            border: none;
-            border-radius: var(--border_radius);
-            transform: scale(calc(1 + (var(--active, 0) * 0.05)));
-            transition: transform var(--transtion);
-            text-decoration: none;
-            font-family: 'Cairo', sans-serif;
-        }
-        .site-link-btn::before {
-            content: "";
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            width: 100%;
-            height: 100%;
-            background-color: var(--black-700);
-            border-radius: var(--border_radius);
-            box-shadow: inset 0 0.5px hsla(0, 0%, 100%, 0.3), inset 0 -1px 2px 0 hsla(0, 0%, 0%, 0.1), 0px 4px 10px -4px hsla(0, 0%, 0%, 0.1);
-            transition: all var(--transtion);
-            z-index: 0;
-        }
-        .site-link-btn::after {
-            content: "";
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            width: 100%;
-            height: 100%;
-            background-color: hsla(210, 97%, 61%, 0.15);
-            background-image: radial-gradient(at 51% 89%, hsla(210, 45%, 74%, 0.3) 0px, transparent 50%), radial-gradient(at 0% 0%, hsla(210, 45%, 74%, 0.3) 0px, transparent 50%);
-            background-position: top;
-            opacity: var(--active, 0);
-            border-radius: var(--border_radius);
-            transition: opacity var(--transtion);
-            z-index: 2;
-        }
-        .site-link-btn:is(:hover,
-        :focus-visible) {
-            --active: 1;
-        }
-        .site-link-btn:active {
-            transform: scale(1);
-        }
-        .site-link-btn .dots_border {
-            --size_border: calc(100% + 2px);
-            overflow: hidden;
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            width: var(--size_border);
-            height: var(--size_border);
-            background-color: transparent;
-            border-radius: var(--border_radius);
-            z-index: -10;
-        }
-        .site-link-btn .dots_border::before {
-            content: "";
-            position: absolute;
-            top: 30%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            transform-origin: left;
-            transform: rotate(0deg);
-            width: 100%;
-            height: 2rem;
-            background: linear-gradient(90deg, transparent, #0076ff, transparent);
-            mask: linear-gradient(transparent 0%, white 120%);
-            animation: rotate 3s linear infinite;
-        }
-        @keyframes rotate {
-            to {
-                transform: rotate(360deg);
-            }
-        }
-        .site-link-btn .text_button {
-            position: relative;
-            z-index: 10;
-            font-size: 1rem;
-            color: #0076ff;
-            font-weight: 700;
-            font-family: 'Cairo', sans-serif;
-            transition: color var(--transtion);
-        }
-        .site-link-btn:is(:hover,
-        :focus-visible) .text_button {
-            color: #0055b3;
-        }
-        @media (max-width: 768px) {
-            .header-new {
-                padding: 12px 16px;
-            }
-            .header-new .logo-text {
-                font-size: 20px;
-                letter-spacing: 1px;
-            }
-            .header-new .divider {
-                height: 25px;
-            }
-            .header-new .dot {
-                width: 6px;
-                height: 6px;
-            }
-            header {
-                padding: 20px 5%;
-            }
-            .logo {
-                font-size: 24px;
-            }
-            .hero h1 {
-                font-size: 2rem;
-            }
-            .hero p {
-                font-size: 1rem;
-            }
-            .cyber-node {
-                width: 120px;
-                height: 120px;
-                font-size: 28px;
-            }
-            .cube-container {
-                width: 130px;
-                height: 120px;
-            }
-            .iso-cube {
-                width: 90px;
-                height: 90px;
-            }
-            .iso-face {
-                width: 90px;
-                height: 90px;
-                font-size: 24px;
-            }
-            .iso-front {
-                transform: rotateY(0deg) translateZ(45px);
-            }
-            .iso-right {
-                transform: rotateY(90deg) translateZ(45px);
-            }
-            .iso-top {
-                transform: rotateX(90deg) translateZ(45px);
-            }
-            .quantum-box {
-                width: 120px;
-                height: 120px;
-            }
-            .two-columns {
-                grid-template-columns: 1fr;
-            }
-            .header-actions .share-btn-text {
-                font-size: 11px;
-                max-width: 180px;
-                padding: 6px 10px;
-            }
-            .cards-grid {
-                grid-template-columns: 1fr;
-            }
-        }
-    </style>
+    /* سلة */
+    .cart-section {
+      background: var(--cream);
+      border-radius: 40px;
+      padding: 1.5rem 2rem;
+      margin-top: 2.5rem;
+      border: 2px solid var(--gold-light);
+    }
+    .cart-items {
+      display: flex;
+      flex-direction: column;
+      gap: 0.6rem;
+    }
+    .cart-item {
+      display: flex;
+      justify-content: space-between;
+      background: white;
+      padding: 0.5rem 1.2rem;
+      border-radius: 60px;
+      border: 1px solid var(--gold);
+    }
+    .checkout-btn {
+      background: var(--brown);
+      color: var(--gold);
+      border: none;
+      padding: 0.8rem 2.5rem;
+      border-radius: 60px;
+      font-size: 1.3rem;
+      font-weight: 700;
+      margin-top: 1.2rem;
+      cursor: pointer;
+    }
+
+    /* صندوق تسجيل الدخول (مودال) */
+    .modal {
+      display: none;
+      position: fixed;
+      top: 0; left: 0; width: 100%; height: 100%;
+      background: rgba(0,0,0,0.5);
+      backdrop-filter: blur(4px);
+      justify-content: center;
+      align-items: center;
+      z-index: 999;
+    }
+    .modal-content {
+      background: #fff7e5;
+      padding: 2.5rem 2.8rem;
+      border-radius: 60px;
+      max-width: 400px;
+      width: 90%;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+      border: 3px solid var(--gold);
+      text-align: center;
+    }
+    .modal-content h2 {
+      color: var(--brown);
+      margin-bottom: 1.5rem;
+    }
+    .modal-content input {
+      width: 100%;
+      padding: 0.8rem 1.2rem;
+      margin: 0.7rem 0;
+      border: 2px solid var(--gold-dark);
+      border-radius: 60px;
+      font-size: 1rem;
+      background: white;
+    }
+    .modal-content .login-submit {
+      background: var(--gold);
+      border: none;
+      padding: 0.8rem;
+      width: 100%;
+      border-radius: 60px;
+      font-weight: 700;
+      font-size: 1.2rem;
+      color: var(--brown);
+      cursor: pointer;
+      margin-top: 0.8rem;
+      box-shadow: 0 4px 0 #b8860b;
+    }
+    .modal-content .close-modal {
+      background: transparent;
+      border: none;
+      font-size: 2rem;
+      float: left;
+      cursor: pointer;
+      color: var(--brown);
+    }
+
+    /* صفحة الادمن */
+    .admin-panel {
+      display: none;
+      background: #fcf3dd;
+      border-radius: 60px;
+      padding: 2rem;
+      margin-top: 2rem;
+      border: 3px solid var(--gold);
+    }
+    .admin-panel input, .admin-panel textarea {
+      width: 100%;
+      padding: 0.8rem;
+      margin: 0.5rem 0;
+      border-radius: 60px;
+      border: 2px solid var(--gold-dark);
+      background: white;
+    }
+    .admin-panel .admin-row {
+      display: flex;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+    .admin-panel .admin-row > * {
+      flex: 1 1 180px;
+    }
+    .admin-btn {
+      background: var(--gold);
+      border: none;
+      padding: 0.7rem 2rem;
+      border-radius: 60px;
+      font-weight: 700;
+      color: var(--brown);
+      cursor: pointer;
+    }
+
+    /* رسائل */
+    .message-popup {
+      position: fixed;
+      bottom: 30px; left: 50%;
+      transform: translateX(-50%);
+      background: var(--brown);
+      color: var(--gold);
+      padding: 1rem 2.5rem;
+      border-radius: 60px;
+      font-weight: 700;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+      display: none;
+      z-index: 1000;
+      border: 2px solid var(--gold);
+    }
+
+    /* مرونة */
+    @media (max-width: 600px) {
+      .top-bar { flex-direction: column; gap: 0.6rem; align-items: stretch; }
+      .landing h1 { font-size: 2.8rem; }
+    }
+  </style>
 </head>
-<body oncontextmenu="return false;">
+<body>
 
-    <!-- ============================================
-    صفحة الهبوط (Landing Page) مع الشريط الجديد
-    ============================================ -->
-    <div id="landingPage">
-        <!-- الشريط العلوي الجديد -->
-        <header class="header-new">
-            <div class="logo-container">
-                <div class="divider"></div>
-                <div class="logo-text"><span>EUX</span> EXPRESS</div>
-                <div class="dot"></div>
-            </div>
-        </header>
+<!-- صفحة الهبوط -->
+<div class="landing" id="landingPage">
+  <h1>بشمهندسه هديل</h1>
+  <p>✨ أهلاً بك في عالم LeVance ✨</p>
+  <button class="enter-btn" id="enterBtn">دخول</button>
+</div>
 
-        <section class="hero">
-            <div class="showcase-wrapper">
-                <div class="cyber-node">EUX</div>
-                <div class="glow-floor"></div>
-            </div>
-            <h1>شركة <span>EUX</span> للشحن</h1>
-            <p>الريادة في سرعة وحلول الشحن نقدم خدماتنا الاحترافية من مدينة العبور (11828) وإلى جميع محافظات جمهورية مصر العربية بأفضل الأسعار وأعلى كفاءة.</p>
-            <button onclick="togglePopup(true)" class="btn"><i class="fas fa-user-plus"></i> افتح حساب الآن</button>
-            <a href="#" class="login-btn-hero" onclick="openTrackingSystem(); return false;">
-                <i class="fas fa-sign-in-alt"></i> تسجيل الدخول
-            </a>
-            <div class="sea-wave-divider">
-                <svg viewBox="0 0 1200 120" preserveAspectRatio="none">
-                    <path d="M321.39,56.44c58-10.79,114.16-30.13,172-41.86,82.39-16.72,168.19-17.73,250.45-.39C823.78,31,906.67,72,985.66,92.83c70.05,18.48,146.53,26.09,214.34,3V120H0V0C26.9,4.75,55.05,16.33,81.11,25.09,151,48.56,224.4,74.48,321.39,56.44Z" class="wave-fill-white"></path>
-                </svg>
-            </div>
-        </section>
+<!-- الموقع الرئيسي -->
+<div class="main-app" id="mainApp">
 
-        <div class="popup-overlay" id="accountPopup" onclick="closePopupOutside(event)">
-            <div class="popup-box">
-                <span class="popup-close" onclick="togglePopup(false)">&times;</span>
-                <div class="popup-title"><i class="far fa-clock"></i> سيتم التواصل خلال 5 ساعات لتفعيل الحساب</div>
-                <form id="excelForm" onsubmit="submitToExcel(event)">
-                    <div class="popup-form-group">
-                        <label for="userName">الاسم</label>
-                        <input type="text" id="userName" name="name" placeholder="أدخل ألإسم " required>
-                    </div>
-                    <div class="popup-form-group">
-                        <label for="userPhone">رقم الهاتف</label>
-                        <input type="tel" id="userPhone" name="phone" placeholder="أدخل رقم الهاتف" required>
-                    </div>
-                    <button type="submit" class="popup-submit-btn">إرسال</button>
-                </form>
-            </div>
-        </div>
-
-        <section id="about" class="about">
-            <div class="showcase-wrapper" style="margin-bottom: 50px; margin-top: 20px;">
-                <div class="cube-container">
-                    <div class="iso-cube">
-                        <div class="iso-face iso-front">EUX</div>
-                        <div class="iso-face iso-right"></div>
-                        <div class="iso-face iso-top"></div>
-                    </div>
-                </div>
-                <div class="glow-floor" style="margin-top: 25px;"></div>
-            </div>
-            <h2 class="section-title">لماذا شركة EUX؟</h2>
-            <p style="max-width: 800px; margin: 0 auto 30px; color: #666;">نعمل في مجال الشحن منذ 3 أعوام متتالية حققنا فيها نجاحا باهرا، وقدمنا حلولا مبتكرة لجميع مشاكل الشحن التي تواجه التجار لأننا ندرك تماما ما يهمك:</p>
-            <div class="about-container">
-                <div class="about-card">
-                    <i class="fas fa-shipping-fast"></i>
-                    <h3>سرعة التسليم والاستلام</h3>
-                    <p>الأفضل والأسرع في استلام الشحنات من مدينة العبور وتسليم الشحنات لجميع المحافظات</p>
-                </div>
-                <div class="about-card">
-                    <i class="fas fa-shield-alt"></i>
-                    <h3>الحفاظ على الشحنات</h3>
-                    <p>أمان كامل لمنتجاتك وضمان وصولها بحالتها الأصلية للعميل</p>
-                </div>
-                <div class="about-card">
-                    <i class="fas fa-hand-holding-usd"></i>
-                    <h3>سعر اقتصادي مميز</h3>
-                    <p>نقدم أفضل معادلة بين السعر الاقتصادي والجودة العالية لدعم تجارتك</p>
-                </div>
-            </div>
-            <div class="sea-wave-divider">
-                <svg viewBox="0 0 1200 120" preserveAspectRatio="none">
-                    <path d="M321.39,56.44c58-10.79,114.16-30.13,172-41.86,82.39-16.72,168.19-17.73,250.45-.39C823.78,31,906.67,72,985.66,92.83c70.05,18.48,146.53,26.09,214.34,3V120H0V0C26.9,4.75,55.05,16.33,81.11,25.09,151,48.56,224.4,74.48,321.39,56.44Z" class="wave-fill-white"></path>
-                </svg>
-            </div>
-        </section>
-
-        <section id="services" class="services">
-            <h2 class="section-title">خدماتنا المميزة</h2>
-            <div class="services-grid">
-                <div class="service-box"><i class="fas fa-mobile-alt"></i><h4>تطبيق متابعة خاص</h4><p>تابع شحناتك خطوة بخطوة أولا بأول من خلال تطبيقنا الذكي</p></div>
-                <div class="service-box"><i class="fas fa-users"></i><h4>جروب للمتابعة والدعم</h4><p>فريق دعم فني متكامل متواجد لخدمتك ومتابعة طلباتك بمرونة</p></div>
-                <div class="service-box"><i class="fas fa-truck-loading"></i><h4>خدمة بيكب مجاني</h4><p>نقوم باستلام الشحنات من باب مخزنك أو مقر عملك مجانا</p></div>
-                <div class="service-box"><i class="fas fa-money-bill-wave"></i><h4>تحصيل 3 أيام أسبوعيا</h4><p>دورة رأس مال سريعة مع نظام تحصيل مرن وموثوق 3 مرات في الأسبوع</p></div>
-                <div class="service-box"><i class="fas fa-search-plus"></i><h4>خدمة معاينة واستبدال</h4><p>نمنح عملائك ميزة المعاينة والاستبدال في مكان التسليم لزيادة الثقة</p></div>
-                <div class="service-box"><i class="fas fa-redo-alt"></i><h4>3 محاولات تسليم</h4><p>نحاول تسليم الشحنة حتى 3 مرات قبل تصنيفها كمرتجع لضمان أعلى نسبة نجاح</p></div>
-                <div class="service-box"><i class="fas fa-chart-line"></i><h4>نسبة تسليم عالية جدا</h4><p>بفضل خبرتنا الممتدة لـ 3 سنوات، نحقق أعلى معدلات نجاح تسليم بمصر</p></div>
-            </div>
-            <div class="sea-wave-divider">
-                <svg viewBox="0 0 1200 120" preserveAspectRatio="none">
-                    <path d="M321.39,56.44c58-10.79,114.16-30.13,172-41.86,82.39-16.72,168.19-17.73,250.45-.39C823.78,31,906.67,72,985.66,92.83c70.05,18.48,146.53,26.09,214.34,3V120H0V0C26.9,4.75,55.05,16.33,81.11,25.09,151,48.56,224.4,74.48,321.39,56.44Z" class="wave-fill-light"></path>
-                </svg>
-            </div>
-        </section>
-
-        <section id="contact" class="contact">
-            <div class="showcase-wrapper" style="margin-bottom: 50px; margin-top: 10px;">
-                <div class="quantum-box">
-                    <span style="color: #0076ff; font-weight: 900; font-size: 32px; z-index: 5; letter-spacing: 1px;">EUX</span>
-                </div>
-                <div class="glow-floor" style="background: radial-gradient(#ffb700, transparent 70%); margin-top: 25px;"></div>
-            </div>
-            <h2 class="section-title">كن أحد عملائنا المميزين اليوم!</h2>
-            <p style="margin-bottom: 30px; font-size: 1.1rem;">لا تتردد في التواصل معنا لمعرفة المزيد من التفاصيل والبدء في شحن منتجاتك</p>
-            <div class="contact-info">
-                <div class="info-item">
-                    <i class="fas fa-map-marker-alt"></i>
-                    <span>مدينة العبور 11828، الشباب، بجوار كشري الوالي</span>
-                </div>
-            </div>
-        </section>
-
-        <footer>
-            <p>&copy; 2026 جميع الحقوق محفوظة لشركة EUX للشحن</p>
-            <div class="footer-social">
-                <a href="https://www.facebook.com/share/1JBqQgjooM/" target="_blank"><i class="fab fa-facebook"></i></a>
-            </div>
-        </footer>
+  <!-- الشريط العلوي -->
+  <div class="top-bar">
+    <div class="brand">
+      <span class="hl">H.L</span>
+      <span class="levance">LeVance</span>
     </div>
+    <button class="login-btn" id="loginModalBtn"><i class="fas fa-user"></i> تسجيل الدخول</button>
+  </div>
 
-    <!-- ============================================
-    نظام التتبع (Tracking App)
-    ============================================ -->
-    <div id="trackingApp" class="hidden">
-        <div class="tracking-container" id="app">
+  <!-- عرض المنتجات -->
+  <div id="productList" class="products-grid"></div>
 
-            <!-- ==========================================
-            صفحة تسجيل الدخول (Login) مع الشريط الجديد
-            ========================================== -->
-            <div id="loginPage" class="login-page">
-                <!-- الشريط العلوي الجديد -->
-                <header class="header-new" style="border-radius: 16px 16px 0 0; margin-bottom: 20px;">
-                    <div class="logo-container">
-                        <div class="divider"></div>
-                        <div class="logo-text"><span>EUX</span> EXPRESS</div>
-                        <div class="dot"></div>
-                    </div>
-                </header>
+  <!-- سلة المشتريات -->
+  <div class="cart-section">
+    <h3 style="color:var(--brown);"><i class="fas fa-shopping-cart"></i> سلة المشتريات</h3>
+    <div id="cartItems" class="cart-items"></div>
+    <button class="checkout-btn" id="checkoutBtn">إتمام الطلب <i class="fas fa-arrow-left"></i></button>
+  </div>
 
-                <div class="logo-wrapper">
-                    <div class="civil-helo">
-                        <div class="body">
-                            <div class="body-stripe"></div>
-                            <div class="cockpit">
-                                <div class="cockpit-wiper"></div>
-                            </div>
-                            <span class="eux-logo">EUX</span>
-                        </div>
-                        <div class="tail"></div>
-                        <div class="main-rotor"></div>
-                        <div class="tail-rotor"></div>
-                        <div class="nav-light red"></div>
-                        <div class="nav-light green"></div>
-                    </div>
-                </div>
-                <div class="brand">مرحبا بك في <span>EUX Express</span></div>
-
-                <div class="input-group">
-                    <span class="input-icon"><i class="fas fa-phone"></i></span>
-                    <input type="text" id="phoneInput" placeholder="رقم الهاتف" dir="ltr" maxlength="11" oninput="this.value=this.value.replace(/[^0-9]/g,'')">
-                </div>
-                <div class="input-group">
-                    <span class="input-icon"><i class="fas fa-lock"></i></span>
-                    <input type="password" id="passwordInput" placeholder="كلمة المرور" dir="ltr">
-                </div>
-
-                <button class="btn-eux" onclick="doLogin()" style="width:100%;padding:16px;font-size:18px;border-radius:14px;">
-                    <span class="inner"><i class="fas fa-sign-in-alt"></i> دخول</span>
-                    <span class="fold"></span>
-                    <div class="points_wrapper">
-                        <span class="point"></span><span class="point"></span><span class="point"></span>
-                        <span class="point"></span><span class="point"></span><span class="point"></span>
-                        <span class="point"></span><span class="point"></span><span class="point"></span>
-                        <span class="point"></span>
-                    </div>
-                </button>
-                <button class="btn-eux-outline" onclick="backToLanding()" style="width:100%;margin-top:10px;padding:14px;border-radius:12px;font-size:15px;">
-                    <span class="inner">العودة للصفحة الرئيسية</span>
-                </button>
-                <p class="error-msg" id="loginError"></p>
-            </div>
-
-            <!-- ==========================================
-            لوحة التحكم (Dashboard) مع الشريط الجديد
-            ========================================== -->
-            <div id="dashboard" class="hidden">
-                <!-- الشريط العلوي الجديد -->
-                <header class="header-new" style="border-radius: 16px 16px 0 0; margin-bottom: 20px;">
-                    <div class="logo-container">
-                        <div class="divider"></div>
-                        <div class="logo-text"><span>EUX</span> EXPRESS</div>
-                        <div class="dot"></div>
-                    </div>
-                </header>
-
-                <div class="tracking-header">
-                    <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
-                        <h2><i class="fas fa-tachometer-alt"></i> لوحة التحكم</h2>
-                        <span class="total-small">اجمالي الشحنات: <span class="count" id="totalCountSmall">0</span></span>
-                    </div>
-                    <div class="header-actions">
-                        <div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap;background:#f0f4fa;padding:4px 8px;border-radius:30px;border:1px solid #dce5ed;">
-                            <i class="fas fa-search" style="color:#888;font-size:14px;"></i>
-                            <input type="text" id="searchShipmentInput" placeholder="بحث باسم أو رقم هاتف..." style="border:none;background:transparent;padding:6px 10px;font-family:'Cairo',sans-serif;font-size:14px;min-width:150px;outline:none;" dir="rtl">
-                            <button onclick="searchShipments()" style="background:#0076ff;color:white;border:none;border-radius:20px;padding:4px 16px;font-weight:600;cursor:pointer;font-family:'Cairo',sans-serif;font-size:13px;transition:0.2s;">بحث</button>
-                            <button onclick="clearSearch()" style="background:transparent;color:#888;border:none;border-radius:20px;padding:4px 10px;cursor:pointer;font-family:'Cairo',sans-serif;font-size:12px;">الغاء</button>
-                        </div>
-                        <button id="shareLinkBtn" class="btn-eux-orange hidden share-btn-text" onclick="copyShareLink()" style="font-size:12px;padding:8px 12px;border-radius:10px;">
-                            <span class="inner">يمكن إرسال هذا الرابط للمستلم ليقوم بتسجيل الشحنه بنفسه</span>
-                            <span class="fold"></span>
-                            <div class="points_wrapper">
-                                <span class="point"></span><span class="point"></span><span class="point"></span>
-                                <span class="point"></span><span class="point"></span><span class="point"></span>
-                                <span class="point"></span><span class="point"></span><span class="point"></span>
-                                <span class="point"></span>
-                            </div>
-                        </button>
-                        <button id="addShipmentBtn" class="btn-eux-green hidden" onclick="showAddShipmentForm()" style="padding:10px 16px;border-radius:10px;font-size:13px;">
-                            <span class="inner">اضافة شحنة</span>
-                            <span class="fold"></span>
-                            <div class="points_wrapper">
-                                <span class="point"></span><span class="point"></span><span class="point"></span>
-                                <span class="point"></span><span class="point"></span><span class="point"></span>
-                                <span class="point"></span><span class="point"></span><span class="point"></span>
-                                <span class="point"></span>
-                            </div>
-                        </button>
-                        <button id="clientsBtn" class="btn-eux hidden" onclick="showClients()" style="padding:10px 16px;border-radius:10px;font-size:13px;">
-                            <span class="inner">عملاء</span>
-                            <span class="fold"></span>
-                            <div class="points_wrapper">
-                                <span class="point"></span><span class="point"></span><span class="point"></span>
-                                <span class="point"></span><span class="point"></span><span class="point"></span>
-                                <span class="point"></span><span class="point"></span><span class="point"></span>
-                                <span class="point"></span>
-                            </div>
-                        </button>
-                        <button id="allShipmentsBtn" class="btn-eux-orange hidden" onclick="loadAllShipments()" style="padding:10px 16px;border-radius:10px;font-size:13px;">
-                            <span class="inner">الكل</span>
-                            <span class="fold"></span>
-                            <div class="points_wrapper">
-                                <span class="point"></span><span class="point"></span><span class="point"></span>
-                                <span class="point"></span><span class="point"></span><span class="point"></span>
-                                <span class="point"></span><span class="point"></span><span class="point"></span>
-                                <span class="point"></span>
-                            </div>
-                        </button>
-                        <button class="btn-eux-outline" onclick="logout()" style="padding:10px 16px;border-radius:10px;font-size:13px;">
-                            <span class="inner">خروج</span>
-                        </button>
-                    </div>
-                </div>
-                <div id="content" class="cards-grid"></div>
-            </div>
-
-            <!-- ==========================================
-            صفحة تسجيل الشحنة العامة (Public Order Page)
-            مع الشريط الجديد وعداد منع التكرار
-            ========================================== -->
-            <div id="publicOrderPage" class="hidden">
-                <!-- الشريط العلوي الجديد -->
-                <header class="header-new" style="border-radius: 16px 16px 0 0; margin-bottom: 20px;">
-                    <div class="logo-container">
-                        <div class="divider"></div>
-                        <div class="logo-text"><span>EUX</span> EXPRESS</div>
-                        <div class="dot"></div>
-                    </div>
-                </header>
-
-                <div class="public-page-header">
-                    <div class="helo-wrapper">
-                        <div class="civil-helo">
-                            <div class="body"><div class="body-stripe"></div><div class="cockpit"><div class="cockpit-wiper"></div></div><span class="eux-logo">EUX</span></div>
-                            <div class="tail"></div><div class="main-rotor"></div><div class="tail-rotor"></div>
-                            <div class="nav-light red"></div><div class="nav-light green"></div>
-                        </div>
-                    </div>
-                    <div class="site-link-wrapper">
-                        <a href="#" onclick="backToLanding(); return false;" class="site-link-btn">
-                            <span class="dots_border"></span>
-                            <span class="text_button">euxexpress.com</span>
-                        </a>
-                    </div>
-                </div>
-
-                <div class="form-group"><label>اسم المستلم *</label><input id="pf_receiverName" placeholder="اسم المستلم"></div>
-                <div class="form-group"><label>هاتف المستلم *</label><input id="pf_receiverPhone" placeholder="مثال: 010xxxxxxxx" dir="ltr" maxlength="11" oninput="this.value=this.value.replace(/[^0-9]/g,'')"></div>
-                <div class="form-group"><label>هاتف آخر للمستلم</label><input id="pf_receiverPhone2" placeholder="هاتف آخر (اختياري)" dir="ltr" maxlength="11" oninput="this.value=this.value.replace(/[^0-9]/g,'')"></div>
-                <div class="two-columns">
-                    <div class="form-group"><label>المحافظة *</label><select id="pf_governorate" onchange="updatePublicCities()"><option value="">اختر المحافظة</option></select></div>
-                    <div class="form-group"><label>المدينة *</label><select id="pf_city"><option value="">اختر المحافظة أولا</option></select></div>
-                </div>
-                <div class="form-group"><label>العنوان التفصيلي *</label><input id="pf_address" placeholder="العنوان بالتفصيل"></div>
-                <div class="form-group"><label>المبلغ المطلوب تحصيله شامل الشحن *</label><input id="pf_amount" type="number" placeholder="المبلغ بالجنيه" dir="ltr"></div>
-                <div class="form-group"><label>وزن الشحنة *</label><input id="pf_weight" type="number" placeholder="الوزن بالكيلو" dir="ltr" value="1"></div>
-                <div class="form-group"><label>ملاحظات</label><textarea id="pf_notes" placeholder="ملاحظات اضافية"></textarea></div>
-                
-                <!-- زر تسجيل الشحنة مع عداد منع التكرار -->
-                <button class="btn-eux" id="publicSubmitBtn" onclick="submitPublicOrder()" style="width:100%;padding:14px;border-radius:12px;font-size:16px;">
-                    <span class="inner">تسجيل الشحنة</span>
-                    <span class="fold"></span>
-                    <div class="points_wrapper">
-                        <span class="point"></span><span class="point"></span><span class="point"></span>
-                        <span class="point"></span><span class="point"></span><span class="point"></span>
-                        <span class="point"></span><span class="point"></span><span class="point"></span>
-                        <span class="point"></span>
-                    </div>
-                </button>
-                <button class="btn-eux-outline" onclick="backToLanding()" style="width:100%;margin-top:8px;padding:12px;border-radius:10px;font-size:14px;">
-                    <span class="inner">العودة للصفحة الرئيسية</span>
-                </button>
-                <p id="publicError" style="color:red;margin-top:10px;text-align:center;"></p>
-            </div>
-        </div>
-
-        <div id="modal" class="modal hidden">
-            <div class="modal-content" id="modalContent">
-                <span class="close-btn" onclick="closeModal()">×</span>
-                <div id="modalBody"></div>
-            </div>
-        </div>
+  <!-- لوحة الادمن (تظهر بعد تسجيل الدخول) -->
+  <div class="admin-panel" id="adminPanel">
+    <h2 style="color:var(--brown);">✨ لوحة الأدمن ✨</h2>
+    <div class="admin-row">
+      <input type="text" id="productName" placeholder="اسم المنتج">
+      <input type="text" id="productPrice" placeholder="السعر (مثال: 150)">
+      <input type="text" id="productDiscount" placeholder="الخصم (مثال: 20%)">
     </div>
-
-    <script>
-        const API_URL = "https://script.google.com/macros/s/AKfycbwiI6c4Kxh3EQxmCWwipr0MsAHgfPUadPqP9LqnUH9WGeGu0QuCXbl-sLTcS7l9NbJu/exec";
-        const BASE_URL = "https://euxexpress.com";
-
-        let currentUser = null;
-        let publicClientPhone = null;
-        let allShipmentsData = [];
-        let editingShipmentId = null;
-        let isSubmitting = false;
-        let isPublicSubmitting = false;
-        let autoUpdateInterval = null;
-
-        // ============================================
-        // إضافة مركز "أبو حماد" في محافظة الشرقية
-        // ============================================
-        const governorates = {
-            'الشرقية': ['بلبيس', 'انشاص الرمل', 'أولاد صقر', 'الحسينية', 'ديرب نجم', 'فاقوس', 'كفر صقر', 'مشتول السوق', 'منيا القمح', 'الصالحية القديمة', 'الصالحية الجديدة', 'صان الحجر', 'مدينة العاشر من رمضان', 'أبو حماد'],
-            'الجيزة': ['مدينة السادس من أكتوبر', 'مدينة الشيخ زايد', 'العياط', 'الحوامدية', 'البدرشين', 'الصف', 'العمرانية', 'أطفيح', 'الواحات البحرية', 'الجيزة', 'حدائق الاهرام', 'فيصل', 'الهرم', 'أبو النمرس', 'العجوزة', 'الوراق', 'أوسيم', 'بولاق الدكرور', 'الدقي', 'أرض اللواء', 'المهندسين', 'كرداسة', 'إمبابة', 'منشأة القناطر'],
-            'الغربية': ['كفر الزيات', 'المحلة الكبرى', 'سمنود', 'بسيون', 'السنطة', 'زفتى', 'قطور', 'طنطا'],
-            'الدقهلية': ['المنصورة', 'أجا', 'المنزلة', 'بلقاس', 'دكرنس', 'السنبلاوين', 'منية النصر', 'ميت غمر', 'شربين', 'طلخا'],
-            'الإسكندرية': ['الدخيلة', 'العامرية', 'برج العرب', 'محرم بيك', 'باب شرقي', 'الساحل الشمالي', 'سيدي جابر', 'العطارين', 'المنشية', 'اللبان', 'الجمرك', 'مينا البصل', 'كرموز', 'الرمل', 'المنتزه'],
-            'أسيوط': ['أبنوب', 'أبوتيج', 'البداري', 'الغنايم', 'الفتح', 'القوصية', 'ديروط', 'ساحل سليم', 'صدفا', 'مدينة أسيوط', 'منفلوط', 'منقباد'],
-            'أسوان': ['أسوان', 'كوم امبو', 'دراو', 'إدفو'],
-            'بني سويف': ['الواسطى', 'ناصر', 'مدينة بني سويف', 'مركز بني سويف', 'أهناسيا', 'ببا', 'سمسطا', 'الفشن'],
-            'القليوبية': ['بنها', 'الخانكة', 'العبور', 'القناطر الخيرية', 'شبين القناطر', 'طوخ', 'كفر شكر', 'قليوب', 'شبرا الخيمة'],
-            'القاهرة': ['عابدين', 'العباسية', 'الأزبكية', 'القطامية', 'المنيل', 'المقطم', 'دار السلام', 'البساتين', 'الجمالية', 'السيدة زينب', 'حلوان', 'المعادي', 'مصر القديمة', 'قصر النيل', 'الخليفة', 'طرة', 'الزمالك', 'الشروق', 'مدينة بدر', 'عين شمس', 'مدينتي', 'الزيتون', 'مدينة نصر', 'القاهرة الجديدة', 'هليوبوليس', 'الأميرية', 'السلام', 'الوايلي', 'الشرابية', 'المرج', 'المطرية', 'النزهة', 'حدائق القبة', 'شبرا مصر', 'كورنيش النيل'],
-            'البحيرة': ['دمنهور', 'كفر الدوار', 'أبو حمص', 'المحمودية', 'وادي النطرون', 'النوبارية', 'أبوالمطامير', 'حوش عيسي', 'إيتاي البارود', 'شبراخيت', 'رشيد', 'إدكوا', 'مركز بدر', 'الدلنجات', 'الرحمانية', 'كوم حمادة'],
-            'دمياط': ['فارسكور', 'دمياط القديمة', 'كفر سعد', 'الزرقا', 'كفر البطيخ', 'دمياط الجديدة', 'رأس البر', 'عزبة البرج'],
-            'الفيوم': ['طامية', 'سنورس', 'مركز الفيوم', 'مدينة الفيوم', 'أطسا', 'أبشواي', 'يوسف الصديق'],
-            'البحر الأحمر': ['الغردقة', 'رأس غارب', 'سفاجا', 'القصير', 'مرسى علم'],
-            'الإسماعيلية': ['الإسماعيلية'],
-            'كفر الشيخ': ['كفر الشيخ', 'دسوق', 'فوه', 'مطوبس', 'بلطيم', 'الحامول', 'الرياض', 'بيلا', 'قلين', 'سيدى سالم'],
-            'الأقصر': ['مدينة الأقصر', 'أرمنت', 'أسنا', 'القرنة'],
-            'مرسى مطروح': ['مرسى مطروح'],
-            'المنيا': ['العدوة', 'مغاغة', 'بني مزار', 'مطاي', 'سمالوط', 'مركز المنيا', 'مدينة المنيا', 'أبو قرقاص', 'ملوي', 'دير مواس'],
-            'بور سعيد': ['بورسعيد'],
-            'قنا': ['قنا', 'قوص', 'مدينة قفط', 'دشنا', 'نقادة', 'نجع حمادي', 'فرشوط', 'أبوتشت'],
-            'المنوفية': ['قويسنا', 'بركة السبع', 'السادات', 'الشهداء', 'تلا', 'شبين الكوم', 'الباجور', 'منوف', 'أشمون'],
-            'سوهاج': ['طما', 'طهطا', 'جهينة', 'مدينة سوهاج', 'المراغة', 'أخميم', 'ساقلته', 'المنشأة', 'جرجا', 'البلينا', 'دار السلام', 'العسيرات'],
-            'السويس': ['السويس'],
-            'الوادي الجديد': ['الخارجة', 'الداخلة', 'الفرافرة'],
-            'جنوب سيناء': ['جنوب سيناء', 'شرم الشيخ', 'دهب']
-        };
-
-        function openTrackingSystem() {
-            document.getElementById('landingPage').classList.add('hidden');
-            document.getElementById('trackingApp').classList.remove('hidden');
-            document.body.style.background = 'linear-gradient(135deg, #e8f0fe, #d4e4f7)';
-
-            if (!checkSession()) {
-                document.getElementById('loginPage').classList.remove('hidden');
-                document.getElementById('dashboard').classList.add('hidden');
-                document.getElementById('publicOrderPage').classList.add('hidden');
-            }
-        }
-
-        function backToLanding() {
-            stopAutoUpdate();
-            document.getElementById('trackingApp').classList.add('hidden');
-            document.getElementById('landingPage').classList.remove('hidden');
-            document.body.style.background = '#ffffff';
-            if (window.history && window.history.pushState) {
-                window.history.pushState({}, '', window.location.pathname);
-            }
-        }
-
-        function saveUserSession(userData) {
-            try {
-                sessionStorage.setItem('eux_user', JSON.stringify(userData));
-                let loginCount = parseInt(localStorage.getItem('eux_login_count') || '0');
-                loginCount++;
-                localStorage.setItem('eux_login_count', loginCount.toString());
-                localStorage.setItem('eux_user_data', JSON.stringify(userData));
-                if (loginCount > 10) localStorage.setItem('eux_login_count', '1');
-            } catch (e) { console.log('خطأ في حفظ الجلسة:', e); }
-        }
-
-        function getSavedUser() {
-            try {
-                const savedUser = sessionStorage.getItem('eux_user');
-                if (savedUser) return JSON.parse(savedUser);
-                const localUser = localStorage.getItem('eux_user_data');
-                if (localUser) {
-                    const user = JSON.parse(localUser);
-                    const loginCount = parseInt(localStorage.getItem('eux_login_count') || '0');
-                    if (loginCount <= 10) {
-                        sessionStorage.setItem('eux_user', JSON.stringify(user));
-                        return user;
-                    } else {
-                        localStorage.removeItem('eux_user_data');
-                        localStorage.removeItem('eux_login_count');
-                        return null;
-                    }
-                }
-                return null;
-            } catch (e) { return null; }
-        }
-
-        function clearUserSession() {
-            stopAutoUpdate();
-            sessionStorage.removeItem('eux_user');
-            localStorage.removeItem('eux_user_data');
-            localStorage.removeItem('eux_login_count');
-        }
-
-        function checkSession() {
-            const urlParams = new URLSearchParams(window.location.search);
-            const refPhone = urlParams.get('ref');
-
-            if (refPhone && refPhone.length === 11) {
-                publicClientPhone = refPhone;
-                showPublicOrderPage();
-                return true;
-            }
-
-            const savedUser = getSavedUser();
-            if (savedUser && savedUser.phone && savedUser.password) {
-                currentUser = savedUser;
-                showDashboard();
-                return true;
-            }
-
-            return false;
-        }
-
-        function updateCities() {
-            const govSelect = document.getElementById('f_governorate');
-            const citySelect = document.getElementById('f_city');
-            const selected = govSelect.value;
-            citySelect.innerHTML = '<option value="">اختر المدينة</option>';
-            if (selected && governorates[selected]) {
-                governorates[selected].forEach(city => {
-                    const option = document.createElement('option');
-                    option.value = city;
-                    option.textContent = city;
-                    citySelect.appendChild(option);
-                });
-            }
-        }
-
-        function updatePublicCities() {
-            const govSelect = document.getElementById('pf_governorate');
-            const citySelect = document.getElementById('pf_city');
-            const selected = govSelect.value;
-            citySelect.innerHTML = '<option value="">اختر المدينة</option>';
-            if (selected && governorates[selected]) {
-                governorates[selected].forEach(city => {
-                    const option = document.createElement('option');
-                    option.value = city;
-                    option.textContent = city;
-                    citySelect.appendChild(option);
-                });
-            }
-        }
-
-        function showPublicOrderPage() {
-            stopAutoUpdate();
-            document.getElementById('landingPage').classList.add('hidden');
-            document.getElementById('loginPage').classList.add('hidden');
-            document.getElementById('dashboard').classList.add('hidden');
-
-            const publicPage = document.getElementById('publicOrderPage');
-            publicPage.classList.remove('hidden');
-
-            let govOptions = '<option value="">اختر المحافظة</option>';
-            Object.keys(governorates).forEach(gov => {
-                govOptions += `<option value="${gov}">${gov}</option>`;
-            });
-            document.getElementById('pf_governorate').innerHTML = govOptions;
-
-            document.body.style.background = 'linear-gradient(135deg, #e8f0fe, #d4e4f7)';
-        }
-
-        // ============================================
-        // دالة تسجيل الشحنة العامة مع عداد منع التكرار
-        // ============================================
-        async function submitPublicOrder() {
-            if (isPublicSubmitting) {
-                showToast('يرجى الانتظار 10 ثوانٍ قبل تسجيل شحنة أخرى', 'error');
-                return;
-            }
-
-            const receiverName = document.getElementById('pf_receiverName').value.trim();
-            const receiverPhone = document.getElementById('pf_receiverPhone').value.trim();
-            const receiverPhone2 = document.getElementById('pf_receiverPhone2').value.trim();
-            const governorate = document.getElementById('pf_governorate').value;
-            const city = document.getElementById('pf_city').value;
-            const address = document.getElementById('pf_address').value.trim();
-            const amount = document.getElementById('pf_amount').value.trim();
-            const weight = document.getElementById('pf_weight').value.trim() || '1';
-            const notes = document.getElementById('pf_notes').value.trim();
-            const errorDiv = document.getElementById('publicError');
-            
-            if (!receiverName || !receiverPhone || !governorate || !city || !address || !amount) { 
-                errorDiv.textContent = "يرجى ملء جميع الحقول المطلوبة"; 
-                return; 
-            }
-            if (receiverPhone.length !== 11) { 
-                errorDiv.textContent = "رقم هاتف المستلم يجب أن يكون 11 رقم"; 
-                return; 
-            }
-            if (receiverPhone2 && receiverPhone2.length !== 11) { 
-                errorDiv.textContent = "رقم هاتف آخر يجب أن يكون 11 رقم"; 
-                return; 
-            }
-
-            isPublicSubmitting = true;
-            const submitBtn = document.getElementById('publicSubmitBtn');
-            if (submitBtn) {
-                submitBtn.disabled = true;
-                submitBtn.style.opacity = '0.6';
-                submitBtn.style.cursor = 'not-allowed';
-                const inner = submitBtn.querySelector('.inner');
-                if (inner) inner.innerHTML = '<i class="fas fa-spinner fa-spin"></i> جاري الإرسال...';
-            }
-
-            const params = new URLSearchParams();
-            params.append('action', 'addShipment');
-            params.append('phone', publicClientPhone);
-            params.append('password', 'public');
-            params.append('receiverName', receiverName);
-            params.append('receiverPhone', receiverPhone);
-            params.append('receiverPhone2', receiverPhone2);
-            params.append('governorate', governorate);
-            params.append('city', city);
-            params.append('address', address);
-            params.append('amount', amount);
-            params.append('weight', weight);
-            params.append('notes', notes);
-            
-            try {
-                const res = await fetch(API_URL, { method: 'POST', headers: { 'Content-Type': 'application/x-www-form-urlencoded' }, body: params.toString() });
-                const data = await res.json();
-                if (data.success) {
-                    showToast('تم تسجيل الشحنة بنجاح!', 'success');
-                    document.getElementById('pf_receiverName').value = '';
-                    document.getElementById('pf_receiverPhone').value = '';
-                    document.getElementById('pf_receiverPhone2').value = '';
-                    document.getElementById('pf_governorate').value = '';
-                    document.getElementById('pf_city').innerHTML = '<option value="">اختر المحافظة أولا</option>';
-                    document.getElementById('pf_address').value = '';
-                    document.getElementById('pf_amount').value = '';
-                    document.getElementById('pf_weight').value = '1';
-                    document.getElementById('pf_notes').value = '';
-                    errorDiv.textContent = '';
-                } else { 
-                    errorDiv.textContent = data.msg || "فشل التسجيل"; 
-                }
-            } catch (e) { 
-                errorDiv.textContent = 'فشل الاتصال'; 
-            }
-
-            setTimeout(() => {
-                isPublicSubmitting = false;
-                if (submitBtn) {
-                    submitBtn.disabled = false;
-                    submitBtn.style.opacity = '1';
-                    submitBtn.style.cursor = 'pointer';
-                    const inner = submitBtn.querySelector('.inner');
-                    if (inner) inner.innerHTML = 'تسجيل الشحنة';
-                }
-            }, 10000);
-        }
-
-        function copyShareLink() {
-            const shareUrl = `${BASE_URL}/?ref=${currentUser.phone}`;
-            if (navigator.clipboard && navigator.clipboard.writeText) {
-                navigator.clipboard.writeText(shareUrl).then(() => showToast('تم نسخ رابط التسجيل!', 'success')).catch(() => fallbackCopy(shareUrl));
-            } else { fallbackCopy(shareUrl); }
-        }
-
-        function fallbackCopy(text) {
-            const textarea = document.createElement('textarea');
-            textarea.value = text;
-            textarea.style.position = 'fixed';
-            textarea.style.top = '0';
-            textarea.style.left = '0';
-            textarea.style.width = '2em';
-            textarea.style.height = '2em';
-            textarea.style.padding = '0';
-            textarea.style.border = 'none';
-            textarea.style.outline = 'none';
-            textarea.style.boxShadow = 'none';
-            textarea.style.background = 'transparent';
-            textarea.style.opacity = '0';
-            textarea.style.zIndex = '9999';
-            textarea.setAttribute('readonly', '');
-            document.body.appendChild(textarea);
-            textarea.focus();
-            textarea.select();
-            textarea.setSelectionRange(0, 999999);
-            try {
-                const successful = document.execCommand('copy');
-                if (successful) showToast('تم نسخ رابط التسجيل!', 'success');
-                else showModalWithLink(text);
-            } catch (e) { showModalWithLink(text); }
-            document.body.removeChild(textarea);
-        }
-
-        function showModalWithLink(url) {
-            document.getElementById('modal').classList.remove('hidden');
-            document.getElementById('modalBody').innerHTML = `
-                    <h3><i class="fas fa-link"></i> رابط التسجيل</h3>
-                    <p style="margin-bottom:12px;color:#666;font-size:13px;">انسخ الرابط يدويا:</p>
-                    <div style="background:#f0f6fe;padding:14px;border-radius:10px;word-break:break-all;direction:ltr;text-align:left;margin-bottom:14px;font-size:13px;border:1px solid #dce8f5;">${url}</div>
-                    <button class="btn-eux" onclick="navigator.clipboard.writeText('${url.replace(/'/g, "\\'")}').then(()=>showToast('تم النسخ!','success')).catch(()=>showToast('فشل النسخ','error'))" style="width:100%;">
-                        <span class="inner">نسخ الرابط</span><span class="fold"></span>
-                        <div class="points_wrapper"><span class="point"></span><span class="point"></span><span class="point"></span><span class="point"></span><span class="point"></span><span class="point"></span><span class="point"></span><span class="point"></span><span class="point"></span><span class="point"></span></div>
-                    </button>
-                    <button class="btn-eux-outline" onclick="closeModal()" style="width:100%;margin-top:8px;"><span class="inner">اغلاق</span></button>
-                `;
-        }
-
-        async function doLogin() {
-            const phone = document.getElementById('phoneInput').value.trim();
-            const password = document.getElementById('passwordInput').value.trim();
-            const errorDiv = document.getElementById('loginError');
-            if (!phone || !password) { errorDiv.textContent = "يرجى إدخال رقم الهاتف وكلمة المرور"; return; }
-            if (phone.length !== 11) { errorDiv.textContent = "رقم الهاتف يجب أن يكون 11 رقم"; return; }
-            try {
-                const res = await fetch(`${API_URL}?action=login&phone=${phone}&password=${password}`);
-                const data = await res.json();
-                if (data.success) {
-                    currentUser = { phone, password, name: data.name, role: data.role };
-                    saveUserSession(currentUser);
-                    errorDiv.classList.add('hidden');
-                    showDashboard();
-                } else { errorDiv.textContent = data.msg || "فشل تسجيل الدخول";
-                    errorDiv.classList.remove('hidden'); }
-            } catch (e) { errorDiv.textContent = "فشل الاتصال";
-                errorDiv.classList.remove('hidden'); }
-        }
-
-        function logout() {
-            currentUser = null;
-            clearUserSession();
-            document.getElementById('loginPage').classList.remove('hidden');
-            document.getElementById('dashboard').classList.add('hidden');
-            document.getElementById('publicOrderPage').classList.add('hidden');
-            document.getElementById('phoneInput').value = '';
-            document.getElementById('passwordInput').value = '';
-            document.getElementById('loginError').classList.add('hidden');
-            if (window.history && window.history.pushState) window.history.pushState({}, '', window.location.pathname);
-            showToast('تم تسجيل الخروج', '');
-        }
-
-        function showDashboard() {
-            document.getElementById('loginPage').classList.add('hidden');
-            document.getElementById('dashboard').classList.remove('hidden');
-            document.getElementById('publicOrderPage').classList.add('hidden');
-            const isAdmin = currentUser.role === 'admin';
-            document.getElementById('shareLinkBtn').classList.toggle('hidden', isAdmin);
-            document.getElementById('addShipmentBtn').classList.toggle('hidden', isAdmin);
-            document.getElementById('clientsBtn').classList.toggle('hidden', !isAdmin);
-            document.getElementById('allShipmentsBtn').classList.toggle('hidden', !isAdmin);
-            
-            // تحميل البيانات الأولية
-            if (isAdmin) {
-                loadAllShipments();
-            } else {
-                loadMyShipments();
-            }
-            
-            // بدء التحديث التلقائي بعد التحميل الأولي
-            setTimeout(() => {
-                startAutoUpdate();
-            }, 2000);
-        }
-
-        // ============================================
-        // جلب حالة الشحنة مباشرة من API
-        // ============================================
-        async function fetchTrackingStatusDirect(trackingNumber) {
-            if (!trackingNumber || trackingNumber.length < 3) return null;
-            try {
-                const res = await fetch(`${API_URL}?action=track&billCode=${trackingNumber}`);
-                const data = await res.json();
-                if (data.code === "1" && data.data && data.data[0]) {
-                    let finalStatus = data.data[0].status || null;
-                    const details = data.data[0].details || [];
-                    for (const d of details) { 
-                        const desc = d.desc || '';
-                        if (desc.includes('تم التسليم') || desc.includes('Delivered')) { 
-                            finalStatus = 'تم التسليم'; 
-                            break; 
-                        }
-                    }
-                    return finalStatus;
-                }
-                return null;
-            } catch (e) { 
-                console.error('فشل تتبع:', trackingNumber, e);
-                return null; 
-            }
-        }
-
-        // ============================================
-        // تحديث حالة الشحنة في البطاقة
-        // ============================================
-        function updateShipmentStatusCard(shipmentId, newStatus) {
-            const card = document.getElementById(`card-${shipmentId}`);
-            if (!card) return false;
-
-            const detailItems = card.querySelectorAll('.detail-item');
-            let statusItem = null;
-            for (const item of detailItems) {
-                const icon = item.querySelector('.detail-icon i');
-                if (icon && (icon.classList.contains('fa-check-circle') || icon.classList.contains('fa-clock') || icon.classList.contains('fa-spinner'))) {
-                    statusItem = item;
-                    break;
-                }
-            }
-
-            if (!statusItem) return false;
-
-            const detailText = statusItem.querySelector('.detail-text');
-            if (!detailText) return false;
-
-            const statusSpan = document.createElement('span');
-            statusSpan.className = 'status-badge';
-
-            let isDelivered = false;
-            let displayStatus = '';
-            let isLoading = false;
-
-            if (newStatus === null || newStatus === undefined) {
-                isLoading = true;
-                displayStatus = 'جاري التحميل...';
-                statusSpan.className = 'status-badge pending';
-                statusSpan.innerHTML = `<i class="fas fa-spinner fa-spin"></i> جاري التحميل...`;
-            } else if (typeof newStatus === 'string') {
-                if (newStatus.includes('تم التسليم') || newStatus.includes('Delivered')) {
-                    isDelivered = true;
-                    displayStatus = 'تم التسليم';
-                    statusSpan.className = 'status-badge';
-                    statusSpan.innerHTML = `<i class="fas fa-check"></i> ${displayStatus}`;
-                } else if (newStatus.includes('تم الاستلام')) {
-                    isDelivered = true;
-                    displayStatus = 'تم الاستلام';
-                    statusSpan.className = 'status-badge';
-                    statusSpan.innerHTML = `<i class="fas fa-check"></i> ${displayStatus}`;
-                } else {
-                    displayStatus = newStatus;
-                    statusSpan.className = 'status-badge pending';
-                    statusSpan.innerHTML = `<i class="fas fa-hourglass-half"></i> ${displayStatus}`;
-                }
-            }
-
-            const oldContent = detailText.querySelector('.status-badge');
-            if (oldContent) {
-                oldContent.replaceWith(statusSpan);
-            } else {
-                detailText.innerHTML = '';
-                detailText.appendChild(statusSpan);
-                const label = document.createElement('span');
-                label.className = 'detail-label';
-                label.textContent = 'آخر تحديث';
-                detailText.appendChild(label);
-            }
-
-            // تحديث الأيقونة
-            const icon = statusItem.querySelector('.detail-icon i');
-            if (icon) {
-                if (isLoading) {
-                    icon.className = 'fas fa-spinner fa-spin';
-                } else if (isDelivered) {
-                    icon.className = 'fas fa-check-circle';
-                } else {
-                    icon.className = 'fas fa-clock';
-                }
-            }
-
-            // إرجاع ما إذا كانت الحالة لا تزال "جاري التحميل..."
-            return isLoading;
-        }
-
-        // ============================================
-        // تحديث حالة شحنة واحدة فقط
-        // ============================================
-        async function updateSingleShipment(shipment) {
-            if (!shipment.trackingNumber || shipment.trackingNumber.length < 3) return false;
-            
-            const status = await fetchTrackingStatusDirect(shipment.trackingNumber);
-            const stillLoading = updateShipmentStatusCard(shipment.id, status);
-            
-            // إذا تغيرت الحالة وليست "جاري التحميل..."، نوقف التحديث لهذه الشحنة
-            return stillLoading;
-        }
-
-        // ============================================
-        // التحديث الأولي للشحنات (مرة واحدة عند التحميل)
-        // ============================================
-        async function initialShipmentUpdate() {
-            const shipmentsWithTracking = allShipmentsData.filter(s => s.trackingNumber && s.trackingNumber.length > 3);
-            if (shipmentsWithTracking.length === 0) return;
-
-            // تحديث كل الشحنات دفعة واحدة
-            const chunkSize = 50;
-            for (let i = 0; i < shipmentsWithTracking.length; i += chunkSize) {
-                const chunk = shipmentsWithTracking.slice(i, i + chunkSize);
-                const promises = chunk.map(async (s) => {
-                    const status = await fetchTrackingStatusDirect(s.trackingNumber);
-                    return { id: s.id, status };
-                });
-                const results = await Promise.all(promises);
-                results.forEach(({ id, status }) => {
-                    updateShipmentStatusCard(id, status);
-                });
-            }
-        }
-
-        // ============================================
-        // التحديث التلقائي - فقط للشحنات التي لا تزال "جاري التحميل..."
-        // ============================================
-        async function autoUpdatePendingShipments() {
-            // البحث عن الشحنات التي لا تزال "جاري التحميل..."
-            const pendingShipments = [];
-            for (const s of allShipmentsData) {
-                if (!s.trackingNumber || s.trackingNumber.length < 3) continue;
-                
-                const card = document.getElementById(`card-${s.id}`);
-                if (!card) continue;
-                
-                const badge = card.querySelector('.status-badge');
-                if (badge && badge.textContent.trim().includes('جاري التحميل')) {
-                    pendingShipments.push(s);
-                }
-            }
-
-            if (pendingShipments.length === 0) {
-                // لا توجد شحنات بحاجة للتحديث، إيقاف التحديث التلقائي
-                stopAutoUpdate();
-                return;
-            }
-
-            // تحديث الشحنات المعلقة فقط
-            const chunkSize = 50;
-            for (let i = 0; i < pendingShipments.length; i += chunkSize) {
-                const chunk = pendingShipments.slice(i, i + chunkSize);
-                const promises = chunk.map(async (s) => {
-                    const status = await fetchTrackingStatusDirect(s.trackingNumber);
-                    return { id: s.id, status };
-                });
-                const results = await Promise.all(promises);
-                results.forEach(({ id, status }) => {
-                    updateShipmentStatusCard(id, status);
-                });
-            }
-
-            // التحقق مرة أخرى بعد التحديث
-            setTimeout(() => {
-                let stillPending = false;
-                for (const s of allShipmentsData) {
-                    if (!s.trackingNumber || s.trackingNumber.length < 3) continue;
-                    const card = document.getElementById(`card-${s.id}`);
-                    if (!card) continue;
-                    const badge = card.querySelector('.status-badge');
-                    if (badge && badge.textContent.trim().includes('جاري التحميل')) {
-                        stillPending = true;
-                        break;
-                    }
-                }
-                if (!stillPending) {
-                    stopAutoUpdate();
-                }
-            }, 1000);
-        }
-
-        // ============================================
-        // بدء التحديث التلقائي (يتم استدعاؤها بعد التحميل الأولي)
-        // ============================================
-        function startAutoUpdate() {
-            stopAutoUpdate();
-            
-            // لا نبدأ التحديث التلقائي إلا إذا كانت هناك شحنات بحالة "جاري التحميل..."
-            let hasPending = false;
-            for (const s of allShipmentsData) {
-                if (!s.trackingNumber || s.trackingNumber.length < 3) continue;
-                const card = document.getElementById(`card-${s.id}`);
-                if (!card) continue;
-                const badge = card.querySelector('.status-badge');
-                if (badge && badge.textContent.trim().includes('جاري التحميل')) {
-                    hasPending = true;
-                    break;
-                }
-            }
-
-            if (!hasPending) {
-                // لا توجد شحنات بحاجة للتحديث
-                return;
-            }
-
-            // بدء التحديث التلقائي كل 5 ثوانٍ
-            autoUpdateInterval = setInterval(() => {
-                autoUpdatePendingShipments();
-            }, 5000);
-        }
-
-        function stopAutoUpdate() {
-            if (autoUpdateInterval) {
-                clearInterval(autoUpdateInterval);
-                autoUpdateInterval = null;
-            }
-        }
-
-        // ============================================
-        // تحميل الشحنات
-        // ============================================
-        async function loadMyShipments() {
-            stopAutoUpdate();
-            const content = document.getElementById('content');
-            content.innerHTML = '<div class="loading"><div class="spinner"></div>جاري التحميل...</div>';
-            try {
-                const res = await fetch(`${API_URL}?action=myShipments&phone=${currentUser.phone}&password=${currentUser.password}`);
-                const data = await res.json();
-                if (data.success) {
-                    allShipmentsData = data.shipments || [];
-                    if (allShipmentsData.length === 0) { 
-                        content.innerHTML = '<div class="empty-state"><div class="icon">📭</div><p>لا توجد شحنات حتى الآن</p></div>';
-                        document.getElementById('totalCountSmall').textContent = '0';
-                    } else { 
-                        document.getElementById('totalCountSmall').textContent = allShipmentsData.length;
-                        renderShipments(allShipmentsData);
-                        // تحديث أولي للشحنات (مرة واحدة)
-                        await initialShipmentUpdate();
-                        // بدء التحديث التلقائي للشحنات المعلقة فقط
-                        setTimeout(() => {
-                            startAutoUpdate();
-                        }, 1000);
-                    }
-                } else { content.innerHTML = '<p style="color:red;">' + (data.msg || 'فشل التحميل') + '</p>'; }
-            } catch (e) { content.innerHTML = '<p style="color:red;">فشل الاتصال</p>'; }
-        }
-
-        async function loadAllShipments() {
-            stopAutoUpdate();
-            const content = document.getElementById('content');
-            content.innerHTML = '<div class="loading"><div class="spinner"></div>جاري التحميل...</div>';
-            try {
-                const params = new URLSearchParams();
-                params.append('action', 'allShipments');
-                params.append('adminPhone', currentUser.phone);
-                params.append('adminPassword', currentUser.password);
-                const res = await fetch(API_URL, { method: 'POST', body: params });
-                const data = await res.json();
-                if (data.success) {
-                    allShipmentsData = data.shipments || [];
-                    document.getElementById('totalCountSmall').textContent = allShipmentsData.length;
-                    renderShipments(allShipmentsData);
-                    // تحديث أولي للشحنات (مرة واحدة)
-                    await initialShipmentUpdate();
-                    // بدء التحديث التلقائي للشحنات المعلقة فقط
-                    setTimeout(() => {
-                        startAutoUpdate();
-                    }, 1000);
-                } else { content.innerHTML = '<p style="color:red;">' + (data.msg || 'فشل التحميل') + '</p>'; }
-            } catch (e) { content.innerHTML = '<p style="color:red;">فشل الاتصال</p>'; }
-        }
-
-        // ============================================
-        // إنشاء بطاقة الشحنة
-        // ============================================
-        function createShipmentCard(s, isAdmin = false) {
-            let actions = '';
-            const trackingNum = s.trackingNumber || '';
-            const hasTracking = trackingNum && trackingNum.length > 3;
-
-            let trackButton = '';
-            if (hasTracking) {
-                trackButton = `
-                    <button class="track-btn" onclick="event.stopPropagation(); trackShipment('${trackingNum}')">
-                        <i class="fas fa-search"></i> تتبع الشحنة
-                    </button>
-                `;
-            }
-
-            if (!isAdmin) {
-                if (!hasTracking) {
-                    actions += `
-                        <button class="btn-edit" onclick="event.stopPropagation(); showEditShipmentForm('${s.id}')">
-                            <i class="fas fa-edit"></i> تعديل
-                        </button>
-                        <button class="btn-delete" onclick="event.stopPropagation(); deleteShipment('${s.id}')">
-                            <i class="fas fa-trash"></i> حذف
-                        </button>
-                    `;
-                }
-            }
-
-            if (isAdmin) {
-                if (!hasTracking) {
-                    actions += `<button class="btn-track-add" onclick="event.stopPropagation(); showAddTracking('${s.id}')"><i class="fas fa-qrcode"></i> اضافة تتبع</button>`;
-                }
-                actions += `<button class="btn-delete" onclick="event.stopPropagation(); deleteShipment('${s.id}')"><i class="fas fa-trash"></i> حذف</button>`;
-                var adminDetails = `
-                    ${hasTracking ? `<div class="info"><strong>رقم التتبع:</strong> ${trackingNum}</div>` : ''}
-                `;
-            } else { var adminDetails = ''; }
-
-            const displayName = s.receiverName || s.customerName || 'غير معروف';
-            const displayPhone = s.receiverPhone || s.customerPhone || '';
-            const displayAmount = s.amount || '0';
-
-            // الحالة الافتراضية
-            let defaultStatus = 'جاري التحميل...';
-            let statusClass = 'pending';
-            let statusIcon = 'fa-spinner fa-spin';
-
-            const shipmentStatus = s.status || null;
-            if (shipmentStatus) {
-                if (shipmentStatus.includes('تم التسليم') || shipmentStatus.includes('Delivered')) {
-                    defaultStatus = 'تم التسليم';
-                    statusClass = '';
-                    statusIcon = 'fa-check';
-                } else if (shipmentStatus.includes('تم الاستلام')) {
-                    defaultStatus = 'تم الاستلام';
-                    statusClass = '';
-                    statusIcon = 'fa-check';
-                } else {
-                    defaultStatus = shipmentStatus;
-                    statusClass = 'pending';
-                    statusIcon = 'fa-hourglass-half';
-                }
-            } else if (hasTracking) {
-                defaultStatus = 'جاري التحميل...';
-                statusClass = 'pending';
-                statusIcon = 'fa-spinner fa-spin';
-            }
-
-            const statusBadge = `
-                <span class="status-badge ${statusClass}">
-                    <i class="fas ${statusIcon}"></i> ${defaultStatus}
-                </span>
-            `;
-
-            return `
-                <div class="shipment-card" id="card-${s.id}" data-shipment='${JSON.stringify(s).replace(/'/g, "\\'")}'>
-                    <div class="card-header">
-                        <div class="customer-info">
-                            <div class="customer-name">${displayName}</div>
-                            <div class="customer-phone"><i class="fas fa-phone-alt"></i> ${displayPhone}</div>
-                        </div>
-                    </div>
-
-                    <div class="details-grid">
-                        <div class="detail-item">
-                            <span class="detail-icon"><i class="fas fa-money-bill-wave"></i></span>
-                            <div class="detail-text">
-                                <span class="detail-title price">${displayAmount} ج.م</span>
-                                <span class="detail-label">المبلغ</span>
-                            </div>
-                        </div>
-                        <div class="detail-item">
-                            <span class="detail-icon"><i class="fas ${hasTracking ? 'fa-spinner fa-spin' : 'fa-clock'}"></i></span>
-                            <div class="detail-text">
-                                ${statusBadge}
-                                <span class="detail-label">آخر تحديث</span>
-                            </div>
-                        </div>
-                    </div>
-
-                    ${hasTracking ? trackButton : ''}
-
-                    <div class="details">
-                        ${isAdmin ? `<div class="info"><strong>رقم العميل:</strong> ${s.clientPhone || 'غير معروف'}</div>` : ''}
-                        ${adminDetails}
-                        ${s.receiverPhone2 ? `<div class="info"><strong>هاتف آخر:</strong> ${s.receiverPhone2}</div>` : ''}
-                        ${s.governorate ? `<div class="info"><strong>المحافظة:</strong> ${s.governorate}</div>` : ''}
-                        ${s.city ? `<div class="info"><strong>المدينة:</strong> ${s.city}</div>` : ''}
-                        <div class="info"><strong>العنوان:</strong> ${s.address || s.customerAddress || ''}</div>
-                        ${s.weight ? `<div class="info"><strong>الوزن:</strong> ${s.weight} كجم</div>` : ''}
-                        ${s.notes ? `<div class="info"><strong>ملاحظات:</strong> ${s.notes}</div>` : ''}
-                        ${actions ? `<div class="actions">${actions}</div>` : ''}
-                    </div>
-                </div>
-            `;
-        }
-
-        function renderShipments(shipments) {
-            const content = document.getElementById('content');
-            if (shipments.length === 0) {
-                content.innerHTML = '<div class="empty-state"><div class="icon">📦</div><p>لا توجد شحنات حتى الآن</p></div>';
-                return;
-            }
-            const isAdmin = currentUser && currentUser.role === 'admin';
-            content.innerHTML = shipments.map(s => createShipmentCard(s, isAdmin)).join('');
-        }
-
-        function searchShipments() {
-            const query = document.getElementById('searchShipmentInput').value.trim().toLowerCase();
-            if (!query) {
-                if (currentUser && currentUser.role === 'admin') {
-                    loadAllShipments();
-                } else {
-                    loadMyShipments();
-                }
-                return;
-            }
-
-            stopAutoUpdate();
-            const content = document.getElementById('content');
-            const filtered = allShipmentsData.filter(s => {
-                const name = (s.receiverName || s.customerName || '').toLowerCase();
-                const phone = (s.receiverPhone || s.customerPhone || '').toLowerCase();
-                return name.includes(query) || phone.includes(query);
-            });
-
-            if (filtered.length === 0) {
-                content.innerHTML = `<div class="empty-state"><div class="icon">🔍</div><p>لا توجد نتائج مطابقة لـ "${query}"</p></div>`;
-            } else {
-                const isAdmin = currentUser && currentUser.role === 'admin';
-                content.innerHTML = filtered.map(s => createShipmentCard(s, isAdmin)).join('');
-                // تحديث أولي للنتائج
-                const shipmentsWithTracking = filtered.filter(s => s.trackingNumber && s.trackingNumber.length > 3);
-                if (shipmentsWithTracking.length > 0) {
-                    shipmentsWithTracking.forEach(async (s) => {
-                        const status = await fetchTrackingStatusDirect(s.trackingNumber);
-                        updateShipmentStatusCard(s.id, status);
-                    });
-                }
-                // بدء التحديث التلقائي للنتائج المعلقة
-                setTimeout(() => {
-                    startAutoUpdate();
-                }, 1000);
-            }
-        }
-
-        function clearSearch() {
-            document.getElementById('searchShipmentInput').value = '';
-            if (currentUser && currentUser.role === 'admin') {
-                loadAllShipments();
-            } else {
-                loadMyShipments();
-            }
-        }
-
-        function showAddShipmentForm() {
-            if (!currentUser) { showToast('يرجى تسجيل الدخول أولا', 'error'); return; }
-            editingShipmentId = null;
-            let govOptions = '<option value="">اختر المحافظة</option>';
-            Object.keys(governorates).forEach(gov => { govOptions += `<option value="${gov}">${gov}</option>`; });
-            document.getElementById('modal').classList.remove('hidden');
-            document.getElementById('modalBody').innerHTML = `
-                    <h3><i class="fas fa-box"></i> اضافة شحنة جديدة</h3>
-                    <div class="form-group"><label>اسم المستلم *</label><input id="f_receiverName" placeholder="اسم المستلم"></div>
-                    <div class="form-group"><label>هاتف المستلم *</label><input id="f_receiverPhone" placeholder="مثال: 010xxxxxxxx" dir="ltr" maxlength="11" oninput="this.value=this.value.replace(/[^0-9]/g,'')"></div>
-                    <div class="form-group"><label>هاتف آخر للمستلم</label><input id="f_receiverPhone2" placeholder="هاتف آخر (اختياري)" dir="ltr" maxlength="11" oninput="this.value=this.value.replace(/[^0-9]/g,'')"></div>
-                    <div class="two-columns"><div class="form-group"><label>المحافظة *</label><select id="f_governorate" onchange="updateCities()">${govOptions}</select></div><div class="form-group"><label>المدينة *</label><select id="f_city"><option value="">اختر المحافظة أولا</option></select></div></div>
-                    <div class="form-group"><label>العنوان التفصيلي *</label><input id="f_address" placeholder="العنوان بالتفصيل"></div>
-                    <div class="form-group"><label>المبلغ المطلوب تحصيله شامل الشحن *</label><input id="f_amount" type="number" placeholder="المبلغ بالجنيه" dir="ltr"></div>
-                    <div class="form-group"><label>وزن الشحنة *</label><input id="f_weight" type="number" placeholder="الوزن بالكيلو" dir="ltr" value="1"></div>
-                    <div class="form-group"><label>ملاحظات</label><textarea id="f_notes" placeholder="ملاحظات اضافية"></textarea></div>
-                    <button class="btn-eux" onclick="submitShipment()" style="width:100%;"><span class="inner">اضافة الشحنة</span><span class="fold"></span></button>
-                    <p id="shipError" style="color:red;margin-top:10px;"></p>
-                `;
-        }
-
-        function showEditShipmentForm(shipmentId) {
-            const card = document.getElementById(`card-${shipmentId}`);
-            if (!card) {
-                showToast('لم يتم العثور على الشحنة', 'error');
-                return;
-            }
-
-            const shipmentData = card.dataset.shipment;
-            if (!shipmentData) {
-                showToast('بيانات الشحنة غير متوفرة', 'error');
-                return;
-            }
-
-            try {
-                const shipment = JSON.parse(shipmentData);
-                editingShipmentId = shipmentId;
-
-                let govOptions = '<option value="">اختر المحافظة</option>';
-                Object.keys(governorates).forEach(gov => {
-                    const selected = gov === shipment.governorate ? 'selected' : '';
-                    govOptions += `<option value="${gov}" ${selected}>${gov}</option>`;
-                });
-
-                let cityOptions = '<option value="">اختر المدينة</option>';
-                if (shipment.governorate && governorates[shipment.governorate]) {
-                    governorates[shipment.governorate].forEach(city => {
-                        const selected = city === shipment.city ? 'selected' : '';
-                        cityOptions += `<option value="${city}" ${selected}>${city}</option>`;
-                    });
-                }
-
-                document.getElementById('modal').classList.remove('hidden');
-                document.getElementById('modalBody').innerHTML = `
-                        <h3><i class="fas fa-edit"></i> تعديل الشحنة</h3>
-                        <p style="color:#888;font-size:13px;margin-bottom:12px;">سيتم حذف الشحنة القديمة وإنشاء شحنة جديدة بنفس البيانات بعد التعديل</p>
-                        <div class="form-group"><label>اسم المستلم *</label><input id="f_receiverName" value="${shipment.receiverName || ''}" placeholder="اسم المستلم"></div>
-                        <div class="form-group"><label>هاتف المستلم *</label><input id="f_receiverPhone" value="${shipment.receiverPhone || ''}" placeholder="مثال: 010xxxxxxxx" dir="ltr" maxlength="11" oninput="this.value=this.value.replace(/[^0-9]/g,'')"></div>
-                        <div class="form-group"><label>هاتف آخر للمستلم</label><input id="f_receiverPhone2" value="${shipment.receiverPhone2 || ''}" placeholder="هاتف آخر (اختياري)" dir="ltr" maxlength="11" oninput="this.value=this.value.replace(/[^0-9]/g,'')"></div>
-                        <div class="two-columns"><div class="form-group"><label>المحافظة *</label><select id="f_governorate" onchange="updateCities()">${govOptions}</select></div><div class="form-group"><label>المدينة *</label><select id="f_city">${cityOptions}</select></div></div>
-                        <div class="form-group"><label>العنوان التفصيلي *</label><input id="f_address" value="${shipment.address || ''}" placeholder="العنوان بالتفصيل"></div>
-                        <div class="form-group"><label>المبلغ المطلوب تحصيله شامل الشحن *</label><input id="f_amount" type="number" value="${shipment.amount || ''}" placeholder="المبلغ بالجنيه" dir="ltr"></div>
-                        <div class="form-group"><label>وزن الشحنة *</label><input id="f_weight" type="number" value="${shipment.weight || '1'}" placeholder="الوزن بالكيلو" dir="ltr"></div>
-                        <div class="form-group"><label>ملاحظات</label><textarea id="f_notes" placeholder="ملاحظات اضافية">${shipment.notes || ''}</textarea></div>
-                        <button class="btn-eux-orange" onclick="submitShipment()" style="width:100%;"><span class="inner">حفظ التعديلات (سيتم حذف القديمة)</span><span class="fold"></span></button>
-                        <p id="shipError" style="color:red;margin-top:10px;"></p>
-                    `;
-            } catch (e) {
-                showToast('خطأ في قراءة بيانات الشحنة', 'error');
-                console.error('Error parsing shipment data:', e);
-            }
-        }
-
-        async function submitShipment() {
-            if (isSubmitting) {
-                showToast('يرجى الانتظار 10 ثوانٍ قبل إضافة شحنة أخرى', 'error');
-                return;
-            }
-
-            const receiverName = document.getElementById('f_receiverName').value.trim();
-            const receiverPhone = document.getElementById('f_receiverPhone').value.trim();
-            const receiverPhone2 = document.getElementById('f_receiverPhone2').value.trim();
-            const governorate = document.getElementById('f_governorate').value;
-            const city = document.getElementById('f_city').value;
-            const address = document.getElementById('f_address').value.trim();
-            const amount = document.getElementById('f_amount').value.trim();
-            const weight = document.getElementById('f_weight').value.trim() || '1';
-            const notes = document.getElementById('f_notes').value.trim();
-            const errorDiv = document.getElementById('shipError');
-            if (!receiverName || !receiverPhone || !governorate || !city || !address || !amount) { errorDiv.textContent = "يرجى ملء جميع الحقول المطلوبة"; return; }
-            if (receiverPhone.length !== 11) { errorDiv.textContent = "رقم هاتف المستلم يجب أن يكون 11 رقم"; return; }
-            if (receiverPhone2 && receiverPhone2.length !== 11) { errorDiv.textContent = "رقم هاتف آخر يجب أن يكون 11 رقم"; return; }
-
-            isSubmitting = true;
-            const submitBtn = document.querySelector('.modal-content .btn-eux, .modal-content .btn-eux-orange');
-            if (submitBtn) {
-                submitBtn.disabled = true;
-                submitBtn.style.opacity = '0.6';
-                submitBtn.style.cursor = 'not-allowed';
-            }
-
-            try {
-                if (editingShipmentId) {
-                    const deleteParams = new URLSearchParams();
-                    deleteParams.append('action', 'deleteShipment');
-                    deleteParams.append('phone', currentUser.phone);
-                    deleteParams.append('password', currentUser.password);
-                    deleteParams.append('shipmentId', editingShipmentId);
-                    try {
-                        await fetch(API_URL, { method: 'POST', headers: { 'Content-Type': 'application/x-www-form-urlencoded' }, body: deleteParams.toString() });
-                    } catch (e) {
-                        errorDiv.textContent = 'فشل حذف الشحنة القديمة';
-                        isSubmitting = false;
-                        if (submitBtn) {
-                            submitBtn.disabled = false;
-                            submitBtn.style.opacity = '1';
-                            submitBtn.style.cursor = 'pointer';
-                        }
-                        return;
-                    }
-                }
-
-                const params = new URLSearchParams();
-                params.append('action', 'addShipment');
-                params.append('phone', currentUser.phone);
-                params.append('password', currentUser.password);
-                params.append('receiverName', receiverName);
-                params.append('receiverPhone', receiverPhone);
-                params.append('receiverPhone2', receiverPhone2);
-                params.append('governorate', governorate);
-                params.append('city', city);
-                params.append('address', address);
-                params.append('amount', amount);
-                params.append('weight', weight);
-                params.append('notes', notes);
-                const res = await fetch(API_URL, { method: 'POST', headers: { 'Content-Type': 'application/x-www-form-urlencoded' }, body: params.toString() });
-                const data = await res.json();
-                if (data.success) {
-                    closeModal();
-                    const wasEditing = editingShipmentId !== null;
-                    editingShipmentId = null;
-                    if (currentUser.role === 'admin') {
-                        loadAllShipments();
-                    } else {
-                        loadMyShipments();
-                    }
-                    showToast(wasEditing ? 'تم تحديث الشحنة بنجاح!' : 'تم اضافة الشحنة بنجاح!', 'success');
-                } else { errorDiv.textContent = data.msg || "فشل الاضافة"; }
-            } catch (e) { errorDiv.textContent = 'فشل الاتصال'; }
-
-            setTimeout(() => {
-                isSubmitting = false;
-                if (submitBtn) {
-                    submitBtn.disabled = false;
-                    submitBtn.style.opacity = '1';
-                    submitBtn.style.cursor = 'pointer';
-                }
-            }, 10000);
-        }
-
-        function showAddTracking(shipmentId) {
-            document.getElementById('modal').classList.remove('hidden');
-            document.getElementById('modalBody').innerHTML = `
-                    <h3><i class="fas fa-qrcode"></i> اضافة رقم تتبع</h3>
-                    <p style="margin-bottom:12px;color:#666;">رقم الشحنة: <strong>${shipmentId}</strong></p>
-                    <div class="form-group"><label>رقم التتبع</label><input id="trackingNum" dir="ltr" placeholder="مثال: JEG000470355620"></div>
-                    <button class="btn-eux-green" onclick="submitTracking('${shipmentId}')" style="width:100%;"><span class="inner">حفظ</span><span class="fold"></span></button>
-                    <p id="trackError" style="color:red;margin-top:10px;"></p>
-                `;
-        }
-
-        async function submitTracking(shipmentId) {
-            const trackingNumber = document.getElementById('trackingNum').value.trim();
-            const errorDiv = document.getElementById('trackError');
-            if (!trackingNumber) { errorDiv.textContent = 'يرجى ادخال رقم التتبع'; return; }
-            const params = new URLSearchParams();
-            params.append('action', 'addTrackingNumber');
-            params.append('adminPhone', currentUser.phone);
-            params.append('adminPassword', currentUser.password);
-            params.append('shipmentId', shipmentId);
-            params.append('trackingNumber', trackingNumber);
-            try {
-                const res = await fetch(API_URL, { method: 'POST', headers: { 'Content-Type': 'application/x-www-form-urlencoded' }, body: params.toString() });
-                const data = await res.json();
-                if (data.success) { 
-                    closeModal();
-                    if (currentUser.role === 'admin') {
-                        loadAllShipments();
-                    } else {
-                        loadMyShipments();
-                    }
-                    showToast('تم اضافة رقم التتبع!', 'success'); 
-                } else { errorDiv.textContent = data.msg; }
-            } catch (e) { errorDiv.textContent = 'فشل الاتصال'; }
-        }
-
-        async function deleteShipment(shipmentId) {
-            if (!confirm('هل أنت متأكد من حذف هذه الشحنة؟')) return;
-            const params = new URLSearchParams();
-            params.append('action', 'deleteShipment');
-            params.append('phone', currentUser.phone);
-            params.append('password', currentUser.password);
-            params.append('shipmentId', shipmentId);
-            try {
-                const res = await fetch(API_URL, { method: 'POST', headers: { 'Content-Type': 'application/x-www-form-urlencoded' }, body: params.toString() });
-                const data = await res.json();
-                if (data.success) {
-                    if (currentUser.role === 'admin') {
-                        loadAllShipments();
-                    } else {
-                        loadMyShipments();
-                    }
-                    showToast('تم حذف الشحنة بنجاح', 'success');
-                } else {
-                    showToast(data.msg || 'فشل الحذف', 'error');
-                }
-            } catch (e) { showToast('فشل الاتصال بالخادم', 'error'); }
-        }
-
-        // ============================================
-        // دالة الترجمة
-        // ============================================
-        async function translateProblemText(text) {
-            if (!text) return text;
-            if (/[\u0600-\u06FF]/.test(text) && !/[a-zA-Z]/.test(text)) return text;
-            try {
-                const url =
-                `https://translate.googleapis.com/translate_a/single?client=gtx&sl=en&tl=ar&dt=t&q=${encodeURIComponent(text)}`;
-                const response = await fetch(url);
-                const data = await response.json();
-                if (data && data[0]) {
-                    let translated = data[0].map(item => item[0]).join('');
-                    translated = translated.replace(/،\s*،/g, '،');
-                    translated = translated.replace(/\s{2,}/g, ' ');
-                    translated = translated.replace(/،\s*$/, '');
-                    translated = translated.replace(/\b\d{3,}\b/g, '');
-                    return translated.trim() || text;
-                }
-                return text;
-            } catch (error) {
-                return fallbackTranslate(text);
-            }
-        }
-
-        function fallbackTranslate(text) {
-            let cleanText = text.replace(/\b\d{3,}\b/g, '').trim();
-            const translations = {
-                'Abnormal Parcel Registration': 'تسجيل طرد غير طبيعي',
-                'Customer refuse by call': 'رفض العميل استلام الطرد عبر الهاتف',
-                'Customer refuse by': 'رفض العميل استلام الطرد عبر',
-                'Change The Delivery Address': 'تغيير عنوان التسليم',
-                'address': 'العنوان',
-                'adres': 'العنوان',
-                'parcelScan': 'فحص الشحنة',
-                'Abnormal': 'غير طبيعي',
-                'Change': 'تغيير',
-                'Delivery': 'تسليم',
-                'Address': 'العنوان',
-                'Customer': 'العميل',
-                'refuse': 'رفض',
-                'call': 'اتصال هاتفي',
-                'الغاء': 'الغاء'
-            };
-            let translated = cleanText;
-            for (const [eng, arb] of Object.entries(translations)) {
-                const regex = new RegExp(eng.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'gi');
-                translated = translated.replace(regex, arb);
-            }
-            translated = translated.replace(/,\s*,/g, '،');
-            translated = translated.replace(/,\s*$/, '');
-            translated = translated.replace(/\s{2,}/g, ' ');
-            translated = translated.replace(/،\s*،/g, '،');
-            translated = translated.replace(/\b\d+\b/g, '');
-            return translated.trim() || text;
-        }
-
-        // ============================================
-        // دالة التتبع (نافذة منبثقة)
-        // ============================================
-        async function trackShipment(billCode) {
-            document.getElementById('modal').classList.remove('hidden');
-            document.getElementById('modalBody').innerHTML = '<div class="loading"><div class="spinner"></div>جاري تتبع الشحنة...</div>';
-            try {
-                const res = await fetch(`${API_URL}?action=track&billCode=${billCode}`);
-                const data = await res.json();
-                if (data.code === "1" && data.data && data.data[0]) {
-                    let html = `<h3><i class="fas fa-map-marked-alt"></i> تتبع الشحنة</h3>`;
-                    const details = data.data[0].details || [];
-                    if (details.length === 0) {
-                        html += `<p style="text-align:center;color:#999;padding:20px;">لا توجد تفاصيل تتبع متاحة</p>`;
-                    } else {
-                        for (const d of details) {
-                            let desc = (d.desc || '').replace(/\([0-9]{10,11}\)/g, '').replace(/[0-9]{10,11}/g, '').replace(
-                                /J&T/gi, '').replace(/courier/gi, '').replace(/Express/gi, '');
-                            let location = d.scanNetworkName || '',
-                                city = d.scanNetworkCity || '';
-                            let locationText = city && !location.includes(city) ? city + ' - ' + location : location;
-                            locationText = locationText.replace(/[0-9]/g, '').trim();
-                            let problemText = d.probleDescription || '';
-                            if (problemText) {
-                                problemText = await translateProblemText(problemText);
-                            }
-                            html +=
-                                `<div class="timeline-item"><div class="time">🕐 ${d.scanTime || ''}</div><div class="event">📌 ${desc}</div><div class="location">📍 ${locationText}</div>${problemText ? `<div class="problem">⚠️ ${problemText}</div>` : ''}</div>`;
-                        }
-                    }
-                    document.getElementById('modalBody').innerHTML = html;
-                } else {
-                    document.getElementById('modalBody').innerHTML =
-                        `<h3><i class="fas fa-map-marked-alt"></i> تتبع الشحنة</h3><div style="text-align:center;padding:20px;color:#dc3545;"><div style="font-size:48px;margin-bottom:12px;">❌</div><p>${data.msg || data.error || 'فشل تتبع الشحنة'}</p></div>`;
-                }
-            } catch (e) {
-                document.getElementById('modalBody').innerHTML =
-                    `<h3><i class="fas fa-map-marked-alt"></i> تتبع الشحنة</h3><div style="text-align:center;padding:20px;color:#dc3545;"><div style="font-size:48px;margin-bottom:12px;">📡</div><p>فشل الاتصال بخدمة التتبع</p></div>`;
-            }
-        }
-
-        async function showClients() {
-            document.getElementById('modal').classList.remove('hidden');
-            document.getElementById('modalBody').innerHTML = '<div class="loading"><div class="spinner"></div>جاري التحميل...</div>';
-            try {
-                const params = new URLSearchParams();
-                params.append('action', 'allClients');
-                params.append('adminPhone', currentUser.phone);
-                params.append('adminPassword', currentUser.password);
-                const res = await fetch(API_URL, { method: 'POST', headers: { 'Content-Type': 'application/x-www-form-urlencoded' }, body: params.toString() });
-                const data = await res.json();
-                if (data.success) {
-                    let html =
-                        `<h3><i class="fas fa-users"></i> ادارة العملاء</h3><button class="btn-eux-green" onclick="showAddClientForm()" style="width:100%;margin-bottom:14px;"><span class="inner">انشاء حساب عميل جديد</span><span class="fold"></span></button><div id="clientList"></div>`;
-                    document.getElementById('modalBody').innerHTML = html;
-                    const listDiv = document.getElementById('clientList');
-                    if (data.clients.length === 0) listDiv.innerHTML =
-                        '<p style="text-align:center;color:#999;padding:20px;">لا يوجد عملاء حتى الآن</p>';
-                    else data.clients.forEach(c => {
-                        listDiv.innerHTML +=
-                            `<div class="client-card"><div class="client-info"><strong>${c.name}</strong><br><span class="phone">📱 ${c.phone}</span><br><span class="created">📅 ${c.created}</span></div><div class="client-actions"><button class="btn-eux-red" onclick="deleteClient('${c.phone}')" style="padding:6px 16px;border-radius:8px;font-size:13px;"><span class="inner">حذف</span><span class="fold"></span></button></div></div>`;
-                    });
-                } else document.getElementById('modalBody').innerHTML = `<p style="color:red;">${data.msg || 'فشل التحميل'}</p>`;
-            } catch (e) { document.getElementById('modalBody').innerHTML = `<p style="color:red;">فشل الاتصال</p>`; }
-        }
-
-        function showAddClientForm() {
-            document.getElementById('modalBody').innerHTML = `
-                    <h3><i class="fas fa-user-plus"></i> انشاء حساب عميل جديد</h3>
-                    <div class="form-group"><label>اسم العميل *</label><input id="newClientName" placeholder="الاسم الكامل"></div>
-                    <div class="form-group"><label>رقم الهاتف *</label><input id="newClientPhone" dir="ltr" placeholder="مثال: 011xxxxxxxx" maxlength="11" oninput="this.value=this.value.replace(/[^0-9]/g,'')"></div>
-                    <div class="form-group"><label>كلمة المرور *</label><input id="newClientPassword" type="password" dir="ltr" placeholder="كلمة المرور للدخول"></div>
-                    <button class="btn-eux-green" onclick="createClient()" style="width:100%;"><span class="inner">انشاء الحساب</span><span class="fold"></span></button>
-                    <button class="btn-eux-outline" onclick="showClients()" style="width:100%;margin-top:8px;"><span class="inner">رجوع</span></button>
-                    <p id="clientError" style="color:red;margin-top:10px;text-align:center;"></p>
-                `;
-        }
-
-        async function createClient() {
-            const name = document.getElementById('newClientName').value.trim();
-            const phone = document.getElementById('newClientPhone').value.trim();
-            const password = document.getElementById('newClientPassword').value.trim();
-            const errorDiv = document.getElementById('clientError');
-            if (!name || !phone || !password) { errorDiv.textContent = "يرجى ملء جميع الحقول"; return; }
-            if (phone.length !== 11) { errorDiv.textContent = "رقم الهاتف يجب أن يكون 11 رقم"; return; }
-            const params = new URLSearchParams();
-            params.append('action', 'createClient');
-            params.append('adminPhone', currentUser.phone);
-            params.append('adminPassword', currentUser.password);
-            params.append('clientName', name);
-            params.append('clientPhone', phone);
-            params.append('clientPassword', password);
-            try {
-                const res = await fetch(API_URL, { method: 'POST', headers: { 'Content-Type': 'application/x-www-form-urlencoded' }, body: params.toString() });
-                const data = await res.json();
-                if (data.success) { showClients();
-                    showToast('تم انشاء الحساب!', 'success'); } else { errorDiv.textContent = data.msg; }
-            } catch (e) { errorDiv.textContent = 'فشل الاتصال'; }
-        }
-
-        async function deleteClient(phone) {
-            if (!confirm('هل أنت متأكد من حذف هذا العميل؟')) return;
-            try {
-                const params = new URLSearchParams();
-                params.append('action', 'deleteClient');
-                params.append('phone', phone);
-                await fetch(API_URL, { method: 'POST', headers: { 'Content-Type': 'application/x-www-form-urlencoded' }, body: params.toString() });
-                showClients();
-                showToast('تم حذف العميل', 'success');
-            } catch (e) { showToast('فشل الحذف', 'error'); }
-        }
-
-        function closeModal() { document.getElementById('modal').classList.add('hidden'); }
-
-        function showToast(message, type) {
-            const existing = document.querySelector('.toast');
-            if (existing) existing.remove();
-            const toast = document.createElement('div');
-            toast.className = 'toast' + (type ? ' ' + type : '');
-            toast.textContent = message;
-            document.body.appendChild(toast);
-            setTimeout(() => { toast.style.opacity = '0';
-                toast.style.transition = 'opacity 0.3s';
-                setTimeout(() => toast.remove(), 300); }, 3000);
-        }
-
-        function togglePopup(show) {
-            const popup = document.getElementById('accountPopup');
-            if (show) { popup.classList.add('active'); } else { popup.classList.remove('active'); }
-        }
-
-        function closePopupOutside(event) {
-            const overlay = document.getElementById('accountPopup');
-            if (event.target === overlay) { togglePopup(false); }
-        }
-
-        function submitToExcel(event) {
-            event.preventDefault();
-            const submitBtn = event.target.querySelector('.popup-submit-btn');
-            const originalBtnText = submitBtn.innerText;
-            submitBtn.innerText = "جاري الإرسال...";
-            submitBtn.disabled = true;
-            const formData = new FormData(event.target);
-            const params = new URLSearchParams(formData).toString();
-            const excelWebhookUrl = 'https://script.google.com/macros/s/AKfycbwiI6c4Kxh3EQxmCWwipr0MsAHgfPUadPqP9LqnUH9WGeGu0QuCXbl-sLTcS7l9NbJu/exec';
-            fetch(`${excelWebhookUrl}?action=openAccount&${params}`, { method: 'POST' })
-                .then(response => {
-                    alert('تم إرسال طلبك بنجاح! سيتم التواصل معك خلال 5 ساعات لتفعيل الحساب.');
-                    event.target.reset();
-                    togglePopup(false);
-                })
-                .catch(error => {
-                    alert('تم إرسال طلبك بنجاح! سيتم التواصل معك خلال 5 ساعات لتفعيل الحساب.');
-                    event.target.reset();
-                    togglePopup(false);
-                })
-                .finally(() => { submitBtn.innerText = originalBtnText;
-                    submitBtn.disabled = false; });
-        }
-
-        document.getElementById('passwordInput').addEventListener('keypress', function(e) { if (e.key === 'Enter') doLogin(); });
-        document.getElementById('phoneInput').addEventListener('keypress', function(e) { if (e.key === 'Enter')
-                document.getElementById('passwordInput').focus(); });
-
-        document.addEventListener('keydown', function(e) {
-            if (e.ctrlKey && (e.key === 'u' || e.key === 's' || e.key === 'c' || e.key === 'a')) e.preventDefault();
-            if (e.key === 'Escape') closeModal();
+    <div class="admin-row">
+      <input type="text" id="productColors" placeholder="الألوان (أحمر, أزرق)">
+      <input type="text" id="productSizes" placeholder="المقاسات (S, M, L)">
+    </div>
+    <input type="text" id="productImage" placeholder="رابط الصورة (URL)">
+    <button class="admin-btn" id="addProductBtn"><i class="fas fa-plus-circle"></i> إضافة منتج</button>
+    <p style="margin-top:1rem; color:var(--brown-light);"><i class="fas fa-info-circle"></i> تم رفع المنتج سيظهر فوراً للعملاء</p>
+  </div>
+</div>
+
+<!-- مودال تسجيل الدخول -->
+<div class="modal" id="loginModal">
+  <div class="modal-content">
+    <button class="close-modal" id="closeLoginModal">&times;</button>
+    <h2>تسجيل الدخول</h2>
+    <input type="text" id="loginName" placeholder="اسم العميل">
+    <input type="text" id="loginPhone" placeholder="رقم الهاتف">
+    <button class="login-submit" id="loginSubmitBtn">دخول</button>
+    <p style="margin-top:0.8rem; color:#7a5a2e;">(استخدم 111 / 111 للدخول كأدمن)</p>
+  </div>
+</div>
+
+<!-- رسالة منبثقة (طلب اسم/رقم لتسجيل حساب) -->
+<div class="message-popup" id="messagePopup">
+  <span id="popupMessage">يرجى إدخال اسمك ورقم هاتفك لتسجيل الحساب</span>
+</div>
+
+<script>
+  (function() {
+    // ---------- DATA ----------
+    let products = [
+      { id: 1, name: 'فستان أنيق', price: 120, discount: '10%', colors: 'أحمر, ذهبي', sizes: 'S, M, L', image: 'https://via.placeholder.com/300x180/f5b81b/3d2b1a?text=LeVance' },
+      { id: 2, name: 'حذاء كلاسيك', price: 85, discount: '', colors: 'أسود, بني', sizes: '38,39,40', image: 'https://via.placeholder.com/300x180/f5b81b/3d2b1a?text=LeVance' },
+    ];
+    let cart = [];
+    let currentUser = null; // { name, phone, address }
+
+    // عناصر
+    const landing = document.getElementById('landingPage');
+    const mainApp = document.getElementById('mainApp');
+    const enterBtn = document.getElementById('enterBtn');
+    const productList = document.getElementById('productList');
+    const cartItems = document.getElementById('cartItems');
+    const checkoutBtn = document.getElementById('checkoutBtn');
+    const adminPanel = document.getElementById('adminPanel');
+    const loginModal = document.getElementById('loginModal');
+    const loginModalBtn = document.getElementById('loginModalBtn');
+    const closeLoginModal = document.getElementById('closeLoginModal');
+    const loginSubmitBtn = document.getElementById('loginSubmitBtn');
+    const loginName = document.getElementById('loginName');
+    const loginPhone = document.getElementById('loginPhone');
+    const messagePopup = document.getElementById('messagePopup');
+    const popupMessage = document.getElementById('popupMessage');
+
+    // إدخالات الأدمن
+    const productName = document.getElementById('productName');
+    const productPrice = document.getElementById('productPrice');
+    const productDiscount = document.getElementById('productDiscount');
+    const productColors = document.getElementById('productColors');
+    const productSizes = document.getElementById('productSizes');
+    const productImage = document.getElementById('productImage');
+    const addProductBtn = document.getElementById('addProductBtn');
+
+    // ---------- FUNCTIONS ----------
+    function renderProducts() {
+      if (!productList) return;
+      if (products.length === 0) {
+        productList.innerHTML = `<p style="grid-column:1/-1; text-align:center; color:var(--brown);">لا توجد منتجات حالياً</p>`;
+        return;
+      }
+      productList.innerHTML = products.map(p => {
+        const discountHtml = p.discount ? `<span class="discount-badge">خصم ${p.discount}</span>` : '';
+        return `
+          <div class="product-card" data-id="${p.id}">
+            <img src="${p.image || 'https://via.placeholder.com/300x180/f5b81b/3d2b1a?text=LeVance'}" alt="${p.name}">
+            <h3>${p.name}</h3>
+            <div class="price">$${p.price}</div>
+            ${discountHtml}
+            <div class="colors">${p.colors || 'ألوان متعددة'}</div>
+            <div class="sizes">${p.sizes || 'مقاسات مختلفة'}</div>
+            <button class="add-btn" data-id="${p.id}">إضافة للسلة</button>
+          </div>
+        `;
+      }).join('');
+
+      // أحداث الأزرار
+      document.querySelectorAll('.add-btn').forEach(btn => {
+        btn.addEventListener('click', function(e) {
+          const id = parseInt(this.dataset.id);
+          const product = products.find(p => p.id === id);
+          if (product) {
+            cart.push({ ...product });
+            renderCart();
+            showPopup('تم إضافة المنتج إلى السلة ✅');
+          }
         });
+      });
+    }
 
-        document.addEventListener('DOMContentLoaded', function() {
-            const urlParams = new URLSearchParams(window.location.search);
-            const refPhone = urlParams.get('ref');
+    function renderCart() {
+      if (!cartItems) return;
+      if (cart.length === 0) {
+        cartItems.innerHTML = `<p style="color:var(--brown-light);">السلة فارغة</p>`;
+        return;
+      }
+      cartItems.innerHTML = cart.map((item, idx) => `
+        <div class="cart-item">
+          <span>${item.name}</span>
+          <span>$${item.price}</span>
+          <button style="background:none; border:none; color:#a94442; font-weight:bold; cursor:pointer;" data-index="${idx}"><i class="fas fa-trash-alt"></i></button>
+        </div>
+      `).join('');
 
-            if (refPhone && refPhone.length === 11) {
-                publicClientPhone = refPhone;
-                document.getElementById('landingPage').classList.add('hidden');
-                document.getElementById('trackingApp').classList.remove('hidden');
-                document.body.style.background = 'linear-gradient(135deg, #e8f0fe, #d4e4f7)';
-                showPublicOrderPage();
-            } else {
-                const savedUser = getSavedUser();
-                if (savedUser && savedUser.phone && savedUser.password) {
-                    currentUser = savedUser;
-                    document.getElementById('landingPage').classList.add('hidden');
-                    document.getElementById('trackingApp').classList.remove('hidden');
-                    document.body.style.background = 'linear-gradient(135deg, #e8f0fe, #d4e4f7)';
-                    showDashboard();
-                } else {
-                    document.getElementById('landingPage').classList.remove('hidden');
-                    document.getElementById('trackingApp').classList.add('hidden');
-                    document.body.style.background = '#ffffff';
-                }
-            }
+      document.querySelectorAll('.cart-item button[data-index]').forEach(btn => {
+        btn.addEventListener('click', function() {
+          const index = parseInt(this.dataset.index);
+          cart.splice(index, 1);
+          renderCart();
+          showPopup('تم حذف المنتج من السلة');
         });
-    </script>
+      });
+    }
+
+    // عرض الرسالة المنبثقة
+    function showPopup(msg) {
+      popupMessage.textContent = msg;
+      messagePopup.style.display = 'block';
+      setTimeout(() => { messagePopup.style.display = 'none'; }, 3000);
+    }
+
+    // طلب العنوان (بعد الضغط على إتمام الطلب)
+    function requestAddress() {
+      if (cart.length === 0) {
+        showPopup('السلة فارغة! أضف منتجات أولاً.');
+        return;
+      }
+      // إذا كان المستخدم مسجل مسبقاً نعرض بياناته مع خيار التعديل
+      let name = currentUser?.name || '';
+      let phone = currentUser?.phone || '';
+      let address = currentUser?.address || '';
+
+      // نطلب البيانات عبر prompt (بسيط)
+      const newName = prompt('أدخل اسمك:', name) || name;
+      const newPhone = prompt('أدخل رقم هاتفك:', phone) || phone;
+      const governorate = prompt('المحافظة:') || '';
+      const center = prompt('المركز:') || '';
+      const street = prompt('اسم الشارع:') || '';
+      const fullAddress = `${governorate} - ${center} - ${street}`;
+
+      if (!newName || !newPhone || !fullAddress.trim()) {
+        showPopup('يرجى إكمال جميع الحقول');
+        return;
+      }
+
+      // تسجيل الحساب (حفظ البيانات)
+      if (!currentUser) {
+        // إنشاء حساب جديد
+        currentUser = { name: newName, phone: newPhone, address: fullAddress };
+        showPopup(`تم تسجيل حسابك بنجاح! ${newName}`);
+      } else {
+        // تحديث البيانات
+        currentUser.name = newName;
+        currentUser.phone = newPhone;
+        currentUser.address = fullAddress;
+        showPopup(`تم تحديث بياناتك ✅`);
+      }
+
+      // تفريغ السلة بعد الطلب
+      cart = [];
+      renderCart();
+      // هنا يمكن إرسال الطلب ... نعرض رسالة
+      showPopup(`شكراً ${newName}! تم إرسال طلبك إلى العنوان: ${fullAddress}`);
+    }
+
+    // تسجيل الدخول (للأدمن أو عميل)
+    function handleLogin() {
+      const name = loginName.value.trim();
+      const phone = loginPhone.value.trim();
+      if (name === '111' && phone === '111') {
+        // أدمن
+        adminPanel.style.display = 'block';
+        showPopup('مرحباً أدمن! يمكنك إدارة المنتجات.');
+        loginModal.style.display = 'none';
+        // مسح الحقول
+        loginName.value = ''; loginPhone.value = '';
+        return;
+      } else {
+        // تسجيل عميل عادي (نبحث في "المستخدمين" لكننا نخزن محلياً)
+        if (name && phone) {
+          // نبحث عن مستخدم بنفس الاسم والرقم (محاكاة)
+          // في هذا الإصدار نستخدم currentUser
+          if (currentUser && currentUser.name === name && currentUser.phone === phone) {
+            // تم تسجيل الدخول كعميل موجود
+            showPopup(`أهلاً بعودتك ${name}! تم ملء بياناتك تلقائياً.`);
+            loginModal.style.display = 'none';
+            // نعرض رسالة فقط
+          } else {
+            // مستخدم جديد
+            currentUser = { name, phone, address: '' };
+            showPopup(`تم تسجيل دخولك كعميل جديد ${name}`);
+            loginModal.style.display = 'none';
+          }
+          loginName.value = ''; loginPhone.value = '';
+        } else {
+          showPopup('يرجى إدخال الاسم ورقم الهاتف');
+        }
+      }
+    }
+
+    // إضافة منتج (أدمن)
+    function addProduct() {
+      const name = productName.value.trim();
+      const price = parseFloat(productPrice.value);
+      const discount = productDiscount.value.trim() || '';
+      const colors = productColors.value.trim() || 'ألوان متعددة';
+      const sizes = productSizes.value.trim() || 'مقاسات متعددة';
+      const image = productImage.value.trim() || 'https://via.placeholder.com/300x180/f5b81b/3d2b1a?text=LeVance';
+      if (!name || isNaN(price) || price <= 0) {
+        showPopup('يرجى إدخال اسم المنتج وسعر صحيح');
+        return;
+      }
+      const newProduct = {
+        id: Date.now(),
+        name,
+        price,
+        discount,
+        colors,
+        sizes,
+        image,
+      };
+      products.push(newProduct);
+      renderProducts();
+      // تفريغ الحقول
+      productName.value = ''; productPrice.value = ''; productDiscount.value = '';
+      productColors.value = ''; productSizes.value = ''; productImage.value = '';
+      showPopup(`تم إضافة المنتج "${name}" بنجاح ✅`);
+    }
+
+    // ---------- EVENT LISTENERS ----------
+    enterBtn.addEventListener('click', function() {
+      landing.style.display = 'none';
+      mainApp.style.display = 'block';
+      renderProducts();
+      renderCart();
+    });
+
+    loginModalBtn.addEventListener('click', function() {
+      loginModal.style.display = 'flex';
+    });
+
+    closeLoginModal.addEventListener('click', function() {
+      loginModal.style.display = 'none';
+    });
+
+    window.addEventListener('click', function(e) {
+      if (e.target === loginModal) loginModal.style.display = 'none';
+    });
+
+    loginSubmitBtn.addEventListener('click', handleLogin);
+
+    checkoutBtn.addEventListener('click', requestAddress);
+
+    addProductBtn.addEventListener('click', addProduct);
+
+    // إذا كان المستخدم مسجل ويدخل لاحقاً - محاكاة لملء الحقول تلقائياً (عند الدخول)
+    // سيظهر في requestAddress
+    // نضيف أيضاً في حالة تسجيل الدخول كعميل نملأ الحقول لاحقاً
+
+    // عرض أولي
+    renderProducts();
+    renderCart();
+
+    // إظهار لوحة الأدمن فقط بعد تسجيل الدخول (مخفية افتراضياً)
+    adminPanel.style.display = 'none';
+
+  })();
+</script>
+</body>
+</html>
+```
