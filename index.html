@@ -32,12 +32,19 @@
       width: 100%;
       height: 100vh;
       height: 100dvh;
+
       background: #000;
+
       z-index: 99999;
+
       display: flex;
       align-items: center;
       justify-content: center;
+
       overflow: hidden;
+
+      opacity: 1;
+      visibility: visible;
 
       transition:
         opacity 0.8s ease,
@@ -47,8 +54,12 @@
     #intro video {
       width: 100%;
       height: 100%;
+
       object-fit: contain;
+
       display: block;
+
+      background: #000;
     }
 
     #intro.hide {
@@ -57,9 +68,13 @@
       pointer-events: none;
     }
 
-    /* زر تخطي اختياري */
+    /* =========================================
+       SKIP BUTTON
+    ========================================= */
+
     #skipIntro {
       position: absolute;
+
       left: 20px;
       bottom: 20px;
 
@@ -69,15 +84,20 @@
       border-radius: 30px;
 
       background: rgba(0,0,0,.45);
+
       backdrop-filter: blur(10px);
 
       color: white;
+
       font-size: 14px;
 
       cursor: pointer;
 
       opacity: .75;
+
       transition: .3s;
+
+      z-index: 2;
     }
 
     #skipIntro:hover {
@@ -92,7 +112,9 @@
 
     #store {
       min-height: 100vh;
+
       opacity: 0;
+
       transform: translateY(15px);
 
       transition:
@@ -104,7 +126,9 @@
 
     #store.show {
       opacity: 1;
+
       transform: translateY(0);
+
       visibility: visible;
     }
 
@@ -115,10 +139,13 @@
 
     header {
       position: sticky;
+
       top: 0;
+
       z-index: 1000;
 
       background: #131921;
+
       color: white;
     }
 
@@ -126,7 +153,9 @@
       min-height: 70px;
 
       display: flex;
+
       align-items: center;
+
       gap: 20px;
 
       padding: 10px 4%;
@@ -134,10 +163,13 @@
 
     .logo {
       color: white;
+
       text-decoration: none;
+
       font-family: Georgia, serif;
 
       font-size: 28px;
+
       font-weight: bold;
 
       white-space: nowrap;
@@ -145,18 +177,26 @@
 
     .logo span {
       display: block;
+
       font-size: 13px;
+
       color: #f7c94b;
+
       margin-top: -3px;
     }
 
-    /* البحث */
+
+    /* =========================================
+       SEARCH
+    ========================================= */
 
     .search-box {
       flex: 1;
+
       display: flex;
 
       height: 44px;
+
       max-width: 800px;
 
       margin: auto;
@@ -166,6 +206,7 @@
       width: 100%;
 
       border: none;
+
       outline: none;
 
       padding: 0 18px;
@@ -181,6 +222,7 @@
       border: none;
 
       background: #f3b51b;
+
       color: #222;
 
       cursor: pointer;
@@ -190,10 +232,13 @@
 
     .cart {
       background: transparent;
+
       border: 0;
+
       color: white;
 
       font-size: 17px;
+
       cursor: pointer;
 
       white-space: nowrap;
@@ -210,6 +255,7 @@
       padding: 12px 4%;
 
       display: flex;
+
       gap: 25px;
 
       overflow-x: auto;
@@ -217,6 +263,7 @@
 
     .nav a {
       color: white;
+
       text-decoration: none;
 
       white-space: nowrap;
@@ -239,7 +286,9 @@
       min-height: 320px;
 
       display: flex;
+
       align-items: center;
+
       justify-content: center;
 
       text-align: center;
@@ -283,6 +332,7 @@
       padding: 14px 35px;
 
       background: #4b0710;
+
       color: white;
 
       border-radius: 8px;
@@ -305,11 +355,13 @@
 
     .categories {
       padding: 35px 4%;
+
       background: white;
     }
 
     .section-title {
       font-size: 27px;
+
       margin-bottom: 25px;
     }
 
@@ -347,6 +399,7 @@
 
     .category .icon {
       font-size: 45px;
+
       margin-bottom: 10px;
     }
 
@@ -396,10 +449,13 @@
 
     .product-image {
       width: 100%;
+
       height: 220px;
 
       display: flex;
+
       align-items: center;
+
       justify-content: center;
 
       background: #fafafa;
@@ -497,6 +553,7 @@
 
       .cart::after {
         content: "🛒";
+
         font-size: 22px;
       }
 
@@ -521,6 +578,7 @@
 
       .product-image {
         height: 160px;
+
         font-size: 65px;
       }
 
@@ -544,8 +602,8 @@
 
   <!-- ==================================================
        INTRO VIDEO
-       ضع الفيديو الذي أرسلته باسم intro.mp4
-  =================================================== -->
+       يجب أن يكون intro.mp4 بجانب index.html
+  ================================================== -->
 
   <section id="intro">
 
@@ -554,12 +612,17 @@
       autoplay
       muted
       playsinline
+      webkit-playsinline
       preload="auto">
 
-      <source src="intro.mp4" type="video/mp4">
+      <source
+        src="./intro.mp4"
+        type="video/mp4">
 
       متصفحك لا يدعم تشغيل الفيديو.
+
     </video>
+
 
     <button id="skipIntro">
       تخطي المقدمة
@@ -571,7 +634,7 @@
 
   <!-- ==================================================
        STORE
-  =================================================== -->
+  ================================================== -->
 
   <main id="store">
 
@@ -583,8 +646,13 @@
       <div class="top-header">
 
         <a href="#" class="logo">
+
           H.L
-          <span>LeVance</span>
+
+          <span>
+            LeVance
+          </span>
+
         </a>
 
 
@@ -603,8 +671,12 @@
         </div>
 
 
-        <button class="cart" onclick="showCart()">
+        <button
+          class="cart"
+          onclick="showCart()">
+
           🛒 السلة
+
         </button>
 
       </div>
@@ -612,7 +684,9 @@
 
       <nav class="nav">
 
-        <a href="#">الرئيسية</a>
+        <a href="#">
+          الرئيسية
+        </a>
 
         <a href="#products">
           جميع المنتجات
@@ -646,7 +720,9 @@
 
       <div class="hero-content">
 
-        <h1>H.L LeVance</h1>
+        <h1>
+          H.L LeVance
+        </h1>
 
         <p>
           اكتشف منتجاتنا واختر ما يناسبك
@@ -680,28 +756,67 @@
       <div class="category-grid">
 
         <div class="category">
-          <div class="icon">👕</div>
-          <h3>الملابس</h3>
+
+          <div class="icon">
+            👕
+          </div>
+
+          <h3>
+            الملابس
+          </h3>
+
         </div>
 
-        <div class="category">
-          <div class="icon">👗</div>
-          <h3>فساتين</h3>
-        </div>
 
         <div class="category">
-          <div class="icon">👠</div>
-          <h3>الأحذية</h3>
+
+          <div class="icon">
+            👗
+          </div>
+
+          <h3>
+            فساتين
+          </h3>
+
         </div>
 
-        <div class="category">
-          <div class="icon">💄</div>
-          <h3>الجمال</h3>
-        </div>
 
         <div class="category">
-          <div class="icon">🎁</div>
-          <h3>الهدايا</h3>
+
+          <div class="icon">
+            👠
+          </div>
+
+          <h3>
+            الأحذية
+          </h3>
+
+        </div>
+
+
+        <div class="category">
+
+          <div class="icon">
+            💄
+          </div>
+
+          <h3>
+            الجمال
+          </h3>
+
+        </div>
+
+
+        <div class="category">
+
+          <div class="icon">
+            🎁
+          </div>
+
+          <h3>
+            الهدايا
+          </h3>
+
         </div>
 
       </div>
@@ -723,6 +838,8 @@
 
       <div class="product-grid">
 
+
+        <!-- PRODUCT 1 -->
 
         <article class="product">
 
@@ -758,6 +875,8 @@
 
 
 
+        <!-- PRODUCT 2 -->
+
         <article class="product">
 
           <div class="product-image">
@@ -792,6 +911,8 @@
 
 
 
+        <!-- PRODUCT 3 -->
+
         <article class="product">
 
           <div class="product-image">
@@ -825,6 +946,8 @@
         </article>
 
 
+
+        <!-- PRODUCT 4 -->
 
         <article class="product">
 
@@ -865,9 +988,13 @@
 
 
 
+    <!-- FOOTER -->
+
     <footer>
 
-      <h2>H.L LeVance</h2>
+      <h2>
+        H.L LeVance
+      </h2>
 
       <p>
         متجرك الإلكتروني
@@ -887,9 +1014,13 @@
 
   <!-- ==================================================
        JAVASCRIPT
-  =================================================== -->
+  ================================================== -->
 
   <script>
+
+    /* =========================================
+       ELEMENTS
+    ========================================= */
 
     const intro =
       document.getElementById("intro");
@@ -904,13 +1035,15 @@
       document.getElementById("skipIntro");
 
 
-    /*
-      الانتقال من الفيديو إلى الموقع
-    */
+    /* =========================================
+       ENTER STORE
+    ========================================= */
 
     function enterStore() {
 
-      if (intro.classList.contains("hide")) {
+      if (
+        intro.classList.contains("hide")
+      ) {
         return;
       }
 
@@ -918,18 +1051,16 @@
 
       store.classList.add("show");
 
-      // السماح بالتمرير بعد انتهاء المقدمة
       document.body.style.overflow = "auto";
 
-      // إيقاف الفيديو
       video.pause();
 
     }
 
 
-    /*
-      عند انتهاء الفيديو تلقائيًا
-    */
+    /* =========================================
+       VIDEO ENDED
+    ========================================= */
 
     video.addEventListener(
       "ended",
@@ -937,9 +1068,9 @@
     );
 
 
-    /*
-      زر التخطي
-    */
+    /* =========================================
+       SKIP
+    ========================================= */
 
     skip.addEventListener(
       "click",
@@ -947,34 +1078,60 @@
     );
 
 
-    /*
-      منع ظهور الموقع خلف الفيديو
-    */
+    /* =========================================
+       PREVENT SCROLL
+       WHILE INTRO IS PLAYING
+    ========================================= */
 
     document.body.style.overflow = "hidden";
 
 
-    /*
-      في حال فشل تشغيل الفيديو
-    */
+    /* =========================================
+       START VIDEO
+    ========================================= */
 
-    video.addEventListener(
-      "error",
-      () => {
+    window.addEventListener(
+      "load",
+      async function() {
 
-        console.warn(
-          "تعذر تشغيل intro.mp4"
-        );
+        try {
 
-        enterStore();
+          video.muted = true;
+
+          await video.play();
+
+        } catch (error) {
+
+          console.log(
+            "Autoplay prevented:",
+            error
+          );
+
+        }
 
       }
     );
 
 
-    /*
-      السلة
-    */
+    /* =========================================
+       VIDEO ERROR
+    ========================================= */
+
+    video.addEventListener(
+      "error",
+      function() {
+
+        console.error(
+          "تعذر تحميل intro.mp4"
+        );
+
+      }
+    );
+
+
+    /* =========================================
+       CART
+    ========================================= */
 
     let cart = [];
 
@@ -996,7 +1153,9 @@
 
       if (cart.length === 0) {
 
-        alert("السلة فارغة.");
+        alert(
+          "السلة فارغة."
+        );
 
         return;
       }
@@ -1009,9 +1168,9 @@
     }
 
 
-    /*
-      البحث
-    */
+    /* =========================================
+       SEARCH
+    ========================================= */
 
     function searchProducts() {
 
@@ -1022,31 +1181,38 @@
           .trim()
           .toLowerCase();
 
+
       const products =
-        document.querySelectorAll(".product");
+        document.querySelectorAll(
+          ".product"
+        );
 
 
-      products.forEach(product => {
+      products.forEach(
+        product => {
 
-        const name =
-          product
-            .querySelector("h3")
-            .textContent
-            .toLowerCase();
+          const name =
+            product
+              .querySelector("h3")
+              .textContent
+              .toLowerCase();
 
-        product.style.display =
-          !query || name.includes(query)
-            ? ""
-            : "none";
 
-      });
+          product.style.display =
+            !query ||
+            name.includes(query)
+              ? ""
+              : "none";
+
+        }
+      );
 
     }
 
 
-    /*
-      البحث عند الضغط على Enter
-    */
+    /* =========================================
+       ENTER TO SEARCH
+    ========================================= */
 
     document
       .getElementById("search")
@@ -1054,8 +1220,12 @@
         "keydown",
         function(event) {
 
-          if (event.key === "Enter") {
+          if (
+            event.key === "Enter"
+          ) {
+
             searchProducts();
+
           }
 
         }
