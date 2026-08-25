@@ -335,6 +335,7 @@
       cursor: pointer;
       color: var(--brown);
       transition: transform .25s ease, background .25s ease;
+      position: relative;
     }
 
     .category:hover {
@@ -345,11 +346,41 @@
     .category .icon {
       font-size: 45px;
       margin-bottom: 12px;
+      display: block;
+    }
+
+    .category .category-image {
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      object-fit: cover;
+      margin: 0 auto 10px;
+      border: 2px solid var(--brown);
+      display: block;
     }
 
     .category h3 {
       color: var(--brown);
       font-size: 18px;
+    }
+
+    .category .delete-cat {
+      position: absolute;
+      top: 5px;
+      left: 5px;
+      background: var(--brown);
+      color: var(--yellow-light);
+      border: none;
+      border-radius: 50%;
+      width: 28px;
+      height: 28px;
+      cursor: pointer;
+      font-size: 14px;
+      display: none;
+    }
+
+    .category .delete-cat:hover {
+      background: var(--brown-light);
     }
 
     /* ==================================================
@@ -374,6 +405,7 @@
       overflow: hidden;
       box-shadow: 0 5px 0 var(--brown);
       transition: transform .25s ease, box-shadow .25s ease;
+      position: relative;
     }
 
     .product:hover {
@@ -391,6 +423,37 @@
       color: var(--brown);
       font-size: 90px;
       border-bottom: 2px solid var(--brown);
+      overflow: hidden;
+      position: relative;
+    }
+
+    .product-image img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .product-image .product-icon {
+      font-size: 90px;
+    }
+
+    .product-image .delete-prod {
+      position: absolute;
+      top: 5px;
+      left: 5px;
+      background: var(--brown);
+      color: var(--yellow-light);
+      border: none;
+      border-radius: 50%;
+      width: 30px;
+      height: 30px;
+      cursor: pointer;
+      font-size: 16px;
+      display: none;
+    }
+
+    .product-image .delete-prod:hover {
+      background: var(--brown-light);
     }
 
     .product-info {
@@ -415,6 +478,13 @@
       font-weight: bold;
       color: var(--brown);
       margin-bottom: 15px;
+    }
+
+    .price .original-price {
+      text-decoration: line-through;
+      font-size: 16px;
+      opacity: 0.6;
+      margin-left: 10px;
     }
 
     .add-cart {
@@ -464,8 +534,6 @@
       bottom: 25px;
       right: 25px;
       z-index: 9999;
-      background: #25D366;
-      /* WhatsApp green, but we'll override with our colors */
       background: var(--brown);
       color: var(--yellow-light);
       width: 60px;
@@ -589,7 +657,7 @@
     }
 
     /* ==================================================
-       ADMIN PANEL (hidden by default)
+       ADMIN PANEL
     ================================================== */
     #adminPanel {
       display: none;
@@ -609,30 +677,29 @@
       margin-bottom: 20px;
     }
 
-    .admin-controls {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 15px;
+    .admin-section {
+      background: var(--yellow-light);
+      border: 2px solid var(--brown);
+      border-radius: 12px;
+      padding: 20px;
       margin-bottom: 20px;
     }
 
-    .admin-controls button {
-      background: var(--brown);
-      color: var(--yellow-light);
-      border: none;
-      padding: 12px 24px;
-      border-radius: 8px;
-      font-weight: bold;
-      cursor: pointer;
-      transition: background 0.2s;
-      font-size: 15px;
+    .admin-section h3 {
+      color: var(--brown);
+      margin-bottom: 15px;
+      font-size: 20px;
     }
 
-    .admin-controls button:hover {
-      background: var(--brown-light);
+    .admin-controls {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-bottom: 15px;
     }
 
-    .admin-controls input {
+    .admin-controls input,
+    .admin-controls select {
       padding: 12px 16px;
       border: 2px solid var(--brown);
       border-radius: 8px;
@@ -648,16 +715,39 @@
       opacity: 0.7;
     }
 
-    .admin-product-list {
+    .admin-controls input[type="file"] {
+      padding: 8px;
+      background: var(--yellow-main);
+      flex: 0 1 auto;
+    }
+
+    .admin-controls button {
+      background: var(--brown);
+      color: var(--yellow-light);
+      border: none;
+      padding: 12px 24px;
+      border-radius: 8px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: background 0.2s;
+      font-size: 15px;
+      white-space: nowrap;
+    }
+
+    .admin-controls button:hover {
+      background: var(--brown-light);
+    }
+
+    .admin-list {
       background: var(--yellow-light);
       border: 2px solid var(--brown);
       border-radius: 12px;
-      padding: 20px;
+      padding: 15px;
       max-height: 300px;
       overflow-y: auto;
     }
 
-    .admin-product-item {
+    .admin-list-item {
       display: flex;
       justify-content: space-between;
       align-items: center;
@@ -665,16 +755,30 @@
       border-bottom: 1px solid var(--brown);
     }
 
-    .admin-product-item:last-child {
+    .admin-list-item:last-child {
       border-bottom: none;
     }
 
-    .admin-product-item span {
+    .admin-list-item .item-info {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .admin-list-item .item-info img {
+      width: 40px;
+      height: 40px;
+      border-radius: 8px;
+      object-fit: cover;
+      border: 1px solid var(--brown);
+    }
+
+    .admin-list-item .item-info span {
       font-weight: bold;
       color: var(--brown);
     }
 
-    .admin-product-item button {
+    .admin-list-item button {
       background: var(--brown);
       color: var(--yellow-light);
       border: none;
@@ -682,9 +786,10 @@
       border-radius: 6px;
       cursor: pointer;
       font-weight: bold;
+      font-size: 13px;
     }
 
-    .admin-product-item button:hover {
+    .admin-list-item button:hover {
       background: var(--brown-light);
     }
 
@@ -833,8 +938,13 @@
         flex-direction: column;
       }
 
-      .admin-controls input {
+      .admin-controls input,
+      .admin-controls select {
         min-width: unset;
+      }
+
+      .admin-controls input[type="file"] {
+        flex: 1;
       }
     }
 
@@ -921,27 +1031,8 @@
     <!-- CATEGORIES -->
     <section class="categories" id="categories">
       <h2 class="section-title">تصفح الأقسام</h2>
-      <div class="category-grid">
-        <div class="category">
-          <div class="icon">👕</div>
-          <h3>الملابس</h3>
-        </div>
-        <div class="category">
-          <div class="icon">👗</div>
-          <h3>فساتين</h3>
-        </div>
-        <div class="category">
-          <div class="icon">👠</div>
-          <h3>الأحذية</h3>
-        </div>
-        <div class="category">
-          <div class="icon">💄</div>
-          <h3>الجمال</h3>
-        </div>
-        <div class="category">
-          <div class="icon">🎁</div>
-          <h3>الهدايا</h3>
-        </div>
+      <div class="category-grid" id="categoryGrid">
+        <!-- سيتم ملؤها بواسطة JS -->
       </div>
     </section>
 
@@ -949,63 +1040,38 @@
     <section class="products" id="products">
       <h2 class="section-title">المنتجات المميزة</h2>
       <div class="product-grid" id="productGrid">
-        <!-- PRODUCT 1 -->
-        <article class="product" data-id="1">
-          <div class="product-image">👕</div>
-          <div class="product-info">
-            <h3>قميص أنيق</h3>
-            <div class="rating">★★★★★</div>
-            <div class="price">499 جنيه</div>
-            <button class="add-cart" onclick="addToCart('قميص أنيق')">أضف إلى السلة</button>
-          </div>
-        </article>
-
-        <!-- PRODUCT 2 -->
-        <article class="product" data-id="2">
-          <div class="product-image">👗</div>
-          <div class="product-info">
-            <h3>فستان أنيق</h3>
-            <div class="rating">★★★★★</div>
-            <div class="price">799 جنيه</div>
-            <button class="add-cart" onclick="addToCart('فستان أنيق')">أضف إلى السلة</button>
-          </div>
-        </article>
-
-        <!-- PRODUCT 3 -->
-        <article class="product" data-id="3">
-          <div class="product-image">👡</div>
-          <div class="product-info">
-            <h3>حذاء أنيق</h3>
-            <div class="rating">★★★★☆</div>
-            <div class="price">599 جنيه</div>
-            <button class="add-cart" onclick="addToCart('حذاء أنيق')">أضف إلى السلة</button>
-          </div>
-        </article>
-
-        <!-- PRODUCT 4 -->
-        <article class="product" data-id="4">
-          <div class="product-image">💄</div>
-          <div class="product-info">
-            <h3>مستحضرات تجميل</h3>
-            <div class="rating">★★★★★</div>
-            <div class="price">299 جنيه</div>
-            <button class="add-cart" onclick="addToCart('مستحضرات تجميل')">أضف إلى السلة</button>
-          </div>
-        </article>
+        <!-- سيتم ملؤها بواسطة JS -->
       </div>
     </section>
 
     <!-- ADMIN PANEL -->
     <section id="adminPanel">
       <h2>🛠 لوحة التحكم - Admin</h2>
-      <div class="admin-controls">
-        <input type="text" id="newProductName" placeholder="اسم المنتج الجديد">
-        <input type="text" id="newProductPrice" placeholder="السعر (مثال: 299 جنيه)">
-        <button onclick="addProduct()">➕ إضافة منتج</button>
-        <button onclick="resetProducts()">🔄 إعادة ضبط المنتجات</button>
+
+      <!-- قسم إدارة المنتجات -->
+      <div class="admin-section">
+        <h3>📦 إدارة المنتجات</h3>
+        <div class="admin-controls">
+          <input type="text" id="newProductName" placeholder="اسم المنتج">
+          <input type="text" id="newProductPrice" placeholder="السعر (مثال: 299)">
+          <input type="text" id="newProductDiscount" placeholder="الخصم (مثال: 20)">
+          <input type="file" id="newProductImage" accept="image/*">
+          <button onclick="addProduct()">➕ إضافة منتج</button>
+          <button onclick="resetProducts()">🔄 إعادة ضبط</button>
+        </div>
+        <div class="admin-list" id="adminProductList"></div>
       </div>
-      <div class="admin-product-list" id="adminProductList">
-        <!-- سيتم ملؤها بواسطة JS -->
+
+      <!-- قسم إدارة الأقسام -->
+      <div class="admin-section">
+        <h3>🏷️ إدارة الأقسام</h3>
+        <div class="admin-controls">
+          <input type="text" id="newCategoryName" placeholder="اسم القسم">
+          <input type="file" id="newCategoryImage" accept="image/*">
+          <button onclick="addCategory()">➕ إضافة قسم</button>
+          <button onclick="resetCategories()">🔄 إعادة ضبط</button>
+        </div>
+        <div class="admin-list" id="adminCategoryList"></div>
       </div>
     </section>
 
@@ -1138,7 +1204,6 @@
       const phone = document.getElementById("loginPhone").value.trim();
       const password = document.getElementById("loginPassword").value.trim();
 
-      // Admin login: 111 / 111
       if (phone === "111" && password === "111") {
         isLoggedIn = true;
         isAdmin = true;
@@ -1147,11 +1212,12 @@
         closeLoginModal();
         document.getElementById("adminPanel").classList.add("active");
         renderAdminProducts();
+        renderAdminCategories();
+        showDeleteButtons(true);
         alert("✅ مرحباً Admin! تم تسجيل الدخول بنجاح.");
         return;
       }
 
-      // Check if user exists in localStorage
       const users = JSON.parse(localStorage.getItem("users") || "[]");
       const user = users.find(u => u.phone === phone && u.password === password);
       if (user) {
@@ -1161,6 +1227,7 @@
         document.getElementById("loginBtn").classList.add("hidden");
         closeLoginModal();
         document.getElementById("adminPanel").classList.remove("active");
+        showDeleteButtons(false);
         alert("✅ مرحباً " + user.phone + "! تم تسجيل الدخول بنجاح.");
       } else {
         alert("❌ رقم الهاتف أو كلمة المرور غير صحيحة. حاول مرة أخرى.");
@@ -1190,35 +1257,50 @@
       users.push({ phone, password });
       localStorage.setItem("users", JSON.stringify(users));
       alert("✅ تم إنشاء الحساب بنجاح! يمكنك الآن تسجيل الدخول.");
-      // Auto-login after signup
       document.getElementById("loginPhone").value = "";
       document.getElementById("loginPassword").value = "";
     }
 
+    document.getElementById("loginModal").addEventListener("click", function(e) {
+      if (e.target === this) {
+        closeLoginModal();
+      }
+    });
+
     /* ==================================================
-       ADMIN PANEL - Product Management
+       PRODUCTS DATA
     ================================================== */
     let products = [
-      { id: 1, name: "قميص أنيق", price: "499 جنيه", icon: "👕" },
-      { id: 2, name: "فستان أنيق", price: "799 جنيه", icon: "👗" },
-      { id: 3, name: "حذاء أنيق", price: "599 جنيه", icon: "👡" },
-      { id: 4, name: "مستحضرات تجميل", price: "299 جنيه", icon: "💄" }
+      { id: 1, name: "قميص أنيق", price: 499, discount: 0, icon: "👕", image: null },
+      { id: 2, name: "فستان أنيق", price: 799, discount: 0, icon: "👗", image: null },
+      { id: 3, name: "حذاء أنيق", price: 599, discount: 0, icon: "👡", image: null },
+      { id: 4, name: "مستحضرات تجميل", price: 299, discount: 0, icon: "💄", image: null }
     ];
-    let nextId = 5;
+    let nextProductId = 5;
 
-    function renderAdminProducts() {
-      const list = document.getElementById("adminProductList");
-      if (!list) return;
-      list.innerHTML = "";
-      products.forEach(p => {
-        const div = document.createElement("div");
-        div.className = "admin-product-item";
-        div.innerHTML = `
-          <span>${p.icon} ${p.name} - ${p.price}</span>
-          <button onclick="deleteProduct(${p.id})">🗑 حذف</button>
-        `;
-        list.appendChild(div);
-      });
+    let categories = [
+      { id: 1, name: "الملابس", icon: "👕", image: null },
+      { id: 2, name: "فساتين", icon: "👗", image: null },
+      { id: 3, name: "الأحذية", icon: "👠", image: null },
+      { id: 4, name: "الجمال", icon: "💄", image: null },
+      { id: 5, name: "الهدايا", icon: "🎁", image: null }
+    ];
+    let nextCategoryId = 6;
+
+    function getProductPriceWithDiscount(product) {
+      if (product.discount > 0) {
+        const discounted = product.price - (product.price * product.discount / 100);
+        return {
+          final: Math.round(discounted),
+          original: product.price,
+          hasDiscount: true
+        };
+      }
+      return {
+        final: product.price,
+        original: null,
+        hasDiscount: false
+      };
     }
 
     function renderStoreProducts() {
@@ -1226,52 +1308,177 @@
       if (!grid) return;
       grid.innerHTML = "";
       products.forEach(p => {
+        const priceInfo = getProductPriceWithDiscount(p);
         const article = document.createElement("article");
         article.className = "product";
         article.dataset.id = p.id;
+        let imageHtml = '';
+        if (p.image) {
+          imageHtml = `<img src="${p.image}" alt="${p.name}">`;
+        } else {
+          imageHtml = `<span class="product-icon">${p.icon}</span>`;
+        }
         article.innerHTML = `
-          <div class="product-image">${p.icon}</div>
+          <div class="product-image">
+            ${imageHtml}
+            <button class="delete-prod" onclick="deleteProduct(${p.id})">🗑</button>
+          </div>
           <div class="product-info">
             <h3>${p.name}</h3>
             <div class="rating">★★★★★</div>
-            <div class="price">${p.price}</div>
+            <div class="price">
+              ${priceInfo.hasDiscount ? `<span class="original-price">${priceInfo.original} جنيه</span>` : ''}
+              ${priceInfo.final} جنيه
+              ${priceInfo.hasDiscount ? `<span style="color:red;font-size:14px;"> (خصم ${p.discount}%)</span>` : ''}
+            </div>
             <button class="add-cart" onclick="addToCart('${p.name}')">أضف إلى السلة</button>
           </div>
         `;
         grid.appendChild(article);
       });
+      if (isAdmin) {
+        showDeleteButtons(true);
+      }
     }
 
+    function renderAdminProducts() {
+      const list = document.getElementById("adminProductList");
+      if (!list) return;
+      list.innerHTML = "";
+      products.forEach(p => {
+        const priceInfo = getProductPriceWithDiscount(p);
+        const div = document.createElement("div");
+        div.className = "admin-list-item";
+        let imagePreview = '';
+        if (p.image) {
+          imagePreview = `<img src="${p.image}" alt="${p.name}">`;
+        } else {
+          imagePreview = `<span style="font-size:30px;">${p.icon}</span>`;
+        }
+        div.innerHTML = `
+          <div class="item-info">
+            ${imagePreview}
+            <span>${p.name} - ${priceInfo.final} جنيه ${priceInfo.hasDiscount ? `(خصم ${p.discount}%)` : ''}</span>
+          </div>
+          <button onclick="deleteProduct(${p.id})">🗑 حذف</button>
+        `;
+        list.appendChild(div);
+      });
+    }
+
+    function renderStoreCategories() {
+      const grid = document.getElementById("categoryGrid");
+      if (!grid) return;
+      grid.innerHTML = "";
+      categories.forEach(c => {
+        const div = document.createElement("div");
+        div.className = "category";
+        div.dataset.id = c.id;
+        let imageHtml = '';
+        if (c.image) {
+          imageHtml = `<img src="${c.image}" alt="${c.name}" class="category-image">`;
+        } else {
+          imageHtml = `<span class="icon">${c.icon}</span>`;
+        }
+        div.innerHTML = `
+          ${imageHtml}
+          <h3>${c.name}</h3>
+          <button class="delete-cat" onclick="deleteCategory(${c.id})">🗑</button>
+        `;
+        grid.appendChild(div);
+      });
+      if (isAdmin) {
+        document.querySelectorAll('.delete-cat').forEach(btn => btn.style.display = 'block');
+      }
+    }
+
+    function renderAdminCategories() {
+      const list = document.getElementById("adminCategoryList");
+      if (!list) return;
+      list.innerHTML = "";
+      categories.forEach(c => {
+        const div = document.createElement("div");
+        div.className = "admin-list-item";
+        let imagePreview = '';
+        if (c.image) {
+          imagePreview = `<img src="${c.image}" alt="${c.name}">`;
+        } else {
+          imagePreview = `<span style="font-size:30px;">${c.icon}</span>`;
+        }
+        div.innerHTML = `
+          <div class="item-info">
+            ${imagePreview}
+            <span>${c.name}</span>
+          </div>
+          <button onclick="deleteCategory(${c.id})">🗑 حذف</button>
+        `;
+        list.appendChild(div);
+      });
+    }
+
+    function showDeleteButtons(show) {
+      document.querySelectorAll('.delete-prod').forEach(btn => {
+        btn.style.display = show ? 'block' : 'none';
+      });
+      document.querySelectorAll('.delete-cat').forEach(btn => {
+        btn.style.display = show ? 'block' : 'none';
+      });
+    }
+
+    /* ==================================================
+       PRODUCT MANAGEMENT
+    ================================================== */
     function addProduct() {
       const nameInput = document.getElementById("newProductName");
       const priceInput = document.getElementById("newProductPrice");
-      const name = nameInput.value.trim();
-      const price = priceInput.value.trim();
+      const discountInput = document.getElementById("newProductDiscount");
+      const fileInput = document.getElementById("newProductImage");
 
-      if (!name || !price) {
-        alert("⚠️ يرجى إدخال اسم المنتج والسعر.");
+      const name = nameInput.value.trim();
+      const price = parseFloat(priceInput.value.trim());
+      const discount = parseFloat(discountInput.value.trim()) || 0;
+
+      if (!name || isNaN(price) || price <= 0) {
+        alert("⚠️ يرجى إدخال اسم المنتج وسعر صحيح.");
         return;
       }
 
+      let imageData = null;
+      if (fileInput.files && fileInput.files[0]) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+          imageData = e.target.result;
+          finishAddProduct(name, price, discount, imageData);
+        };
+        reader.readAsDataURL(fileInput.files[0]);
+      } else {
+        finishAddProduct(name, price, discount, null);
+      }
+    }
+
+    function finishAddProduct(name, price, discount, imageData) {
       products.push({
-        id: nextId++,
+        id: nextProductId++,
         name: name,
         price: price,
-        icon: "🆕"
+        discount: discount,
+        icon: "🆕",
+        image: imageData
       });
-
-      nameInput.value = "";
-      priceInput.value = "";
-      renderAdminProducts();
+      document.getElementById("newProductName").value = "";
+      document.getElementById("newProductPrice").value = "";
+      document.getElementById("newProductDiscount").value = "";
+      document.getElementById("newProductImage").value = "";
       renderStoreProducts();
+      renderAdminProducts();
       alert("✅ تم إضافة المنتج بنجاح!");
     }
 
     function deleteProduct(id) {
       if (confirm("هل أنت متأكد من حذف هذا المنتج؟")) {
         products = products.filter(p => p.id !== id);
-        renderAdminProducts();
         renderStoreProducts();
+        renderAdminProducts();
         alert("🗑 تم حذف المنتج.");
       }
     }
@@ -1279,24 +1486,88 @@
     function resetProducts() {
       if (confirm("⚠️ سيتم إعادة ضبط المنتجات إلى الوضع الافتراضي. هل أنت متأكد؟")) {
         products = [
-          { id: 1, name: "قميص أنيق", price: "499 جنيه", icon: "👕" },
-          { id: 2, name: "فستان أنيق", price: "799 جنيه", icon: "👗" },
-          { id: 3, name: "حذاء أنيق", price: "599 جنيه", icon: "👡" },
-          { id: 4, name: "مستحضرات تجميل", price: "299 جنيه", icon: "💄" }
+          { id: 1, name: "قميص أنيق", price: 499, discount: 0, icon: "👕", image: null },
+          { id: 2, name: "فستان أنيق", price: 799, discount: 0, icon: "👗", image: null },
+          { id: 3, name: "حذاء أنيق", price: 599, discount: 0, icon: "👡", image: null },
+          { id: 4, name: "مستحضرات تجميل", price: 299, discount: 0, icon: "💄", image: null }
         ];
-        nextId = 5;
-        renderAdminProducts();
+        nextProductId = 5;
         renderStoreProducts();
+        renderAdminProducts();
         alert("🔄 تم إعادة ضبط المنتجات.");
       }
     }
 
-    // Close modal on overlay click
-    document.getElementById("loginModal").addEventListener("click", function(e) {
-      if (e.target === this) {
-        closeLoginModal();
+    /* ==================================================
+       CATEGORY MANAGEMENT
+    ================================================== */
+    function addCategory() {
+      const nameInput = document.getElementById("newCategoryName");
+      const fileInput = document.getElementById("newCategoryImage");
+
+      const name = nameInput.value.trim();
+      if (!name) {
+        alert("⚠️ يرجى إدخال اسم القسم.");
+        return;
       }
-    });
+
+      let imageData = null;
+      if (fileInput.files && fileInput.files[0]) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+          imageData = e.target.result;
+          finishAddCategory(name, imageData);
+        };
+        reader.readAsDataURL(fileInput.files[0]);
+      } else {
+        finishAddCategory(name, null);
+      }
+    }
+
+    function finishAddCategory(name, imageData) {
+      categories.push({
+        id: nextCategoryId++,
+        name: name,
+        icon: "🏷️",
+        image: imageData
+      });
+      document.getElementById("newCategoryName").value = "";
+      document.getElementById("newCategoryImage").value = "";
+      renderStoreCategories();
+      renderAdminCategories();
+      alert("✅ تم إضافة القسم بنجاح!");
+    }
+
+    function deleteCategory(id) {
+      if (confirm("هل أنت متأكد من حذف هذا القسم؟")) {
+        categories = categories.filter(c => c.id !== id);
+        renderStoreCategories();
+        renderAdminCategories();
+        alert("🗑 تم حذف القسم.");
+      }
+    }
+
+    function resetCategories() {
+      if (confirm("⚠️ سيتم إعادة ضبط الأقسام إلى الوضع الافتراضي. هل أنت متأكد؟")) {
+        categories = [
+          { id: 1, name: "الملابس", icon: "👕", image: null },
+          { id: 2, name: "فساتين", icon: "👗", image: null },
+          { id: 3, name: "الأحذية", icon: "👠", image: null },
+          { id: 4, name: "الجمال", icon: "💄", image: null },
+          { id: 5, name: "الهدايا", icon: "🎁", image: null }
+        ];
+        nextCategoryId = 6;
+        renderStoreCategories();
+        renderAdminCategories();
+        alert("🔄 تم إعادة ضبط الأقسام.");
+      }
+    }
+
+    /* ==================================================
+       INIT
+    ================================================== */
+    renderStoreCategories();
+    renderStoreProducts();
   </script>
 </body>
 
