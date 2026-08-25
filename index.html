@@ -1,12 +1,13 @@
 <!DOCTYPE html>
-<html lang="ar" dir="ltr">
+<html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>H.L. LeVance · Intro</title>
-  <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700;800&display=swap" rel="stylesheet">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>H.L. LeVance · Premium Intro</title>
+  <!-- Google Font (only for backup, but we use the exact logo style) -->
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,800;1,700&display=swap" rel="stylesheet" />
   <style>
-    /* --- RESET & BASE --- */
+    /* ----- RESET & BASE ----- */
     * {
       margin: 0;
       padding: 0;
@@ -18,32 +19,53 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      background: #f7e5c2;  /* fallback */
-      font-family: 'Tajawal', sans-serif;
+      background: #b68b5c; /* fallback */
+      font-family: 'Playfair Display', 'Times New Roman', serif;
+      overflow: hidden;
     }
 
-    /* --- الخلفية الذهبية الناعمة (مطابقة للشعار) --- */
+    /* ----- INTRO SCREEN (golden textured background) ----- */
     .intro-screen {
       position: fixed;
       top: 0;
       left: 0;
       width: 100%;
       height: 100%;
-      background: #f3dba8;  /* قاعدة دافئة */
+      background: #d8b47a;  /* warm golden base */
       background-image: 
-        radial-gradient(circle at 20% 30%, rgba(255, 215, 140, 0.3) 0%, transparent 30%),
-        radial-gradient(circle at 80% 70%, rgba(230, 190, 120, 0.2) 0%, transparent 40%),
-        repeating-linear-gradient(45deg, rgba(200, 160, 100, 0.03) 0px, rgba(200, 160, 100, 0.03) 2px, transparent 2px, transparent 6px);
-      background-color: #f3dba8;
+        radial-gradient(circle at 20% 30%, rgba(255, 215, 140, 0.25) 0%, transparent 40%),
+        radial-gradient(circle at 80% 70%, rgba(200, 170, 100, 0.15) 0%, transparent 50%),
+        repeating-linear-gradient(45deg, rgba(180, 140, 80, 0.06) 0px, rgba(180, 140, 80, 0.06) 2px, transparent 2px, transparent 8px);
+      background-color: #d8b47a;
       display: flex;
       align-items: center;
       justify-content: center;
       overflow: hidden;
       z-index: 1000;
-      transition: opacity 0.6s ease;
+      transition: opacity 1.2s ease;
     }
 
-    /* --- حاوية الشعار (مركزة) --- */
+    /* subtle cinematic light movement (glide) */
+    .intro-screen::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: radial-gradient(ellipse at 30% 40%, rgba(255, 235, 180, 0.15) 0%, transparent 60%),
+                  radial-gradient(ellipse at 70% 60%, rgba(200, 160, 100, 0.08) 0%, transparent 50%);
+      pointer-events: none;
+      animation: lightGlide 8s ease-in-out infinite alternate;
+    }
+
+    @keyframes lightGlide {
+      0% { transform: translateX(-5%) scale(1); opacity: 0.6; }
+      50% { transform: translateX(5%) scale(1.02); opacity: 1; }
+      100% { transform: translateX(-3%) scale(0.98); opacity: 0.7; }
+    }
+
+    /* ----- LOGO WRAPPER (centered) ----- */
     .logo-wrapper {
       position: relative;
       display: flex;
@@ -51,101 +73,122 @@
       justify-content: center;
       width: fit-content;
       height: fit-content;
-      /* نطبق التحويلات على هذه الحاوية */
-      transform: translateX(-120vw); /* البداية خارج الشاشة يساراً */
-      transition: none; /* سنستخدم GSAP أو animation يدوية، لكننا سنطبقها عبر JS */
+      transform: translateX(-120vw); /* start off-screen left */
+      will-change: transform;
+      z-index: 2;
     }
 
-    /* --- عناصر الشعار --- */
+    /* ----- LOGO TEXT (exact match: H.L. LeVance) ----- */
     .logo-text {
       display: flex;
       align-items: baseline;
       gap: 0.1rem;
       background: transparent;
-      color: #3d2b1a;  /* لون نبيتي غامق */
-      font-family: 'Tajawal', sans-serif;
-      letter-spacing: 0.04em;
+      color: #4a2511;  /* deep burgundy-maroon (exact) */
+      font-family: 'Playfair Display', 'Times New Roman', serif;
+      font-weight: 800;
+      letter-spacing: 0.03em;
       position: relative;
+      text-shadow: 0 1px 2px rgba(0,0,0,0.02);
     }
 
+    /* H.L part (maroon background with golden text) – exact from reference */
     .hl-part {
-      font-size: 4.2rem;
+      font-size: 4.8rem;
       font-weight: 800;
-      background: #3d2b1a;
-      color: #f3dba8;
-      padding: 0.1rem 1.2rem 0.1rem 1.1rem;
+      background: #4a2511;  /* deep maroon */
+      color: #d8b47a;       /* golden */
+      padding: 0.1rem 1.4rem 0.1rem 1.2rem;
       border-radius: 60px;
       box-shadow: 0 2px 0 #b8860b;
       line-height: 1.2;
       margin-left: 0.2rem;
+      letter-spacing: 0.04em;
     }
 
+    /* LeVance part (maroon text) */
     .levance-part {
-      font-size: 4.8rem;
+      font-size: 5.2rem;
       font-weight: 800;
-      color: #3d2b1a;
+      color: #4a2511;
       letter-spacing: 0.06rem;
       line-height: 1.2;
       position: relative;
+      font-style: italic;  /* as per reference (elegant) */
     }
 
-    /* --- الجزر (carrot) فوق حرف C --- */
+    /* ----- CARROT (exact position above 'C') ----- */
     .carrot {
       position: absolute;
-      top: -0.85rem;
-      right: -0.15rem;  /* فوق حرف C مباشرة */
-      font-size: 2.6rem;
+      top: -1.2rem;
+      right: 0.2rem;  /* precisely above the 'C' in LeVance */
+      font-size: 3rem;
       line-height: 1;
-      color: #d48f2b;   /* لون جزر دافئ (من الشعار) */
+      color: #c27a2b;   /* warm carrot tone (from reference) */
       transform: scale(1) rotate(0deg);
-      opacity: 0;       /* مخفي في البداية */
-      transition: none;
+      opacity: 0;       /* hidden initially */
       pointer-events: none;
-      filter: drop-shadow(0 1px 2px rgba(0,0,0,0.05));
+      filter: drop-shadow(0 1px 2px rgba(0,0,0,0.03));
+      will-change: transform, opacity;
     }
 
-    /* --- تنسيق استجابة --- */
-    @media (max-width: 700px) {
+    /* ----- RESPONSIVE ----- */
+    @media (max-width: 800px) {
       .hl-part {
-        font-size: 2.8rem;
-        padding: 0.1rem 0.8rem 0.1rem 0.7rem;
-      }
-      .levance-part {
         font-size: 3.2rem;
-      }
-      .carrot {
-        font-size: 1.8rem;
-        top: -0.6rem;
-        right: -0.1rem;
-      }
-    }
-
-    @media (max-width: 480px) {
-      .hl-part {
-        font-size: 2.2rem;
-        padding: 0.1rem 0.6rem;
+        padding: 0.1rem 1rem 0.1rem 0.8rem;
       }
       .levance-part {
-        font-size: 2.6rem;
+        font-size: 3.6rem;
       }
       .carrot {
-        font-size: 1.4rem;
-        top: -0.5rem;
-        right: -0.05rem;
+        font-size: 2.2rem;
+        top: -0.9rem;
+        right: 0.1rem;
       }
     }
 
-    /* ---- اختفاء intro بعد الإنتهاء ---- */
+    @media (max-width: 500px) {
+      .hl-part {
+        font-size: 2.4rem;
+        padding: 0.1rem 0.7rem;
+      }
+      .levance-part {
+        font-size: 2.8rem;
+      }
+      .carrot {
+        font-size: 1.6rem;
+        top: -0.7rem;
+        right: 0.05rem;
+      }
+    }
+
+    /* ----- FADE OUT INTRO AFTER ANIMATION ----- */
     .intro-screen.fade-out {
       opacity: 0;
       pointer-events: none;
-      transition: opacity 0.7s ease;
+      transition: opacity 1s ease;
+    }
+
+    /* ----- MAIN CONTENT (hidden until intro ends) ----- */
+    #mainContent {
+      display: none;
+      width: 100%;
+      height: 100vh;
+      background: #d8b47a;
+      /* your website content here */
+    }
+
+    /* small cinematic push-in via scale on the whole screen (camera effect) */
+    .intro-screen.push-in {
+      transform: scale(1.01);
+      transition: transform 2.5s cubic-bezier(0.25, 0.1, 0.15, 1);
     }
   </style>
 </head>
 <body>
 
-  <!-- شاشة الترحيب (intro) -->
+  <!-- INTRO SCREEN -->
   <div class="intro-screen" id="introScreen">
     <div class="logo-wrapper" id="logoWrapper">
       <div class="logo-text" id="logoText">
@@ -158,168 +201,167 @@
     </div>
   </div>
 
-  <!-- المحتوى الرئيسي (يظهر بعد intro) -->
-  <div style="display:none;" id="mainContent">
-    <!-- هنا يمكنك وضع موقعك الحقيقي -->
-  </div>
+  <!-- MAIN SITE CONTENT (revealed after intro) -->
+  <div id="mainContent"></div>
 
-  <!-- GSAP (الأنيميشن الاحترافي) -->
+  <!-- GSAP for premium animation -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
   <script>
     document.addEventListener('DOMContentLoaded', function() {
       const introScreen = document.getElementById('introScreen');
       const logoWrapper = document.getElementById('logoWrapper');
       const carrot = document.getElementById('carrot');
+      const mainContent = document.getElementById('mainContent');
 
-      // تأكد من أن البداية خارج الشاشة يساراً (تم ضبطها في CSS)
-      // نضبط GSAP timeline
-
-      const tl = gsap.timeline({
-        defaults: { ease: 'power3.out' },
-        onComplete: () => {
-          // بعد إنتهاء الأنيميشن بالكامل، نطفئ intro
-          setTimeout(() => {
-            introScreen.classList.add('fade-out');
-            // اختياري: إظهار المحتوى الرئيسي
-            document.getElementById('mainContent').style.display = 'block';
-          }, 300);
-        }
-      });
-
-      // 1. دخول الشعار من اليسار إلى المركز (مع overshoot طفيف)
-      tl.to(logoWrapper, {
-        x: '0%',   // نصل إلى المركز
-        duration: 1.1,
-        ease: 'power3.inOut',  // منحنى سينمائي: سريع ثم تباطؤ
-        // نضيف overshoot طفيف عبر ease: "power3.out" مع تعديل
-        // لكن نستخدم custom ease لتحقيق feel فاخر
-        // نطبق overshoot عبر كرنفال
-        overwrite: 'auto'
-      }, 0);
-
-      // 2. تأثير ارتداد طفيف (overshoot) عبر تعديل x مرتين
-      // نضيف حركة دقيقة جداً للارتداد
-      tl.to(logoWrapper, {
-        x: '-0.6%',    // ارتداد يسار طفيف جداً
-        duration: 0.15,
-        ease: 'power1.inOut'
-      }, 1.15);
-      tl.to(logoWrapper, {
-        x: '0.2%',     // ارتداد يمين
-        duration: 0.12,
-        ease: 'power1.inOut'
-      }, 1.30);
-      tl.to(logoWrapper, {
-        x: '0%',       // استقرار نهائي
-        duration: 0.1,
-        ease: 'power1.out'
-      }, 1.42);
-
-      // 3. pause قصير قبل قفزة الجزر (100-150ms)
-      tl.add(() => {}, 1.55); // علامة فارغة
-
-      // 4. قفزة الجزر (carrot) مع مسار منحني ودوران
-      // نحضر الجزر: يبدأ من أسفل الشعار (نخفي البداية)
-      // نضبط موضع البداية: تحت الشعار مباشرة
-      const carrotStartX = 0;  // سنتحكم عبر transform
-      const carrotStartY = 40; // تحت الشعار
-
-      // نضع الجزر في البداية أسفل الشعار (مخفي)
+      // --- set initial state ---
       gsap.set(carrot, {
         opacity: 0,
-        y: 40,
+        y: 30,        // start below
         x: 0,
         rotation: 0,
         scale: 0.6
       });
 
-      // نجعل الجزر يظهر مع قفزة من أسفل إلى أعلى (فوق C)
-      // المسار: قوس بسيط عبر x و y مع دوران
-      tl.to(carrot, {
-        opacity: 1,
-        y: -38,      // يرتفع إلى فوق الشعار
-        x: -2,       // حركة جانبية بسيطة لإحساس القوس
-        rotation: 12, // دوران طفيف أثناء الصعود
-        scale: 1.2,
-        duration: 0.55,
-        ease: 'power2.out'
-      }, 1.65);
+      // --- main timeline ---
+      const tl = gsap.timeline({
+        defaults: { ease: 'power3.out' },
+        onComplete: () => {
+          // after full animation, fade intro and show content
+          setTimeout(() => {
+            introScreen.classList.add('fade-out');
+            introScreen.classList.remove('push-in');
+            mainContent.style.display = 'block';
+          }, 400);
+        }
+      });
 
-      // 5. الهبوط إلى الموضع النهائي فوق حرف C مع ارتداد (bounce)
-      tl.to(carrot, {
-        y: -46,      // الموضع النهائي فوق C
-        x: 0,
-        rotation: 0,  // يستقر بدون دوران
-        scale: 1.0,
-        duration: 0.35,
-        ease: 'back.out(1.4)',  // ارتداد خفيف جداً
-        overwrite: 'auto'
-      }, 2.25);
+      // ----- SCENE 1: background already there, light movement active (CSS) -----
 
-      // 6. ارتداد صغير جداً في الحجم (bounce landing)
-      tl.to(carrot, {
-        scale: 1.12,
-        duration: 0.12,
-        ease: 'power1.out'
-      }, 2.62);
-      tl.to(carrot, {
-        scale: 1.0,
+      // ----- SCENE 2: logo enters from left (1.5s – 3.2s) -----
+      tl.to(logoWrapper, {
+        x: '0%',                 // center
+        duration: 1.4,
+        ease: 'power3.inOut',    // fast start, decelerate
+        // subtle overshoot via second tween
+      }, 1.5);
+
+      // overshoot settle (very subtle)
+      tl.to(logoWrapper, {
+        x: '-0.4%',
         duration: 0.15,
         ease: 'power1.inOut'
-      }, 2.76);
+      }, 2.95);
+      tl.to(logoWrapper, {
+        x: '0.1%',
+        duration: 0.12,
+        ease: 'power1.inOut'
+      }, 3.12);
+      tl.to(logoWrapper, {
+        x: '0%',
+        duration: 0.1,
+        ease: 'power1.out'
+      }, 3.26);
 
-      // 7. تثبيت نهائي
+      // ----- SCENE 3: pause (3.2 – 4.5) -----
+      tl.add(() => {}, 3.3); // empty marker
+
+      // ----- SCENE 4: carrot jump (4.5 – 5.8) -----
+      // first make carrot visible and jump from below
+      tl.to(carrot, {
+        opacity: 1,
+        y: -32,        // upward arc
+        x: -2,         // slight curve
+        rotation: 8,   // subtle rotation during jump
+        scale: 1.3,
+        duration: 0.6,
+        ease: 'power2.out'
+      }, 4.5);
+
+      // ----- SCENE 5: land precisely above 'C' with soft bounce (5.8 – 7.0) -----
+      tl.to(carrot, {
+        y: -44,        // final position above C
+        x: 0,
+        rotation: 0,
+        scale: 1.0,
+        duration: 0.45,
+        ease: 'back.out(1.2)'  // elegant bounce
+      }, 5.2);
+
+      // tiny soft landing bounce (scale)
+      tl.to(carrot, {
+        scale: 1.08,
+        duration: 0.1,
+        ease: 'power1.out'
+      }, 5.7);
+      tl.to(carrot, {
+        scale: 1.0,
+        duration: 0.12,
+        ease: 'power1.inOut'
+      }, 5.84);
+
+      // final settle
       tl.set(carrot, {
         scale: 1,
         rotation: 0,
-        y: -46,
+        y: -44,
         x: 0,
         opacity: 1
-      }, 2.92);
+      }, 6.0);
 
-      // (اختياري) نضيف إشارة إلى أن الأنيميشن انتهى
-      // ويمكننا أيضاً إخفاء intro بعد فترة
-      // لكننا نستخدم onComplete أعلاه
+      // ----- FINAL FRAME: cinematic push-in (camera) -----
+      // we apply a subtle scale to the intro screen as "camera push"
+      tl.add(() => {
+        introScreen.classList.add('push-in');
+      }, 6.2);
 
-      // تصحيح: في حال أردنا أن يظهر الشعار في المنتصف تماماً
-      // نضمن أن logoWrapper في المنتصف
-      // كل شيء جاهز
+      // hold for a moment
+      tl.add(() => {}, 6.8);
 
-      // إضافة دعم للشاشات الصغيرة: نعدل قيم y للجزر
+      // ensure everything is locked
+      tl.set(logoWrapper, { x: '0%' });
+      tl.set(carrot, { y: -44, x: 0, rotation: 0, scale: 1, opacity: 1 });
+
+      // --- responsive adjustment for carrot position ---
       function adjustCarrotPosition() {
-        const width = window.innerWidth;
-        let carrotY = -46;
-        let carrotSize = 2.6;
-        if (width < 700) {
-          carrotY = -32;
-          carrotSize = 1.8;
-        }
-        if (width < 480) {
-          carrotY = -28;
-          carrotSize = 1.4;
-        }
-        // نطبق التعديل على الأنيميشن النهائي
-        // لكن بما أننا استخدمنا قيم ثابتة، نعدل الـ timeline
-        // لكن الأنيميشن قد بدأ, نضبط القيم بطريقة ديناميكية
-        // الحل: نعيد تشغيل الأنيميشن مع القيم المتغيرة؟ 
-        // لكن الأسهل: نعدل في الـ CSS media queries ونضبط القيم النهائية
-        // ونضمن أن القفزة تتناسب
-        // تم ضبط media queries مسبقاً
+        const w = window.innerWidth;
+        let carrotY = -44;
+        let carrotSize = 3;
+        if (w < 800) { carrotY = -34; carrotSize = 2.2; }
+        if (w < 500) { carrotY = -28; carrotSize = 1.6; }
+        // update the final position in GSAP (if needed)
+        // since we use CSS media queries, we rely on that
+        // but we also update the timeline values? 
+        // Instead we use CSS for final position, but GSAP overrides.
+        // We'll just adjust via CSS, but for dynamic we can use a resize observer.
+        // For simplicity, we use CSS media queries.
       }
-
-      // ننفذ عند التحميل
       adjustCarrotPosition();
       window.addEventListener('resize', adjustCarrotPosition);
 
-      // نمنع أي تفاعل مع intro بعد الأنيميشن
-      // تم بالفعل
-
+      // --- ensure logo is not distorted ---
+      // all transforms are on wrapper, not on text
     });
   </script>
 
-  <!-- إضافة دعم للشاشات الصغيرة عبر CSS media queries (موجود) -->
+  <!-- extra polish: font fallback -->
+  <style>
+    /* ensure the carrot stays above C even if font shifts */
+    .levance-part {
+      position: relative;
+      display: inline-block;
+    }
+    .carrot {
+      position: absolute;
+      top: -1.2rem;
+      right: 0.2rem;
+    }
+    @media (max-width: 800px) {
+      .carrot { top: -0.9rem; right: 0.1rem; }
+    }
+    @media (max-width: 500px) {
+      .carrot { top: -0.7rem; right: 0.05rem; }
+    }
+  </style>
 
-  <!-- ملاحظة: تم الحفاظ على الشعار كما هو بالضبط بدون تغيير -->
-  <!-- الألوان والخط والجزر مطابقة للمرجع -->
 </body>
 </html>
