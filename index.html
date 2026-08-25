@@ -2,11 +2,12 @@
 <html lang="ar" dir="rtl">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 
   <title>H.L LeVance | المتجر</title>
 
   <style>
+
     * {
       margin: 0;
       padding: 0;
@@ -22,14 +23,20 @@
       color: #222;
     }
 
+
     /* =========================================
        INTRO VIDEO
     ========================================= */
 
     #intro {
       position: fixed;
-      inset: 0;
-      width: 100%;
+
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+
+      width: 100vw;
       height: 100vh;
       height: 100dvh;
 
@@ -43,24 +50,38 @@
 
       overflow: hidden;
 
-      opacity: 1;
-      visibility: visible;
-
       transition:
         opacity 0.8s ease,
         visibility 0.8s ease;
     }
 
+
+    /*
+       الفيديو يملأ الشاشة بالكامل
+       بدون مساحات سوداء
+    */
+
     #intro video {
+      position: absolute;
+
+      top: 0;
+      left: 0;
+
       width: 100%;
       height: 100%;
 
-      object-fit: contain;
-
       display: block;
+
+      object-fit: cover;
+      object-position: center center;
 
       background: #000;
     }
+
+
+    /*
+       إخفاء المقدمة
+    */
 
     #intro.hide {
       opacity: 0;
@@ -68,41 +89,53 @@
       pointer-events: none;
     }
 
+
     /* =========================================
-       SKIP BUTTON
+       زر تخطي المقدمة
     ========================================= */
 
     #skipIntro {
+
       position: absolute;
 
       left: 20px;
       bottom: 20px;
 
-      padding: 10px 18px;
+      z-index: 10;
+
+      padding: 12px 22px;
 
       border: 1px solid rgba(255,255,255,.35);
+
       border-radius: 30px;
 
       background: rgba(0,0,0,.45);
 
       backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
 
       color: white;
 
-      font-size: 14px;
+      font-size: 15px;
 
       cursor: pointer;
 
-      opacity: .75;
+      opacity: .85;
 
-      transition: .3s;
-
-      z-index: 2;
+      transition:
+        opacity .3s ease,
+        background .3s ease,
+        transform .3s ease;
     }
 
+
     #skipIntro:hover {
+
       opacity: 1;
-      background: rgba(0,0,0,.7);
+
+      background: rgba(0,0,0,.75);
+
+      transform: translateY(-2px);
     }
 
 
@@ -111,6 +144,7 @@
     ========================================= */
 
     #store {
+
       min-height: 100vh;
 
       opacity: 0;
@@ -124,7 +158,9 @@
       visibility: hidden;
     }
 
+
     #store.show {
+
       opacity: 1;
 
       transform: translateY(0);
@@ -138,6 +174,7 @@
     ========================================= */
 
     header {
+
       position: sticky;
 
       top: 0;
@@ -149,7 +186,9 @@
       color: white;
     }
 
+
     .top-header {
+
       min-height: 70px;
 
       display: flex;
@@ -161,7 +200,9 @@
       padding: 10px 4%;
     }
 
+
     .logo {
+
       color: white;
 
       text-decoration: none;
@@ -175,7 +216,9 @@
       white-space: nowrap;
     }
 
+
     .logo span {
+
       display: block;
 
       font-size: 13px;
@@ -191,6 +234,7 @@
     ========================================= */
 
     .search-box {
+
       flex: 1;
 
       display: flex;
@@ -202,7 +246,9 @@
       margin: auto;
     }
 
+
     .search-box input {
+
       width: 100%;
 
       border: none;
@@ -216,7 +262,9 @@
       direction: rtl;
     }
 
+
     .search-box button {
+
       width: 60px;
 
       border: none;
@@ -230,7 +278,9 @@
       font-size: 20px;
     }
 
+
     .cart {
+
       background: transparent;
 
       border: 0;
@@ -250,6 +300,7 @@
     ========================================= */
 
     .nav {
+
       background: #232f3e;
 
       padding: 12px 4%;
@@ -261,7 +312,9 @@
       overflow-x: auto;
     }
 
+
     .nav a {
+
       color: white;
 
       text-decoration: none;
@@ -271,7 +324,9 @@
       font-size: 15px;
     }
 
+
     .nav a:hover {
+
       color: #f7c94b;
     }
 
@@ -281,6 +336,7 @@
     ========================================= */
 
     .hero {
+
       margin: 0;
 
       min-height: 320px;
@@ -304,11 +360,15 @@
       padding: 50px 20px;
     }
 
+
     .hero-content {
+
       max-width: 850px;
     }
 
+
     .hero h1 {
+
       font-family: Georgia, serif;
 
       font-size: clamp(38px, 7vw, 76px);
@@ -318,7 +378,9 @@
       margin-bottom: 15px;
     }
 
+
     .hero p {
+
       font-size: clamp(17px, 3vw, 24px);
 
       color: #4b0710;
@@ -326,7 +388,9 @@
       margin-bottom: 25px;
     }
 
+
     .shop-btn {
+
       display: inline-block;
 
       padding: 14px 35px;
@@ -344,7 +408,9 @@
       transition: transform .25s ease;
     }
 
+
     .shop-btn:hover {
+
       transform: translateY(-3px);
     }
 
@@ -354,18 +420,23 @@
     ========================================= */
 
     .categories {
+
       padding: 35px 4%;
 
       background: white;
     }
 
+
     .section-title {
+
       font-size: 27px;
 
       margin-bottom: 25px;
     }
 
+
     .category-grid {
+
       display: grid;
 
       grid-template-columns:
@@ -374,7 +445,9 @@
       gap: 15px;
     }
 
+
     .category {
+
       background: #f7f7f7;
 
       border-radius: 10px;
@@ -390,20 +463,26 @@
         box-shadow .25s ease;
     }
 
+
     .category:hover {
+
       transform: translateY(-5px);
 
       box-shadow:
         0 8px 25px rgba(0,0,0,.1);
     }
 
+
     .category .icon {
+
       font-size: 45px;
 
       margin-bottom: 10px;
     }
 
+
     .category h3 {
+
       font-size: 17px;
     }
 
@@ -413,10 +492,13 @@
     ========================================= */
 
     .products {
+
       padding: 35px 4%;
     }
 
+
     .product-grid {
+
       display: grid;
 
       grid-template-columns:
@@ -425,7 +507,9 @@
       gap: 20px;
     }
 
+
     .product {
+
       background: white;
 
       border-radius: 10px;
@@ -440,14 +524,18 @@
         box-shadow .25s ease;
     }
 
+
     .product:hover {
+
       transform: translateY(-5px);
 
       box-shadow:
         0 12px 30px rgba(0,0,0,.13);
     }
 
+
     .product-image {
+
       width: 100%;
 
       height: 220px;
@@ -463,23 +551,31 @@
       font-size: 90px;
     }
 
+
     .product-info {
+
       padding: 18px;
     }
 
+
     .product-info h3 {
+
       font-size: 18px;
 
       margin-bottom: 10px;
     }
 
+
     .rating {
+
       color: #f0ad00;
 
       margin-bottom: 10px;
     }
 
+
     .price {
+
       font-size: 23px;
 
       font-weight: bold;
@@ -489,7 +585,9 @@
       margin-bottom: 15px;
     }
 
+
     .add-cart {
+
       width: 100%;
 
       padding: 11px;
@@ -507,7 +605,9 @@
       font-weight: bold;
     }
 
+
     .add-cart:hover {
+
       background: #f7ca00;
     }
 
@@ -517,6 +617,7 @@
     ========================================= */
 
     footer {
+
       margin-top: 40px;
 
       padding: 40px 5%;
@@ -536,73 +637,163 @@
     @media (max-width: 700px) {
 
       .top-header {
+
         gap: 10px;
       }
 
+
       .logo {
+
         font-size: 21px;
       }
 
+
       .logo span {
+
         font-size: 10px;
       }
 
+
       .cart {
+
         font-size: 0;
       }
 
+
       .cart::after {
+
         content: "🛒";
 
         font-size: 22px;
       }
 
+
       .search-box {
+
         height: 40px;
       }
 
+
       .search-box button {
+
         width: 45px;
       }
 
+
       .hero {
+
         min-height: 270px;
       }
 
+
       .product-grid {
+
         grid-template-columns:
           repeat(2, minmax(0, 1fr));
 
         gap: 12px;
       }
 
+
       .product-image {
+
         height: 160px;
 
         font-size: 65px;
       }
 
+
       .product-info {
+
         padding: 12px;
       }
 
+
       .product-info h3 {
+
         font-size: 15px;
       }
 
+
       .price {
+
         font-size: 19px;
       }
+
+
+      /*
+         زر التخطي على الهاتف
+      */
+
+      #skipIntro {
+
+        left: 20px;
+
+        bottom: 20px;
+
+        padding: 11px 20px;
+
+        font-size: 14px;
+      }
     }
+
+
+    /* =========================================
+       شاشات الهاتف الطولية
+    ========================================= */
+
+    @media (max-width: 700px) and (orientation: portrait) {
+
+      #intro {
+
+        width: 100vw;
+
+        height: 100dvh;
+      }
+
+
+      #intro video {
+
+        width: 100vw;
+
+        height: 100dvh;
+
+        object-fit: cover;
+
+        object-position: center center;
+      }
+    }
+
+
+    /* =========================================
+       شاشات الهاتف الأفقية
+    ========================================= */
+
+    @media (max-width: 900px) and (orientation: landscape) {
+
+      #intro video {
+
+        width: 100vw;
+
+        height: 100dvh;
+
+        object-fit: cover;
+
+        object-position: center center;
+      }
+    }
+
   </style>
 </head>
+
 
 <body>
 
 
   <!-- ==================================================
        INTRO VIDEO
-       يجب أن يكون intro.mp4 بجانب index.html
+       يجب أن يكون اسم الفيديو:
+       intro.mp4
   ================================================== -->
 
   <section id="intro">
@@ -616,7 +807,7 @@
       preload="auto">
 
       <source
-        src="./intro.mp4"
+        src="intro.mp4"
         type="video/mp4">
 
       متصفحك لا يدعم تشغيل الفيديو.
@@ -639,13 +830,17 @@
   <main id="store">
 
 
-    <!-- HEADER -->
+    <!-- ================================================
+         HEADER
+    ================================================= -->
 
     <header>
 
       <div class="top-header">
 
-        <a href="#" class="logo">
+        <a
+          href="#"
+          class="logo">
 
           H.L
 
@@ -664,8 +859,12 @@
             placeholder="ابحث عن منتج..."
           >
 
-          <button onclick="searchProducts()">
+
+          <button
+            onclick="searchProducts()">
+
             🔍
+
           </button>
 
         </div>
@@ -682,27 +881,33 @@
       </div>
 
 
+
       <nav class="nav">
 
         <a href="#">
           الرئيسية
         </a>
 
+
         <a href="#products">
           جميع المنتجات
         </a>
+
 
         <a href="#categories">
           الأقسام
         </a>
 
+
         <a href="#">
           العروض
         </a>
 
+
         <a href="#">
           الأكثر مبيعًا
         </a>
+
 
         <a href="#">
           تواصل معنا
@@ -714,7 +919,9 @@
 
 
 
-    <!-- HERO -->
+    <!-- ================================================
+         HERO
+    ================================================= -->
 
     <section class="hero">
 
@@ -724,9 +931,11 @@
           H.L LeVance
         </h1>
 
+
         <p>
           اكتشف منتجاتنا واختر ما يناسبك
         </p>
+
 
         <a
           href="#products"
@@ -742,18 +951,23 @@
 
 
 
-    <!-- CATEGORIES -->
+    <!-- ================================================
+         CATEGORIES
+    ================================================= -->
 
     <section
       class="categories"
       id="categories">
 
       <h2 class="section-title">
+
         تصفح الأقسام
+
       </h2>
 
 
       <div class="category-grid">
+
 
         <div class="category">
 
@@ -766,6 +980,7 @@
           </h3>
 
         </div>
+
 
 
         <div class="category">
@@ -781,6 +996,7 @@
         </div>
 
 
+
         <div class="category">
 
           <div class="icon">
@@ -792,6 +1008,7 @@
           </h3>
 
         </div>
+
 
 
         <div class="category">
@@ -807,6 +1024,7 @@
         </div>
 
 
+
         <div class="category">
 
           <div class="icon">
@@ -819,27 +1037,32 @@
 
         </div>
 
+
       </div>
 
     </section>
 
 
 
-    <!-- PRODUCTS -->
+    <!-- ================================================
+         PRODUCTS
+    ================================================= -->
 
     <section
       class="products"
       id="products">
 
       <h2 class="section-title">
+
         المنتجات المميزة
+
       </h2>
 
 
       <div class="product-grid">
 
 
-        <!-- PRODUCT 1 -->
+        <!-- المنتج الأول -->
 
         <article class="product">
 
@@ -847,19 +1070,23 @@
             👕
           </div>
 
+
           <div class="product-info">
 
             <h3>
               قميص أنيق
             </h3>
 
+
             <div class="rating">
               ★★★★★
             </div>
 
+
             <div class="price">
               499 جنيه
             </div>
+
 
             <button
               class="add-cart"
@@ -875,7 +1102,7 @@
 
 
 
-        <!-- PRODUCT 2 -->
+        <!-- المنتج الثاني -->
 
         <article class="product">
 
@@ -883,19 +1110,23 @@
             👗
           </div>
 
+
           <div class="product-info">
 
             <h3>
               فستان أنيق
             </h3>
 
+
             <div class="rating">
               ★★★★★
             </div>
 
+
             <div class="price">
               799 جنيه
             </div>
+
 
             <button
               class="add-cart"
@@ -911,7 +1142,7 @@
 
 
 
-        <!-- PRODUCT 3 -->
+        <!-- المنتج الثالث -->
 
         <article class="product">
 
@@ -919,19 +1150,23 @@
             👡
           </div>
 
+
           <div class="product-info">
 
             <h3>
               حذاء أنيق
             </h3>
 
+
             <div class="rating">
               ★★★★☆
             </div>
 
+
             <div class="price">
               599 جنيه
             </div>
+
 
             <button
               class="add-cart"
@@ -947,7 +1182,7 @@
 
 
 
-        <!-- PRODUCT 4 -->
+        <!-- المنتج الرابع -->
 
         <article class="product">
 
@@ -955,19 +1190,23 @@
             💄
           </div>
 
+
           <div class="product-info">
 
             <h3>
               مستحضرات تجميل
             </h3>
 
+
             <div class="rating">
               ★★★★★
             </div>
 
+
             <div class="price">
               299 جنيه
             </div>
+
 
             <button
               class="add-cart"
@@ -988,7 +1227,9 @@
 
 
 
-    <!-- FOOTER -->
+    <!-- ================================================
+         FOOTER
+    ================================================= -->
 
     <footer>
 
@@ -996,17 +1237,21 @@
         H.L LeVance
       </h2>
 
+
       <p>
         متجرك الإلكتروني
       </p>
 
+
       <br>
+
 
       <p>
         © 2026 جميع الحقوق محفوظة
       </p>
 
     </footer>
+
 
   </main>
 
@@ -1018,49 +1263,61 @@
 
   <script>
 
-    /* =========================================
-       ELEMENTS
-    ========================================= */
+
+    /* ================================================
+       عناصر المقدمة
+    ================================================= */
 
     const intro =
       document.getElementById("intro");
 
+
     const video =
       document.getElementById("introVideo");
 
+
     const store =
       document.getElementById("store");
+
 
     const skip =
       document.getElementById("skipIntro");
 
 
-    /* =========================================
-       ENTER STORE
-    ========================================= */
+
+    /* ================================================
+       الانتقال من الفيديو إلى الموقع
+    ================================================= */
 
     function enterStore() {
 
       if (
         intro.classList.contains("hide")
       ) {
+
         return;
+
       }
+
 
       intro.classList.add("hide");
 
+
       store.classList.add("show");
 
+
       document.body.style.overflow = "auto";
+
 
       video.pause();
 
     }
 
 
-    /* =========================================
-       VIDEO ENDED
-    ========================================= */
+
+    /* ================================================
+       عند انتهاء الفيديو
+    ================================================= */
 
     video.addEventListener(
       "ended",
@@ -1068,9 +1325,10 @@
     );
 
 
-    /* =========================================
-       SKIP
-    ========================================= */
+
+    /* ================================================
+       زر تخطي المقدمة
+    ================================================= */
 
     skip.addEventListener(
       "click",
@@ -1078,67 +1336,105 @@
     );
 
 
-    /* =========================================
-       PREVENT SCROLL
-       WHILE INTRO IS PLAYING
-    ========================================= */
 
-    document.body.style.overflow = "hidden";
+    /* ================================================
+       منع التمرير أثناء المقدمة
+    ================================================= */
+
+    document.body.style.overflow =
+      "hidden";
 
 
-    /* =========================================
-       START VIDEO
-    ========================================= */
 
-    window.addEventListener(
-      "load",
-      async function() {
+    /* ================================================
+       محاولة تشغيل الفيديو
+    ================================================= */
 
-        try {
+    function startVideo() {
 
-          video.muted = true;
+      const promise =
+        video.play();
 
-          await video.play();
 
-        } catch (error) {
+      if (
+        promise !== undefined
+      ) {
 
-          console.log(
-            "Autoplay prevented:",
-            error
-          );
+        promise.catch(
+          function(error) {
 
-        }
+            console.log(
+              "تعذر التشغيل التلقائي:",
+              error
+            );
+
+          }
+        );
 
       }
-    );
+
+    }
 
 
-    /* =========================================
-       VIDEO ERROR
-    ========================================= */
+    /*
+       تشغيل الفيديو بعد تحميل الصفحة
+    */
+
+    if (
+      video.readyState >= 2
+    ) {
+
+      startVideo();
+
+    }
+    else {
+
+      video.addEventListener(
+        "loadeddata",
+        startVideo,
+        { once: true }
+      );
+
+    }
+
+
+
+    /* ================================================
+       في حالة فشل تحميل الفيديو
+    ================================================= */
 
     video.addEventListener(
       "error",
       function() {
 
-        console.error(
+        console.warn(
           "تعذر تحميل intro.mp4"
         );
+
+        /*
+           لا نخفي الموقع نهائيًا
+           في حالة وجود مشكلة في الفيديو
+        */
+
+        enterStore();
 
       }
     );
 
 
-    /* =========================================
-       CART
-    ========================================= */
+
+    /* ================================================
+       السلة
+    ================================================= */
 
     let cart = [];
+
 
 
     function addToCart(product) {
 
       cart.push(product);
+
 
       alert(
         "تمت إضافة " +
@@ -1149,16 +1445,21 @@
     }
 
 
+
     function showCart() {
 
-      if (cart.length === 0) {
+      if (
+        cart.length === 0
+      ) {
 
         alert(
           "السلة فارغة."
         );
 
         return;
+
       }
+
 
       alert(
         "المنتجات في السلة:\n\n" +
@@ -1168,9 +1469,10 @@
     }
 
 
-    /* =========================================
-       SEARCH
-    ========================================= */
+
+    /* ================================================
+       البحث
+    ================================================= */
 
     function searchProducts() {
 
@@ -1210,9 +1512,10 @@
     }
 
 
-    /* =========================================
-       ENTER TO SEARCH
-    ========================================= */
+
+    /* ================================================
+       البحث عند الضغط على Enter
+    ================================================= */
 
     document
       .getElementById("search")
@@ -1231,7 +1534,9 @@
         }
       );
 
+
   </script>
+
 
 </body>
 </html>
