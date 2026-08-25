@@ -1,147 +1,157 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
+
 <head>
+
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0, viewport-fit=cover"
+  >
 
   <title>H.L LeVance | المتجر</title>
 
+
   <style>
 
+    /* ==================================================
+       COLORS
+       الهوية مستخرجة من الصورة
+    ================================================== */
+
+    :root {
+
+      --yellow-main: #FDD95A;
+
+      --yellow-light: #FDE35E;
+
+      --yellow-soft: #FCD649;
+
+      --yellow-dark: #F4C83E;
+
+      --brown: #57080E;
+
+      --brown-light: #6A1017;
+
+    }
+
+
+    /* ==================================================
+       RESET
+    ================================================== */
+
     * {
+
       margin: 0;
+
       padding: 0;
+
       box-sizing: border-box;
+
     }
 
-    html,
-    body {
+
+    html {
+
       width: 100%;
+
       min-height: 100%;
-      font-family: Arial, sans-serif;
-      background: #f5f5f5;
-      color: #222;
+
+      scroll-behavior: smooth;
+
     }
 
 
-    /* =========================================
-       INTRO VIDEO
-    ========================================= */
+    body {
+
+      width: 100%;
+
+      min-height: 100vh;
+
+      font-family: Arial, sans-serif;
+
+      background: var(--yellow-main);
+
+      color: var(--brown);
+
+    }
+
+
+    /* ==================================================
+       INTRO
+    ================================================== */
 
     #intro {
+
       position: fixed;
 
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
+      inset: 0;
 
       width: 100vw;
+
       height: 100vh;
+
       height: 100dvh;
 
-      background: #000;
+      background: var(--yellow-main);
 
       z-index: 99999;
 
       display: flex;
+
       align-items: center;
+
       justify-content: center;
 
       overflow: hidden;
 
       transition:
-        opacity 0.8s ease,
-        visibility 0.8s ease;
+
+        opacity .8s ease,
+
+        visibility .8s ease;
+
     }
 
 
-    /*
-       الفيديو يملأ الشاشة بالكامل
-       بدون مساحات سوداء
-    */
-
     #intro video {
+
       position: absolute;
 
-      top: 0;
-      left: 0;
+      inset: 0;
 
-      width: 100%;
-      height: 100%;
+      width: 100vw;
+
+      height: 100vh;
+
+      height: 100dvh;
 
       display: block;
 
       object-fit: cover;
+
       object-position: center center;
 
-      background: #000;
+      background: var(--yellow-main);
+
     }
 
-
-    /*
-       إخفاء المقدمة
-    */
 
     #intro.hide {
+
       opacity: 0;
+
       visibility: hidden;
+
       pointer-events: none;
+
     }
 
 
-    /* =========================================
-       زر تخطي المقدمة
-    ========================================= */
-
-    #skipIntro {
-
-      position: absolute;
-
-      left: 20px;
-      bottom: 20px;
-
-      z-index: 10;
-
-      padding: 12px 22px;
-
-      border: 1px solid rgba(255,255,255,.35);
-
-      border-radius: 30px;
-
-      background: rgba(0,0,0,.45);
-
-      backdrop-filter: blur(10px);
-      -webkit-backdrop-filter: blur(10px);
-
-      color: white;
-
-      font-size: 15px;
-
-      cursor: pointer;
-
-      opacity: .85;
-
-      transition:
-        opacity .3s ease,
-        background .3s ease,
-        transform .3s ease;
-    }
-
-
-    #skipIntro:hover {
-
-      opacity: 1;
-
-      background: rgba(0,0,0,.75);
-
-      transform: translateY(-2px);
-    }
-
-
-    /* =========================================
+    /* ==================================================
        STORE
-    ========================================= */
+    ================================================== */
 
     #store {
 
@@ -151,11 +161,16 @@
 
       transform: translateY(15px);
 
+      visibility: hidden;
+
+      background: var(--yellow-main);
+
       transition:
+
         opacity .8s ease,
+
         transform .8s ease;
 
-      visibility: hidden;
     }
 
 
@@ -166,12 +181,13 @@
       transform: translateY(0);
 
       visibility: visible;
+
     }
 
 
-    /* =========================================
+    /* ==================================================
        HEADER
-    ========================================= */
+    ================================================== */
 
     header {
 
@@ -181,15 +197,20 @@
 
       z-index: 1000;
 
-      background: #131921;
+      background: var(--yellow-main);
 
-      color: white;
+      color: var(--brown);
+
+      border-bottom:
+
+        3px solid var(--brown);
+
     }
 
 
     .top-header {
 
-      min-height: 70px;
+      min-height: 78px;
 
       display: flex;
 
@@ -198,22 +219,32 @@
       gap: 20px;
 
       padding: 10px 4%;
+
+      background: var(--yellow-main);
+
     }
 
 
+    /* ==================================================
+       LOGO
+    ================================================== */
+
     .logo {
 
-      color: white;
+      color: var(--brown);
 
       text-decoration: none;
 
       font-family: Georgia, serif;
 
-      font-size: 28px;
+      font-size: 30px;
 
       font-weight: bold;
 
       white-space: nowrap;
+
+      line-height: 1;
+
     }
 
 
@@ -223,15 +254,20 @@
 
       font-size: 13px;
 
-      color: #f7c94b;
+      color: var(--brown);
 
-      margin-top: -3px;
+      margin-top: 5px;
+
+      text-align: center;
+
+      letter-spacing: 1px;
+
     }
 
 
-    /* =========================================
+    /* ==================================================
        SEARCH
-    ========================================= */
+    ================================================== */
 
     .search-box {
 
@@ -239,11 +275,22 @@
 
       display: flex;
 
-      height: 44px;
+      height: 46px;
 
       max-width: 800px;
 
       margin: auto;
+
+      border:
+
+        2px solid var(--brown);
+
+      border-radius: 8px;
+
+      overflow: hidden;
+
+      background: var(--yellow-light);
+
     }
 
 
@@ -255,11 +302,25 @@
 
       outline: none;
 
+      background: var(--yellow-light);
+
+      color: var(--brown);
+
       padding: 0 18px;
 
       font-size: 16px;
 
       direction: rtl;
+
+    }
+
+
+    .search-box input::placeholder {
+
+      color: var(--brown);
+
+      opacity: .75;
+
     }
 
 
@@ -269,77 +330,114 @@
 
       border: none;
 
-      background: #f3b51b;
+      border-right:
 
-      color: #222;
+        2px solid var(--brown);
+
+      background: var(--brown);
+
+      color: var(--yellow-light);
 
       cursor: pointer;
 
       font-size: 20px;
+
     }
 
 
+    .search-box button:hover {
+
+      background: var(--brown-light);
+
+    }
+
+
+    /* ==================================================
+       CART
+    ================================================== */
+
     .cart {
 
-      background: transparent;
+      background: var(--brown);
 
-      border: 0;
+      border: none;
 
-      color: white;
+      color: var(--yellow-light);
 
-      font-size: 17px;
+      font-size: 16px;
 
       cursor: pointer;
 
       white-space: nowrap;
+
+      padding: 12px 18px;
+
+      border-radius: 8px;
+
+      font-weight: bold;
+
     }
 
 
-    /* =========================================
+    .cart:hover {
+
+      background: var(--brown-light);
+
+    }
+
+
+    /* ==================================================
        NAVIGATION
-    ========================================= */
+    ================================================== */
 
     .nav {
 
-      background: #232f3e;
+      background: var(--yellow-soft);
 
       padding: 12px 4%;
 
       display: flex;
 
-      gap: 25px;
+      gap: 28px;
 
       overflow-x: auto;
+
+      border-top:
+
+        2px solid var(--brown);
+
     }
 
 
     .nav a {
 
-      color: white;
+      color: var(--brown);
 
       text-decoration: none;
 
       white-space: nowrap;
 
       font-size: 15px;
+
+      font-weight: bold;
+
     }
 
 
     .nav a:hover {
 
-      color: #f7c94b;
+      color: var(--brown-light);
+
     }
 
 
-    /* =========================================
+    /* ==================================================
        HERO
-    ========================================= */
+    ================================================== */
 
     .hero {
 
-      margin: 0;
-
-      min-height: 320px;
+      min-height: 420px;
 
       display: flex;
 
@@ -350,20 +448,32 @@
       text-align: center;
 
       background:
+
         linear-gradient(
+
           135deg,
-          #f7c928,
-          #ffd95b,
-          #f3b91e
+
+          var(--yellow-light),
+
+          var(--yellow-main),
+
+          var(--yellow-soft)
+
         );
 
-      padding: 50px 20px;
+      padding: 60px 20px;
+
+      border-bottom:
+
+        3px solid var(--brown);
+
     }
 
 
     .hero-content {
 
       max-width: 850px;
+
     }
 
 
@@ -371,21 +481,43 @@
 
       font-family: Georgia, serif;
 
-      font-size: clamp(38px, 7vw, 76px);
+      font-size: clamp(
 
-      color: #4b0710;
+        48px,
 
-      margin-bottom: 15px;
+        9vw,
+
+        90px
+
+      );
+
+      color: var(--brown);
+
+      margin-bottom: 18px;
+
+      line-height: 1.05;
+
     }
 
 
     .hero p {
 
-      font-size: clamp(17px, 3vw, 24px);
+      font-size: clamp(
 
-      color: #4b0710;
+        18px,
 
-      margin-bottom: 25px;
+        3vw,
+
+        25px
+
+      );
+
+      color: var(--brown);
+
+      margin-bottom: 30px;
+
+      font-weight: bold;
+
     }
 
 
@@ -393,11 +525,15 @@
 
       display: inline-block;
 
-      padding: 14px 35px;
+      padding: 15px 38px;
 
-      background: #4b0710;
+      background: var(--brown);
 
-      color: white;
+      color: var(--yellow-light);
+
+      border:
+
+        2px solid var(--brown);
 
       border-radius: 8px;
 
@@ -405,33 +541,51 @@
 
       font-weight: bold;
 
-      transition: transform .25s ease;
+      transition:
+
+        transform .25s ease,
+
+        background .25s ease;
+
     }
 
 
     .shop-btn:hover {
 
       transform: translateY(-3px);
+
+      background: var(--brown-light);
+
     }
 
 
-    /* =========================================
+    /* ==================================================
        CATEGORIES
-    ========================================= */
+    ================================================== */
 
     .categories {
 
-      padding: 35px 4%;
+      padding: 45px 4%;
 
-      background: white;
+      background: var(--yellow-main);
+
+      border-bottom:
+
+        3px solid var(--brown);
+
     }
 
 
     .section-title {
 
-      font-size: 27px;
+      font-family: Georgia, serif;
 
-      margin-bottom: 25px;
+      color: var(--brown);
+
+      font-size: 30px;
+
+      margin-bottom: 28px;
+
     }
 
 
@@ -440,27 +594,44 @@
       display: grid;
 
       grid-template-columns:
-        repeat(auto-fit, minmax(150px, 1fr));
 
-      gap: 15px;
+        repeat(
+
+          auto-fit,
+
+          minmax(150px, 1fr)
+
+        );
+
+      gap: 18px;
+
     }
 
 
     .category {
 
-      background: #f7f7f7;
+      background: var(--yellow-light);
 
-      border-radius: 10px;
+      border:
 
-      padding: 25px 15px;
+        2px solid var(--brown);
+
+      border-radius: 12px;
+
+      padding: 28px 15px;
 
       text-align: center;
 
       cursor: pointer;
 
+      color: var(--brown);
+
       transition:
+
         transform .25s ease,
-        box-shadow .25s ease;
+
+        background .25s ease;
+
     }
 
 
@@ -468,8 +639,8 @@
 
       transform: translateY(-5px);
 
-      box-shadow:
-        0 8px 25px rgba(0,0,0,.1);
+      background: var(--yellow-soft);
+
     }
 
 
@@ -477,23 +648,34 @@
 
       font-size: 45px;
 
-      margin-bottom: 10px;
+      margin-bottom: 12px;
+
     }
 
 
     .category h3 {
 
-      font-size: 17px;
+      color: var(--brown);
+
+      font-size: 18px;
+
     }
 
 
-    /* =========================================
+    /* ==================================================
        PRODUCTS
-    ========================================= */
+    ================================================== */
 
     .products {
 
-      padding: 35px 4%;
+      padding: 45px 4%;
+
+      background: var(--yellow-soft);
+
+      border-bottom:
+
+        3px solid var(--brown);
+
     }
 
 
@@ -502,26 +684,42 @@
       display: grid;
 
       grid-template-columns:
-        repeat(auto-fill, minmax(220px, 1fr));
 
-      gap: 20px;
+        repeat(
+
+          auto-fill,
+
+          minmax(220px, 1fr)
+
+        );
+
+      gap: 22px;
+
     }
 
 
     .product {
 
-      background: white;
+      background: var(--yellow-light);
 
-      border-radius: 10px;
+      border:
+
+        2px solid var(--brown);
+
+      border-radius: 12px;
 
       overflow: hidden;
 
       box-shadow:
-        0 3px 12px rgba(0,0,0,.08);
+
+        0 5px 0 var(--brown);
 
       transition:
+
         transform .25s ease,
+
         box-shadow .25s ease;
+
     }
 
 
@@ -530,7 +728,9 @@
       transform: translateY(-5px);
 
       box-shadow:
-        0 12px 30px rgba(0,0,0,.13);
+
+        0 9px 0 var(--brown);
+
     }
 
 
@@ -546,15 +746,25 @@
 
       justify-content: center;
 
-      background: #fafafa;
+      background: var(--yellow-main);
+
+      color: var(--brown);
 
       font-size: 90px;
+
+      border-bottom:
+
+        2px solid var(--brown);
+
     }
 
 
     .product-info {
 
       padding: 18px;
+
+      background: var(--yellow-light);
+
     }
 
 
@@ -563,14 +773,20 @@
       font-size: 18px;
 
       margin-bottom: 10px;
+
+      color: var(--brown);
+
     }
 
 
     .rating {
 
-      color: #f0ad00;
+      color: var(--brown);
 
       margin-bottom: 10px;
+
+      letter-spacing: 2px;
+
     }
 
 
@@ -580,9 +796,10 @@
 
       font-weight: bold;
 
-      color: #b12704;
+      color: var(--brown);
 
       margin-bottom: 15px;
+
     }
 
 
@@ -590,73 +807,113 @@
 
       width: 100%;
 
-      padding: 11px;
+      padding: 12px;
 
-      border: none;
+      border:
+
+        2px solid var(--brown);
 
       border-radius: 7px;
 
-      background: #ffd814;
+      background: var(--brown);
+
+      color: var(--yellow-light);
 
       cursor: pointer;
 
       font-size: 15px;
 
       font-weight: bold;
+
     }
 
 
     .add-cart:hover {
 
-      background: #f7ca00;
+      background: var(--brown-light);
+
     }
 
 
-    /* =========================================
+    /* ==================================================
        FOOTER
-    ========================================= */
+    ================================================== */
 
     footer {
 
-      margin-top: 40px;
+      margin-top: 0;
 
-      padding: 40px 5%;
+      padding: 45px 5%;
 
-      background: #131921;
+      background: var(--yellow-main);
 
-      color: white;
+      color: var(--brown);
 
       text-align: center;
+
+      border-top:
+
+        3px solid var(--brown);
+
     }
 
 
-    /* =========================================
+    footer h2 {
+
+      font-family: Georgia, serif;
+
+      font-size: 32px;
+
+      margin-bottom: 10px;
+
+    }
+
+
+    footer p {
+
+      color: var(--brown);
+
+      font-weight: bold;
+
+    }
+
+
+    /* ==================================================
        MOBILE
-    ========================================= */
+    ================================================== */
 
     @media (max-width: 700px) {
 
+
       .top-header {
 
-        gap: 10px;
+        gap: 8px;
+
+        padding: 10px 3%;
+
       }
 
 
       .logo {
 
         font-size: 21px;
+
       }
 
 
       .logo span {
 
-        font-size: 10px;
+        font-size: 9px;
+
       }
 
 
       .cart {
 
         font-size: 0;
+
+        padding: 10px 12px;
+
       }
 
 
@@ -665,33 +922,135 @@
         content: "🛒";
 
         font-size: 22px;
+
       }
 
 
       .search-box {
 
         height: 40px;
+
       }
 
 
       .search-box button {
 
         width: 45px;
+
+        font-size: 17px;
+
+      }
+
+
+      .search-box input {
+
+        font-size: 14px;
+
+        padding: 0 10px;
+
+      }
+
+
+      .nav {
+
+        gap: 20px;
+
+        padding: 10px 3%;
+
+      }
+
+
+      .nav a {
+
+        font-size: 14px;
+
       }
 
 
       .hero {
 
-        min-height: 270px;
+        min-height: 320px;
+
+        padding: 45px 15px;
+
+      }
+
+
+      .hero h1 {
+
+        font-size: 48px;
+
+      }
+
+
+      .hero p {
+
+        font-size: 17px;
+
+      }
+
+
+      .shop-btn {
+
+        padding: 13px 30px;
+
+      }
+
+
+      .categories {
+
+        padding: 35px 3%;
+
+      }
+
+
+      .products {
+
+        padding: 35px 3%;
+
+      }
+
+
+      .section-title {
+
+        font-size: 26px;
+
+      }
+
+
+      .category-grid {
+
+        grid-template-columns:
+
+          repeat(2, minmax(0, 1fr));
+
+        gap: 12px;
+
+      }
+
+
+      .category {
+
+        padding: 20px 10px;
+
+      }
+
+
+      .category .icon {
+
+        font-size: 38px;
+
       }
 
 
       .product-grid {
 
         grid-template-columns:
+
           repeat(2, minmax(0, 1fr));
 
         gap: 12px;
+
       }
 
 
@@ -700,47 +1059,45 @@
         height: 160px;
 
         font-size: 65px;
+
       }
 
 
       .product-info {
 
         padding: 12px;
+
       }
 
 
       .product-info h3 {
 
         font-size: 15px;
+
       }
 
 
       .price {
 
-        font-size: 19px;
+        font-size: 18px;
+
       }
 
 
-      /*
-         زر التخطي على الهاتف
-      */
+      .add-cart {
 
-      #skipIntro {
+        font-size: 13px;
 
-        left: 20px;
+        padding: 10px 5px;
 
-        bottom: 20px;
-
-        padding: 11px 20px;
-
-        font-size: 14px;
       }
+
     }
 
 
-    /* =========================================
-       شاشات الهاتف الطولية
-    ========================================= */
+    /* ==================================================
+       INTRO MOBILE
+    ================================================== */
 
     @media (max-width: 700px) and (orientation: portrait) {
 
@@ -749,6 +1106,7 @@
         width: 100vw;
 
         height: 100dvh;
+
       }
 
 
@@ -761,13 +1119,15 @@
         object-fit: cover;
 
         object-position: center center;
+
       }
+
     }
 
 
-    /* =========================================
-       شاشات الهاتف الأفقية
-    ========================================= */
+    /* ==================================================
+       LANDSCAPE
+    ================================================== */
 
     @media (max-width: 900px) and (orientation: landscape) {
 
@@ -780,10 +1140,13 @@
         object-fit: cover;
 
         object-position: center center;
+
       }
+
     }
 
   </style>
+
 </head>
 
 
@@ -792,8 +1155,7 @@
 
   <!-- ==================================================
        INTRO VIDEO
-       يجب أن يكون اسم الفيديو:
-       intro.mp4
+       لا يوجد زر تخطي
   ================================================== -->
 
   <section id="intro">
@@ -804,20 +1166,17 @@
       muted
       playsinline
       webkit-playsinline
-      preload="auto">
+      preload="auto"
+    >
 
       <source
         src="intro.mp4"
-        type="video/mp4">
+        type="video/mp4"
+      >
 
       متصفحك لا يدعم تشغيل الفيديو.
 
     </video>
-
-
-    <button id="skipIntro">
-      تخطي المقدمة
-    </button>
 
   </section>
 
@@ -830,17 +1189,17 @@
   <main id="store">
 
 
-    <!-- ================================================
-         HEADER
-    ================================================= -->
+    <!-- HEADER -->
 
     <header>
 
       <div class="top-header">
 
+
         <a
           href="#"
-          class="logo">
+          class="logo"
+        >
 
           H.L
 
@@ -851,7 +1210,9 @@
         </a>
 
 
+
         <div class="search-box">
+
 
           <input
             type="search"
@@ -861,28 +1222,32 @@
 
 
           <button
-            onclick="searchProducts()">
-
+            onclick="searchProducts()"
+          >
             🔍
-
           </button>
+
 
         </div>
 
 
+
         <button
           class="cart"
-          onclick="showCart()">
+          onclick="showCart()"
+        >
 
           🛒 السلة
 
         </button>
+
 
       </div>
 
 
 
       <nav class="nav">
+
 
         <a href="#">
           الرئيسية
@@ -913,19 +1278,21 @@
           تواصل معنا
         </a>
 
+
       </nav>
+
 
     </header>
 
 
 
-    <!-- ================================================
-         HERO
-    ================================================= -->
+    <!-- HERO -->
 
     <section class="hero">
 
+
       <div class="hero-content">
+
 
         <h1>
           H.L LeVance
@@ -939,31 +1306,33 @@
 
         <a
           href="#products"
-          class="shop-btn">
+          class="shop-btn"
+        >
 
           تسوق الآن
 
         </a>
 
+
       </div>
+
 
     </section>
 
 
 
-    <!-- ================================================
-         CATEGORIES
-    ================================================= -->
+    <!-- CATEGORIES -->
 
     <section
       class="categories"
-      id="categories">
+      id="categories"
+    >
+
 
       <h2 class="section-title">
-
         تصفح الأقسام
-
       </h2>
+
 
 
       <div class="category-grid">
@@ -1040,31 +1409,32 @@
 
       </div>
 
+
     </section>
 
 
 
-    <!-- ================================================
-         PRODUCTS
-    ================================================= -->
+    <!-- PRODUCTS -->
 
     <section
       class="products"
-      id="products">
+      id="products"
+    >
+
 
       <h2 class="section-title">
-
         المنتجات المميزة
-
       </h2>
+
 
 
       <div class="product-grid">
 
 
-        <!-- المنتج الأول -->
+        <!-- PRODUCT 1 -->
 
         <article class="product">
+
 
           <div class="product-image">
             👕
@@ -1072,6 +1442,7 @@
 
 
           <div class="product-info">
+
 
             <h3>
               قميص أنيق
@@ -1090,21 +1461,25 @@
 
             <button
               class="add-cart"
-              onclick="addToCart('قميص أنيق')">
+              onclick="addToCart('قميص أنيق')"
+            >
 
               أضف إلى السلة
 
             </button>
 
+
           </div>
+
 
         </article>
 
 
 
-        <!-- المنتج الثاني -->
+        <!-- PRODUCT 2 -->
 
         <article class="product">
+
 
           <div class="product-image">
             👗
@@ -1112,6 +1487,7 @@
 
 
           <div class="product-info">
+
 
             <h3>
               فستان أنيق
@@ -1130,21 +1506,25 @@
 
             <button
               class="add-cart"
-              onclick="addToCart('فستان أنيق')">
+              onclick="addToCart('فستان أنيق')"
+            >
 
               أضف إلى السلة
 
             </button>
 
+
           </div>
+
 
         </article>
 
 
 
-        <!-- المنتج الثالث -->
+        <!-- PRODUCT 3 -->
 
         <article class="product">
+
 
           <div class="product-image">
             👡
@@ -1152,6 +1532,7 @@
 
 
           <div class="product-info">
+
 
             <h3>
               حذاء أنيق
@@ -1170,21 +1551,25 @@
 
             <button
               class="add-cart"
-              onclick="addToCart('حذاء أنيق')">
+              onclick="addToCart('حذاء أنيق')"
+            >
 
               أضف إلى السلة
 
             </button>
 
+
           </div>
+
 
         </article>
 
 
 
-        <!-- المنتج الرابع -->
+        <!-- PRODUCT 4 -->
 
         <article class="product">
+
 
           <div class="product-image">
             💄
@@ -1192,6 +1577,7 @@
 
 
           <div class="product-info">
+
 
             <h3>
               مستحضرات تجميل
@@ -1210,28 +1596,31 @@
 
             <button
               class="add-cart"
-              onclick="addToCart('مستحضرات تجميل')">
+              onclick="addToCart('مستحضرات تجميل')"
+            >
 
               أضف إلى السلة
 
             </button>
 
+
           </div>
+
 
         </article>
 
 
       </div>
 
+
     </section>
 
 
 
-    <!-- ================================================
-         FOOTER
-    ================================================= -->
+    <!-- FOOTER -->
 
     <footer>
+
 
       <h2>
         H.L LeVance
@@ -1250,6 +1639,7 @@
         © 2026 جميع الحقوق محفوظة
       </p>
 
+
     </footer>
 
 
@@ -1264,9 +1654,9 @@
   <script>
 
 
-    /* ================================================
-       عناصر المقدمة
-    ================================================= */
+    /* ==================================================
+       INTRO
+    ================================================== */
 
     const intro =
       document.getElementById("intro");
@@ -1280,16 +1670,13 @@
       document.getElementById("store");
 
 
-    const skip =
-      document.getElementById("skipIntro");
 
-
-
-    /* ================================================
-       الانتقال من الفيديو إلى الموقع
-    ================================================= */
+    /* ==================================================
+       دخول المتجر بعد انتهاء الفيديو
+    ================================================== */
 
     function enterStore() {
+
 
       if (
         intro.classList.contains("hide")
@@ -1306,18 +1693,20 @@
       store.classList.add("show");
 
 
-      document.body.style.overflow = "auto";
+      document.body.style.overflow =
+        "auto";
 
 
       video.pause();
+
 
     }
 
 
 
-    /* ================================================
+    /* ==================================================
        عند انتهاء الفيديو
-    ================================================= */
+    ================================================== */
 
     video.addEventListener(
       "ended",
@@ -1326,31 +1715,12 @@
 
 
 
-    /* ================================================
-       زر تخطي المقدمة
-    ================================================= */
-
-    skip.addEventListener(
-      "click",
-      enterStore
-    );
-
-
-
-    /* ================================================
-       منع التمرير أثناء المقدمة
-    ================================================= */
-
-    document.body.style.overflow =
-      "hidden";
-
-
-
-    /* ================================================
-       محاولة تشغيل الفيديو
-    ================================================= */
+    /* ==================================================
+       تشغيل الفيديو
+    ================================================== */
 
     function startVideo() {
+
 
       const promise =
         video.play();
@@ -1359,6 +1729,7 @@
       if (
         promise !== undefined
       ) {
+
 
         promise.catch(
           function(error) {
@@ -1371,61 +1742,72 @@
           }
         );
 
+
       }
 
     }
 
 
-    /*
-       تشغيل الفيديو بعد تحميل الصفحة
-    */
 
     if (
       video.readyState >= 2
     ) {
 
+
       startVideo();
+
 
     }
     else {
 
+
       video.addEventListener(
         "loadeddata",
         startVideo,
-        { once: true }
+        {
+          once: true
+        }
       );
+
 
     }
 
 
 
-    /* ================================================
-       في حالة فشل تحميل الفيديو
-    ================================================= */
+    /* ==================================================
+       في حالة فشل الفيديو
+    ================================================== */
 
     video.addEventListener(
       "error",
       function() {
 
+
         console.warn(
           "تعذر تحميل intro.mp4"
         );
 
-        /*
-           لا نخفي الموقع نهائيًا
-           في حالة وجود مشكلة في الفيديو
-        */
 
         enterStore();
+
 
       }
     );
 
 
 
-    /* ================================================
-       السلة
-    ================================================= */
+    /* ==================================================
+       منع التمرير أثناء الفيديو
+    ================================================== */
+
+    document.body.style.overflow =
+      "hidden";
+
+
+
+    /* ==================================================
+       CART
+    ================================================== */
 
     let cart = [];
 
@@ -1433,14 +1815,18 @@
 
     function addToCart(product) {
 
+
       cart.push(product);
 
 
       alert(
+
         "تمت إضافة " +
         product +
         " إلى السلة 🛒"
+
       );
+
 
     }
 
@@ -1448,13 +1834,16 @@
 
     function showCart() {
 
+
       if (
         cart.length === 0
       ) {
 
+
         alert(
           "السلة فارغة."
         );
+
 
         return;
 
@@ -1462,21 +1851,26 @@
 
 
       alert(
+
         "المنتجات في السلة:\n\n" +
         cart.join("\n")
+
       );
+
 
     }
 
 
 
-    /* ================================================
-       البحث
-    ================================================= */
+    /* ==================================================
+       SEARCH
+    ================================================== */
 
     function searchProducts() {
 
+
       const query =
+
         document
           .getElementById("search")
           .value
@@ -1484,38 +1878,49 @@
           .toLowerCase();
 
 
+
       const products =
+
         document.querySelectorAll(
           ".product"
         );
 
 
+
       products.forEach(
         product => {
 
+
           const name =
+
             product
               .querySelector("h3")
               .textContent
               .toLowerCase();
 
 
+
           product.style.display =
+
             !query ||
             name.includes(query)
+
               ? ""
+
               : "none";
+
 
         }
       );
+
 
     }
 
 
 
-    /* ================================================
-       البحث عند الضغط على Enter
-    ================================================= */
+    /* ==================================================
+       SEARCH ENTER
+    ================================================== */
 
     document
       .getElementById("search")
@@ -1523,13 +1928,17 @@
         "keydown",
         function(event) {
 
+
           if (
             event.key === "Enter"
           ) {
 
+
             searchProducts();
 
+
           }
+
 
         }
       );
@@ -1539,4 +1948,5 @@
 
 
 </body>
+
 </html>
