@@ -426,13 +426,21 @@
       position: relative;
     }
 
-    .product-image img {
+    .product-image .main-media {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .product-image .main-media img {
       width: 100%;
       height: 100%;
       object-fit: cover;
     }
 
-    .product-image video {
+    .product-image .main-media video {
       width: 100%;
       height: 100%;
       object-fit: cover;
@@ -455,6 +463,7 @@
       cursor: pointer;
       font-size: 16px;
       display: none;
+      z-index: 10;
     }
 
     .product-image .delete-prod:hover {
@@ -469,24 +478,15 @@
       bottom: 10px;
       left: 50%;
       transform: translateX(-50%);
-      background: rgba(0,0,0,0.5);
+      background: rgba(0,0,0,0.6);
       padding: 5px 10px;
       border-radius: 20px;
+      z-index: 5;
+      max-width: 90%;
+      overflow-x: auto;
     }
 
-    .product-image .image-gallery img {
-      width: 40px;
-      height: 40px;
-      border-radius: 4px;
-      border: 2px solid var(--yellow-main);
-      cursor: pointer;
-      object-fit: cover;
-    }
-
-    .product-image .image-gallery img.active {
-      border-color: var(--brown);
-    }
-
+    .product-image .image-gallery img,
     .product-image .image-gallery video {
       width: 40px;
       height: 40px;
@@ -494,6 +494,12 @@
       border: 2px solid var(--yellow-main);
       cursor: pointer;
       object-fit: cover;
+      flex-shrink: 0;
+    }
+
+    .product-image .image-gallery img.active,
+    .product-image .image-gallery video.active {
+      border-color: var(--brown);
     }
 
     .product-info {
@@ -875,6 +881,14 @@
       border: 1px solid var(--brown);
     }
 
+    .admin-list-item .item-info video {
+      width: 40px;
+      height: 40px;
+      border-radius: 8px;
+      object-fit: cover;
+      border: 1px solid var(--brown);
+    }
+
     .admin-list-item .item-info span {
       font-weight: bold;
       color: var(--brown);
@@ -1044,7 +1058,8 @@
         font-size: 65px;
       }
 
-      .product-image .image-gallery img {
+      .product-image .image-gallery img,
+      .product-image .image-gallery video {
         width: 30px;
         height: 30px;
       }
@@ -1589,10 +1604,10 @@
     ================================================== */
     function getSampleProducts() {
       return [
-        { id: 1, name: "قميص أنيق", price: 499, discount: 0, icon: "👕", image: null, media: [], sizes: ["S", "M", "L", "XL"] },
-        { id: 2, name: "فستان أنيق", price: 799, discount: 0, icon: "👗", image: null, media: [], sizes: ["S", "M", "L"] },
-        { id: 3, name: "حذاء أنيق", price: 599, discount: 0, icon: "👡", image: null, media: [], sizes: ["40", "41", "42", "43"] },
-        { id: 4, name: "مستحضرات تجميل", price: 299, discount: 0, icon: "💄", image: null, media: [], sizes: [] }
+        { id: 1, name: "قميص أنيق", price: 499, discount: 0, icon: "👕", media: [], sizes: ["S", "M", "L", "XL"] },
+        { id: 2, name: "فستان أنيق", price: 799, discount: 0, icon: "👗", media: [], sizes: ["S", "M", "L"] },
+        { id: 3, name: "حذاء أنيق", price: 599, discount: 0, icon: "👡", media: [], sizes: ["40", "41", "42", "43"] },
+        { id: 4, name: "مستحضرات تجميل", price: 299, discount: 0, icon: "💄", media: [], sizes: [] }
       ];
     }
 
@@ -1635,16 +1650,15 @@
         return;
       }
 
-      products.forEach(p => {
+      products.forEach((p, productIndex) => {
         const priceInfo = getProductPriceWithDiscount(p);
         const article = document.createElement("article");
         article.className = "product";
         article.dataset.id = p.id;
 
         // Build media gallery
-        let mediaHtml = '';
-        let galleryHtml = '';
         let mainMedia = '';
+        let galleryHtml = '';
 
         if (p.media && p.media.length > 0) {
           // Show first media as main
@@ -1655,23 +1669,21 @@
             mainMedia = `<img src="${firstMedia.data}" alt="${p.name}">`;
           }
 
-          // Build gallery thumbs
-          galleryHtml = `<div class="image-gallery">`;
-          p.media.forEach((m, index) => {
-            if (m.type === 'video') {
-              galleryHtml += `<video muted playsinline onclick="changeMainMedia(this, ${p.id}, ${index})"><source src="${m.data}" type="video/mp4"></video>`;
-            } else {
-              galleryHtml += `<img src="${m.data}" alt="${p.name}" onclick="changeMainMedia(this, ${p.id}, ${index})">`;
-            }
-          });
-          galleryHtml += `</div>`;
-        } else {
-          // Fallback to icon or single image
-          if (p.image) {
-            mainMedia = `<img src="${p.image}" alt="${p.name}">`;
-          } else {
-            mainMedia = `<span class="product-icon">${p.icon || '📦'}</span>`;
+          // Build gallery thumbs - show only if more than 1 media
+          if (p.media.length > 1) {
+            galleryHtml = `<div class="image-gallery">`;
+            p.media.forEach((m, index) => {
+              if (m.type === 'video') {
+                galleryHtml += `<video muted playsinline onclick="changeMainMedia(this, ${p.id}, ${index})"><source src="${m.data}" type="video/mp4"></video>`;
+              } else {
+                galleryHtml += `<img src="${m.data}" alt="${p.name}" onclick="changeMainMedia(this, ${p.id}, ${index})">`;
+              }
+            });
+            galleryHtml += `</div>`;
           }
+        } else {
+          // Fallback to icon
+          mainMedia = `<span class="product-icon">${p.icon || '📦'}</span>`;
         }
 
         // Build sizes
@@ -1679,7 +1691,7 @@
         if (p.sizes && p.sizes.length > 0) {
           sizesHtml = `<div class="sizes">`;
           p.sizes.forEach(size => {
-            sizesHtml += `<button class="size-btn" onclick="selectSize(this, '${p.name.replace(/'/g, "\\'")}')">${size}</button>`;
+            sizesHtml += `<button class="size-btn" onclick="selectSize(this)">${size}</button>`;
           });
           sizesHtml += `</div>`;
         }
@@ -1699,7 +1711,7 @@
               ${priceInfo.hasDiscount ? `<span style="color:red;font-size:14px;"> (خصم ${p.discount}%)</span>` : ''}
             </div>
             ${sizesHtml}
-            <button class="add-cart" onclick="addToCartWithSize('${p.name.replace(/'/g, "\\'")}')">أضف إلى السلة</button>
+            <button class="add-cart" onclick="addToCartWithSize(this)">أضف إلى السلة</button>
           </div>
         `;
         grid.appendChild(article);
@@ -1711,55 +1723,23 @@
     }
 
     // Helper function for size selection
-    function selectSize(btn, productName) {
+    function selectSize(btn) {
       const parent = btn.parentElement;
       parent.querySelectorAll('.size-btn').forEach(b => b.classList.remove('selected'));
       btn.classList.add('selected');
-      
-      // Store selected size in the product card
-      const productCard = btn.closest('.product');
-      productCard.dataset.selectedSize = btn.textContent;
     }
 
     // Helper function for adding to cart with selected size
-    function addToCartWithSize(productName) {
-      const productCard = document.querySelector(`.product:has(h3:contains("${productName}"))`);
+    function addToCartWithSize(btn) {
+      const productCard = btn.closest('.product');
+      const name = productCard.querySelector('h3').textContent;
       let size = null;
-      if (productCard) {
-        const selected = productCard.querySelector('.size-btn.selected');
-        if (selected) {
-          size = selected.textContent;
-        }
+      const selected = productCard.querySelector('.size-btn.selected');
+      if (selected) {
+        size = selected.textContent;
       }
-      addToCart(productName, size);
+      addToCart(name, size);
     }
-
-    // Custom contains selector for h3
-    document.querySelectorAll('.product h3').forEach(h3 => {
-      const parent = h3.closest('.product');
-      if (parent) {
-        parent.dataset.productName = h3.textContent;
-      }
-    });
-
-    // Override the add to cart with size
-    document.addEventListener('click', function(e) {
-      if (e.target.classList.contains('add-cart')) {
-        const productCard = e.target.closest('.product');
-        if (productCard) {
-          const name = productCard.querySelector('h3').textContent;
-          let size = null;
-          const selected = productCard.querySelector('.size-btn.selected');
-          if (selected) {
-            size = selected.textContent;
-          }
-          // The addToCart function will be called from onclick, but we handle it here
-          // to ensure size is passed correctly
-          e.preventDefault();
-          addToCart(name, size);
-        }
-      }
-    });
 
     function changeMainMedia(element, productId, index) {
       const container = document.getElementById(`productImage_${productId}`);
@@ -1777,7 +1757,6 @@
       
       if (media.type === 'video') {
         mainMedia.innerHTML = `<video controls muted playsinline><source src="${media.data}" type="video/mp4"></video>`;
-        // Auto-play the video
         const videoEl = mainMedia.querySelector('video');
         if (videoEl) videoEl.play();
       } else {
@@ -1807,18 +1786,16 @@
         const priceInfo = getProductPriceWithDiscount(p);
         const div = document.createElement("div");
         div.className = "admin-list-item";
-        let imagePreview = '';
+        let mediaPreview = '';
         if (p.media && p.media.length > 0) {
           const first = p.media[0];
           if (first.type === 'video') {
-            imagePreview = `<video style="width:40px;height:40px;object-fit:cover;border-radius:8px;" muted><source src="${first.data}" type="video/mp4"></video>`;
+            mediaPreview = `<video style="width:40px;height:40px;object-fit:cover;border-radius:8px;" muted><source src="${first.data}" type="video/mp4"></video>`;
           } else {
-            imagePreview = `<img src="${first.data}" alt="${p.name}">`;
+            mediaPreview = `<img src="${first.data}" alt="${p.name}">`;
           }
-        } else if (p.image) {
-          imagePreview = `<img src="${p.image}" alt="${p.name}">`;
         } else {
-          imagePreview = `<span style="font-size:30px;">${p.icon || '📦'}</span>`;
+          mediaPreview = `<span style="font-size:30px;">${p.icon || '📦'}</span>`;
         }
 
         const sizeTags = p.sizes && p.sizes.length > 0 ? 
@@ -1826,7 +1803,7 @@
 
         div.innerHTML = `
           <div class="item-info">
-            ${imagePreview}
+            ${mediaPreview}
             <span>${p.name} - ${priceInfo.final} جنيه ${priceInfo.hasDiscount ? `(خصم ${p.discount}%)` : ''}</span>
             ${sizeTags}
             <span style="font-size:12px;opacity:0.7;">📎 ${p.media ? p.media.length : 0} ملف</span>
@@ -1932,22 +1909,21 @@
         return;
       }
 
-      // Process media files
+      // Process media files (images and videos)
       const media = [];
       if (fileInput.files && fileInput.files.length > 0) {
         for (const file of fileInput.files) {
-          const reader = new FileReader();
-          const mediaData = await new Promise((resolve) => {
-            reader.onload = function(e) {
-              resolve({
-                type: file.type.startsWith('video') ? 'video' : 'image',
-                data: e.target.result,
-                name: file.name
-              });
-            };
-            reader.readAsDataURL(file);
-          });
-          media.push(mediaData);
+          try {
+            const mediaData = await readFileAsDataURL(file);
+            const isVideo = file.type.startsWith('video/');
+            media.push({
+              type: isVideo ? 'video' : 'image',
+              data: mediaData,
+              name: file.name
+            });
+          } catch (error) {
+            console.error('Error reading file:', error);
+          }
         }
       }
 
@@ -1957,7 +1933,6 @@
         price: price,
         discount: discount,
         icon: icon,
-        image: media.length > 0 ? media[0].data : null,
         media: media,
         sizes: sizes
       };
@@ -1974,7 +1949,6 @@
         price: price,
         discount: discount,
         icon: icon,
-        image: media.length > 0 ? media[0].data : null,
         media: media,
         sizes: sizes
       });
@@ -1991,6 +1965,20 @@
       } else {
         alert("⚠️ تم إضافة المنتج محلياً ولكن قد يكون هناك خطأ في المزامنة مع الخادم.");
       }
+    }
+
+    // Helper function to read file as DataURL
+    function readFileAsDataURL(file) {
+      return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+          resolve(e.target.result);
+        };
+        reader.onerror = function(e) {
+          reject(e);
+        };
+        reader.readAsDataURL(file);
+      });
     }
 
     async function deleteProduct(id) {
