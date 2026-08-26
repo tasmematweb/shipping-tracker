@@ -1,3 +1,4 @@
+```html
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 
@@ -412,7 +413,6 @@
       box-shadow: 0 9px 0 var(--brown);
     }
 
-    /* Zoom button */
     .zoom-btn {
       position: absolute;
       top: 10px;
@@ -494,7 +494,6 @@
       background: var(--brown-light);
     }
 
-    /* Image gallery thumbs */
     .product-image .image-gallery {
       display: flex;
       gap: 5px;
@@ -557,7 +556,6 @@
       margin-left: 10px;
     }
 
-    /* Sizes */
     .sizes {
       display: flex;
       gap: 8px;
@@ -690,6 +688,161 @@
       font-size: 18px;
       font-weight: bold;
       padding: 0 15px;
+    }
+
+    /* ==================================================
+       ORDER FORM - صفحة طلب العميل
+    ================================================== */
+    #orderFormPage {
+      display: none;
+      padding: 30px 4%;
+      background: var(--yellow-soft);
+      min-height: 100vh;
+    }
+
+    #orderFormPage.active {
+      display: block;
+    }
+
+    .order-form-container {
+      max-width: 700px;
+      margin: 0 auto;
+      background: var(--yellow-light);
+      border: 3px solid var(--brown);
+      border-radius: 16px;
+      padding: 35px 30px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+    }
+
+    .order-form-container h2 {
+      text-align: center;
+      color: var(--brown);
+      font-family: Georgia, serif;
+      font-size: 28px;
+      margin-bottom: 25px;
+    }
+
+    .order-form-container .order-summary {
+      background: var(--yellow-main);
+      border: 2px solid var(--brown);
+      border-radius: 10px;
+      padding: 15px;
+      margin-bottom: 20px;
+    }
+
+    .order-form-container .order-summary h3 {
+      color: var(--brown);
+      margin-bottom: 10px;
+      font-size: 18px;
+    }
+
+    .order-form-container .order-summary .cart-items {
+      max-height: 150px;
+      overflow-y: auto;
+      font-size: 14px;
+      color: var(--brown);
+    }
+
+    .order-form-container .order-summary .cart-items .item {
+      padding: 5px 0;
+      border-bottom: 1px solid rgba(87, 8, 14, 0.1);
+    }
+
+    .order-form-container .order-summary .total-price {
+      text-align: left;
+      font-weight: bold;
+      font-size: 20px;
+      color: var(--brown);
+      margin-top: 10px;
+      padding-top: 10px;
+      border-top: 2px solid var(--brown);
+    }
+
+    .order-form-container .form-group {
+      margin-bottom: 16px;
+    }
+
+    .order-form-container .form-group label {
+      display: block;
+      font-weight: 700;
+      color: var(--brown);
+      margin-bottom: 5px;
+      font-size: 15px;
+    }
+
+    .order-form-container .form-group label .required {
+      color: red;
+    }
+
+    .order-form-container .form-group input,
+    .order-form-container .form-group select,
+    .order-form-container .form-group textarea {
+      width: 100%;
+      padding: 12px 15px;
+      border: 2px solid var(--brown);
+      border-radius: 8px;
+      font-size: 15px;
+      font-family: Arial, sans-serif;
+      background: var(--yellow-light);
+      color: var(--brown);
+      transition: 0.3s;
+      direction: rtl;
+    }
+
+    .order-form-container .form-group input:focus,
+    .order-form-container .form-group select:focus,
+    .order-form-container .form-group textarea:focus {
+      border-color: var(--brown-light);
+      outline: none;
+      box-shadow: 0 0 0 3px rgba(87, 8, 14, 0.1);
+    }
+
+    .order-form-container .form-group textarea {
+      height: 80px;
+      resize: vertical;
+    }
+
+    .order-form-container .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 15px;
+    }
+
+    .order-form-container .submit-order-btn {
+      width: 100%;
+      padding: 15px;
+      background: var(--brown);
+      color: var(--yellow-light);
+      border: none;
+      border-radius: 8px;
+      font-size: 20px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: background 0.3s;
+      margin-top: 10px;
+    }
+
+    .order-form-container .submit-order-btn:hover {
+      background: var(--brown-light);
+    }
+
+    .order-form-container .submit-order-btn:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+
+    .order-form-container .back-to-store {
+      display: block;
+      text-align: center;
+      margin-top: 15px;
+      color: var(--brown);
+      cursor: pointer;
+      font-weight: bold;
+      text-decoration: underline;
+    }
+
+    .order-form-container .back-to-store:hover {
+      color: var(--brown-light);
     }
 
     /* ==================================================
@@ -951,7 +1104,6 @@
       padding: 0;
     }
 
-    /* Media files container */
     .media-files-container {
       display: flex;
       flex-direction: column;
@@ -1129,45 +1281,6 @@
     @keyframes spin {
       0% { transform: rotate(0deg); }
       100% { transform: rotate(360deg); }
-    }
-
-    /* ==================================================
-       STORAGE INFO
-    ================================================== */
-    .storage-info {
-      background: var(--yellow-main);
-      border: 2px solid var(--brown);
-      border-radius: 8px;
-      padding: 10px 15px;
-      font-size: 14px;
-      font-weight: bold;
-      color: var(--brown);
-      display: flex;
-      align-items: center;
-      gap: 15px;
-      flex-wrap: wrap;
-    }
-
-    .storage-info .storage-bar {
-      flex: 1;
-      height: 10px;
-      background: var(--yellow-light);
-      border-radius: 5px;
-      border: 1px solid var(--brown);
-      overflow: hidden;
-      min-width: 100px;
-    }
-
-    .storage-info .storage-bar .storage-fill {
-      height: 100%;
-      background: var(--brown);
-      border-radius: 5px;
-      transition: width 0.3s;
-    }
-
-    .storage-info .storage-text {
-      font-size: 13px;
-      white-space: nowrap;
     }
 
     /* ==================================================
@@ -1370,10 +1483,13 @@
         left: 10px;
       }
 
-      .storage-info {
-        flex-direction: column;
-        align-items: stretch;
-        gap: 8px;
+      .order-form-container {
+        padding: 20px 15px;
+      }
+
+      .order-form-container .form-row {
+        grid-template-columns: 1fr;
+        gap: 0;
       }
     }
 
@@ -1439,7 +1555,7 @@
       </div>
 
       <nav class="nav">
-        <a href="#">الرئيسية</a>
+        <a href="#" onclick="showStore()">الرئيسية</a>
         <a href="#products">جميع المنتجات</a>
         <a href="#categories">الأقسام</a>
       </nav>
@@ -1481,7 +1597,6 @@
           <input type="number" id="newProductDiscount" placeholder="الخصم %">
           <input type="text" id="newProductIcon" placeholder="أيقونة (مثال: 👕)">
 
-          <!-- المقاسات -->
           <div class="size-checkboxes">
             <label><input type="checkbox" value="S"> S</label>
             <label><input type="checkbox" value="M"> M</label>
@@ -1491,7 +1606,6 @@
             <label><input type="checkbox" value="3XL"> 3XL</label>
           </div>
 
-          <!-- Media files container -->
           <div class="media-files-container" id="mediaFilesContainer">
             <div class="media-file-row" id="fileRowTemplate">
               <input type="file" accept="image/*,video/*" onchange="previewFile(this)">
@@ -1504,18 +1618,7 @@
 
           <button onclick="addProduct()">➕ إضافة منتج</button>
           <button onclick="resetProducts()">🔄 إعادة ضبط</button>
-          <button onclick="clearStorage()" style="background:#brown;color:var(--yellow-light);">🗑️ تنظيف التخزين</button>
         </div>
-
-        <!-- Storage Info -->
-        <div class="storage-info" id="storageInfo">
-          <span>💾 مساحة التخزين</span>
-          <div class="storage-bar">
-            <div class="storage-fill" id="storageFill" style="width:0%"></div>
-          </div>
-          <span class="storage-text" id="storageText">0%</span>
-        </div>
-
         <div class="admin-list" id="adminProductList"></div>
       </div>
 
@@ -1541,6 +1644,81 @@
       <p>© 2026 جميع الحقوق محفوظة</p>
     </footer>
   </main>
+
+  <!-- ==================================================
+       ORDER FORM PAGE - صفحة طلب العميل
+  ================================================== -->
+  <section id="orderFormPage">
+    <div class="order-form-container">
+      <h2>📋 طلبية جديدة</h2>
+
+      <div class="order-summary">
+        <h3>🛒 ملخص الطلبية</h3>
+        <div class="cart-items" id="orderCartItems"></div>
+        <div class="total-price">
+          الإجمالي: <span id="orderTotalPrice">0</span> جنيه
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label>اسم المستلم <span class="required">*</span></label>
+        <input type="text" id="orderCustomerName" placeholder="أدخل اسم المستلم">
+      </div>
+
+      <div class="form-group">
+        <label>هاتف المستلم <span class="required">*</span></label>
+        <input type="tel" id="orderCustomerPhone" placeholder="مثال: 01012345678" dir="ltr" maxlength="11" oninput="this.value=this.value.replace(/[^0-9]/g,'')">
+      </div>
+
+      <div class="form-group">
+        <label>هاتف آخر للمستلم</label>
+        <input type="tel" id="orderCustomerPhone2" placeholder="هاتف آخر (اختياري)" dir="ltr" maxlength="11" oninput="this.value=this.value.replace(/[^0-9]/g,'')">
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label>المحافظة <span class="required">*</span></label>
+          <select id="orderGovernorate" onchange="updateOrderCities()">
+            <option value="">اختر المحافظة</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>المدينة <span class="required">*</span></label>
+          <select id="orderCity">
+            <option value="">اختر المحافظة أولا</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label>العنوان التفصيلي <span class="required">*</span></label>
+        <input type="text" id="orderAddress" placeholder="العنوان بالتفصيل (مثال: الحي الأول، شارع ...)">
+      </div>
+
+      <div class="form-group">
+        <label>المبلغ المطلوب تحصيله شامل الشحن <span class="required">*</span></label>
+        <input type="number" id="orderAmount" placeholder="المبلغ بالجنيه" dir="ltr">
+      </div>
+
+      <div class="form-group">
+        <label>وزن الشحنة <span class="required">*</span></label>
+        <input type="number" id="orderWeight" placeholder="الوزن بالكيلو" dir="ltr" value="1">
+      </div>
+
+      <div class="form-group">
+        <label>ملاحظات</label>
+        <textarea id="orderNotes" placeholder="ملاحظات إضافية (اختياري)"></textarea>
+      </div>
+
+      <button class="submit-order-btn" id="submitOrderBtn" onclick="submitOrder()">
+        🛒 تأكيد الطلبية
+      </button>
+
+      <span class="back-to-store" onclick="showStore()">← العودة للمتجر</span>
+
+      <p id="orderError" style="color:red;margin-top:10px;text-align:center;"></p>
+    </div>
+  </section>
 
   <!-- ==================================================
        ZOOM MODAL
@@ -1587,9 +1765,9 @@
   ================================================== -->
   <script>
     /* ==================================================
-       CONFIGURATION
+       CONFIGURATION - Google Sheets API (محدث)
     ================================================== */
-    const API_BASE_URL = 'https://script.google.com/macros/s/AKfycbwg13w9Vy8DK6S6kEAbQvSthyfKkMuH7hFvR2Pc0_xVxRihIuB2S6Xk-CxQHy9GeUQG/exec';
+    const API_BASE_URL = 'https://script.google.com/macros/s/AKfycbw7gVSwecJeRRQU-aD5R-0R5LoDNN3Mxd5lMhwV8HlN65CmgcRr2dHQ29KlyB__QajX/exec';
 
     /* ==================================================
        INTRO
@@ -1635,50 +1813,6 @@
     document.body.style.overflow = "hidden";
 
     /* ==================================================
-       STORAGE INFO
-    ================================================== */
-    function updateStorageInfo() {
-      try {
-        let total = 0;
-        for (let key in localStorage) {
-          if (localStorage.hasOwnProperty(key)) {
-            total += localStorage[key].length * 2;
-          }
-        }
-        const mb = (total / 1024 / 1024).toFixed(2);
-        const maxMB = 5; // 5MB
-        const percent = Math.min((total / 1024 / 1024 / maxMB) * 100, 100);
-        
-        document.getElementById('storageFill').style.width = percent + '%';
-        document.getElementById('storageText').textContent = mb + ' MB / ' + maxMB + ' MB (' + Math.round(percent) + '%)';
-      } catch(e) {
-        console.log('Storage info error:', e);
-      }
-    }
-
-    /* ==================================================
-       CLEAR STORAGE (تنظيف التخزين)
-    ================================================== */
-    function clearStorage() {
-      if (confirm("⚠️ هل أنت متأكد من تنظيف التخزين؟ سيتم حذف جميع المنتجات والأقسام المؤقتة.")) {
-        // حذف المنتجات والأقسام فقط مع الاحتفاظ بالبيانات الأساسية
-        localStorage.removeItem('products');
-        localStorage.removeItem('categories');
-        products = getSampleProducts();
-        categories = getSampleCategories();
-        saveToLocalStorage();
-        renderStoreProducts();
-        renderStoreCategories();
-        if (isAdmin) {
-          renderAdminProducts();
-          renderAdminCategories();
-        }
-        updateStorageInfo();
-        alert("✅ تم تنظيف التخزين بنجاح!");
-      }
-    }
-
-    /* ==================================================
        ZOOM FUNCTIONALITY
     ================================================== */
     let zoomMedia = [];
@@ -1720,12 +1854,12 @@
       video.style.display = 'none';
 
       if (media.type === 'video') {
-        videoSource.src = media.data;
+        videoSource.src = media.url || media.data;
         video.load();
         video.style.display = 'block';
         video.play().catch(() => {});
       } else {
-        img.src = media.data;
+        img.src = media.url || media.data;
         img.style.display = 'block';
       }
 
@@ -1931,10 +2065,12 @@
        CART
     ================================================== */
     let cart = [];
+    let cartTotal = 0;
 
-    function addToCart(productName, size) {
+    function addToCart(productName, price, size) {
       const item = size ? `${productName} (مقاس ${size})` : productName;
-      cart.push(item);
+      cart.push({ name: item, price: price });
+      cartTotal += price;
       alert("تمت إضافة " + item + " إلى السلة 🛒");
     }
 
@@ -1943,7 +2079,194 @@
         alert("السلة فارغة.");
         return;
       }
-      alert("المنتجات في السلة:\n\n" + cart.join("\n"));
+      let msg = "المنتجات في السلة:\n\n";
+      cart.forEach((item, index) => {
+        msg += `${index + 1}. ${item.name} - ${item.price} جنيه\n`;
+      });
+      msg += `\nالإجمالي: ${cartTotal} جنيه`;
+      msg += `\n\nهل تريد تأكيد الطلبية؟`;
+      if (confirm(msg)) {
+        showOrderForm();
+      }
+    }
+
+    /* ==================================================
+       ORDER FORM - صفحة الطلب
+    ================================================== */
+    const governorates = {
+      'الشرقية': ['بلبيس', 'انشاص الرمل', 'أولاد صقر', 'الحسينية', 'ديرب نجم', 'فاقوس', 'كفر صقر', 'مشتول السوق', 'منيا القمح', 'الصالحية القديمة', 'الصالحية الجديدة', 'صان الحجر', 'مدينة العاشر من رمضان'],
+      'الجيزة': ['مدينة السادس من أكتوبر', 'مدينة الشيخ زايد', 'العياط', 'الحوامدية', 'البدرشين', 'الصف', 'العمرانية', 'أطفيح', 'الواحات البحرية', 'الجيزة', 'حدائق الاهرام', 'فيصل', 'الهرم', 'أبو النمرس', 'العجوزة', 'الوراق', 'أوسيم', 'بولاق الدكرور', 'الدقي', 'أرض اللواء', 'المهندسين', 'كرداسة', 'إمبابة', 'منشأة القناطر'],
+      'الغربية': ['كفر الزيات', 'المحلة الكبرى', 'سمنود', 'بسيون', 'السنطة', 'زفتى', 'قطور', 'طنطا'],
+      'الدقهلية': ['المنصورة', 'أجا', 'المنزلة', 'بلقاس', 'دكرنس', 'السنبلاوين', 'منية النصر', 'ميت غمر', 'شربين', 'طلخا'],
+      'الإسكندرية': ['الدخيلة', 'العامرية', 'برج العرب', 'محرم بيك', 'باب شرقي', 'الساحل الشمالي', 'سيدي جابر', 'العطارين', 'المنشية', 'اللبان', 'الجمرك', 'مينا البصل', 'كرموز', 'الرمل', 'المنتزه'],
+      'أسيوط': ['أبنوب', 'أبوتيج', 'البداري', 'الغنايم', 'الفتح', 'القوصية', 'ديروط', 'ساحل سليم', 'صدفا', 'مدينة أسيوط', 'منفلوط', 'منقباد'],
+      'أسوان': ['أسوان', 'كوم امبو', 'دراو', 'إدفو'],
+      'بني سويف': ['الواسطى', 'ناصر', 'مدينة بني سويف', 'مركز بني سويف', 'أهناسيا', 'ببا', 'سمسطا', 'الفشن'],
+      'القليوبية': ['بنها', 'الخانكة', 'العبور', 'القناطر الخيرية', 'شبين القناطر', 'طوخ', 'كفر شكر', 'قليوب', 'شبرا الخيمة'],
+      'القاهرة': ['عابدين', 'العباسية', 'الأزبكية', 'القطامية', 'المنيل', 'المقطم', 'دار السلام', 'البساتين', 'الجمالية', 'السيدة زينب', 'حلوان', 'المعادي', 'مصر القديمة', 'قصر النيل', 'الخليفة', 'طرة', 'الزمالك', 'الشروق', 'مدينة بدر', 'عين شمس', 'مدينتي', 'الزيتون', 'مدينة نصر', 'القاهرة الجديدة', 'هليوبوليس', 'الأميرية', 'السلام', 'الوايلي', 'الشرابية', 'المرج', 'المطرية', 'النزهة', 'حدائق القبة', 'شبرا مصر', 'كورنيش النيل'],
+      'البحيرة': ['دمنهور', 'كفر الدوار', 'أبو حمص', 'المحمودية', 'وادي النطرون', 'النوبارية', 'أبوالمطامير', 'حوش عيسي', 'إيتاي البارود', 'شبراخيت', 'رشيد', 'إدكوا', 'مركز بدر', 'الدلنجات', 'الرحمانية', 'كوم حمادة'],
+      'دمياط': ['فارسكور', 'دمياط القديمة', 'كفر سعد', 'الزرقا', 'كفر البطيخ', 'دمياط الجديدة', 'رأس البر', 'عزبة البرج'],
+      'الفيوم': ['طامية', 'سنورس', 'مركز الفيوم', 'مدينة الفيوم', 'أطسا', 'أبشواي', 'يوسف الصديق'],
+      'البحر الأحمر': ['الغردقة', 'رأس غارب', 'سفاجا', 'القصير', 'مرسى علم'],
+      'الإسماعيلية': ['الإسماعيلية'],
+      'كفر الشيخ': ['كفر الشيخ', 'دسوق', 'فوه', 'مطوبس', 'بلطيم', 'الحامول', 'الرياض', 'بيلا', 'قلين', 'سيدى سالم'],
+      'الأقصر': ['مدينة الأقصر', 'أرمنت', 'أسنا', 'القرنة'],
+      'مرسى مطروح': ['مرسى مطروح'],
+      'المنيا': ['العدوة', 'مغاغة', 'بني مزار', 'مطاي', 'سمالوط', 'مركز المنيا', 'مدينة المنيا', 'أبو قرقاص', 'ملوي', 'دير مواس'],
+      'بور سعيد': ['بورسعيد'],
+      'قنا': ['قنا', 'قوص', 'مدينة قفط', 'دشنا', 'نقادة', 'نجع حمادي', 'فرشوط', 'أبوتشت'],
+      'المنوفية': ['قويسنا', 'بركة السبع', 'السادات', 'الشهداء', 'تلا', 'شبين الكوم', 'الباجور', 'منوف', 'أشمون'],
+      'سوهاج': ['طما', 'طهطا', 'جهينة', 'مدينة سوهاج', 'المراغة', 'أخميم', 'ساقلته', 'المنشأة', 'جرجا', 'البلينا', 'دار السلام', 'العسيرات'],
+      'السويس': ['السويس'],
+      'الوادي الجديد': ['الخارجة', 'الداخلة', 'الفرافرة'],
+      'جنوب سيناء': ['جنوب سيناء', 'شرم الشيخ', 'دهب']
+    };
+
+    function populateOrderGovernorates() {
+      const select = document.getElementById('orderGovernorate');
+      select.innerHTML = '<option value="">اختر المحافظة</option>';
+      Object.keys(governorates).forEach(gov => {
+        const option = document.createElement('option');
+        option.value = gov;
+        option.textContent = gov;
+        select.appendChild(option);
+      });
+    }
+
+    function updateOrderCities() {
+      const govSelect = document.getElementById('orderGovernorate');
+      const citySelect = document.getElementById('orderCity');
+      const selected = govSelect.value;
+      citySelect.innerHTML = '<option value="">اختر المدينة</option>';
+      if (selected && governorates[selected]) {
+        governorates[selected].forEach(city => {
+          const option = document.createElement('option');
+          option.value = city;
+          option.textContent = city;
+          citySelect.appendChild(option);
+        });
+      }
+    }
+
+    function showOrderForm() {
+      // إخفاء المتجر وإظهار صفحة الطلب
+      document.getElementById('store').style.display = 'none';
+      document.getElementById('orderFormPage').classList.add('active');
+      
+      // عرض محتويات السلة
+      const itemsDiv = document.getElementById('orderCartItems');
+      itemsDiv.innerHTML = '';
+      cart.forEach(item => {
+        const div = document.createElement('div');
+        div.className = 'item';
+        div.textContent = `${item.name} - ${item.price} جنيه`;
+        itemsDiv.appendChild(div);
+      });
+      document.getElementById('orderTotalPrice').textContent = cartTotal;
+      
+      // ملء المحافظات
+      populateOrderGovernorates();
+    }
+
+    function showStore() {
+      document.getElementById('store').style.display = 'block';
+      document.getElementById('orderFormPage').classList.remove('active');
+    }
+
+    /* ==================================================
+       SUBMIT ORDER - إرسال الطلب
+    ================================================== */
+    let isOrderSubmitting = false;
+
+    async function submitOrder() {
+      if (isOrderSubmitting) {
+        alert('يتم معالجة الطلب حالياً، يرجى الانتظار...');
+        return;
+      }
+
+      const customerName = document.getElementById('orderCustomerName').value.trim();
+      const customerPhone = document.getElementById('orderCustomerPhone').value.trim();
+      const customerPhone2 = document.getElementById('orderCustomerPhone2').value.trim();
+      const governorate = document.getElementById('orderGovernorate').value;
+      const city = document.getElementById('orderCity').value;
+      const address = document.getElementById('orderAddress').value.trim();
+      const amount = document.getElementById('orderAmount').value.trim();
+      const weight = document.getElementById('orderWeight').value.trim() || '1';
+      const notes = document.getElementById('orderNotes').value.trim();
+      const errorDiv = document.getElementById('orderError');
+
+      // التحقق من الحقول المطلوبة
+      if (!customerName || !customerPhone || !governorate || !city || !address || !amount) {
+        errorDiv.textContent = '⚠️ يرجى ملء جميع الحقول المطلوبة';
+        return;
+      }
+      if (customerPhone.length !== 11) {
+        errorDiv.textContent = '⚠️ رقم هاتف المستلم يجب أن يكون 11 رقم';
+        return;
+      }
+      if (customerPhone2 && customerPhone2.length !== 11) {
+        errorDiv.textContent = '⚠️ رقم الهاتف الآخر يجب أن يكون 11 رقم';
+        return;
+      }
+
+      // تحضير بيانات الطلب
+      const orderData = {
+        action: 'addOrder',
+        customerName: customerName,
+        customerPhone: customerPhone,
+        customerPhone2: customerPhone2,
+        governorate: governorate,
+        city: city,
+        address: address,
+        amount: amount,
+        weight: weight,
+        notes: notes,
+        products: cart.map(item => item.name).join('، '),
+        totalPrice: cartTotal.toString()
+      };
+
+      // تعطيل الزر
+      isOrderSubmitting = true;
+      const submitBtn = document.getElementById('submitOrderBtn');
+      submitBtn.disabled = true;
+      submitBtn.textContent = '⏳ جاري الإرسال...';
+
+      try {
+        const result = await apiPost(orderData);
+        
+        if (result && result.success) {
+          errorDiv.textContent = '';
+          alert(`✅ تم تأكيد الطلبية بنجاح!\nرقم الطلب: ${result.orderId || ''}`);
+          
+          // مسح السلة
+          cart = [];
+          cartTotal = 0;
+          
+          // العودة للمتجر
+          showStore();
+          
+          // إعادة تعيين الحقول
+          document.getElementById('orderCustomerName').value = '';
+          document.getElementById('orderCustomerPhone').value = '';
+          document.getElementById('orderCustomerPhone2').value = '';
+          document.getElementById('orderGovernorate').value = '';
+          document.getElementById('orderCity').innerHTML = '<option value="">اختر المحافظة أولا</option>';
+          document.getElementById('orderAddress').value = '';
+          document.getElementById('orderAmount').value = '';
+          document.getElementById('orderWeight').value = '1';
+          document.getElementById('orderNotes').value = '';
+        } else {
+          errorDiv.textContent = result?.error || '❌ فشل إرسال الطلب، حاول مرة أخرى';
+        }
+      } catch (error) {
+        errorDiv.textContent = '❌ حدث خطأ في الاتصال بالخادم';
+        console.error('Order submission error:', error);
+      }
+
+      // إعادة تفعيل الزر
+      isOrderSubmitting = false;
+      submitBtn.disabled = false;
+      submitBtn.textContent = '🛒 تأكيد الطلبية';
     }
 
     /* ==================================================
@@ -1996,7 +2319,6 @@
         closeLoginModal();
         document.getElementById("adminPanel").classList.add("active");
         showDeleteButtons(true);
-        updateStorageInfo();
         alert("✅ مرحباً Admin! تم تسجيل الدخول بنجاح.");
         return;
       }
@@ -2058,7 +2380,7 @@
     });
 
     /* ==================================================
-       LOAD DATA
+       LOAD DATA FROM GOOGLE SHEETS
     ================================================== */
     let products = [];
     let categories = [];
@@ -2096,10 +2418,9 @@
       try {
         localStorage.setItem('products', JSON.stringify(products));
         localStorage.setItem('categories', JSON.stringify(categories));
-        updateStorageInfo();
       } catch (e) {
-        console.error('❌ localStorage full! Products:', products.length);
-        alert('⚠️ مساحة التخزين ممتلئة! يرجى حذف بعض المنتجات أو استخدام زر "تنظيف التخزين".');
+        console.error('❌ localStorage full!');
+        alert('⚠️ مساحة التخزين ممتلئة! حاول تقليل حجم الصور أو عدد المنتجات.');
       }
     }
 
@@ -2107,7 +2428,6 @@
       loadFromLocalStorage();
       renderStoreProducts();
       renderStoreCategories();
-      updateStorageInfo();
       
       await loadProductsFromAPI();
       await loadCategoriesFromAPI();
@@ -2126,7 +2446,6 @@
           localStorage.setItem('products', JSON.stringify(products));
           renderStoreProducts();
           if (isAdmin) renderAdminProducts();
-          updateStorageInfo();
           console.log('✅ Products loaded from API');
         } else {
           console.log('Using cached products from localStorage');
@@ -2150,7 +2469,6 @@
           localStorage.setItem('categories', JSON.stringify(categories));
           renderStoreCategories();
           if (isAdmin) renderAdminCategories();
-          updateStorageInfo();
           console.log('✅ Categories loaded from API');
         } else {
           console.log('Using cached categories from localStorage');
@@ -2225,18 +2543,18 @@
         if (hasMedia) {
           const firstMedia = p.media[0];
           if (firstMedia.type === 'video') {
-            mainMedia = `<video controls muted playsinline><source src="${firstMedia.data}" type="video/mp4"></video>`;
+            mainMedia = `<video controls muted playsinline><source src="${firstMedia.url || firstMedia.data}" type="video/mp4"></video>`;
           } else {
-            mainMedia = `<img src="${firstMedia.data}" alt="${p.name}">`;
+            mainMedia = `<img src="${firstMedia.url || firstMedia.data}" alt="${p.name}">`;
           }
 
           if (p.media.length > 1) {
             galleryHtml = `<div class="image-gallery">`;
             p.media.forEach((m, index) => {
               if (m.type === 'video') {
-                galleryHtml += `<video muted playsinline onclick="changeMainMedia(this, ${p.id}, ${index})"><source src="${m.data}" type="video/mp4"></video>`;
+                galleryHtml += `<video muted playsinline onclick="changeMainMedia(this, ${p.id}, ${index})"><source src="${m.url || m.data}" type="video/mp4"></video>`;
               } else {
-                galleryHtml += `<img src="${m.data}" alt="${p.name}" onclick="changeMainMedia(this, ${p.id}, ${index})">`;
+                galleryHtml += `<img src="${m.url || m.data}" alt="${p.name}" onclick="changeMainMedia(this, ${p.id}, ${index})">`;
               }
             });
             galleryHtml += `</div>`;
@@ -2270,7 +2588,7 @@
               ${priceInfo.hasDiscount ? `<span style="color:red;font-size:14px;"> (خصم ${p.discount}%)</span>` : ''}
             </div>
             ${sizesHtml}
-            <button class="add-cart" onclick="addToCartWithSize(this)">أضف إلى السلة</button>
+            <button class="add-cart" onclick="addToCartWithSize(this, ${priceInfo.final})">أضف إلى السلة</button>
           </div>
         `;
         grid.appendChild(article);
@@ -2287,7 +2605,7 @@
       btn.classList.add('selected');
     }
 
-    function addToCartWithSize(btn) {
+    function addToCartWithSize(btn, price) {
       const productCard = btn.closest('.product');
       const name = productCard.querySelector('h3').textContent;
       let size = null;
@@ -2295,7 +2613,7 @@
       if (selected) {
         size = selected.textContent;
       }
-      addToCart(name, size);
+      addToCart(name, price, size);
     }
 
     function changeMainMedia(element, productId, index) {
@@ -2312,11 +2630,11 @@
       if (!media) return;
       
       if (media.type === 'video') {
-        mainMedia.innerHTML = `<video controls muted playsinline><source src="${media.data}" type="video/mp4"></video>`;
+        mainMedia.innerHTML = `<video controls muted playsinline><source src="${media.url || media.data}" type="video/mp4"></video>`;
         const videoEl = mainMedia.querySelector('video');
         if (videoEl) videoEl.play();
       } else {
-        mainMedia.innerHTML = `<img src="${media.data}" alt="${product.name}">`;
+        mainMedia.innerHTML = `<img src="${media.url || media.data}" alt="${product.name}">`;
       }
       
       const gallery = container.querySelector('.image-gallery');
@@ -2345,9 +2663,9 @@
         if (p.media && p.media.length > 0) {
           const first = p.media[0];
           if (first.type === 'video') {
-            mediaPreview = `<video style="width:40px;height:40px;object-fit:cover;border-radius:8px;" muted><source src="${first.data}" type="video/mp4"></video>`;
+            mediaPreview = `<video style="width:40px;height:40px;object-fit:cover;border-radius:8px;" muted><source src="${first.url || first.data}" type="video/mp4"></video>`;
           } else {
-            mediaPreview = `<img src="${first.data}" alt="${p.name}">`;
+            mediaPreview = `<img src="${first.url || first.data}" alt="${p.name}">`;
           }
         } else {
           mediaPreview = `<span style="font-size:30px;">${p.icon || '📦'}</span>`;
@@ -2494,7 +2812,7 @@
       renderStoreProducts();
       renderAdminProducts();
 
-      // Try to sync with server
+      // Sync with server
       const result = await apiPost({
         action: 'addProduct',
         name: name,
@@ -2669,7 +2987,6 @@
     loadFromLocalStorage();
     renderStoreProducts();
     renderStoreCategories();
-    updateStorageInfo();
 
     setTimeout(() => {
       loadProductsFromAPI();
@@ -2679,3 +2996,4 @@
 </body>
 
 </html>
+```
