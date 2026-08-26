@@ -1129,11 +1129,11 @@
   </div>
 
   <!-- ==================================================
-       JAVASCRIPT
+       JAVASCRIPT - نسخة مستقرة مع localStorage
   ================================================== -->
   <script>
     /* ==================================================
-       CONFIGURATION - Google Sheets API (UPDATED)
+       CONFIGURATION
     ================================================== */
     const API_BASE_URL = 'https://script.google.com/macros/s/AKfycbwg13w9Vy8DK6S6kEAbQvSthyfKkMuH7hFvR2Pc0_xVxRihIuB2S6Xk-CxQHy9GeUQG/exec';
 
@@ -1150,10 +1150,9 @@
       store.classList.add("show");
       document.body.style.overflow = "auto";
       video.pause();
-      // Load data after intro
       setTimeout(() => {
         loadData();
-      }, 500);
+      }, 300);
     }
 
     video.addEventListener("ended", enterStore);
@@ -1184,28 +1183,35 @@
     /* ==================================================
        API HELPER FUNCTIONS
     ================================================== */
+    
+    // دالة GET - لجلب البيانات
     async function apiGet(action) {
       try {
         const url = `${API_BASE_URL}?action=${action}`;
-        console.log('Fetching:', url);
-        const response = await fetch(url);
+        console.log('Fetching (GET):', url);
+        const response = await fetch(url, {
+          method: 'GET',
+          redirect: 'follow'
+        });
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`);
         }
         const data = await response.json();
-        console.log('API Response:', data);
+        console.log('API GET Response:', data);
         return data;
       } catch (error) {
-        console.error('API Error:', error);
+        console.error('API GET Error:', error);
         return { error: error.toString() };
       }
     }
 
+    // دالة POST - لإرسال البيانات
     async function apiPost(data) {
       try {
-        console.log('Posting:', data);
+        console.log('Posting data:', data);
         const response = await fetch(API_BASE_URL, {
           method: 'POST',
+          redirect: 'follow',
           headers: {
             'Content-Type': 'application/json',
           },
@@ -1215,10 +1221,10 @@
           throw new Error(`HTTP error! status: ${response.status}`);
         }
         const result = await response.json();
-        console.log('API Post Response:', result);
+        console.log('API POST Response:', result);
         return result;
       } catch (error) {
-        console.error('API Error:', error);
+        console.error('API POST Error:', error);
         return { error: error.toString() };
       }
     }
@@ -1283,7 +1289,7 @@
         return;
       }
 
-      // Admin login (local check)
+      // Admin login (محلي)
       if (phone === "111" && password === "111") {
         isLoggedIn = true;
         isAdmin = true;
@@ -1296,14 +1302,14 @@
         return;
       }
 
-      // Check with Google Sheets
+      // محاولة تسجيل الدخول عبر Google Sheets
       const result = await apiPost({
         action: 'loginUser',
         phone: phone,
         password: password
       });
 
-      if (result.success) {
+      if (result && result.success) {
         isLoggedIn = true;
         isAdmin = false;
         currentUser = phone;
@@ -1313,7 +1319,7 @@
         showDeleteButtons(false);
         alert("✅ مرحباً " + (result.user?.name || phone) + "! تم تسجيل الدخول بنجاح.");
       } else {
-        alert("❌ " + (result.error || "رقم الهاتف أو كلمة المرور غير صحيحة."));
+        alert("❌ " + (result?.error || "رقم الهاتف أو كلمة المرور غير صحيحة."));
       }
     }
 
@@ -1338,12 +1344,12 @@
         name: phone
       });
 
-      if (result.success) {
+      if (result && result.success) {
         alert("✅ تم إنشاء الحساب بنجاح! يمكنك الآن تسجيل الدخول.");
         document.getElementById("loginPhone").value = "";
         document.getElementById("loginPassword").value = "";
       } else {
-        alert("❌ " + (result.error || "حدث خطأ أثناء إنشاء الحساب."));
+        alert("❌ " + (result?.error || "حدث خطأ أثناء إنشاء الحساب."));
       }
     }
 
@@ -1354,103 +1360,95 @@
     });
 
     /* ==================================================
-       LOAD DATA FROM GOOGLE SHEETS
+       LOAD DATA
     ================================================== */
     let products = [];
     let categories = [];
 
-    async function loadData() {
-      await loadProducts();
-      await loadCategories();
+    // تحميل البيانات من localStorage أولاً (للتجربة السريعة)
+    function loadFromLocalStorage() {
+      const savedProducts = localStorage.getItem('products');
+      const savedCategories = localStorage.getItem('categories');
+      
+      if (savedProducts) {
+        products = JSON.parse(savedProducts);
+      } else {
+        products = getSampleProducts();
+        localStorage.setItem('products', JSON.stringify(products));
+      }
+      
+      if (savedCategories) {
+        categories = JSON.parse(savedCategories);
+      } else {
+        categories = getSampleCategories();
+        localStorage.setItem('categories', JSON.stringify(categories));
+      }
     }
 
-    async function loadProducts() {
+    function saveToLocalStorage() {
+      localStorage.setItem('products', JSON.stringify(products));
+      localStorage.setItem('categories', JSON.stringify(categories));
+    }
+
+    async function loadData() {
+      // أولاً نعرض البيانات من localStorage
+      loadFromLocalStorage();
+      renderStoreProducts();
+      renderStoreCategories();
+      
+      // ثم نحاول جلب البيانات من Google Sheets
+      await loadProductsFromAPI();
+      await loadCategoriesFromAPI();
+    }
+
+    async function loadProductsFromAPI() {
       const spinner = document.getElementById('productSpinner');
       spinner.classList.add('active');
 
       try {
         const result = await apiGet('getProducts');
-
         spinner.classList.remove('active');
 
-        if (result.error) {
-          console.error('Error loading products:', result.error);
-          document.getElementById('productGrid').innerHTML = `
-            <div style="grid-column:1/-1;text-align:center;color:var(--brown);padding:40px 20px;font-size:18px;">
-              ⚠️ حدث خطأ في تحميل المنتجات. يرجى تحديث الصفحة.<br>
-              <span style="font-size:14px;opacity:0.7;">الخطأ: ${result.error}</span>
-              <br><br>
-              <button onclick="loadProducts()" style="background:var(--brown);color:var(--yellow-light);border:none;padding:12px 30px;border-radius:8px;cursor:pointer;font-weight:bold;">
-                🔄 إعادة المحاولة
-              </button>
-            </div>
-          `;
-          // Use sample data as fallback
-          products = getSampleProducts();
+        if (result && !result.error && result.products && result.products.length > 0) {
+          products = result.products;
+          localStorage.setItem('products', JSON.stringify(products));
           renderStoreProducts();
-          return;
-        }
-
-        products = result.products || [];
-        renderStoreProducts();
-        if (isAdmin) {
-          renderAdminProducts();
+          if (isAdmin) renderAdminProducts();
+          console.log('✅ Products loaded from API');
+        } else {
+          console.log('Using cached products from localStorage');
         }
       } catch (error) {
         spinner.classList.remove('active');
         console.error('Load products error:', error);
-        document.getElementById('productGrid').innerHTML = `
-          <div style="grid-column:1/-1;text-align:center;color:var(--brown);padding:40px 20px;font-size:18px;">
-            ⚠️ حدث خطأ في تحميل المنتجات.<br>
-            <button onclick="loadProducts()" style="background:var(--brown);color:var(--yellow-light);border:none;padding:12px 30px;border-radius:8px;cursor:pointer;font-weight:bold;margin-top:15px;">
-              🔄 إعادة المحاولة
-            </button>
-          </div>
-        `;
-        products = getSampleProducts();
-        renderStoreProducts();
       }
     }
 
-    async function loadCategories() {
+    async function loadCategoriesFromAPI() {
       const spinner = document.getElementById('categorySpinner');
       spinner.classList.add('active');
 
       try {
         const result = await apiGet('getCategories');
-
         spinner.classList.remove('active');
 
-        if (result.error) {
-          console.error('Error loading categories:', result.error);
-          document.getElementById('categoryGrid').innerHTML = `
-            <div style="grid-column:1/-1;text-align:center;color:var(--brown);padding:40px 20px;font-size:18px;">
-              ⚠️ حدث خطأ في تحميل الأقسام.<br>
-              <button onclick="loadCategories()" style="background:var(--brown);color:var(--yellow-light);border:none;padding:12px 30px;border-radius:8px;cursor:pointer;font-weight:bold;margin-top:15px;">
-                🔄 إعادة المحاولة
-              </button>
-            </div>
-          `;
-          categories = getSampleCategories();
+        if (result && !result.error && result.categories && result.categories.length > 0) {
+          categories = result.categories;
+          localStorage.setItem('categories', JSON.stringify(categories));
           renderStoreCategories();
-          return;
-        }
-
-        categories = result.categories || [];
-        renderStoreCategories();
-        if (isAdmin) {
-          renderAdminCategories();
+          if (isAdmin) renderAdminCategories();
+          console.log('✅ Categories loaded from API');
+        } else {
+          console.log('Using cached categories from localStorage');
         }
       } catch (error) {
         spinner.classList.remove('active');
         console.error('Load categories error:', error);
-        categories = getSampleCategories();
-        renderStoreCategories();
       }
     }
 
     /* ==================================================
-       SAMPLE DATA (Fallback)
+       SAMPLE DATA
     ================================================== */
     function getSampleProducts() {
       return [
@@ -1472,7 +1470,7 @@
     }
 
     /* ==================================================
-       PRODUCTS RENDER FUNCTIONS
+       RENDER FUNCTIONS
     ================================================== */
     function getProductPriceWithDiscount(product) {
       if (product.discount && product.discount > 0) {
@@ -1565,9 +1563,6 @@
       });
     }
 
-    /* ==================================================
-       CATEGORIES RENDER FUNCTIONS
-    ================================================== */
     function renderStoreCategories() {
       const grid = document.getElementById("categoryGrid");
       if (!grid) return;
@@ -1673,6 +1668,21 @@
     }
 
     async function finishAddProduct(name, price, discount, icon, imageData) {
+      // إضافة محلياً أولاً
+      const newProduct = {
+        id: Date.now(),
+        name: name,
+        price: price,
+        discount: discount,
+        icon: icon,
+        image: imageData
+      };
+      products.push(newProduct);
+      saveToLocalStorage();
+      renderStoreProducts();
+      renderAdminProducts();
+
+      // محاولة الإضافة على الخادم
       const result = await apiPost({
         action: 'addProduct',
         name: name,
@@ -1682,66 +1692,49 @@
         image: imageData
       });
 
-      if (result.success) {
+      if (result && result.success) {
         document.getElementById("newProductName").value = "";
         document.getElementById("newProductPrice").value = "";
         document.getElementById("newProductDiscount").value = "";
         document.getElementById("newProductIcon").value = "";
         document.getElementById("newProductImage").value = "";
-        await loadProducts();
+        await loadProductsFromAPI();
         alert("✅ تم إضافة المنتج بنجاح!");
       } else {
-        alert("❌ " + (result.error || "حدث خطأ أثناء إضافة المنتج."));
+        alert("⚠️ تم إضافة المنتج محلياً ولكن قد يكون هناك خطأ في المزامنة مع الخادم.");
       }
     }
 
     async function deleteProduct(id) {
       if (confirm("هل أنت متأكد من حذف هذا المنتج؟")) {
+        // حذف محلياً أولاً
+        products = products.filter(p => p.id !== id);
+        saveToLocalStorage();
+        renderStoreProducts();
+        renderAdminProducts();
+
+        // محاولة الحذف من الخادم
         const result = await apiPost({
           action: 'deleteProduct',
           id: id
         });
 
-        if (result.success) {
-          await loadProducts();
+        if (result && result.success) {
+          await loadProductsFromAPI();
           alert("🗑 تم حذف المنتج.");
         } else {
-          alert("❌ " + (result.error || "حدث خطأ أثناء حذف المنتج."));
+          alert("⚠️ تم حذف المنتج محلياً ولكن قد يكون هناك خطأ في المزامنة مع الخادم.");
         }
       }
     }
 
     async function resetProducts() {
-      if (confirm("⚠️ سيتم حذف جميع المنتجات وإعادة تعيينها إلى القيم الافتراضية. هل أنت متأكد؟")) {
-        // Delete all products
-        for (const p of products) {
-          await apiPost({
-            action: 'deleteProduct',
-            id: p.id
-          });
-        }
-
-        // Add default products
-        const defaultProducts = [
-          { name: "قميص أنيق", price: 499, discount: 0, icon: "👕" },
-          { name: "فستان أنيق", price: 799, discount: 0, icon: "👗" },
-          { name: "حذاء أنيق", price: 599, discount: 0, icon: "👡" },
-          { name: "مستحضرات تجميل", price: 299, discount: 0, icon: "💄" }
-        ];
-
-        for (const p of defaultProducts) {
-          await apiPost({
-            action: 'addProduct',
-            name: p.name,
-            price: p.price,
-            discount: p.discount,
-            icon: p.icon,
-            image: null
-          });
-        }
-
-        await loadProducts();
-        alert("🔄 تم إعادة ضبط المنتجات.");
+      if (confirm("⚠️ سيتم إعادة ضبط المنتجات إلى الوضع الافتراضي. هل أنت متأكد؟")) {
+        products = getSampleProducts();
+        saveToLocalStorage();
+        renderStoreProducts();
+        renderAdminProducts();
+        alert("🔄 تم إعادة ضبط المنتجات محلياً.");
       }
     }
 
@@ -1775,6 +1768,19 @@
     }
 
     async function finishAddCategory(name, icon, imageData) {
+      // إضافة محلياً أولاً
+      const newCategory = {
+        id: Date.now(),
+        name: name,
+        icon: icon,
+        image: imageData
+      };
+      categories.push(newCategory);
+      saveToLocalStorage();
+      renderStoreCategories();
+      renderAdminCategories();
+
+      // محاولة الإضافة على الخادم
       const result = await apiPost({
         action: 'addCategory',
         name: name,
@@ -1782,84 +1788,60 @@
         image: imageData
       });
 
-      if (result.success) {
+      if (result && result.success) {
         document.getElementById("newCategoryName").value = "";
         document.getElementById("newCategoryIcon").value = "";
         document.getElementById("newCategoryImage").value = "";
-        await loadCategories();
+        await loadCategoriesFromAPI();
         alert("✅ تم إضافة القسم بنجاح!");
       } else {
-        alert("❌ " + (result.error || "حدث خطأ أثناء إضافة القسم."));
+        alert("⚠️ تم إضافة القسم محلياً ولكن قد يكون هناك خطأ في المزامنة مع الخادم.");
       }
     }
 
     async function deleteCategory(id) {
       if (confirm("هل أنت متأكد من حذف هذا القسم؟")) {
+        // حذف محلياً أولاً
+        categories = categories.filter(c => c.id !== id);
+        saveToLocalStorage();
+        renderStoreCategories();
+        renderAdminCategories();
+
+        // محاولة الحذف من الخادم
         const result = await apiPost({
           action: 'deleteCategory',
           id: id
         });
 
-        if (result.success) {
-          await loadCategories();
+        if (result && result.success) {
+          await loadCategoriesFromAPI();
           alert("🗑 تم حذف القسم.");
         } else {
-          alert("❌ " + (result.error || "حدث خطأ أثناء حذف القسم."));
+          alert("⚠️ تم حذف القسم محلياً ولكن قد يكون هناك خطأ في المزامنة مع الخادم.");
         }
       }
     }
 
     async function resetCategories() {
-      if (confirm("⚠️ سيتم حذف جميع الأقسام وإعادة تعيينها إلى القيم الافتراضية. هل أنت متأكد؟")) {
-        // Delete all categories
-        for (const c of categories) {
-          await apiPost({
-            action: 'deleteCategory',
-            id: c.id
-          });
-        }
-
-        // Add default categories
-        const defaultCategories = [
-          { name: "الملابس", icon: "👕" },
-          { name: "فساتين", icon: "👗" },
-          { name: "الأحذية", icon: "👠" },
-          { name: "الجمال", icon: "💄" },
-          { name: "الهدايا", icon: "🎁" }
-        ];
-
-        for (const c of defaultCategories) {
-          await apiPost({
-            action: 'addCategory',
-            name: c.name,
-            icon: c.icon,
-            image: null
-          });
-        }
-
-        await loadCategories();
-        alert("🔄 تم إعادة ضبط الأقسام.");
+      if (confirm("⚠️ سيتم إعادة ضبط الأقسام إلى الوضع الافتراضي. هل أنت متأكد؟")) {
+        categories = getSampleCategories();
+        saveToLocalStorage();
+        renderStoreCategories();
+        renderAdminCategories();
+        alert("🔄 تم إعادة ضبط الأقسام محلياً.");
       }
     }
 
-    // Check API connectivity on load
-    async function checkAPI() {
-      try {
-        const result = await apiGet('getProducts');
-        if (result.error) {
-          console.warn('API check failed:', result.error);
-        } else {
-          console.log('✅ API is working!');
-        }
-      } catch (e) {
-        console.warn('API check error:', e);
-      }
-    }
+    // تحميل البيانات عند بدء التشغيل
+    loadFromLocalStorage();
+    renderStoreProducts();
+    renderStoreCategories();
 
-    // Initial load will happen after intro video ends
-    window.addEventListener('load', function() {
-      setTimeout(checkAPI, 1000);
-    });
+    // محاولة جلب البيانات من الخادم
+    setTimeout(() => {
+      loadProductsFromAPI();
+      loadCategoriesFromAPI();
+    }, 1000);
   </script>
 </body>
 
