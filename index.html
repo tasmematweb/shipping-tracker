@@ -792,12 +792,6 @@
       opacity: 0.7;
     }
 
-    .admin-controls input[type="file"] {
-      padding: 8px;
-      background: var(--yellow-main);
-      flex: 0 1 auto;
-    }
-
     .admin-controls button {
       background: var(--brown);
       color: var(--yellow-light);
@@ -843,6 +837,85 @@
       flex: 0 0 auto;
       min-width: unset;
       padding: 0;
+    }
+
+    /* Media files container with dynamic file inputs */
+    .media-files-container {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      width: 100%;
+      padding: 10px;
+      background: var(--yellow-soft);
+      border-radius: 8px;
+      border: 2px solid var(--brown);
+    }
+
+    .media-file-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .media-file-row input[type="file"] {
+      flex: 1;
+      padding: 8px;
+      background: var(--yellow-light);
+      border: 2px solid var(--brown);
+      border-radius: 6px;
+      min-width: 150px;
+    }
+
+    .media-file-row .file-preview {
+      width: 50px;
+      height: 50px;
+      border-radius: 6px;
+      object-fit: cover;
+      border: 2px solid var(--brown);
+      display: none;
+    }
+
+    .media-file-row .file-preview.show {
+      display: block;
+    }
+
+    .media-file-row .remove-file-btn {
+      background: var(--brown);
+      color: var(--yellow-light);
+      border: none;
+      border-radius: 50%;
+      width: 30px;
+      height: 30px;
+      cursor: pointer;
+      font-size: 16px;
+      font-weight: bold;
+      display: none;
+    }
+
+    .media-file-row .remove-file-btn.show {
+      display: block;
+    }
+
+    .media-file-row .remove-file-btn:hover {
+      background: var(--brown-light);
+    }
+
+    .add-file-btn {
+      background: var(--brown);
+      color: var(--yellow-light);
+      border: none;
+      padding: 8px 16px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: bold;
+      font-size: 14px;
+      white-space: nowrap;
+      align-self: flex-start;
+    }
+
+    .add-file-btn:hover {
+      background: var(--brown-light);
     }
 
     .admin-list {
@@ -1107,13 +1180,18 @@
         min-width: unset;
       }
 
-      .admin-controls input[type="file"] {
-        flex: 1;
-      }
-
       .admin-controls .size-checkboxes {
         flex-wrap: wrap;
         justify-content: center;
+      }
+
+      .media-file-row {
+        flex-direction: column;
+        align-items: stretch;
+      }
+
+      .media-file-row .file-preview {
+        align-self: center;
       }
     }
 
@@ -1234,7 +1312,17 @@
             <label><input type="checkbox" value="3XL"> 3XL</label>
           </div>
 
-          <input type="file" id="newProductFiles" accept="image/*,video/*" multiple>
+          <!-- Media files container with dynamic file inputs -->
+          <div class="media-files-container" id="mediaFilesContainer">
+            <div class="media-file-row" id="fileRowTemplate">
+              <input type="file" accept="image/*,video/*" onchange="previewFile(this)">
+              <img class="file-preview" id="previewImg" alt="معاينة">
+              <video class="file-preview" id="previewVideo" muted></video>
+              <button class="remove-file-btn" onclick="removeFileRow(this)">✕</button>
+            </div>
+          </div>
+          <button class="add-file-btn" onclick="addFileRow()">➕ إضافة ملف آخر</button>
+
           <button onclick="addProduct()">➕ إضافة منتج</button>
           <button onclick="resetProducts()">🔄 إعادة ضبط</button>
         </div>
@@ -1383,6 +1471,132 @@
         console.error('API POST Error:', error);
         return { error: error.toString() };
       }
+    }
+
+    /* ==================================================
+       MEDIA FILE INPUTS - Dynamic rows
+    ================================================== */
+    let fileRows = 1;
+
+    function addFileRow() {
+      const container = document.getElementById('mediaFilesContainer');
+      const template = document.getElementById('fileRowTemplate');
+      
+      // Create new row from template
+      const newRow = template.cloneNode(true);
+      newRow.id = 'fileRow_' + Date.now();
+      newRow.style.display = 'flex';
+      
+      // Reset input value
+      const fileInput = newRow.querySelector('input[type="file"]');
+      fileInput.value = '';
+      fileInput.onchange = function() { previewFile(this); };
+      
+      // Reset previews
+      const imgPreview = newRow.querySelector('#previewImg');
+      if (imgPreview) {
+        imgPreview.id = 'previewImg_' + Date.now();
+        imgPreview.className = 'file-preview';
+        imgPreview.style.display = 'none';
+      }
+      
+      const videoPreview = newRow.querySelector('#previewVideo');
+      if (videoPreview) {
+        videoPreview.id = 'previewVideo_' + Date.now();
+        videoPreview.className = 'file-preview';
+        videoPreview.style.display = 'none';
+      }
+      
+      // Show remove button
+      const removeBtn = newRow.querySelector('.remove-file-btn');
+      removeBtn.className = 'remove-file-btn show';
+      removeBtn.onclick = function() { removeFileRow(this); };
+      
+      container.appendChild(newRow);
+      fileRows++;
+    }
+
+    function previewFile(input) {
+      const row = input.closest('.media-file-row');
+      const file = input.files[0];
+      if (!file) return;
+      
+      const isVideo = file.type.startsWith('video/');
+      const imgPreview = row.querySelector('img.file-preview');
+      const videoPreview = row.querySelector('video.file-preview');
+      
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        if (isVideo) {
+          if (videoPreview) {
+            videoPreview.src = e.target.result;
+            videoPreview.style.display = 'block';
+            videoPreview.className = 'file-preview show';
+          }
+          if (imgPreview) {
+            imgPreview.style.display = 'none';
+            imgPreview.className = 'file-preview';
+          }
+        } else {
+          if (imgPreview) {
+            imgPreview.src = e.target.result;
+            imgPreview.style.display = 'block';
+            imgPreview.className = 'file-preview show';
+          }
+          if (videoPreview) {
+            videoPreview.style.display = 'none';
+            videoPreview.className = 'file-preview';
+          }
+        }
+      };
+      reader.readAsDataURL(file);
+    }
+
+    function removeFileRow(btn) {
+      const row = btn.closest('.media-file-row');
+      // Don't remove if it's the last row
+      const container = document.getElementById('mediaFilesContainer');
+      if (container.querySelectorAll('.media-file-row').length <= 1) {
+        // Just clear the input and previews
+        const fileInput = row.querySelector('input[type="file"]');
+        fileInput.value = '';
+        const imgPreview = row.querySelector('img.file-preview');
+        if (imgPreview) {
+          imgPreview.style.display = 'none';
+          imgPreview.className = 'file-preview';
+        }
+        const videoPreview = row.querySelector('video.file-preview');
+        if (videoPreview) {
+          videoPreview.style.display = 'none';
+          videoPreview.className = 'file-preview';
+        }
+        const removeBtn = row.querySelector('.remove-file-btn');
+        removeBtn.className = 'remove-file-btn';
+        return;
+      }
+      row.remove();
+      fileRows--;
+    }
+
+    function getMediaFiles() {
+      const rows = document.querySelectorAll('.media-file-row');
+      const media = [];
+      
+      rows.forEach(row => {
+        const fileInput = row.querySelector('input[type="file"]');
+        if (fileInput && fileInput.files && fileInput.files[0]) {
+          const file = fileInput.files[0];
+          const isVideo = file.type.startsWith('video/');
+          // Store file object for later processing
+          media.push({
+            file: file,
+            type: isVideo ? 'video' : 'image',
+            name: file.name
+          });
+        }
+      });
+      
+      return media;
     }
 
     /* ==================================================
@@ -1893,7 +2107,6 @@
       const priceInput = document.getElementById("newProductPrice");
       const discountInput = document.getElementById("newProductDiscount");
       const iconInput = document.getElementById("newProductIcon");
-      const fileInput = document.getElementById("newProductFiles");
 
       const name = nameInput.value.trim();
       const price = parseFloat(priceInput.value.trim());
@@ -1909,21 +2122,20 @@
         return;
       }
 
-      // Process media files (images and videos)
+      // Process media files from dynamic rows
+      const mediaFiles = getMediaFiles();
       const media = [];
-      if (fileInput.files && fileInput.files.length > 0) {
-        for (const file of fileInput.files) {
-          try {
-            const mediaData = await readFileAsDataURL(file);
-            const isVideo = file.type.startsWith('video/');
-            media.push({
-              type: isVideo ? 'video' : 'image',
-              data: mediaData,
-              name: file.name
-            });
-          } catch (error) {
-            console.error('Error reading file:', error);
-          }
+      
+      for (const mf of mediaFiles) {
+        try {
+          const dataUrl = await readFileAsDataURL(mf.file);
+          media.push({
+            type: mf.type,
+            data: dataUrl,
+            name: mf.name
+          });
+        } catch (error) {
+          console.error('Error reading file:', error);
         }
       }
 
@@ -1958,7 +2170,23 @@
         document.getElementById("newProductPrice").value = "";
         document.getElementById("newProductDiscount").value = "";
         document.getElementById("newProductIcon").value = "";
-        document.getElementById("newProductFiles").value = "";
+        // Clear file inputs
+        document.querySelectorAll('.media-file-row input[type="file"]').forEach(input => {
+          input.value = '';
+        });
+        document.querySelectorAll('.media-file-row .file-preview').forEach(preview => {
+          preview.style.display = 'none';
+          preview.className = 'file-preview';
+        });
+        document.querySelectorAll('.media-file-row .remove-file-btn').forEach(btn => {
+          btn.className = 'remove-file-btn';
+        });
+        // Reset to one row
+        const container = document.getElementById('mediaFilesContainer');
+        const rows = container.querySelectorAll('.media-file-row');
+        rows.forEach((row, index) => {
+          if (index > 0) row.remove();
+        });
         document.querySelectorAll('.size-checkboxes input[type="checkbox"]').forEach(cb => cb.checked = false);
         await loadProductsFromAPI();
         alert("✅ تم إضافة المنتج بنجاح!");
