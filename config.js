@@ -41,7 +41,7 @@ const CONFIG = {
     // ==============================================
     DEFAULT_CURRENCY: 'جنيه',
     DEFAULT_WEIGHT: 1,
-    MAX_FILE_SIZE: 5, // ميجابايت
+    MAX_FILE_SIZE: 5,
     ALLOWED_FILE_TYPES: ['image/jpeg', 'image/png', 'image/gif', 'image/webp', 'video/mp4', 'video/webm']
 };
 
@@ -50,7 +50,7 @@ if (typeof window !== 'undefined') {
     window.CONFIG = CONFIG;
 }
 
-// تصدير للاستخدام في Node.js (إذا لزم الأمر)
+// تصدير للاستخدام في Node.js
 if (typeof module !== 'undefined' && module.exports) {
     module.exports = CONFIG;
 }
