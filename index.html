@@ -1132,6 +1132,45 @@
     }
 
     /* ==================================================
+       STORAGE INFO
+    ================================================== */
+    .storage-info {
+      background: var(--yellow-main);
+      border: 2px solid var(--brown);
+      border-radius: 8px;
+      padding: 10px 15px;
+      font-size: 14px;
+      font-weight: bold;
+      color: var(--brown);
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      flex-wrap: wrap;
+    }
+
+    .storage-info .storage-bar {
+      flex: 1;
+      height: 10px;
+      background: var(--yellow-light);
+      border-radius: 5px;
+      border: 1px solid var(--brown);
+      overflow: hidden;
+      min-width: 100px;
+    }
+
+    .storage-info .storage-bar .storage-fill {
+      height: 100%;
+      background: var(--brown);
+      border-radius: 5px;
+      transition: width 0.3s;
+    }
+
+    .storage-info .storage-text {
+      font-size: 13px;
+      white-space: nowrap;
+    }
+
+    /* ==================================================
        MOBILE
     ================================================== */
     @media (max-width: 700px) {
@@ -1330,6 +1369,12 @@
         top: 10px;
         left: 10px;
       }
+
+      .storage-info {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 8px;
+      }
     }
 
     @media (max-width: 700px) and (orientation: portrait) {
@@ -1459,7 +1504,18 @@
 
           <button onclick="addProduct()">➕ إضافة منتج</button>
           <button onclick="resetProducts()">🔄 إعادة ضبط</button>
+          <button onclick="clearStorage()" style="background:#brown;color:var(--yellow-light);">🗑️ تنظيف التخزين</button>
         </div>
+
+        <!-- Storage Info -->
+        <div class="storage-info" id="storageInfo">
+          <span>💾 مساحة التخزين</span>
+          <div class="storage-bar">
+            <div class="storage-fill" id="storageFill" style="width:0%"></div>
+          </div>
+          <span class="storage-text" id="storageText">0%</span>
+        </div>
+
         <div class="admin-list" id="adminProductList"></div>
       </div>
 
@@ -1577,6 +1633,50 @@
     });
 
     document.body.style.overflow = "hidden";
+
+    /* ==================================================
+       STORAGE INFO
+    ================================================== */
+    function updateStorageInfo() {
+      try {
+        let total = 0;
+        for (let key in localStorage) {
+          if (localStorage.hasOwnProperty(key)) {
+            total += localStorage[key].length * 2;
+          }
+        }
+        const mb = (total / 1024 / 1024).toFixed(2);
+        const maxMB = 5; // 5MB
+        const percent = Math.min((total / 1024 / 1024 / maxMB) * 100, 100);
+        
+        document.getElementById('storageFill').style.width = percent + '%';
+        document.getElementById('storageText').textContent = mb + ' MB / ' + maxMB + ' MB (' + Math.round(percent) + '%)';
+      } catch(e) {
+        console.log('Storage info error:', e);
+      }
+    }
+
+    /* ==================================================
+       CLEAR STORAGE (تنظيف التخزين)
+    ================================================== */
+    function clearStorage() {
+      if (confirm("⚠️ هل أنت متأكد من تنظيف التخزين؟ سيتم حذف جميع المنتجات والأقسام المؤقتة.")) {
+        // حذف المنتجات والأقسام فقط مع الاحتفاظ بالبيانات الأساسية
+        localStorage.removeItem('products');
+        localStorage.removeItem('categories');
+        products = getSampleProducts();
+        categories = getSampleCategories();
+        saveToLocalStorage();
+        renderStoreProducts();
+        renderStoreCategories();
+        if (isAdmin) {
+          renderAdminProducts();
+          renderAdminCategories();
+        }
+        updateStorageInfo();
+        alert("✅ تم تنظيف التخزين بنجاح!");
+      }
+    }
 
     /* ==================================================
        ZOOM FUNCTIONALITY
@@ -1706,71 +1806,6 @@
         console.error('API POST Error:', error);
         return { error: error.toString() };
       }
-    }
-
-    /* ==================================================
-       IMAGE COMPRESSION - لحل مشكلة localStorage
-    ================================================== */
-    function compressImage(dataUrl, maxWidth = 600, maxHeight = 600, quality = 0.7) {
-      return new Promise((resolve) => {
-        const img = new Image();
-        img.onload = function() {
-          let width = img.width;
-          let height = img.height;
-          
-          if (width > maxWidth) {
-            height = (height * maxWidth) / width;
-            width = maxWidth;
-          }
-          if (height > maxHeight) {
-            width = (width * maxHeight) / height;
-            height = maxHeight;
-          }
-          
-          const canvas = document.createElement('canvas');
-          canvas.width = width;
-          canvas.height = height;
-          const ctx = canvas.getContext('2d');
-          ctx.drawImage(img, 0, 0, width, height);
-          
-          resolve(canvas.toDataURL('image/jpeg', quality));
-        };
-        img.src = dataUrl;
-      });
-    }
-
-    // دالة لضغط الفيديو (تقليل الجودة عن طريق تقليل الدقة)
-    function compressVideo(dataUrl, maxWidth = 400) {
-      return new Promise((resolve) => {
-        const video = document.createElement('video');
-        video.src = dataUrl;
-        video.muted = true;
-        video.playsInline = true;
-        
-        video.onloadedmetadata = function() {
-          const canvas = document.createElement('canvas');
-          let width = video.videoWidth;
-          let height = video.videoHeight;
-          
-          if (width > maxWidth) {
-            height = (height * maxWidth) / width;
-            width = maxWidth;
-          }
-          
-          canvas.width = width;
-          canvas.height = height;
-          const ctx = canvas.getContext('2d');
-          
-          // رسم إطار واحد فقط من الفيديو (للمعاينة)
-          video.currentTime = 0.1;
-          video.onseeked = function() {
-            ctx.drawImage(video, 0, 0, width, height);
-            // نعيد الصورة المضغوطة فقط (ليس الفيديو كاملاً)
-            resolve(canvas.toDataURL('image/jpeg', 0.6));
-          };
-        };
-        video.load();
-      });
     }
 
     /* ==================================================
@@ -1961,6 +1996,7 @@
         closeLoginModal();
         document.getElementById("adminPanel").classList.add("active");
         showDeleteButtons(true);
+        updateStorageInfo();
         alert("✅ مرحباً Admin! تم تسجيل الدخول بنجاح.");
         return;
       }
@@ -2060,27 +2096,18 @@
       try {
         localStorage.setItem('products', JSON.stringify(products));
         localStorage.setItem('categories', JSON.stringify(categories));
+        updateStorageInfo();
       } catch (e) {
         console.error('❌ localStorage full! Products:', products.length);
-        alert('⚠️ مساحة التخزين ممتلئة! حاول تقليل حجم الصور أو عدد المنتجات.');
+        alert('⚠️ مساحة التخزين ممتلئة! يرجى حذف بعض المنتجات أو استخدام زر "تنظيف التخزين".');
       }
-    }
-
-    // التحقق من حجم localStorage
-    function getLocalStorageSize() {
-      let total = 0;
-      for (let key in localStorage) {
-        if (localStorage.hasOwnProperty(key)) {
-          total += localStorage[key].length * 2; // UTF-16
-        }
-      }
-      return total / 1024 / 1024; // MB
     }
 
     async function loadData() {
       loadFromLocalStorage();
       renderStoreProducts();
       renderStoreCategories();
+      updateStorageInfo();
       
       await loadProductsFromAPI();
       await loadCategoriesFromAPI();
@@ -2099,6 +2126,7 @@
           localStorage.setItem('products', JSON.stringify(products));
           renderStoreProducts();
           if (isAdmin) renderAdminProducts();
+          updateStorageInfo();
           console.log('✅ Products loaded from API');
         } else {
           console.log('Using cached products from localStorage');
@@ -2122,6 +2150,7 @@
           localStorage.setItem('categories', JSON.stringify(categories));
           renderStoreCategories();
           if (isAdmin) renderAdminCategories();
+          updateStorageInfo();
           console.log('✅ Categories loaded from API');
         } else {
           console.log('Using cached categories from localStorage');
@@ -2412,7 +2441,7 @@
     }
 
     /* ==================================================
-       PRODUCT MANAGEMENT - مع ضغط الصور
+       PRODUCT MANAGEMENT
     ================================================== */
     async function addProduct() {
       const nameInput = document.getElementById("newProductName");
@@ -2433,26 +2462,16 @@
         return;
       }
 
-      // Process media files with compression
+      // Process media files
       const mediaFiles = getMediaFiles();
       const media = [];
       
       for (const mf of mediaFiles) {
         try {
           const dataUrl = await readFileAsDataURL(mf.file);
-          let compressedData;
-          
-          if (mf.type === 'video') {
-            // For videos, we create a thumbnail only (to save space)
-            compressedData = await compressVideo(dataUrl);
-          } else {
-            // Compress images to smaller size
-            compressedData = await compressImage(dataUrl, 500, 500, 0.6);
-          }
-          
           media.push({
             type: mf.type,
-            data: compressedData,
+            data: dataUrl,
             name: mf.name
           });
         } catch (error) {
@@ -2583,8 +2602,6 @@
           };
           reader.readAsDataURL(fileInput.files[0]);
         });
-        // Compress category image
-        imageData = await compressImage(imageData, 200, 200, 0.5);
       }
 
       const newCategory = {
@@ -2652,6 +2669,7 @@
     loadFromLocalStorage();
     renderStoreProducts();
     renderStoreCategories();
+    updateStorageInfo();
 
     setTimeout(() => {
       loadProductsFromAPI();
