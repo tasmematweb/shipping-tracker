@@ -1151,10 +1151,10 @@
       store.classList.add("show");
       document.body.style.overflow = "auto";
       video.pause();
-      // Load data after intro with a small delay to ensure everything is ready
+      // Load data after intro with a small delay
       setTimeout(() => {
         loadData();
-      }, 500);
+      }, 300);
     }
 
     video.addEventListener("ended", enterStore);
@@ -1164,7 +1164,6 @@
       if (promise !== undefined) {
         promise.catch(function(error) {
           console.log("تعذر التشغيل التلقائي:", error);
-          // If video fails, enter store anyway
           enterStore();
         });
       }
@@ -1313,7 +1312,7 @@
         closeLoginModal();
         document.getElementById("adminPanel").classList.remove("active");
         showDeleteButtons(false);
-        alert("✅ مرحباً " + (result.user.name || phone) + "! تم تسجيل الدخول بنجاح.");
+        alert("✅ مرحباً " + (result.user?.name || phone) + "! تم تسجيل الدخول بنجاح.");
       } else {
         alert("❌ " + (result.error || "رقم الهاتف أو كلمة المرور غير صحيحة."));
       }
@@ -1387,7 +1386,7 @@
               </button>
             </div>
           `;
-          // Try with sample data as fallback
+          // Use sample data as fallback
           products = getSampleProducts();
           renderStoreProducts();
           return;
@@ -1844,7 +1843,25 @@
       }
     }
 
+    // Check API connectivity on load
+    async function checkAPI() {
+      try {
+        const result = await apiGet('getProducts');
+        if (result.error) {
+          console.warn('API check failed:', result.error);
+        } else {
+          console.log('API is working!');
+        }
+      } catch (e) {
+        console.warn('API check error:', e);
+      }
+    }
+
     // Initial load will happen after intro video ends
+    // Also check API on load
+    window.addEventListener('load', function() {
+      setTimeout(checkAPI, 1000);
+    });
   </script>
 </body>
 
