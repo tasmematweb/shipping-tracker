@@ -1,4 +1,3 @@
-```html
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 
@@ -1761,19 +1760,15 @@
   </div>
 
   <!-- ==================================================
-       JAVASCRIPT - مع إصلاح CORS (لا تعديل)
+       JAVASCRIPT
   ================================================== -->
   <script>
     /* ==================================================
        CONFIGURATION - يتم استيرادها من config.js
-       في حال عدم وجود config.js، نستخدم القيم الافتراضية
     ================================================== */
     
-    // محاولة استيراد CONFIG من ملف خارجي
     let CONFIG = {};
     try {
-      // إذا كان الملف config.js موجوداً، سيتم تحميله
-      // نتحقق من وجود window.CONFIG
       if (typeof window !== 'undefined' && window.CONFIG) {
         CONFIG = window.CONFIG;
         console.log('✅ CONFIG loaded from external file');
@@ -1782,10 +1777,9 @@
       console.log('⚠️ Using default config');
     }
 
-    // إذا لم يتم تحميل CONFIG، نستخدم القيم الافتراضية
     if (!CONFIG.API_BASE_URL) {
       CONFIG = {
-        API_BASE_URL: 'https://script.google.com/macros/s/AKfycbw7gVSwecJeRRQU-aD5R-0R5LoDNN3Mxd5lMhwV8HlN65CmgcRr2dHQ29KlyB__QajX/exec',
+        API_BASE_URL: 'https://script.google.com/macros/s/AKfycbwMtcxky7rrjXBdKVOyohFF7f-F_FzbW1eIV_p7wc-gLsac6VYOrUPTXzptkKiPW0ju/exec',
         STORE_NAME: 'H.L LeVance',
         STORE_PHONE: '201234567890',
         ADMIN_PHONE: '111',
@@ -1797,7 +1791,6 @@
       console.log('⚠️ Using default config');
     }
 
-    // تعيين الرابط الأساسي
     const API_BASE_URL = CONFIG.API_BASE_URL;
 
     /* ==================================================
@@ -1927,7 +1920,7 @@
     });
 
     /* ==================================================
-       API HELPER FUNCTIONS - مع إصلاح CORS (لا تعديل)
+       API HELPER FUNCTIONS
     ================================================== */
     
     async function apiGet(action) {
@@ -1953,25 +1946,21 @@
       }
     }
 
-    // دالة POST - مع إصلاح CORS باستخدام FormData و no-cors
     async function apiPost(data) {
       try {
         console.log('Posting data:', data);
         
-        // استخدام FormData بدلاً من JSON
         const formData = new FormData();
         formData.append('payload', JSON.stringify(data));
         
         const response = await fetch(API_BASE_URL, {
           method: 'POST',
           redirect: 'follow',
-          mode: 'no-cors', // تجنب مشاكل CORS
+          mode: 'no-cors',
           body: formData
         });
         
-        // مع mode: 'no-cors' لا يمكن قراءة الرد
-        // نعتبر الطلب ناجحاً إذا لم يرمي خطأ
-        console.log('✅ POST request sent successfully (no-cors mode)');
+        console.log('✅ POST request sent successfully');
         return { success: true, message: 'تم الإرسال بنجاح' };
       } catch (error) {
         console.error('❌ API POST Error:', error);
@@ -2098,6 +2087,19 @@
       return media;
     }
 
+    function readFileAsDataURL(file) {
+      return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+          resolve(e.target.result);
+        };
+        reader.onerror = function(e) {
+          reject(e);
+        };
+        reader.readAsDataURL(file);
+      });
+    }
+
     /* ==================================================
        CART
     ================================================== */
@@ -2208,7 +2210,7 @@
     }
 
     /* ==================================================
-       SUBMIT ORDER - إرسال الطلب (مع إصلاح CORS)
+       SUBMIT ORDER - إرسال الطلب
     ================================================== */
     let isOrderSubmitting = false;
 
@@ -2263,13 +2265,11 @@
       submitBtn.textContent = '⏳ جاري الإرسال...';
 
       try {
-        // استخدام apiPost المعدلة مع FormData و no-cors
         const result = await apiPost(orderData);
         
-        // بما أن no-cors لا يعطي رد، نعتبر الطلب ناجحاً
         if (result && !result.error) {
           errorDiv.textContent = '';
-          alert(`✅ تم تأكيد الطلبية بنجاح! سيتم التواصل معك قريباً.`);
+          alert(`✅ تم تأكيد الطلبية بنجاح!`);
           
           cart = [];
           cartTotal = 0;
@@ -2339,7 +2339,6 @@
         return;
       }
 
-      // Admin login (محلي)
       if (phone === CONFIG.ADMIN_PHONE && password === CONFIG.ADMIN_PASSWORD) {
         isLoggedIn = true;
         isAdmin = true;
@@ -2352,7 +2351,6 @@
         return;
       }
 
-      // محاولة تسجيل الدخول عبر الخادم
       const result = await apiPost({
         action: 'loginUser',
         phone: phone,
@@ -2851,7 +2849,7 @@
         sizes: sizes
       });
 
-      if (result && result.success) {
+      if (result && !result.error) {
         document.getElementById("newProductName").value = "";
         document.getElementById("newProductPrice").value = "";
         document.getElementById("newProductDiscount").value = "";
@@ -2879,19 +2877,6 @@
       }
     }
 
-    function readFileAsDataURL(file) {
-      return new Promise((resolve, reject) => {
-        const reader = new FileReader();
-        reader.onload = function(e) {
-          resolve(e.target.result);
-        };
-        reader.onerror = function(e) {
-          reject(e);
-        };
-        reader.readAsDataURL(file);
-      });
-    }
-
     async function deleteProduct(id) {
       if (confirm("هل أنت متأكد من حذف هذا المنتج؟")) {
         products = products.filter(p => p.id !== id);
@@ -2904,7 +2889,7 @@
           id: id
         });
 
-        if (result && result.success) {
+        if (result && !result.error) {
           await loadProductsFromAPI();
           alert("🗑 تم حذف المنتج.");
         } else {
@@ -2969,7 +2954,7 @@
         image: imageData
       });
 
-      if (result && result.success) {
+      if (result && !result.error) {
         document.getElementById("newCategoryName").value = "";
         document.getElementById("newCategoryIcon").value = "";
         document.getElementById("newCategoryImage").value = "";
@@ -2992,7 +2977,7 @@
           id: id
         });
 
-        if (result && result.success) {
+        if (result && !result.error) {
           await loadCategoriesFromAPI();
           alert("🗑 تم حذف القسم.");
         } else {
@@ -3024,4 +3009,3 @@
 </body>
 
 </html>
-```
