@@ -1,4 +1,3 @@
-```html
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 
@@ -1761,13 +1760,44 @@
   </div>
 
   <!-- ==================================================
-       JAVASCRIPT - مع إصلاح CORS
+       JAVASCRIPT - مع إصلاح CORS واستيراد CONFIG
   ================================================== -->
   <script>
     /* ==================================================
-       CONFIGURATION - Google Sheets API (محدث)
+       CONFIGURATION - يتم استيرادها من config.js
+       في حال عدم وجود config.js، نستخدم القيم الافتراضية
     ================================================== */
-    const API_BASE_URL = 'https://script.google.com/macros/s/AKfycbw7gVSwecJeRRQU-aD5R-0R5LoDNN3Mxd5lMhwV8HlN65CmgcRr2dHQ29KlyB__QajX/exec';
+    
+    // محاولة استيراد CONFIG من ملف خارجي
+    let CONFIG = {};
+    try {
+      // إذا كان الملف config.js موجوداً، سيتم تحميله
+      // نتحقق من وجود window.CONFIG
+      if (typeof window !== 'undefined' && window.CONFIG) {
+        CONFIG = window.CONFIG;
+        console.log('✅ CONFIG loaded from external file');
+      }
+    } catch(e) {
+      console.log('⚠️ Using default config');
+    }
+
+    // إذا لم يتم تحميل CONFIG، نستخدم القيم الافتراضية
+    if (!CONFIG.API_BASE_URL) {
+      CONFIG = {
+        API_BASE_URL: 'https://script.google.com/macros/s/AKfycbw7gVSwecJeRRQU-aD5R-0R5LoDNN3Mxd5lMhwV8HlN65CmgcRr2dHQ29KlyB__QajX/exec',
+        STORE_NAME: 'H.L LeVance',
+        STORE_PHONE: '201234567890',
+        ADMIN_PHONE: '111',
+        ADMIN_PASSWORD: '111',
+        STORAGE_KEY_PRODUCTS: 'products',
+        STORAGE_KEY_CATEGORIES: 'categories',
+        STORAGE_KEY_CART: 'cart'
+      };
+      console.log('⚠️ Using default config');
+    }
+
+    // تعيين الرابط الأساسي
+    const API_BASE_URL = CONFIG.API_BASE_URL;
 
     /* ==================================================
        INTRO
@@ -1922,35 +1952,10 @@
       }
     }
 
-    // دالة POST باستخدام FormData و no-cors لتجنب CORS
+    // دالة POST - تستخدم JSON مع redirect: follow
     async function apiPost(data) {
       try {
         console.log('Posting data:', data);
-        
-        const formData = new FormData();
-        formData.append('payload', JSON.stringify(data));
-        
-        const response = await fetch(API_BASE_URL, {
-          method: 'POST',
-          redirect: 'follow',
-          mode: 'no-cors',
-          body: formData
-        });
-        
-        // مع mode: 'no-cors' لا يمكن قراءة الرد
-        // نعتبر الطلب ناجحاً
-        console.log('POST request sent successfully (no-cors mode)');
-        return { success: true, message: 'تم الإرسال بنجاح' };
-      } catch (error) {
-        console.error('API POST Error:', error);
-        return { error: error.toString() };
-      }
-    }
-
-    // دالة POST باستخدام JSON (للمستخدمين - للقراءة)
-    async function apiPostJSON(data) {
-      try {
-        console.log('Posting (JSON):', data);
         const response = await fetch(API_BASE_URL, {
           method: 'POST',
           redirect: 'follow',
@@ -1966,7 +1971,7 @@
         console.log('API POST Response:', result);
         return result;
       } catch (error) {
-        console.error('API POST JSON Error:', error);
+        console.error('API POST Error:', error);
         return { error: error.toString() };
       }
     }
@@ -2200,7 +2205,7 @@
     }
 
     /* ==================================================
-       SUBMIT ORDER - إرسال الطلب (باستخدام FormData)
+       SUBMIT ORDER - إرسال الطلب
     ================================================== */
     let isOrderSubmitting = false;
 
@@ -2255,12 +2260,11 @@
       submitBtn.textContent = '⏳ جاري الإرسال...';
 
       try {
-        // استخدام apiPost مع FormData لتجنب CORS
         const result = await apiPost(orderData);
         
-        if (result && !result.error) {
+        if (result && result.success) {
           errorDiv.textContent = '';
-          alert(`✅ تم تأكيد الطلبية بنجاح!`);
+          alert(`✅ تم تأكيد الطلبية بنجاح!\nرقم الطلب: ${result.orderId || ''}`);
           
           cart = [];
           cartTotal = 0;
@@ -2330,7 +2334,8 @@
         return;
       }
 
-      if (phone === "111" && password === "111") {
+      // Admin login (محلي)
+      if (phone === CONFIG.ADMIN_PHONE && password === CONFIG.ADMIN_PASSWORD) {
         isLoggedIn = true;
         isAdmin = true;
         currentUser = "admin";
@@ -2342,8 +2347,8 @@
         return;
       }
 
-      // محاولة تسجيل الدخول باستخدام JSON
-      const result = await apiPostJSON({
+      // محاولة تسجيل الدخول عبر الخادم
+      const result = await apiPost({
         action: 'loginUser',
         phone: phone,
         password: password
@@ -2372,12 +2377,12 @@
         return;
       }
 
-      if (phone === "111") {
+      if (phone === CONFIG.ADMIN_PHONE) {
         alert("⚠️ هذا الرقم محجوز للإدمن.");
         return;
       }
 
-      const result = await apiPostJSON({
+      const result = await apiPost({
         action: 'registerUser',
         phone: phone,
         password: password,
@@ -2406,19 +2411,19 @@
     let categories = [];
 
     function loadFromLocalStorage() {
-      const savedProducts = localStorage.getItem('products');
-      const savedCategories = localStorage.getItem('categories');
+      const savedProducts = localStorage.getItem(CONFIG.STORAGE_KEY_PRODUCTS);
+      const savedCategories = localStorage.getItem(CONFIG.STORAGE_KEY_CATEGORIES);
       
       if (savedProducts) {
         try {
           products = JSON.parse(savedProducts);
         } catch (e) {
           products = getSampleProducts();
-          localStorage.setItem('products', JSON.stringify(products));
+          localStorage.setItem(CONFIG.STORAGE_KEY_PRODUCTS, JSON.stringify(products));
         }
       } else {
         products = getSampleProducts();
-        localStorage.setItem('products', JSON.stringify(products));
+        localStorage.setItem(CONFIG.STORAGE_KEY_PRODUCTS, JSON.stringify(products));
       }
       
       if (savedCategories) {
@@ -2426,18 +2431,18 @@
           categories = JSON.parse(savedCategories);
         } catch (e) {
           categories = getSampleCategories();
-          localStorage.setItem('categories', JSON.stringify(categories));
+          localStorage.setItem(CONFIG.STORAGE_KEY_CATEGORIES, JSON.stringify(categories));
         }
       } else {
         categories = getSampleCategories();
-        localStorage.setItem('categories', JSON.stringify(categories));
+        localStorage.setItem(CONFIG.STORAGE_KEY_CATEGORIES, JSON.stringify(categories));
       }
     }
 
     function saveToLocalStorage() {
       try {
-        localStorage.setItem('products', JSON.stringify(products));
-        localStorage.setItem('categories', JSON.stringify(categories));
+        localStorage.setItem(CONFIG.STORAGE_KEY_PRODUCTS, JSON.stringify(products));
+        localStorage.setItem(CONFIG.STORAGE_KEY_CATEGORIES, JSON.stringify(categories));
       } catch (e) {
         console.error('❌ localStorage full!');
         alert('⚠️ مساحة التخزين ممتلئة! حاول تقليل حجم الصور أو عدد المنتجات.');
@@ -2463,7 +2468,7 @@
 
         if (result && !result.error && result.products && result.products.length > 0) {
           products = result.products;
-          localStorage.setItem('products', JSON.stringify(products));
+          localStorage.setItem(CONFIG.STORAGE_KEY_PRODUCTS, JSON.stringify(products));
           renderStoreProducts();
           if (isAdmin) renderAdminProducts();
           console.log('✅ Products loaded from API');
@@ -2486,7 +2491,7 @@
 
         if (result && !result.error && result.categories && result.categories.length > 0) {
           categories = result.categories;
-          localStorage.setItem('categories', JSON.stringify(categories));
+          localStorage.setItem(CONFIG.STORAGE_KEY_CATEGORIES, JSON.stringify(categories));
           renderStoreCategories();
           if (isAdmin) renderAdminCategories();
           console.log('✅ Categories loaded from API');
@@ -2841,7 +2846,7 @@
         sizes: sizes
       });
 
-      if (result && !result.error) {
+      if (result && result.success) {
         document.getElementById("newProductName").value = "";
         document.getElementById("newProductPrice").value = "";
         document.getElementById("newProductDiscount").value = "";
@@ -2894,7 +2899,7 @@
           id: id
         });
 
-        if (result && !result.error) {
+        if (result && result.success) {
           await loadProductsFromAPI();
           alert("🗑 تم حذف المنتج.");
         } else {
@@ -2959,7 +2964,7 @@
         image: imageData
       });
 
-      if (result && !result.error) {
+      if (result && result.success) {
         document.getElementById("newCategoryName").value = "";
         document.getElementById("newCategoryIcon").value = "";
         document.getElementById("newCategoryImage").value = "";
@@ -2982,7 +2987,7 @@
           id: id
         });
 
-        if (result && !result.error) {
+        if (result && result.success) {
           await loadCategoriesFromAPI();
           alert("🗑 تم حذف القسم.");
         } else {
@@ -3014,4 +3019,3 @@
 </body>
 
 </html>
-```
