@@ -1,25 +1,14 @@
-```javascript
 /* ==================================================
-   MAIN.JS - H.L LeVance Store - مُعدل
-   تم إضافة تعريف API_BASE_URL في بداية الملف
+   MAIN.JS - H.L LeVance Store - الإصدار النهائي
+   تم تعريف API_BASE_URL في بداية الملف
 ================================================== */
 
-/* ==================================================
-   تعريف API_BASE_URL - حل مشكلة ReferenceError
-================================================== */
-let API_BASE_URL = '';
+// ==================================================
+// تعريف API_BASE_URL في النطاق العام (GLOBAL)
+// ==================================================
+var API_BASE_URL = 'https://script.google.com/macros/s/AKfycbzuajhu983jCQWr_V4ezz6SHpanxinydY5L4Vf7spqyuWTtoOLBmH4536yWz6jboSxm/exec';
 
-// محاولة تحميل الرابط من CONFIG
-if (typeof window.CONFIG !== 'undefined' && window.CONFIG.API_BASE_URL) {
-    API_BASE_URL = window.CONFIG.API_BASE_URL;
-    console.log('✅ API_BASE_URL loaded from CONFIG:', API_BASE_URL);
-} else {
-    // رابط احتياطي مباشر
-    API_BASE_URL = 'https://script.google.com/macros/s/AKfycbzuajhu983jCQWr_V4ezz6SHpanxinydY5L4Vf7spqyuWTtoOLBmH4536yWz6jboSxm/exec';
-    console.warn('⚠️ Using fallback API_BASE_URL:', API_BASE_URL);
-}
-
-// تعريف CONFIG إذا لم يكن موجوداً
+// التأكد من وجود CONFIG
 if (typeof window.CONFIG === 'undefined') {
     window.CONFIG = {
         API_BASE_URL: API_BASE_URL,
@@ -32,8 +21,10 @@ if (typeof window.CONFIG === 'undefined') {
         STORAGE_KEY_CART: 'hl_cart',
         STORAGE_KEY_ORDERS: 'hl_orders'
     };
-    console.log('⚠️ CONFIG created with fallback values');
+    console.log('✅ CONFIG created with fallback values');
 }
+
+console.log('✅ API_BASE_URL:', API_BASE_URL);
 
 /* ==================================================
    INTRO - التحكم بشاشة الترحيب
@@ -58,11 +49,9 @@ function enterStore() {
   }, 300);
 }
 
-// عند انتهاء الفيديو
 if (video) {
   video.addEventListener("ended", enterStore);
   
-  // حل احتياطي بعد 5 ثواني
   setTimeout(function() {
     if (!intro.classList.contains("hide")) {
       console.log("⏰ Timeout - forcing enter store");
@@ -1275,4 +1264,3 @@ document.addEventListener('DOMContentLoaded', function() {
     loadCategoriesFromAPI();
   }, 1000);
 });
-```
