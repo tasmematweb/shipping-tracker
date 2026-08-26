@@ -1,3 +1,4 @@
+```html
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 
@@ -393,7 +394,7 @@
 
     .product-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
       gap: 22px;
     }
 
@@ -414,19 +415,24 @@
 
     .product-image {
       width: 100%;
-      height: 220px;
+      height: 280px;
       display: flex;
       align-items: center;
       justify-content: center;
       background: var(--yellow-main);
       color: var(--brown);
-      font-size: 90px;
       border-bottom: 2px solid var(--brown);
       overflow: hidden;
       position: relative;
     }
 
     .product-image img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .product-image video {
       width: 100%;
       height: 100%;
       object-fit: cover;
@@ -455,6 +461,41 @@
       background: var(--brown-light);
     }
 
+    /* Image gallery thumbs */
+    .product-image .image-gallery {
+      display: flex;
+      gap: 5px;
+      position: absolute;
+      bottom: 10px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: rgba(0,0,0,0.5);
+      padding: 5px 10px;
+      border-radius: 20px;
+    }
+
+    .product-image .image-gallery img {
+      width: 40px;
+      height: 40px;
+      border-radius: 4px;
+      border: 2px solid var(--yellow-main);
+      cursor: pointer;
+      object-fit: cover;
+    }
+
+    .product-image .image-gallery img.active {
+      border-color: var(--brown);
+    }
+
+    .product-image .image-gallery video {
+      width: 40px;
+      height: 40px;
+      border-radius: 4px;
+      border: 2px solid var(--yellow-main);
+      cursor: pointer;
+      object-fit: cover;
+    }
+
     .product-info {
       padding: 18px;
       background: var(--yellow-light);
@@ -476,7 +517,7 @@
       font-size: 23px;
       font-weight: bold;
       color: var(--brown);
-      margin-bottom: 15px;
+      margin-bottom: 10px;
     }
 
     .price .original-price {
@@ -484,6 +525,36 @@
       font-size: 16px;
       opacity: 0.6;
       margin-left: 10px;
+    }
+
+    /* Sizes */
+    .sizes {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-bottom: 12px;
+    }
+
+    .sizes .size-btn {
+      padding: 5px 12px;
+      border: 2px solid var(--brown);
+      border-radius: 6px;
+      background: var(--yellow-light);
+      color: var(--brown);
+      cursor: pointer;
+      font-weight: bold;
+      font-size: 13px;
+      transition: all 0.2s;
+    }
+
+    .sizes .size-btn:hover {
+      background: var(--brown);
+      color: var(--yellow-light);
+    }
+
+    .sizes .size-btn.selected {
+      background: var(--brown);
+      color: var(--yellow-light);
     }
 
     .add-cart {
@@ -496,6 +567,7 @@
       cursor: pointer;
       font-size: 15px;
       font-weight: bold;
+      transition: background 0.2s;
     }
 
     .add-cart:hover {
@@ -737,6 +809,36 @@
       background: var(--brown-light);
     }
 
+    .admin-controls .size-checkboxes {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      align-items: center;
+      padding: 5px 10px;
+      background: var(--yellow-main);
+      border-radius: 8px;
+      border: 2px solid var(--brown);
+    }
+
+    .admin-controls .size-checkboxes label {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      font-weight: bold;
+      color: var(--brown);
+      font-size: 14px;
+      cursor: pointer;
+    }
+
+    .admin-controls .size-checkboxes input[type="checkbox"] {
+      width: 16px;
+      height: 16px;
+      accent-color: var(--brown);
+      flex: 0 0 auto;
+      min-width: unset;
+      padding: 0;
+    }
+
     .admin-list {
       background: var(--yellow-light);
       border: 2px solid var(--brown);
@@ -762,6 +864,7 @@
       display: flex;
       align-items: center;
       gap: 12px;
+      flex-wrap: wrap;
     }
 
     .admin-list-item .item-info img {
@@ -775,6 +878,20 @@
     .admin-list-item .item-info span {
       font-weight: bold;
       color: var(--brown);
+    }
+
+    .admin-list-item .item-info .size-tags {
+      display: flex;
+      gap: 4px;
+    }
+
+    .admin-list-item .item-info .size-tags span {
+      background: var(--brown);
+      color: var(--yellow-light);
+      padding: 2px 8px;
+      border-radius: 4px;
+      font-size: 11px;
+      font-weight: bold;
     }
 
     .admin-list-item button {
@@ -923,8 +1040,13 @@
       }
 
       .product-image {
-        height: 160px;
+        height: 180px;
         font-size: 65px;
+      }
+
+      .product-image .image-gallery img {
+        width: 30px;
+        height: 30px;
       }
 
       .product-info {
@@ -932,11 +1054,16 @@
       }
 
       .product-info h3 {
-        font-size: 15px;
+        font-size: 14px;
       }
 
       .price {
-        font-size: 18px;
+        font-size: 16px;
+      }
+
+      .sizes .size-btn {
+        font-size: 11px;
+        padding: 3px 8px;
       }
 
       .add-cart {
@@ -967,6 +1094,11 @@
 
       .admin-controls input[type="file"] {
         flex: 1;
+      }
+
+      .admin-controls .size-checkboxes {
+        flex-wrap: wrap;
+        justify-content: center;
       }
     }
 
@@ -1076,7 +1208,18 @@
           <input type="number" id="newProductPrice" placeholder="السعر">
           <input type="number" id="newProductDiscount" placeholder="الخصم %">
           <input type="text" id="newProductIcon" placeholder="أيقونة (مثال: 👕)">
-          <input type="file" id="newProductImage" accept="image/*">
+
+          <!-- المقاسات -->
+          <div class="size-checkboxes">
+            <label><input type="checkbox" value="S"> S</label>
+            <label><input type="checkbox" value="M"> M</label>
+            <label><input type="checkbox" value="L"> L</label>
+            <label><input type="checkbox" value="XL"> XL</label>
+            <label><input type="checkbox" value="2XL"> 2XL</label>
+            <label><input type="checkbox" value="3XL"> 3XL</label>
+          </div>
+
+          <input type="file" id="newProductFiles" accept="image/*,video/*" multiple>
           <button onclick="addProduct()">➕ إضافة منتج</button>
           <button onclick="resetProducts()">🔄 إعادة ضبط</button>
         </div>
@@ -1129,7 +1272,7 @@
   </div>
 
   <!-- ==================================================
-       JAVASCRIPT - نسخة مستقرة مع localStorage
+       JAVASCRIPT
   ================================================== -->
   <script>
     /* ==================================================
@@ -1184,7 +1327,6 @@
        API HELPER FUNCTIONS
     ================================================== */
     
-    // دالة GET - لجلب البيانات
     async function apiGet(action) {
       try {
         const url = `${API_BASE_URL}?action=${action}`;
@@ -1205,7 +1347,6 @@
       }
     }
 
-    // دالة POST - لإرسال البيانات
     async function apiPost(data) {
       try {
         console.log('Posting data:', data);
@@ -1234,9 +1375,10 @@
     ================================================== */
     let cart = [];
 
-    function addToCart(product) {
-      cart.push(product);
-      alert("تمت إضافة " + product + " إلى السلة 🛒");
+    function addToCart(productName, size) {
+      const item = size ? `${productName} (مقاس ${size})` : productName;
+      cart.push(item);
+      alert("تمت إضافة " + item + " إلى السلة 🛒");
     }
 
     function showCart() {
@@ -1289,7 +1431,6 @@
         return;
       }
 
-      // Admin login (محلي)
       if (phone === "111" && password === "111") {
         isLoggedIn = true;
         isAdmin = true;
@@ -1302,7 +1443,6 @@
         return;
       }
 
-      // محاولة تسجيل الدخول عبر Google Sheets
       const result = await apiPost({
         action: 'loginUser',
         phone: phone,
@@ -1365,7 +1505,6 @@
     let products = [];
     let categories = [];
 
-    // تحميل البيانات من localStorage أولاً (للتجربة السريعة)
     function loadFromLocalStorage() {
       const savedProducts = localStorage.getItem('products');
       const savedCategories = localStorage.getItem('categories');
@@ -1391,12 +1530,10 @@
     }
 
     async function loadData() {
-      // أولاً نعرض البيانات من localStorage
       loadFromLocalStorage();
       renderStoreProducts();
       renderStoreCategories();
       
-      // ثم نحاول جلب البيانات من Google Sheets
       await loadProductsFromAPI();
       await loadCategoriesFromAPI();
     }
@@ -1452,10 +1589,10 @@
     ================================================== */
     function getSampleProducts() {
       return [
-        { id: 1, name: "قميص أنيق", price: 499, discount: 0, icon: "👕", image: null },
-        { id: 2, name: "فستان أنيق", price: 799, discount: 0, icon: "👗", image: null },
-        { id: 3, name: "حذاء أنيق", price: 599, discount: 0, icon: "👡", image: null },
-        { id: 4, name: "مستحضرات تجميل", price: 299, discount: 0, icon: "💄", image: null }
+        { id: 1, name: "قميص أنيق", price: 499, discount: 0, icon: "👕", image: null, media: [], sizes: ["S", "M", "L", "XL"] },
+        { id: 2, name: "فستان أنيق", price: 799, discount: 0, icon: "👗", image: null, media: [], sizes: ["S", "M", "L"] },
+        { id: 3, name: "حذاء أنيق", price: 599, discount: 0, icon: "👡", image: null, media: [], sizes: ["40", "41", "42", "43"] },
+        { id: 4, name: "مستحضرات تجميل", price: 299, discount: 0, icon: "💄", image: null, media: [], sizes: [] }
       ];
     }
 
@@ -1503,15 +1640,54 @@
         const article = document.createElement("article");
         article.className = "product";
         article.dataset.id = p.id;
-        let imageHtml = '';
-        if (p.image) {
-          imageHtml = `<img src="${p.image}" alt="${p.name}">`;
+
+        // Build media gallery
+        let mediaHtml = '';
+        let galleryHtml = '';
+        let mainMedia = '';
+
+        if (p.media && p.media.length > 0) {
+          // Show first media as main
+          const firstMedia = p.media[0];
+          if (firstMedia.type === 'video') {
+            mainMedia = `<video controls muted playsinline><source src="${firstMedia.data}" type="video/mp4"></video>`;
+          } else {
+            mainMedia = `<img src="${firstMedia.data}" alt="${p.name}">`;
+          }
+
+          // Build gallery thumbs
+          galleryHtml = `<div class="image-gallery">`;
+          p.media.forEach((m, index) => {
+            if (m.type === 'video') {
+              galleryHtml += `<video muted playsinline onclick="changeMainMedia(this, ${p.id}, ${index})"><source src="${m.data}" type="video/mp4"></video>`;
+            } else {
+              galleryHtml += `<img src="${m.data}" alt="${p.name}" onclick="changeMainMedia(this, ${p.id}, ${index})">`;
+            }
+          });
+          galleryHtml += `</div>`;
         } else {
-          imageHtml = `<span class="product-icon">${p.icon || '📦'}</span>`;
+          // Fallback to icon or single image
+          if (p.image) {
+            mainMedia = `<img src="${p.image}" alt="${p.name}">`;
+          } else {
+            mainMedia = `<span class="product-icon">${p.icon || '📦'}</span>`;
+          }
         }
+
+        // Build sizes
+        let sizesHtml = '';
+        if (p.sizes && p.sizes.length > 0) {
+          sizesHtml = `<div class="sizes">`;
+          p.sizes.forEach(size => {
+            sizesHtml += `<button class="size-btn" onclick="selectSize(this, '${p.name.replace(/'/g, "\\'")}')">${size}</button>`;
+          });
+          sizesHtml += `</div>`;
+        }
+
         article.innerHTML = `
-          <div class="product-image">
-            ${imageHtml}
+          <div class="product-image" id="productImage_${p.id}">
+            <div class="main-media">${mainMedia}</div>
+            ${galleryHtml}
             <button class="delete-prod" onclick="deleteProduct(${p.id})">🗑</button>
           </div>
           <div class="product-info">
@@ -1522,13 +1698,98 @@
               ${priceInfo.final} جنيه
               ${priceInfo.hasDiscount ? `<span style="color:red;font-size:14px;"> (خصم ${p.discount}%)</span>` : ''}
             </div>
-            <button class="add-cart" onclick="addToCart('${p.name.replace(/'/g, "\\'")}')">أضف إلى السلة</button>
+            ${sizesHtml}
+            <button class="add-cart" onclick="addToCartWithSize('${p.name.replace(/'/g, "\\'")}')">أضف إلى السلة</button>
           </div>
         `;
         grid.appendChild(article);
       });
+
       if (isAdmin) {
         showDeleteButtons(true);
+      }
+    }
+
+    // Helper function for size selection
+    function selectSize(btn, productName) {
+      const parent = btn.parentElement;
+      parent.querySelectorAll('.size-btn').forEach(b => b.classList.remove('selected'));
+      btn.classList.add('selected');
+      
+      // Store selected size in the product card
+      const productCard = btn.closest('.product');
+      productCard.dataset.selectedSize = btn.textContent;
+    }
+
+    // Helper function for adding to cart with selected size
+    function addToCartWithSize(productName) {
+      const productCard = document.querySelector(`.product:has(h3:contains("${productName}"))`);
+      let size = null;
+      if (productCard) {
+        const selected = productCard.querySelector('.size-btn.selected');
+        if (selected) {
+          size = selected.textContent;
+        }
+      }
+      addToCart(productName, size);
+    }
+
+    // Custom contains selector for h3
+    document.querySelectorAll('.product h3').forEach(h3 => {
+      const parent = h3.closest('.product');
+      if (parent) {
+        parent.dataset.productName = h3.textContent;
+      }
+    });
+
+    // Override the add to cart with size
+    document.addEventListener('click', function(e) {
+      if (e.target.classList.contains('add-cart')) {
+        const productCard = e.target.closest('.product');
+        if (productCard) {
+          const name = productCard.querySelector('h3').textContent;
+          let size = null;
+          const selected = productCard.querySelector('.size-btn.selected');
+          if (selected) {
+            size = selected.textContent;
+          }
+          // The addToCart function will be called from onclick, but we handle it here
+          // to ensure size is passed correctly
+          e.preventDefault();
+          addToCart(name, size);
+        }
+      }
+    });
+
+    function changeMainMedia(element, productId, index) {
+      const container = document.getElementById(`productImage_${productId}`);
+      if (!container) return;
+      
+      const mainMedia = container.querySelector('.main-media');
+      if (!mainMedia) return;
+      
+      // Find the product
+      const product = products.find(p => p.id === productId);
+      if (!product || !product.media) return;
+      
+      const media = product.media[index];
+      if (!media) return;
+      
+      if (media.type === 'video') {
+        mainMedia.innerHTML = `<video controls muted playsinline><source src="${media.data}" type="video/mp4"></video>`;
+        // Auto-play the video
+        const videoEl = mainMedia.querySelector('video');
+        if (videoEl) videoEl.play();
+      } else {
+        mainMedia.innerHTML = `<img src="${media.data}" alt="${product.name}">`;
+      }
+      
+      // Update active state
+      const gallery = container.querySelector('.image-gallery');
+      if (gallery) {
+        gallery.querySelectorAll('img, video').forEach((el, i) => {
+          el.classList.toggle('active', i === index);
+        });
       }
     }
 
@@ -1547,15 +1808,28 @@
         const div = document.createElement("div");
         div.className = "admin-list-item";
         let imagePreview = '';
-        if (p.image) {
+        if (p.media && p.media.length > 0) {
+          const first = p.media[0];
+          if (first.type === 'video') {
+            imagePreview = `<video style="width:40px;height:40px;object-fit:cover;border-radius:8px;" muted><source src="${first.data}" type="video/mp4"></video>`;
+          } else {
+            imagePreview = `<img src="${first.data}" alt="${p.name}">`;
+          }
+        } else if (p.image) {
           imagePreview = `<img src="${p.image}" alt="${p.name}">`;
         } else {
           imagePreview = `<span style="font-size:30px;">${p.icon || '📦'}</span>`;
         }
+
+        const sizeTags = p.sizes && p.sizes.length > 0 ? 
+          `<div class="size-tags">${p.sizes.map(s => `<span>${s}</span>`).join('')}</div>` : '';
+
         div.innerHTML = `
           <div class="item-info">
             ${imagePreview}
             <span>${p.name} - ${priceInfo.final} جنيه ${priceInfo.hasDiscount ? `(خصم ${p.discount}%)` : ''}</span>
+            ${sizeTags}
+            <span style="font-size:12px;opacity:0.7;">📎 ${p.media ? p.media.length : 0} ملف</span>
           </div>
           <button onclick="deleteProduct(${p.id})">🗑 حذف</button>
         `;
@@ -1642,54 +1916,67 @@
       const priceInput = document.getElementById("newProductPrice");
       const discountInput = document.getElementById("newProductDiscount");
       const iconInput = document.getElementById("newProductIcon");
-      const fileInput = document.getElementById("newProductImage");
+      const fileInput = document.getElementById("newProductFiles");
 
       const name = nameInput.value.trim();
       const price = parseFloat(priceInput.value.trim());
       const discount = parseFloat(discountInput.value.trim()) || 0;
       const icon = iconInput.value.trim() || '📦';
 
+      // Get selected sizes
+      const sizeCheckboxes = document.querySelectorAll('.size-checkboxes input[type="checkbox"]:checked');
+      const sizes = Array.from(sizeCheckboxes).map(cb => cb.value);
+
       if (!name || isNaN(price) || price <= 0) {
         alert("⚠️ يرجى إدخال اسم المنتج وسعر صحيح.");
         return;
       }
 
-      let imageData = null;
-      if (fileInput.files && fileInput.files[0]) {
-        const reader = new FileReader();
-        reader.onload = async function(e) {
-          imageData = e.target.result;
-          await finishAddProduct(name, price, discount, icon, imageData);
-        };
-        reader.readAsDataURL(fileInput.files[0]);
-      } else {
-        await finishAddProduct(name, price, discount, icon, null);
+      // Process media files
+      const media = [];
+      if (fileInput.files && fileInput.files.length > 0) {
+        for (const file of fileInput.files) {
+          const reader = new FileReader();
+          const mediaData = await new Promise((resolve) => {
+            reader.onload = function(e) {
+              resolve({
+                type: file.type.startsWith('video') ? 'video' : 'image',
+                data: e.target.result,
+                name: file.name
+              });
+            };
+            reader.readAsDataURL(file);
+          });
+          media.push(mediaData);
+        }
       }
-    }
 
-    async function finishAddProduct(name, price, discount, icon, imageData) {
-      // إضافة محلياً أولاً
       const newProduct = {
         id: Date.now(),
         name: name,
         price: price,
         discount: discount,
         icon: icon,
-        image: imageData
+        image: media.length > 0 ? media[0].data : null,
+        media: media,
+        sizes: sizes
       };
+
       products.push(newProduct);
       saveToLocalStorage();
       renderStoreProducts();
       renderAdminProducts();
 
-      // محاولة الإضافة على الخادم
+      // Try to sync with server
       const result = await apiPost({
         action: 'addProduct',
         name: name,
         price: price,
         discount: discount,
         icon: icon,
-        image: imageData
+        image: media.length > 0 ? media[0].data : null,
+        media: media,
+        sizes: sizes
       });
 
       if (result && result.success) {
@@ -1697,7 +1984,8 @@
         document.getElementById("newProductPrice").value = "";
         document.getElementById("newProductDiscount").value = "";
         document.getElementById("newProductIcon").value = "";
-        document.getElementById("newProductImage").value = "";
+        document.getElementById("newProductFiles").value = "";
+        document.querySelectorAll('.size-checkboxes input[type="checkbox"]').forEach(cb => cb.checked = false);
         await loadProductsFromAPI();
         alert("✅ تم إضافة المنتج بنجاح!");
       } else {
@@ -1707,13 +1995,11 @@
 
     async function deleteProduct(id) {
       if (confirm("هل أنت متأكد من حذف هذا المنتج؟")) {
-        // حذف محلياً أولاً
         products = products.filter(p => p.id !== id);
         saveToLocalStorage();
         renderStoreProducts();
         renderAdminProducts();
 
-        // محاولة الحذف من الخادم
         const result = await apiPost({
           action: 'deleteProduct',
           id: id
@@ -1757,30 +2043,26 @@
       let imageData = null;
       if (fileInput.files && fileInput.files[0]) {
         const reader = new FileReader();
-        reader.onload = async function(e) {
-          imageData = e.target.result;
-          await finishAddCategory(name, icon, imageData);
-        };
-        reader.readAsDataURL(fileInput.files[0]);
-      } else {
-        await finishAddCategory(name, icon, null);
+        imageData = await new Promise((resolve) => {
+          reader.onload = function(e) {
+            resolve(e.target.result);
+          };
+          reader.readAsDataURL(fileInput.files[0]);
+        });
       }
-    }
 
-    async function finishAddCategory(name, icon, imageData) {
-      // إضافة محلياً أولاً
       const newCategory = {
         id: Date.now(),
         name: name,
         icon: icon,
         image: imageData
       };
+
       categories.push(newCategory);
       saveToLocalStorage();
       renderStoreCategories();
       renderAdminCategories();
 
-      // محاولة الإضافة على الخادم
       const result = await apiPost({
         action: 'addCategory',
         name: name,
@@ -1801,13 +2083,11 @@
 
     async function deleteCategory(id) {
       if (confirm("هل أنت متأكد من حذف هذا القسم؟")) {
-        // حذف محلياً أولاً
         categories = categories.filter(c => c.id !== id);
         saveToLocalStorage();
         renderStoreCategories();
         renderAdminCategories();
 
-        // محاولة الحذف من الخادم
         const result = await apiPost({
           action: 'deleteCategory',
           id: id
@@ -1832,12 +2112,11 @@
       }
     }
 
-    // تحميل البيانات عند بدء التشغيل
+    // Initial load
     loadFromLocalStorage();
     renderStoreProducts();
     renderStoreCategories();
 
-    // محاولة جلب البيانات من الخادم
     setTimeout(() => {
       loadProductsFromAPI();
       loadCategoriesFromAPI();
@@ -1846,3 +2125,4 @@
 </body>
 
 </html>
+```
