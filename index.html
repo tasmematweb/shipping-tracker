@@ -794,6 +794,29 @@
     }
 
     /* ==================================================
+       LOADING SPINNER
+    ================================================== */
+    .spinner {
+      display: none;
+      width: 40px;
+      height: 40px;
+      margin: 20px auto;
+      border: 4px solid var(--yellow-light);
+      border-top: 4px solid var(--brown);
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+    }
+
+    .spinner.active {
+      display: block;
+    }
+
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    /* ==================================================
        MOBILE
     ================================================== */
     @media (max-width: 700px) {
@@ -1031,17 +1054,15 @@
     <!-- CATEGORIES -->
     <section class="categories" id="categories">
       <h2 class="section-title">تصفح الأقسام</h2>
-      <div class="category-grid" id="categoryGrid">
-        <!-- سيتم ملؤها بواسطة JS -->
-      </div>
+      <div class="spinner" id="categorySpinner"></div>
+      <div class="category-grid" id="categoryGrid"></div>
     </section>
 
     <!-- PRODUCTS -->
     <section class="products" id="products">
       <h2 class="section-title">المنتجات المميزة</h2>
-      <div class="product-grid" id="productGrid">
-        <!-- سيتم ملؤها بواسطة JS -->
-      </div>
+      <div class="spinner" id="productSpinner"></div>
+      <div class="product-grid" id="productGrid"></div>
     </section>
 
     <!-- ADMIN PANEL -->
@@ -1053,8 +1074,9 @@
         <h3>📦 إدارة المنتجات</h3>
         <div class="admin-controls">
           <input type="text" id="newProductName" placeholder="اسم المنتج">
-          <input type="text" id="newProductPrice" placeholder="السعر (مثال: 299)">
-          <input type="text" id="newProductDiscount" placeholder="الخصم (مثال: 20)">
+          <input type="number" id="newProductPrice" placeholder="السعر">
+          <input type="number" id="newProductDiscount" placeholder="الخصم %">
+          <input type="text" id="newProductIcon" placeholder="أيقونة (مثال: 👕)">
           <input type="file" id="newProductImage" accept="image/*">
           <button onclick="addProduct()">➕ إضافة منتج</button>
           <button onclick="resetProducts()">🔄 إعادة ضبط</button>
@@ -1067,6 +1089,7 @@
         <h3>🏷️ إدارة الأقسام</h3>
         <div class="admin-controls">
           <input type="text" id="newCategoryName" placeholder="اسم القسم">
+          <input type="text" id="newCategoryIcon" placeholder="أيقونة (مثال: 👕)">
           <input type="file" id="newCategoryImage" accept="image/*">
           <button onclick="addCategory()">➕ إضافة قسم</button>
           <button onclick="resetCategories()">🔄 إعادة ضبط</button>
@@ -1111,6 +1134,11 @@
   ================================================== -->
   <script>
     /* ==================================================
+       CONFIGURATION - Google Sheets API
+    ================================================== */
+    const API_BASE_URL = 'https://script.google.com/macros/s/AKfycbw2XxoZgTWBXlA41a3pfzneStppqnbLBU0_xGZu_JVpfVL1WSAs3X2rVP7mKP_A_Nx8/exec';
+
+    /* ==================================================
        INTRO
     ================================================== */
     const intro = document.getElementById("intro");
@@ -1123,6 +1151,7 @@
       store.classList.add("show");
       document.body.style.overflow = "auto";
       video.pause();
+      loadData(); // Load data after intro
     }
 
     video.addEventListener("ended", enterStore);
@@ -1148,6 +1177,35 @@
     });
 
     document.body.style.overflow = "hidden";
+
+    /* ==================================================
+       API HELPER FUNCTIONS
+    ================================================== */
+    async function apiGet(action) {
+      try {
+        const response = await fetch(`${API_BASE_URL}?action=${action}`);
+        return await response.json();
+      } catch (error) {
+        console.error('API Error:', error);
+        return { error: error.toString() };
+      }
+    }
+
+    async function apiPost(data) {
+      try {
+        const response = await fetch(API_BASE_URL, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(data)
+        });
+        return await response.json();
+      } catch (error) {
+        console.error('API Error:', error);
+        return { error: error.toString() };
+      }
+    }
 
     /* ==================================================
        CART
@@ -1200,10 +1258,16 @@
       document.getElementById("loginModal").classList.remove("active");
     }
 
-    function handleLogin() {
+    async function handleLogin() {
       const phone = document.getElementById("loginPhone").value.trim();
       const password = document.getElementById("loginPassword").value.trim();
 
+      if (!phone || !password) {
+        alert("⚠️ يرجى إدخال رقم الهاتف وكلمة المرور.");
+        return;
+      }
+
+      // Admin login (local for now, will also check Google Sheets)
       if (phone === "111" && password === "111") {
         isLoggedIn = true;
         isAdmin = true;
@@ -1211,30 +1275,33 @@
         document.getElementById("loginBtn").classList.add("hidden");
         closeLoginModal();
         document.getElementById("adminPanel").classList.add("active");
-        renderAdminProducts();
-        renderAdminCategories();
         showDeleteButtons(true);
         alert("✅ مرحباً Admin! تم تسجيل الدخول بنجاح.");
         return;
       }
 
-      const users = JSON.parse(localStorage.getItem("users") || "[]");
-      const user = users.find(u => u.phone === phone && u.password === password);
-      if (user) {
+      // Check with Google Sheets
+      const result = await apiPost({
+        action: 'loginUser',
+        phone: phone,
+        password: password
+      });
+
+      if (result.success) {
         isLoggedIn = true;
         isAdmin = false;
-        currentUser = user.phone;
+        currentUser = phone;
         document.getElementById("loginBtn").classList.add("hidden");
         closeLoginModal();
         document.getElementById("adminPanel").classList.remove("active");
         showDeleteButtons(false);
-        alert("✅ مرحباً " + user.phone + "! تم تسجيل الدخول بنجاح.");
+        alert("✅ مرحباً " + (result.user.name || phone) + "! تم تسجيل الدخول بنجاح.");
       } else {
-        alert("❌ رقم الهاتف أو كلمة المرور غير صحيحة. حاول مرة أخرى.");
+        alert("❌ " + (result.error || "رقم الهاتف أو كلمة المرور غير صحيحة."));
       }
     }
 
-    function handleSignup() {
+    async function handleSignup() {
       const phone = document.getElementById("loginPhone").value.trim();
       const password = document.getElementById("loginPassword").value.trim();
 
@@ -1248,17 +1315,20 @@
         return;
       }
 
-      let users = JSON.parse(localStorage.getItem("users") || "[]");
-      if (users.find(u => u.phone === phone)) {
-        alert("⚠️ هذا الرقم مسجل بالفعل. يرجى تسجيل الدخول.");
-        return;
-      }
+      const result = await apiPost({
+        action: 'registerUser',
+        phone: phone,
+        password: password,
+        name: phone
+      });
 
-      users.push({ phone, password });
-      localStorage.setItem("users", JSON.stringify(users));
-      alert("✅ تم إنشاء الحساب بنجاح! يمكنك الآن تسجيل الدخول.");
-      document.getElementById("loginPhone").value = "";
-      document.getElementById("loginPassword").value = "";
+      if (result.success) {
+        alert("✅ تم إنشاء الحساب بنجاح! يمكنك الآن تسجيل الدخول.");
+        document.getElementById("loginPhone").value = "";
+        document.getElementById("loginPassword").value = "";
+      } else {
+        alert("❌ " + (result.error || "حدث خطأ أثناء إنشاء الحساب."));
+      }
     }
 
     document.getElementById("loginModal").addEventListener("click", function(e) {
@@ -1268,27 +1338,63 @@
     });
 
     /* ==================================================
-       PRODUCTS DATA
+       LOAD DATA FROM GOOGLE SHEETS
     ================================================== */
-    let products = [
-      { id: 1, name: "قميص أنيق", price: 499, discount: 0, icon: "👕", image: null },
-      { id: 2, name: "فستان أنيق", price: 799, discount: 0, icon: "👗", image: null },
-      { id: 3, name: "حذاء أنيق", price: 599, discount: 0, icon: "👡", image: null },
-      { id: 4, name: "مستحضرات تجميل", price: 299, discount: 0, icon: "💄", image: null }
-    ];
-    let nextProductId = 5;
+    let products = [];
+    let categories = [];
 
-    let categories = [
-      { id: 1, name: "الملابس", icon: "👕", image: null },
-      { id: 2, name: "فساتين", icon: "👗", image: null },
-      { id: 3, name: "الأحذية", icon: "👠", image: null },
-      { id: 4, name: "الجمال", icon: "💄", image: null },
-      { id: 5, name: "الهدايا", icon: "🎁", image: null }
-    ];
-    let nextCategoryId = 6;
+    async function loadData() {
+      await loadProducts();
+      await loadCategories();
+    }
 
+    async function loadProducts() {
+      const spinner = document.getElementById('productSpinner');
+      spinner.classList.add('active');
+
+      const result = await apiGet('getProducts');
+
+      spinner.classList.remove('active');
+
+      if (result.error) {
+        console.error('Error loading products:', result.error);
+        alert('⚠️ حدث خطأ في تحميل المنتجات. يرجى تحديث الصفحة.');
+        return;
+      }
+
+      products = result.products || [];
+      renderStoreProducts();
+      if (isAdmin) {
+        renderAdminProducts();
+      }
+    }
+
+    async function loadCategories() {
+      const spinner = document.getElementById('categorySpinner');
+      spinner.classList.add('active');
+
+      const result = await apiGet('getCategories');
+
+      spinner.classList.remove('active');
+
+      if (result.error) {
+        console.error('Error loading categories:', result.error);
+        alert('⚠️ حدث خطأ في تحميل الأقسام. يرجى تحديث الصفحة.');
+        return;
+      }
+
+      categories = result.categories || [];
+      renderStoreCategories();
+      if (isAdmin) {
+        renderAdminCategories();
+      }
+    }
+
+    /* ==================================================
+       PRODUCTS RENDER FUNCTIONS
+    ================================================== */
     function getProductPriceWithDiscount(product) {
-      if (product.discount > 0) {
+      if (product.discount && product.discount > 0) {
         const discounted = product.price - (product.price * product.discount / 100);
         return {
           final: Math.round(discounted),
@@ -1307,6 +1413,12 @@
       const grid = document.getElementById("productGrid");
       if (!grid) return;
       grid.innerHTML = "";
+
+      if (!products || products.length === 0) {
+        grid.innerHTML = '<p style="text-align:center;color:var(--brown);font-size:18px;padding:40px 0;">لا توجد منتجات حالياً</p>';
+        return;
+      }
+
       products.forEach(p => {
         const priceInfo = getProductPriceWithDiscount(p);
         const article = document.createElement("article");
@@ -1316,7 +1428,7 @@
         if (p.image) {
           imageHtml = `<img src="${p.image}" alt="${p.name}">`;
         } else {
-          imageHtml = `<span class="product-icon">${p.icon}</span>`;
+          imageHtml = `<span class="product-icon">${p.icon || '📦'}</span>`;
         }
         article.innerHTML = `
           <div class="product-image">
@@ -1331,7 +1443,7 @@
               ${priceInfo.final} جنيه
               ${priceInfo.hasDiscount ? `<span style="color:red;font-size:14px;"> (خصم ${p.discount}%)</span>` : ''}
             </div>
-            <button class="add-cart" onclick="addToCart('${p.name}')">أضف إلى السلة</button>
+            <button class="add-cart" onclick="addToCart('${p.name.replace(/'/g, "\\'")}')">أضف إلى السلة</button>
           </div>
         `;
         grid.appendChild(article);
@@ -1345,6 +1457,12 @@
       const list = document.getElementById("adminProductList");
       if (!list) return;
       list.innerHTML = "";
+
+      if (!products || products.length === 0) {
+        list.innerHTML = '<p style="text-align:center;color:var(--brown);padding:20px 0;">لا توجد منتجات</p>';
+        return;
+      }
+
       products.forEach(p => {
         const priceInfo = getProductPriceWithDiscount(p);
         const div = document.createElement("div");
@@ -1353,7 +1471,7 @@
         if (p.image) {
           imagePreview = `<img src="${p.image}" alt="${p.name}">`;
         } else {
-          imagePreview = `<span style="font-size:30px;">${p.icon}</span>`;
+          imagePreview = `<span style="font-size:30px;">${p.icon || '📦'}</span>`;
         }
         div.innerHTML = `
           <div class="item-info">
@@ -1366,10 +1484,19 @@
       });
     }
 
+    /* ==================================================
+       CATEGORIES RENDER FUNCTIONS
+    ================================================== */
     function renderStoreCategories() {
       const grid = document.getElementById("categoryGrid");
       if (!grid) return;
       grid.innerHTML = "";
+
+      if (!categories || categories.length === 0) {
+        grid.innerHTML = '<p style="text-align:center;color:var(--brown);font-size:18px;padding:40px 0;">لا توجد أقسام حالياً</p>';
+        return;
+      }
+
       categories.forEach(c => {
         const div = document.createElement("div");
         div.className = "category";
@@ -1378,7 +1505,7 @@
         if (c.image) {
           imageHtml = `<img src="${c.image}" alt="${c.name}" class="category-image">`;
         } else {
-          imageHtml = `<span class="icon">${c.icon}</span>`;
+          imageHtml = `<span class="icon">${c.icon || '🏷️'}</span>`;
         }
         div.innerHTML = `
           ${imageHtml}
@@ -1396,6 +1523,12 @@
       const list = document.getElementById("adminCategoryList");
       if (!list) return;
       list.innerHTML = "";
+
+      if (!categories || categories.length === 0) {
+        list.innerHTML = '<p style="text-align:center;color:var(--brown);padding:20px 0;">لا توجد أقسام</p>';
+        return;
+      }
+
       categories.forEach(c => {
         const div = document.createElement("div");
         div.className = "admin-list-item";
@@ -1403,7 +1536,7 @@
         if (c.image) {
           imagePreview = `<img src="${c.image}" alt="${c.name}">`;
         } else {
-          imagePreview = `<span style="font-size:30px;">${c.icon}</span>`;
+          imagePreview = `<span style="font-size:30px;">${c.icon || '🏷️'}</span>`;
         }
         div.innerHTML = `
           <div class="item-info">
@@ -1428,15 +1561,17 @@
     /* ==================================================
        PRODUCT MANAGEMENT
     ================================================== */
-    function addProduct() {
+    async function addProduct() {
       const nameInput = document.getElementById("newProductName");
       const priceInput = document.getElementById("newProductPrice");
       const discountInput = document.getElementById("newProductDiscount");
+      const iconInput = document.getElementById("newProductIcon");
       const fileInput = document.getElementById("newProductImage");
 
       const name = nameInput.value.trim();
       const price = parseFloat(priceInput.value.trim());
       const discount = parseFloat(discountInput.value.trim()) || 0;
+      const icon = iconInput.value.trim() || '📦';
 
       if (!name || isNaN(price) || price <= 0) {
         alert("⚠️ يرجى إدخال اسم المنتج وسعر صحيح.");
@@ -1446,54 +1581,85 @@
       let imageData = null;
       if (fileInput.files && fileInput.files[0]) {
         const reader = new FileReader();
-        reader.onload = function(e) {
+        reader.onload = async function(e) {
           imageData = e.target.result;
-          finishAddProduct(name, price, discount, imageData);
+          await finishAddProduct(name, price, discount, icon, imageData);
         };
         reader.readAsDataURL(fileInput.files[0]);
       } else {
-        finishAddProduct(name, price, discount, null);
+        await finishAddProduct(name, price, discount, icon, null);
       }
     }
 
-    function finishAddProduct(name, price, discount, imageData) {
-      products.push({
-        id: nextProductId++,
+    async function finishAddProduct(name, price, discount, icon, imageData) {
+      const result = await apiPost({
+        action: 'addProduct',
         name: name,
         price: price,
         discount: discount,
-        icon: "🆕",
+        icon: icon,
         image: imageData
       });
-      document.getElementById("newProductName").value = "";
-      document.getElementById("newProductPrice").value = "";
-      document.getElementById("newProductDiscount").value = "";
-      document.getElementById("newProductImage").value = "";
-      renderStoreProducts();
-      renderAdminProducts();
-      alert("✅ تم إضافة المنتج بنجاح!");
-    }
 
-    function deleteProduct(id) {
-      if (confirm("هل أنت متأكد من حذف هذا المنتج؟")) {
-        products = products.filter(p => p.id !== id);
-        renderStoreProducts();
-        renderAdminProducts();
-        alert("🗑 تم حذف المنتج.");
+      if (result.success) {
+        document.getElementById("newProductName").value = "";
+        document.getElementById("newProductPrice").value = "";
+        document.getElementById("newProductDiscount").value = "";
+        document.getElementById("newProductIcon").value = "";
+        document.getElementById("newProductImage").value = "";
+        await loadProducts();
+        alert("✅ تم إضافة المنتج بنجاح!");
+      } else {
+        alert("❌ " + (result.error || "حدث خطأ أثناء إضافة المنتج."));
       }
     }
 
-    function resetProducts() {
-      if (confirm("⚠️ سيتم إعادة ضبط المنتجات إلى الوضع الافتراضي. هل أنت متأكد؟")) {
-        products = [
-          { id: 1, name: "قميص أنيق", price: 499, discount: 0, icon: "👕", image: null },
-          { id: 2, name: "فستان أنيق", price: 799, discount: 0, icon: "👗", image: null },
-          { id: 3, name: "حذاء أنيق", price: 599, discount: 0, icon: "👡", image: null },
-          { id: 4, name: "مستحضرات تجميل", price: 299, discount: 0, icon: "💄", image: null }
+    async function deleteProduct(id) {
+      if (confirm("هل أنت متأكد من حذف هذا المنتج؟")) {
+        const result = await apiPost({
+          action: 'deleteProduct',
+          id: id
+        });
+
+        if (result.success) {
+          await loadProducts();
+          alert("🗑 تم حذف المنتج.");
+        } else {
+          alert("❌ " + (result.error || "حدث خطأ أثناء حذف المنتج."));
+        }
+      }
+    }
+
+    async function resetProducts() {
+      if (confirm("⚠️ سيتم حذف جميع المنتجات وإعادة تعيينها إلى القيم الافتراضية. هل أنت متأكد؟")) {
+        // Delete all products
+        for (const p of products) {
+          await apiPost({
+            action: 'deleteProduct',
+            id: p.id
+          });
+        }
+
+        // Add default products
+        const defaultProducts = [
+          { name: "قميص أنيق", price: 499, discount: 0, icon: "👕" },
+          { name: "فستان أنيق", price: 799, discount: 0, icon: "👗" },
+          { name: "حذاء أنيق", price: 599, discount: 0, icon: "👡" },
+          { name: "مستحضرات تجميل", price: 299, discount: 0, icon: "💄" }
         ];
-        nextProductId = 5;
-        renderStoreProducts();
-        renderAdminProducts();
+
+        for (const p of defaultProducts) {
+          await apiPost({
+            action: 'addProduct',
+            name: p.name,
+            price: p.price,
+            discount: p.discount,
+            icon: p.icon,
+            image: null
+          });
+        }
+
+        await loadProducts();
         alert("🔄 تم إعادة ضبط المنتجات.");
       }
     }
@@ -1501,11 +1667,14 @@
     /* ==================================================
        CATEGORY MANAGEMENT
     ================================================== */
-    function addCategory() {
+    async function addCategory() {
       const nameInput = document.getElementById("newCategoryName");
+      const iconInput = document.getElementById("newCategoryIcon");
       const fileInput = document.getElementById("newCategoryImage");
 
       const name = nameInput.value.trim();
+      const icon = iconInput.value.trim() || '🏷️';
+
       if (!name) {
         alert("⚠️ يرجى إدخال اسم القسم.");
         return;
@@ -1514,60 +1683,83 @@
       let imageData = null;
       if (fileInput.files && fileInput.files[0]) {
         const reader = new FileReader();
-        reader.onload = function(e) {
+        reader.onload = async function(e) {
           imageData = e.target.result;
-          finishAddCategory(name, imageData);
+          await finishAddCategory(name, icon, imageData);
         };
         reader.readAsDataURL(fileInput.files[0]);
       } else {
-        finishAddCategory(name, null);
+        await finishAddCategory(name, icon, null);
       }
     }
 
-    function finishAddCategory(name, imageData) {
-      categories.push({
-        id: nextCategoryId++,
+    async function finishAddCategory(name, icon, imageData) {
+      const result = await apiPost({
+        action: 'addCategory',
         name: name,
-        icon: "🏷️",
+        icon: icon,
         image: imageData
       });
-      document.getElementById("newCategoryName").value = "";
-      document.getElementById("newCategoryImage").value = "";
-      renderStoreCategories();
-      renderAdminCategories();
-      alert("✅ تم إضافة القسم بنجاح!");
-    }
 
-    function deleteCategory(id) {
-      if (confirm("هل أنت متأكد من حذف هذا القسم؟")) {
-        categories = categories.filter(c => c.id !== id);
-        renderStoreCategories();
-        renderAdminCategories();
-        alert("🗑 تم حذف القسم.");
+      if (result.success) {
+        document.getElementById("newCategoryName").value = "";
+        document.getElementById("newCategoryIcon").value = "";
+        document.getElementById("newCategoryImage").value = "";
+        await loadCategories();
+        alert("✅ تم إضافة القسم بنجاح!");
+      } else {
+        alert("❌ " + (result.error || "حدث خطأ أثناء إضافة القسم."));
       }
     }
 
-    function resetCategories() {
-      if (confirm("⚠️ سيتم إعادة ضبط الأقسام إلى الوضع الافتراضي. هل أنت متأكد؟")) {
-        categories = [
-          { id: 1, name: "الملابس", icon: "👕", image: null },
-          { id: 2, name: "فساتين", icon: "👗", image: null },
-          { id: 3, name: "الأحذية", icon: "👠", image: null },
-          { id: 4, name: "الجمال", icon: "💄", image: null },
-          { id: 5, name: "الهدايا", icon: "🎁", image: null }
+    async function deleteCategory(id) {
+      if (confirm("هل أنت متأكد من حذف هذا القسم؟")) {
+        const result = await apiPost({
+          action: 'deleteCategory',
+          id: id
+        });
+
+        if (result.success) {
+          await loadCategories();
+          alert("🗑 تم حذف القسم.");
+        } else {
+          alert("❌ " + (result.error || "حدث خطأ أثناء حذف القسم."));
+        }
+      }
+    }
+
+    async function resetCategories() {
+      if (confirm("⚠️ سيتم حذف جميع الأقسام وإعادة تعيينها إلى القيم الافتراضية. هل أنت متأكد؟")) {
+        // Delete all categories
+        for (const c of categories) {
+          await apiPost({
+            action: 'deleteCategory',
+            id: c.id
+          });
+        }
+
+        // Add default categories
+        const defaultCategories = [
+          { name: "الملابس", icon: "👕" },
+          { name: "فساتين", icon: "👗" },
+          { name: "الأحذية", icon: "👠" },
+          { name: "الجمال", icon: "💄" },
+          { name: "الهدايا", icon: "🎁" }
         ];
-        nextCategoryId = 6;
-        renderStoreCategories();
-        renderAdminCategories();
+
+        for (const c of defaultCategories) {
+          await apiPost({
+            action: 'addCategory',
+            name: c.name,
+            icon: c.icon,
+            image: null
+          });
+        }
+
+        await loadCategories();
         alert("🔄 تم إعادة ضبط الأقسام.");
       }
     }
-
-    /* ==================================================
-       INIT
-    ================================================== */
-    renderStoreCategories();
-    renderStoreProducts();
   </script>
 </body>
 
