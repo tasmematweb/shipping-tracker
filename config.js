@@ -7,7 +7,7 @@ const CONFIG = {
     // ==============================================
     // Google Sheets API - الرابط الجديد
     // ==============================================
-    API_BASE_URL: 'https://script.google.com/macros/s/AKfycbwMtcxky7rrjXBdKVOyohFF7f-F_FzbW1eIV_p7wc-gLsac6VYOrUPTXzptkKiPW0ju/exec',
+    API_BASE_URL: 'https://script.google.com/macros/s/AKfycbxdhsaiJDo9RvwZcljGxmgbMpkyR96at3SaRZBCdvQYIhZySLPLR-bODSf6kyDJ90Gu/exec',
     
     // ==============================================
     // إعدادات المتجر
