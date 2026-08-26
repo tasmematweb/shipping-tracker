@@ -1151,7 +1151,10 @@
       store.classList.add("show");
       document.body.style.overflow = "auto";
       video.pause();
-      loadData(); // Load data after intro
+      // Load data after intro with a small delay to ensure everything is ready
+      setTimeout(() => {
+        loadData();
+      }, 500);
     }
 
     video.addEventListener("ended", enterStore);
@@ -1161,6 +1164,8 @@
       if (promise !== undefined) {
         promise.catch(function(error) {
           console.log("تعذر التشغيل التلقائي:", error);
+          // If video fails, enter store anyway
+          enterStore();
         });
       }
     }
@@ -1183,8 +1188,15 @@
     ================================================== */
     async function apiGet(action) {
       try {
-        const response = await fetch(`${API_BASE_URL}?action=${action}`);
-        return await response.json();
+        const url = `${API_BASE_URL}?action=${action}`;
+        console.log('Fetching:', url);
+        const response = await fetch(url);
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        const data = await response.json();
+        console.log('API Response:', data);
+        return data;
       } catch (error) {
         console.error('API Error:', error);
         return { error: error.toString() };
@@ -1193,6 +1205,7 @@
 
     async function apiPost(data) {
       try {
+        console.log('Posting:', data);
         const response = await fetch(API_BASE_URL, {
           method: 'POST',
           headers: {
@@ -1200,7 +1213,12 @@
           },
           body: JSON.stringify(data)
         });
-        return await response.json();
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        const result = await response.json();
+        console.log('API Post Response:', result);
+        return result;
       } catch (error) {
         console.error('API Error:', error);
         return { error: error.toString() };
@@ -1267,7 +1285,7 @@
         return;
       }
 
-      // Admin login (local for now, will also check Google Sheets)
+      // Admin login (local check)
       if (phone === "111" && password === "111") {
         isLoggedIn = true;
         isAdmin = true;
@@ -1352,20 +1370,47 @@
       const spinner = document.getElementById('productSpinner');
       spinner.classList.add('active');
 
-      const result = await apiGet('getProducts');
+      try {
+        const result = await apiGet('getProducts');
 
-      spinner.classList.remove('active');
+        spinner.classList.remove('active');
 
-      if (result.error) {
-        console.error('Error loading products:', result.error);
-        alert('⚠️ حدث خطأ في تحميل المنتجات. يرجى تحديث الصفحة.');
-        return;
-      }
+        if (result.error) {
+          console.error('Error loading products:', result.error);
+          document.getElementById('productGrid').innerHTML = `
+            <div style="grid-column:1/-1;text-align:center;color:var(--brown);padding:40px 20px;font-size:18px;">
+              ⚠️ حدث خطأ في تحميل المنتجات. يرجى تحديث الصفحة.<br>
+              <span style="font-size:14px;opacity:0.7;">الخطأ: ${result.error}</span>
+              <br><br>
+              <button onclick="loadProducts()" style="background:var(--brown);color:var(--yellow-light);border:none;padding:12px 30px;border-radius:8px;cursor:pointer;font-weight:bold;">
+                🔄 إعادة المحاولة
+              </button>
+            </div>
+          `;
+          // Try with sample data as fallback
+          products = getSampleProducts();
+          renderStoreProducts();
+          return;
+        }
 
-      products = result.products || [];
-      renderStoreProducts();
-      if (isAdmin) {
-        renderAdminProducts();
+        products = result.products || [];
+        renderStoreProducts();
+        if (isAdmin) {
+          renderAdminProducts();
+        }
+      } catch (error) {
+        spinner.classList.remove('active');
+        console.error('Load products error:', error);
+        document.getElementById('productGrid').innerHTML = `
+          <div style="grid-column:1/-1;text-align:center;color:var(--brown);padding:40px 20px;font-size:18px;">
+            ⚠️ حدث خطأ في تحميل المنتجات.<br>
+            <button onclick="loadProducts()" style="background:var(--brown);color:var(--yellow-light);border:none;padding:12px 30px;border-radius:8px;cursor:pointer;font-weight:bold;margin-top:15px;">
+              🔄 إعادة المحاولة
+            </button>
+          </div>
+        `;
+        products = getSampleProducts();
+        renderStoreProducts();
       }
     }
 
@@ -1373,21 +1418,59 @@
       const spinner = document.getElementById('categorySpinner');
       spinner.classList.add('active');
 
-      const result = await apiGet('getCategories');
+      try {
+        const result = await apiGet('getCategories');
 
-      spinner.classList.remove('active');
+        spinner.classList.remove('active');
 
-      if (result.error) {
-        console.error('Error loading categories:', result.error);
-        alert('⚠️ حدث خطأ في تحميل الأقسام. يرجى تحديث الصفحة.');
-        return;
+        if (result.error) {
+          console.error('Error loading categories:', result.error);
+          document.getElementById('categoryGrid').innerHTML = `
+            <div style="grid-column:1/-1;text-align:center;color:var(--brown);padding:40px 20px;font-size:18px;">
+              ⚠️ حدث خطأ في تحميل الأقسام.<br>
+              <button onclick="loadCategories()" style="background:var(--brown);color:var(--yellow-light);border:none;padding:12px 30px;border-radius:8px;cursor:pointer;font-weight:bold;margin-top:15px;">
+                🔄 إعادة المحاولة
+              </button>
+            </div>
+          `;
+          categories = getSampleCategories();
+          renderStoreCategories();
+          return;
+        }
+
+        categories = result.categories || [];
+        renderStoreCategories();
+        if (isAdmin) {
+          renderAdminCategories();
+        }
+      } catch (error) {
+        spinner.classList.remove('active');
+        console.error('Load categories error:', error);
+        categories = getSampleCategories();
+        renderStoreCategories();
       }
+    }
 
-      categories = result.categories || [];
-      renderStoreCategories();
-      if (isAdmin) {
-        renderAdminCategories();
-      }
+    /* ==================================================
+       SAMPLE DATA (Fallback)
+    ================================================== */
+    function getSampleProducts() {
+      return [
+        { id: 1, name: "قميص أنيق", price: 499, discount: 0, icon: "👕", image: null },
+        { id: 2, name: "فستان أنيق", price: 799, discount: 0, icon: "👗", image: null },
+        { id: 3, name: "حذاء أنيق", price: 599, discount: 0, icon: "👡", image: null },
+        { id: 4, name: "مستحضرات تجميل", price: 299, discount: 0, icon: "💄", image: null }
+      ];
+    }
+
+    function getSampleCategories() {
+      return [
+        { id: 1, name: "الملابس", icon: "👕", image: null },
+        { id: 2, name: "فساتين", icon: "👗", image: null },
+        { id: 3, name: "الأحذية", icon: "👠", image: null },
+        { id: 4, name: "الجمال", icon: "💄", image: null },
+        { id: 5, name: "الهدايا", icon: "🎁", image: null }
+      ];
     }
 
     /* ==================================================
@@ -1760,6 +1843,8 @@
         alert("🔄 تم إعادة ضبط الأقسام.");
       }
     }
+
+    // Initial load will happen after intro video ends
   </script>
 </body>
 
