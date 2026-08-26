@@ -1,7 +1,39 @@
+```javascript
 /* ==================================================
-   MAIN.JS - H.L LeVance Store
-   تم فصله عن index.html لتسهيل الصيانة
+   MAIN.JS - H.L LeVance Store - مُعدل
+   تم إضافة تعريف API_BASE_URL في بداية الملف
 ================================================== */
+
+/* ==================================================
+   تعريف API_BASE_URL - حل مشكلة ReferenceError
+================================================== */
+let API_BASE_URL = '';
+
+// محاولة تحميل الرابط من CONFIG
+if (typeof window.CONFIG !== 'undefined' && window.CONFIG.API_BASE_URL) {
+    API_BASE_URL = window.CONFIG.API_BASE_URL;
+    console.log('✅ API_BASE_URL loaded from CONFIG:', API_BASE_URL);
+} else {
+    // رابط احتياطي مباشر
+    API_BASE_URL = 'https://script.google.com/macros/s/AKfycbzuajhu983jCQWr_V4ezz6SHpanxinydY5L4Vf7spqyuWTtoOLBmH4536yWz6jboSxm/exec';
+    console.warn('⚠️ Using fallback API_BASE_URL:', API_BASE_URL);
+}
+
+// تعريف CONFIG إذا لم يكن موجوداً
+if (typeof window.CONFIG === 'undefined') {
+    window.CONFIG = {
+        API_BASE_URL: API_BASE_URL,
+        STORE_NAME: 'H.L LeVance',
+        STORE_PHONE: '201234567890',
+        ADMIN_PHONE: '111',
+        ADMIN_PASSWORD: '111',
+        STORAGE_KEY_PRODUCTS: 'hl_products',
+        STORAGE_KEY_CATEGORIES: 'hl_categories',
+        STORAGE_KEY_CART: 'hl_cart',
+        STORAGE_KEY_ORDERS: 'hl_orders'
+    };
+    console.log('⚠️ CONFIG created with fallback values');
+}
 
 /* ==================================================
    INTRO - التحكم بشاشة الترحيب
@@ -1243,3 +1275,4 @@ document.addEventListener('DOMContentLoaded', function() {
     loadCategoriesFromAPI();
   }, 1000);
 });
+```
