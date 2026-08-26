@@ -413,6 +413,31 @@
       box-shadow: 0 9px 0 var(--brown);
     }
 
+    /* Zoom button */
+    .zoom-btn {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      background: var(--brown);
+      color: var(--yellow-light);
+      border: none;
+      border-radius: 50%;
+      width: 40px;
+      height: 40px;
+      font-size: 20px;
+      cursor: pointer;
+      z-index: 15;
+      transition: transform 0.2s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .zoom-btn:hover {
+      transform: scale(1.1);
+      background: var(--brown-light);
+    }
+
     .product-image {
       width: 100%;
       height: 280px;
@@ -578,6 +603,94 @@
 
     .add-cart:hover {
       background: var(--brown-light);
+    }
+
+    /* ==================================================
+       ZOOM MODAL (لعرض الصور بحجم كبير)
+    ================================================== */
+    .zoom-modal {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.9);
+      z-index: 99999;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      padding: 20px;
+    }
+
+    .zoom-modal.active {
+      display: flex;
+    }
+
+    .zoom-modal .zoom-close {
+      position: absolute;
+      top: 20px;
+      left: 20px;
+      background: var(--brown);
+      color: var(--yellow-light);
+      border: none;
+      border-radius: 50%;
+      width: 50px;
+      height: 50px;
+      font-size: 28px;
+      cursor: pointer;
+      z-index: 10;
+      transition: transform 0.2s;
+    }
+
+    .zoom-modal .zoom-close:hover {
+      transform: scale(1.1);
+    }
+
+    .zoom-modal .zoom-content {
+      width: 100%;
+      max-width: 900px;
+      max-height: 80vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+    }
+
+    .zoom-modal .zoom-content img,
+    .zoom-modal .zoom-content video {
+      max-width: 100%;
+      max-height: 80vh;
+      border-radius: 12px;
+      border: 3px solid var(--yellow-main);
+      object-fit: contain;
+    }
+
+    .zoom-modal .zoom-nav {
+      display: flex;
+      gap: 15px;
+      margin-top: 20px;
+      align-items: center;
+    }
+
+    .zoom-modal .zoom-nav button {
+      background: var(--brown);
+      color: var(--yellow-light);
+      border: none;
+      padding: 12px 25px;
+      border-radius: 8px;
+      font-size: 18px;
+      cursor: pointer;
+      font-weight: bold;
+      transition: background 0.2s;
+    }
+
+    .zoom-modal .zoom-nav button:hover {
+      background: var(--brown-light);
+    }
+
+    .zoom-modal .zoom-nav .zoom-counter {
+      color: var(--yellow-light);
+      font-size: 18px;
+      font-weight: bold;
+      padding: 0 15px;
     }
 
     /* ==================================================
@@ -1137,6 +1250,14 @@
         height: 30px;
       }
 
+      .zoom-btn {
+        width: 32px;
+        height: 32px;
+        font-size: 16px;
+        top: 6px;
+        right: 6px;
+      }
+
       .product-info {
         padding: 12px;
       }
@@ -1192,6 +1313,23 @@
 
       .media-file-row .file-preview {
         align-self: center;
+      }
+
+      .zoom-modal .zoom-content {
+        max-height: 60vh;
+      }
+
+      .zoom-modal .zoom-nav button {
+        padding: 8px 15px;
+        font-size: 14px;
+      }
+
+      .zoom-modal .zoom-close {
+        width: 40px;
+        height: 40px;
+        font-size: 22px;
+        top: 10px;
+        left: 10px;
       }
     }
 
@@ -1260,9 +1398,6 @@
         <a href="#">الرئيسية</a>
         <a href="#products">جميع المنتجات</a>
         <a href="#categories">الأقسام</a>
-        <a href="#">العروض</a>
-        <a href="#">الأكثر مبيعًا</a>
-        <a href="#">تواصل معنا</a>
       </nav>
     </header>
 
@@ -1353,6 +1488,24 @@
   </main>
 
   <!-- ==================================================
+       ZOOM MODAL - لعرض الصور بحجم كبير
+  ================================================== -->
+  <div class="zoom-modal" id="zoomModal">
+    <button class="zoom-close" onclick="closeZoom()">✕</button>
+    <div class="zoom-content" id="zoomContent">
+      <img id="zoomImage" src="" alt="تكبير" style="display:none;">
+      <video id="zoomVideo" controls muted playsinline style="display:none;">
+        <source id="zoomVideoSource" src="" type="video/mp4">
+      </video>
+    </div>
+    <div class="zoom-nav">
+      <button onclick="zoomPrev()">◀ السابق</button>
+      <span class="zoom-counter" id="zoomCounter">1 / 1</span>
+      <button onclick="zoomNext()">التالي ▶</button>
+    </div>
+  </div>
+
+  <!-- ==================================================
        FIXED WHATSAPP BUTTON (bottom-right)
   ================================================== -->
   <a href="https://wa.me/201234567890" target="_blank" class="whatsapp-float" aria-label="WhatsApp">
@@ -1425,6 +1578,92 @@
     });
 
     document.body.style.overflow = "hidden";
+
+    /* ==================================================
+       ZOOM FUNCTIONALITY
+    ================================================== */
+    let zoomMedia = [];
+    let zoomIndex = 0;
+    let zoomProductId = null;
+
+    function openZoom(productId) {
+      const product = products.find(p => p.id === productId);
+      if (!product || !product.media || product.media.length === 0) {
+        alert("لا توجد صور أو فيديوهات لعرضها.");
+        return;
+      }
+
+      zoomMedia = product.media;
+      zoomIndex = 0;
+      zoomProductId = productId;
+      showZoomMedia(0);
+      document.getElementById('zoomModal').classList.add('active');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeZoom() {
+      document.getElementById('zoomModal').classList.remove('active');
+      document.body.style.overflow = 'auto';
+      // Pause video if playing
+      const video = document.getElementById('zoomVideo');
+      if (video) video.pause();
+    }
+
+    function showZoomMedia(index) {
+      const media = zoomMedia[index];
+      if (!media) return;
+
+      const img = document.getElementById('zoomImage');
+      const video = document.getElementById('zoomVideo');
+      const videoSource = document.getElementById('zoomVideoSource');
+      const counter = document.getElementById('zoomCounter');
+
+      img.style.display = 'none';
+      video.style.display = 'none';
+
+      if (media.type === 'video') {
+        videoSource.src = media.data;
+        video.load();
+        video.style.display = 'block';
+        video.play().catch(() => {});
+      } else {
+        img.src = media.data;
+        img.style.display = 'block';
+      }
+
+      counter.textContent = `${index + 1} / ${zoomMedia.length}`;
+      zoomIndex = index;
+    }
+
+    function zoomPrev() {
+      if (zoomIndex > 0) {
+        showZoomMedia(zoomIndex - 1);
+      } else {
+        showZoomMedia(zoomMedia.length - 1);
+      }
+    }
+
+    function zoomNext() {
+      if (zoomIndex < zoomMedia.length - 1) {
+        showZoomMedia(zoomIndex + 1);
+      } else {
+        showZoomMedia(0);
+      }
+    }
+
+    // Keyboard navigation for zoom
+    document.addEventListener('keydown', function(e) {
+      if (document.getElementById('zoomModal').classList.contains('active')) {
+        if (e.key === 'Escape') closeZoom();
+        if (e.key === 'ArrowRight') zoomNext();
+        if (e.key === 'ArrowLeft') zoomPrev();
+      }
+    });
+
+    // Close zoom on overlay click
+    document.getElementById('zoomModal').addEventListener('click', function(e) {
+      if (e.target === this) closeZoom();
+    });
 
     /* ==================================================
        API HELPER FUNCTIONS
@@ -1587,7 +1826,6 @@
         if (fileInput && fileInput.files && fileInput.files[0]) {
           const file = fileInput.files[0];
           const isVideo = file.type.startsWith('video/');
-          // Store file object for later processing
           media.push({
             file: file,
             type: isVideo ? 'video' : 'image',
@@ -1873,8 +2111,9 @@
         // Build media gallery
         let mainMedia = '';
         let galleryHtml = '';
+        const hasMedia = p.media && p.media.length > 0;
 
-        if (p.media && p.media.length > 0) {
+        if (hasMedia) {
           // Show first media as main
           const firstMedia = p.media[0];
           if (firstMedia.type === 'video') {
@@ -1914,6 +2153,7 @@
           <div class="product-image" id="productImage_${p.id}">
             <div class="main-media">${mainMedia}</div>
             ${galleryHtml}
+            <button class="zoom-btn" onclick="openZoom(${p.id})" title="عرض الصور بحجم كبير">🔍</button>
             <button class="delete-prod" onclick="deleteProduct(${p.id})">🗑</button>
           </div>
           <div class="product-info">
