@@ -695,7 +695,8 @@ document.addEventListener('DOMContentLoaded', function() {
         }, 500);
     }
 
-    setTimeout(transitionToStore, 3000);
+    // تم ضبط المهلة إلى 5000ms (5 ثوانٍ) لإظهار مقدمة الفيديو بالكامل
+    setTimeout(transitionToStore, 5000);
 
     if (video) {
         video.addEventListener('ended', transitionToStore);
@@ -707,4 +708,3 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 console.log('✅ Main.js loaded successfully');
-
