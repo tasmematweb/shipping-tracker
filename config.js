@@ -42,7 +42,19 @@ const CONFIG = {
     DEFAULT_CURRENCY: 'جنيه',
     DEFAULT_WEIGHT: 1,
     MAX_FILE_SIZE: 5,
-    ALLOWED_FILE_TYPES: ['image/jpeg', 'image/png', 'image/gif', 'image/webp', 'video/mp4', 'video/webm']
+    ALLOWED_FILE_TYPES: ['image/jpeg', 'image/png', 'image/gif', 'image/webp', 'video/mp4', 'video/webm'],
+
+    // ==============================================
+    // Cloudinary - رفع الصور والفيديو
+    // ==============================================
+    CLOUDINARY: {
+        CLOUD_NAME: 'q2tqddel',
+        API_KEY: '518715792296824',
+        API_SECRET: 'اضف_المفتاح_السري_هنا'  // ضع الـ API Secret من Cloudinary
+    },
+    
+    // رابط API الخاص بـ Cloudinary للرفع
+    CLOUDINARY_UPLOAD_URL: 'https://api.cloudinary.com/v1_1/q2tqddel/upload'
 };
 
 // تصدير للاستخدام في المتصفح
