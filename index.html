@@ -6,6 +6,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <title>H.L LeVance | المتجر</title>
   <link rel="stylesheet" href="styles.css">
+  <!-- إضافة مكتبة لرفع الملفات مباشرة -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/cloudinary-core/2.12.0/cloudinary-core-shrinkwrap.min.js">
+  </script>
 </head>
 
 <body>
@@ -251,10 +254,45 @@
   </div>
 
   <!-- ==================================================
-       JAVASCRIPT
+       JAVASCRIPT - ترتيب التحميل الصحيح
   ================================================== -->
+  <!-- 1. تحميل CONFIG أولاً -->
   <script src="config.js"></script>
+  
+  <!-- 2. تحميل MAIN.JS -->
   <script src="main.js"></script>
+  
+  <!-- 3. إضافة تعريف API_BASE_URL كاحتياطي -->
+  <script>
+    // تعريف احتياطي في حال لم يتم تحميله من config.js
+    if (typeof API_BASE_URL === 'undefined') {
+      var API_BASE_URL = 'https://script.google.com/macros/s/AKfycbzuajhu983jCQWr_V4ezz6SHpanxinydY5L4Vf7spqyuWTtoOLBmH4536yWz6jboSxm/exec';
+      console.warn('⚠️ API_BASE_URL defined as fallback in index.html');
+    }
+    
+    // تأكد من وجود CONFIG في window
+    if (typeof window.CONFIG === 'undefined') {
+      window.CONFIG = {
+        API_BASE_URL: API_BASE_URL,
+        STORE_NAME: 'H.L LeVance',
+        STORE_PHONE: '201234567890',
+        ADMIN_PHONE: '111',
+        ADMIN_PASSWORD: '111',
+        STORAGE_KEY_PRODUCTS: 'hl_products',
+        STORAGE_KEY_CATEGORIES: 'hl_categories',
+        STORAGE_KEY_CART: 'hl_cart',
+        STORAGE_KEY_ORDERS: 'hl_orders',
+        CLOUDINARY: {
+          CLOUD_NAME: 'q2tqddel',
+          API_KEY: '518715792296824',
+          API_SECRET: '' // اتركه فارغاً، سيتم تعبئته من config.js
+        }
+      };
+      console.log('✅ CONFIG created with fallback values');
+    }
+    
+    console.log('✅ All configurations loaded successfully');
+  </script>
 
 </body>
 
