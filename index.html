@@ -1,4 +1,4 @@
-
+```html
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
@@ -455,9 +455,12 @@ async function handleLogin() {
   const phone = document.getElementById('loginPhone').value.trim();
   const password = document.getElementById('loginPassword').value.trim();
   if(!phone||!password) return alert('⚠️ يرجى إدخال رقم الهاتف وكلمة المرور.');
-  if((phone==='111'&&password==='111')||(phone===String(CONFIG.ADMIN_PHONE)&&password===String(CONFIG.ADMIN_PASSWORD))) {
+  
+  // Admin فقط
+  if(phone === String(CONFIG.ADMIN_PHONE) && password === String(CONFIG.ADMIN_PASSWORD)) {
     alert('✅ مرحباً Admin! تم تسجيل الدخول بنجاح.');
     localStorage.setItem('hl_admin','true');
+    localStorage.removeItem('hl_user');
     document.getElementById('loginBtn').classList.add('hidden');
     document.getElementById('adminPanel').style.display='block';
     document.getElementById('adminPanel').classList.add('active');
@@ -465,8 +468,19 @@ async function handleLogin() {
     document.querySelectorAll('.delete-prod, .delete-cat').forEach(el=>el.style.display='block');
     return;
   }
+  
+  // مستخدم عادي - لا يرى الأدمن
   const result = await callAPI('loginUser', {phone,password});
-  if(result?.success){ alert('✅ تم تسجيل الدخول بنجاح.'); localStorage.setItem('hl_admin','true'); document.getElementById('loginBtn').classList.add('hidden'); closeLoginModal(); }
+  if(result?.success){ 
+    alert('✅ تم تسجيل الدخول بنجاح.'); 
+    localStorage.setItem('hl_user','true');
+    localStorage.removeItem('hl_admin');
+    document.getElementById('loginBtn').classList.add('hidden'); 
+    document.getElementById('adminPanel').style.display='none';
+    document.getElementById('adminPanel').classList.remove('active');
+    document.querySelectorAll('.delete-prod, .delete-cat').forEach(el=>el.style.display='none');
+    closeLoginModal(); 
+  }
   else alert('❌ رقم الهاتف أو كلمة المرور غير صحيحة.');
 }
 function handleSignup(){ alert('📝 سيتم تفعيل إنشاء الحساب قريباً'); }
@@ -546,7 +560,7 @@ document.addEventListener('DOMContentLoaded', function() {
     store?.classList.add('show');
     setTimeout(loadData, 500);
   }
-  setTimeout(transitionToStore, 5000);
+  setTimeout(transitionToStore, 6000);
   if(video) { video.addEventListener('ended', transitionToStore); video.addEventListener('error', transitionToStore); video.play().catch(transitionToStore); }
   else transitionToStore();
   if(localStorage.getItem('hl_admin')==='true') {
@@ -554,6 +568,10 @@ document.addEventListener('DOMContentLoaded', function() {
     document.getElementById('adminPanel').style.display='block';
     document.getElementById('adminPanel').classList.add('active');
     document.querySelectorAll('.delete-prod, .delete-cat').forEach(el=>el.style.display='block');
+  } else {
+    document.getElementById('adminPanel').style.display='none';
+    document.getElementById('adminPanel').classList.remove('active');
+    document.querySelectorAll('.delete-prod, .delete-cat').forEach(el=>el.style.display='none');
   }
 });
 console.log('✅ H.L LeVance Store loaded (بدون رفع ملفات)');
