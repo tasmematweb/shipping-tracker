@@ -1,3 +1,4 @@
+```html
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
@@ -141,16 +142,6 @@
     .admin-controls .size-checkboxes { display:flex; flex-wrap:wrap; gap:8px; align-items:center; padding:5px 10px; background:var(--yellow-main); border-radius:8px; border:2px solid var(--brown); }
     .admin-controls .size-checkboxes label { display:flex; align-items:center; gap:4px; font-weight:bold; color:var(--brown); font-size:14px; cursor:pointer; }
     .admin-controls .size-checkboxes input[type="checkbox"] { width:16px; height:16px; accent-color:var(--brown); flex:0 0 auto; min-width:unset; padding:0; }
-    .media-files-container { display:flex; flex-direction:column; gap:10px; width:100%; padding:10px; background:var(--yellow-soft); border-radius:8px; border:2px solid var(--brown); }
-    .media-file-row { display:flex; align-items:center; gap:10px; flex-wrap:wrap; }
-    .media-file-row input[type="file"] { flex:1; padding:8px; background:var(--yellow-light); border:2px solid var(--brown); border-radius:6px; min-width:150px; }
-    .media-file-row .file-preview { width:50px; height:50px; border-radius:6px; object-fit:cover; border:2px solid var(--brown); display:none; }
-    .media-file-row .file-preview.show { display:block; }
-    .media-file-row .remove-file-btn { background:var(--brown); color:var(--yellow-light); border:none; border-radius:50%; width:30px; height:30px; cursor:pointer; font-size:16px; font-weight:bold; display:none; }
-    .media-file-row .remove-file-btn.show { display:block; }
-    .media-file-row .remove-file-btn:hover { background:var(--brown-light); }
-    .add-file-btn { background:var(--brown); color:var(--yellow-light); border:none; padding:8px 16px; border-radius:6px; cursor:pointer; font-weight:bold; font-size:14px; white-space:nowrap; align-self:flex-start; }
-    .add-file-btn:hover { background:var(--brown-light); }
     .admin-list { background:var(--yellow-light); border:2px solid var(--brown); border-radius:12px; padding:15px; max-height:300px; overflow-y:auto; }
     .admin-list-item { display:flex; justify-content:space-between; align-items:center; padding:10px 0; border-bottom:1px solid var(--brown); }
     .admin-list-item:last-child { border-bottom:none; }
@@ -201,8 +192,6 @@
       .admin-controls { flex-direction:column; }
       .admin-controls input, .admin-controls select { min-width:unset; }
       .admin-controls .size-checkboxes { flex-wrap:wrap; justify-content:center; }
-      .media-file-row { flex-direction:column; align-items:stretch; }
-      .media-file-row .file-preview { align-self:center; }
       .zoom-modal .zoom-content { max-height:60vh; }
       .zoom-modal .zoom-nav button { padding:8px 15px; font-size:14px; }
       .zoom-modal .zoom-close { width:40px; height:40px; font-size:22px; top:10px; left:10px; }
@@ -242,22 +231,13 @@
       <input type="text" id="newProductIcon" placeholder="أيقونة 📦">
       <div class="size-checkboxes"><label><input type="checkbox" value="S"> S</label><label><input type="checkbox" value="M"> M</label><label><input type="checkbox" value="L"> L</label><label><input type="checkbox" value="XL"> XL</label></div>
     </div>
-    <div class="media-files-container" id="mediaFilesContainer">
-      <div class="media-file-row" id="fileRowTemplate">
-        <input type="file" accept="image/*,video/*" onchange="previewFile(this)">
-        <img class="file-preview" id="previewImg" style="display:none">
-        <video class="file-preview" id="previewVideo" style="display:none" muted></video>
-        <button class="remove-file-btn" onclick="removeFileRow(this)">✕</button>
-      </div>
-    </div>
-    <button class="add-file-btn" onclick="addFileRow()">➕ إضافة ملف</button>
+    <!-- تم حذف أزرار رفع الصور والفيديوهات -->
     <button onclick="addProduct()" style="margin-top:15px;background:var(--brown);color:var(--yellow-light);border:none;padding:12px 30px;border-radius:8px;font-weight:bold;cursor:pointer;">إضافة المنتج</button>
     </div>
     <div class="admin-section"><h3>📦 قائمة المنتجات</h3><div class="admin-list" id="adminProductList"></div></div>
     <div class="admin-section"><h3>➕ إضافة قسم</h3><div class="admin-controls">
       <input type="text" id="newCategoryName" placeholder="اسم القسم">
       <input type="text" id="newCategoryIcon" placeholder="أيقونة 🏷️">
-      <input type="file" id="newCategoryImage" accept="image/*">
       <button onclick="addCategory()">إضافة القسم</button>
     </div></div>
     <div class="admin-section"><h3>📂 قائمة الأقسام</h3><div class="admin-list" id="adminCategoryList"></div></div>
@@ -401,17 +381,7 @@ async function addProduct() {
   const icon = document.getElementById('newProductIcon').value.trim()||'📦';
   if(!name || isNaN(price) || price<=0) return alert('⚠️ يرجى إدخال اسم المنتج وسعر صحيح.');
   const sizes = [...document.querySelectorAll('.size-checkboxes input[type="checkbox"]:checked')].map(cb=>cb.value);
-  const media = [];
-  for(const input of document.querySelectorAll('.media-file-row input[type="file"]')) {
-    if(input.files?.[0]) {
-      const file = input.files[0];
-      const isVideo = file.type.startsWith('video/');
-      try {
-        const dataUrl = await new Promise((res,rej)=>{const r=new FileReader(); r.onload=e=>res(e.target.result); r.onerror=rej; r.readAsDataURL(file);});
-        media.push({type:isVideo?'video':'image', data:dataUrl, name:file.name});
-      } catch(e){ console.error(e); }
-    }
-  }
+  const media = []; // تم حذف رفع الملفات، نرسل مصفوفة فارغة
   const result = await callAPI('addProduct', {name,price,discount,icon,sizes,media});
   if(result.success){ alert('✅ تم إضافة المنتج بنجاح!'); await loadData(); clearAddProduct(); }
   else alert('❌ فشل إضافة المنتج: '+(result.error||'خطأ'));
@@ -422,8 +392,6 @@ function clearAddProduct() {
   document.getElementById('newProductDiscount').value='';
   document.getElementById('newProductIcon').value='';
   document.querySelectorAll('.size-checkboxes input[type="checkbox"]').forEach(cb=>cb.checked=false);
-  document.querySelectorAll('.media-file-row input[type="file"]').forEach(inp=>inp.value='');
-  document.querySelectorAll('.file-preview').forEach(el=>{el.style.display='none'; el.className='file-preview';});
 }
 async function deleteProduct(id) {
   if(!confirm('هل أنت متأكد من حذف هذا المنتج؟')) return;
@@ -436,14 +404,9 @@ async function deleteProduct(id) {
 async function addCategory() {
   const name = document.getElementById('newCategoryName').value.trim();
   const icon = document.getElementById('newCategoryIcon').value.trim()||'🏷️';
-  const imgInput = document.getElementById('newCategoryImage');
-  let image='';
-  if(imgInput.files?.[0]) {
-    try { image = await new Promise((res,rej)=>{const r=new FileReader(); r.onload=e=>res(e.target.result); r.onerror=rej; r.readAsDataURL(imgInput.files[0]);}); } catch(e){}
-  }
   if(!name) return alert('⚠️ يرجى إدخال اسم القسم.');
-  const result = await callAPI('addCategory', {name,icon,image});
-  if(result.success){ alert('✅ تم إضافة القسم بنجاح!'); await loadData(); document.getElementById('newCategoryName').value=''; document.getElementById('newCategoryIcon').value=''; document.getElementById('newCategoryImage').value=''; }
+  const result = await callAPI('addCategory', {name,icon,image:''}); // بدون صورة
+  if(result.success){ alert('✅ تم إضافة القسم بنجاح!'); await loadData(); document.getElementById('newCategoryName').value=''; document.getElementById('newCategoryIcon').value=''; }
   else alert('❌ فشل إضافة القسم: '+(result.error||'خطأ'));
 }
 async function deleteCategory(id) {
@@ -507,6 +470,7 @@ async function handleLogin() {
   if(!phone||!password) return alert('⚠️ يرجى إدخال رقم الهاتف وكلمة المرور.');
   if((phone==='111'&&password==='111')||(phone===String(CONFIG.ADMIN_PHONE)&&password===String(CONFIG.ADMIN_PASSWORD))) {
     alert('✅ مرحباً Admin! تم تسجيل الدخول بنجاح.');
+    localStorage.setItem('hl_admin','true');
     document.getElementById('loginBtn').classList.add('hidden');
     document.getElementById('adminPanel').classList.add('active');
     closeLoginModal();
@@ -514,12 +478,12 @@ async function handleLogin() {
     return;
   }
   const result = await callAPI('loginUser', {phone,password});
-  if(result?.success){ alert('✅ تم تسجيل الدخول بنجاح.'); document.getElementById('loginBtn').classList.add('hidden'); closeLoginModal(); }
+  if(result?.success){ alert('✅ تم تسجيل الدخول بنجاح.'); localStorage.setItem('hl_admin','true'); document.getElementById('loginBtn').classList.add('hidden'); closeLoginModal(); }
   else alert('❌ رقم الهاتف أو كلمة المرور غير صحيحة.');
 }
 function handleSignup(){ alert('📝 سيتم تفعيل إنشاء الحساب قريباً'); }
 
-// ======= ZOOM (placeholder) =======
+// ======= ZOOM =======
 let zoomData = [];
 let zoomIndex = 0;
 function openZoom(id) {
@@ -541,67 +505,17 @@ function showZoomItem() {
 function nextZoom(){ if(zoomIndex<zoomData.length-1){ zoomIndex++; showZoomItem(); } }
 function prevZoom(){ if(zoomIndex>0){ zoomIndex--; showZoomItem(); } }
 function closeZoom(){ document.getElementById('zoomModal').classList.remove('active'); }
-
-// ======= MEDIA ROWS =======
-function addFileRow() {
-  const container = document.getElementById('mediaFilesContainer');
-  const template = document.getElementById('fileRowTemplate');
-  const row = template.cloneNode(true);
-  row.id = 'fileRow_'+Date.now();
-  row.style.display='flex';
-  const inp = row.querySelector('input[type="file"]');
-  inp.value='';
-  inp.onchange = function(){ previewFile(this); };
-  const img = row.querySelector('#previewImg');
-  if(img){ img.id='previewImg_'+Date.now(); img.className='file-preview'; img.style.display='none'; }
-  const vid = row.querySelector('#previewVideo');
-  if(vid){ vid.id='previewVideo_'+Date.now(); vid.className='file-preview'; vid.style.display='none'; }
-  const btn = row.querySelector('.remove-file-btn');
-  btn.className='remove-file-btn show';
-  btn.onclick = function(){
-    const r = this.closest('.media-file-row');
-    if(container.querySelectorAll('.media-file-row').length<=1) {
-      const fi = r.querySelector('input[type="file"]'); if(fi) fi.value='';
-      const pi = r.querySelector('img.file-preview'); if(pi){ pi.style.display='none'; pi.className='file-preview'; }
-      const pv = r.querySelector('video.file-preview'); if(pv){ pv.style.display='none'; pv.className='file-preview'; }
-      this.className='remove-file-btn';
-      return;
-    }
-    r.remove();
-  };
-  container.appendChild(row);
-}
-function removeFileRow(btn) {
-  const row = btn.closest('.media-file-row');
-  const container = document.getElementById('mediaFilesContainer');
-  if(container.querySelectorAll('.media-file-row').length<=1) {
-    const inp = row.querySelector('input[type="file"]'); if(inp) inp.value='';
-    const img = row.querySelector('img.file-preview'); if(img){ img.style.display='none'; img.className='file-preview'; }
-    const vid = row.querySelector('video.file-preview'); if(vid){ vid.style.display='none'; vid.className='file-preview'; }
-    btn.className='remove-file-btn';
-    return;
-  }
-  row.remove();
-}
-function previewFile(input) {
-  const row = input.closest('.media-file-row');
-  const file = input.files?.[0];
-  if(!file) return;
-  const isVideo = file.type.startsWith('video/');
-  const img = row.querySelector('img.file-preview');
-  const vid = row.querySelector('video.file-preview');
-  const reader = new FileReader();
-  reader.onload = function(e){
-    if(isVideo) {
-      if(vid){ vid.src=e.target.result; vid.style.display='block'; vid.className='file-preview show'; }
-      if(img){ img.style.display='none'; img.className='file-preview'; }
-    } else {
-      if(img){ img.src=e.target.result; img.style.display='block'; img.className='file-preview show'; }
-      if(vid){ vid.style.display='none'; vid.className='file-preview'; }
-    }
-  };
-  reader.readAsDataURL(file);
-}
+window.changeMainMedia = function(el, id, idx) {
+  const container = document.getElementById('productImage_'+id);
+  if(!container) return;
+  const main = container.querySelector('.main-media');
+  const media = JSON.parse(localStorage.getItem(CONFIG.STORAGE_KEY_PRODUCTS)||'[]').find(p=>p.id===id)?.media;
+  if(!media || !media[idx]) return;
+  const m = media[idx];
+  main.innerHTML = m.type==='video' ? `<video controls muted playsinline><source src="${m.data||m.url}" type="video/mp4"></video>` : `<img src="${m.data||m.url}" alt="main">`;
+  container.querySelectorAll('.image-gallery img, .image-gallery video').forEach(e=>e.classList.remove('active'));
+  el.classList.add('active');
+};
 
 // ======= CITIES =======
 const EGYPT_GOVERNORATES = {
@@ -658,43 +572,14 @@ document.addEventListener('DOMContentLoaded', function() {
   setTimeout(transitionToStore, 5000);
   if(video) { video.addEventListener('ended', transitionToStore); video.addEventListener('error', transitionToStore); video.play().catch(transitionToStore); }
   else transitionToStore();
-  // إظهار أزرار الحذف في حالة تسجيل الدخول (admin) تلقائياً
   if(localStorage.getItem('hl_admin')==='true') {
     document.getElementById('loginBtn').classList.add('hidden');
     document.getElementById('adminPanel').classList.add('active');
     document.querySelectorAll('.delete-prod, .delete-cat').forEach(el=>el.style.display='block');
   }
 });
-// حفظ حالة admin في localStorage اختيارياً
-window.handleLogin = async function() {
-  const phone = document.getElementById('loginPhone').value.trim();
-  const password = document.getElementById('loginPassword').value.trim();
-  if(!phone||!password) return alert('⚠️ يرجى إدخال رقم الهاتف وكلمة المرور.');
-  if((phone==='111'&&password==='111')||(phone===String(CONFIG.ADMIN_PHONE)&&password===String(CONFIG.ADMIN_PASSWORD))) {
-    alert('✅ مرحباً Admin! تم تسجيل الدخول بنجاح.');
-    localStorage.setItem('hl_admin','true');
-    document.getElementById('loginBtn').classList.add('hidden');
-    document.getElementById('adminPanel').classList.add('active');
-    closeLoginModal();
-    document.querySelectorAll('.delete-prod, .delete-cat').forEach(el=>el.style.display='block');
-    return;
-  }
-  const result = await callAPI('loginUser', {phone,password});
-  if(result?.success){ alert('✅ تم تسجيل الدخول بنجاح.'); localStorage.setItem('hl_admin','true'); document.getElementById('loginBtn').classList.add('hidden'); closeLoginModal(); }
-  else alert('❌ رقم الهاتف أو كلمة المرور غير صحيحة.');
-};
-window.changeMainMedia = function(el, id, idx) {
-  const container = document.getElementById('productImage_'+id);
-  if(!container) return;
-  const main = container.querySelector('.main-media');
-  const media = JSON.parse(localStorage.getItem(CONFIG.STORAGE_KEY_PRODUCTS)||'[]').find(p=>p.id===id)?.media;
-  if(!media || !media[idx]) return;
-  const m = media[idx];
-  main.innerHTML = m.type==='video' ? `<video controls muted playsinline><source src="${m.data||m.url}" type="video/mp4"></video>` : `<img src="${m.data||m.url}" alt="main">`;
-  container.querySelectorAll('.image-gallery img, .image-gallery video').forEach(e=>e.classList.remove('active'));
-  el.classList.add('active');
-};
-console.log('✅ H.L LeVance Store loaded');
+console.log('✅ H.L LeVance Store loaded (بدون رفع ملفات)');
 </script>
 </body>
 </html>
+```
