@@ -1,6 +1,6 @@
+```javascript
 /* ==================================================
-   MAIN.JS - H.L LeVance Store - الإصدار النهائي
-   تم تعريف API_BASE_URL في بداية الملف
+   MAIN.JS - H.L LeVance Store - الإصدار النهائي مع رفع Cloudinary
 ================================================== */
 
 // ==================================================
@@ -19,7 +19,12 @@ if (typeof window.CONFIG === 'undefined') {
         STORAGE_KEY_PRODUCTS: 'hl_products',
         STORAGE_KEY_CATEGORIES: 'hl_categories',
         STORAGE_KEY_CART: 'hl_cart',
-        STORAGE_KEY_ORDERS: 'hl_orders'
+        STORAGE_KEY_ORDERS: 'hl_orders',
+        CLOUDINARY: {
+            CLOUD_NAME: 'q2tqddel',
+            API_KEY: '518715792296824',
+            API_SECRET: '' // سيتم تعبئته
+        }
     };
     console.log('✅ CONFIG created with fallback values');
 }
@@ -342,17 +347,46 @@ function getMediaFiles() {
   return media;
 }
 
-function readFileAsDataURL(file) {
-  return new Promise((resolve, reject) => {
-    const reader = new FileReader();
-    reader.onload = function(e) {
-      resolve(e.target.result);
-    };
-    reader.onerror = function(e) {
-      reject(e);
-    };
-    reader.readAsDataURL(file);
-  });
+/* ==================================================
+   رفع الملفات إلى Cloudinary (صور + فيديو)
+================================================== */
+async function uploadToCloudinary(file) {
+    try {
+        const CLOUD_NAME = CONFIG.CLOUDINARY.CLOUD_NAME;
+        const UPLOAD_URL = `https://api.cloudinary.com/v1_1/${CLOUD_NAME}/upload`;
+        
+        const formData = new FormData();
+        formData.append('file', file);
+        formData.append('upload_preset', 'ml_default'); // استخدام upload preset الافتراضي
+        
+        console.log('📤 Uploading to Cloudinary:', file.name);
+        
+        const response = await fetch(UPLOAD_URL, {
+            method: 'POST',
+            body: formData
+        });
+        
+        if (!response.ok) {
+            throw new Error(`Upload failed: ${response.status}`);
+        }
+        
+        const result = await response.json();
+        console.log('✅ Uploaded successfully:', result.secure_url);
+        
+        return {
+            success: true,
+            url: result.secure_url,
+            public_id: result.public_id,
+            type: file.type.startsWith('video/') ? 'video' : 'image'
+        };
+        
+    } catch (error) {
+        console.error('❌ Cloudinary upload error:', error);
+        return {
+            success: false,
+            error: error.message
+        };
+    }
 }
 
 /* ==================================================
@@ -1042,7 +1076,7 @@ function showDeleteButtons(show) {
 }
 
 /* ==================================================
-   PRODUCT MANAGEMENT
+   PRODUCT MANAGEMENT - مع رفع Cloudinary
 ================================================== */
 async function addProduct() {
   const nameInput = document.getElementById("newProductName");
@@ -1063,29 +1097,45 @@ async function addProduct() {
     return;
   }
 
+  // ==========================================
+  // رفع الملفات إلى Cloudinary
+  // ==========================================
   const mediaFiles = getMediaFiles();
   const media = [];
   
-  for (const mf of mediaFiles) {
+  if (mediaFiles.length > 0) {
+    const uploadPromises = mediaFiles.map(async (mf) => {
+      const result = await uploadToCloudinary(mf.file);
+      if (result.success) {
+        media.push({
+          type: result.type,
+          url: result.url,
+          name: mf.name
+        });
+        console.log('✅ File uploaded:', result.url);
+      } else {
+        throw new Error(`فشل رفع الملف: ${mf.name} - ${result.error}`);
+      }
+    });
+    
     try {
-      const dataUrl = await readFileAsDataURL(mf.file);
-      media.push({
-        type: mf.type,
-        data: dataUrl,
-        name: mf.name
-      });
+      await Promise.all(uploadPromises);
     } catch (error) {
-      console.error('Error processing file:', error);
+      alert(`❌ ${error.message}`);
+      return;
     }
   }
 
+  // ==========================================
+  // حفظ المنتج
+  // ==========================================
   const newProduct = {
     id: Date.now(),
     name: name,
     price: price,
     discount: discount,
     icon: icon,
-    media: media,
+    media: media,  // الآن يحتوي على روابط Cloudinary فقط
     sizes: sizes
   };
 
@@ -1105,6 +1155,7 @@ async function addProduct() {
   });
 
   if (result && !result.error) {
+    // تنظيف الحقول
     document.getElementById("newProductName").value = "";
     document.getElementById("newProductPrice").value = "";
     document.getElementById("newProductDiscount").value = "";
@@ -1264,3 +1315,4 @@ document.addEventListener('DOMContentLoaded', function() {
     loadCategoriesFromAPI();
   }, 1000);
 });
+```
