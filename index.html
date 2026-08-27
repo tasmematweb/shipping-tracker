@@ -1,3 +1,4 @@
+```html
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
@@ -11,6 +12,7 @@
         :root {
             --primary: #4f46e5; --primary-hover: #4338ca;
             --danger: #dc2626; --danger-hover: #b91c1c;
+            --success: #16a34a;
             --gray-50: #f9fafb; --gray-100: #f3f4f6;
             --gray-200: #e5e7eb; --gray-300: #d1d5db;
             --gray-600: #4b5563; --gray-700: #374151;
@@ -227,7 +229,7 @@
 </div>
 
 <!-- ============================================================ -->
-<!-- ===== JAVASCRIPT – الكود الكامل مع الرابط الجديد ===== -->
+<!-- ===== JAVASCRIPT – الكود الكامل مع الروابط الجديدة ===== -->
 <!-- ============================================================ -->
 <script>
     // ===================================================================
@@ -235,7 +237,7 @@
     // ===================================================================
     const CONFIG = {
         // 🔹 رابط Google Apps Script (تم تحديثه بالرابط الجديد)
-        API_BASE_URL: 'https://script.google.com/macros/s/AKfycbygUKOmBhnpwkfSZMivvmjGXmb0jLM5-iu7YgymQXsVzDFnV56lA5ZURF_-Pt3Zot7G/exec',
+        API_BASE_URL: 'https://script.google.com/macros/s/AKfycbyE66jL8-UiPIeDLNR0409wY4W6Ni7l9WAcec-qmDP0J6rOiTx4wecZrj3ZOYwVYZDA/exec',
 
         // 🔹 بيانات Cloudinary — استبدلها بقيمك الفعلية
         CLOUDINARY_CLOUD_NAME: 'your_cloud_name_here',
@@ -258,7 +260,7 @@
     let currentZoomImages = [];
     let currentZoomIndex = 0;
     let editingProductId = null;
-    let mainImageIndexMap = {};   // يحفظ لكل منتج أي صورة هي الرئيسية المعروضة
+    let mainImageIndexMap = {};
 
     // ===================================================================
     // 3.  التهيئة (Initialization)
@@ -352,7 +354,6 @@
         }).join('');
     }
 
-    // تغيير الصورة الرئيسية المعروضة فقط (دون تعديل ترتيب المصفوفة الأصلية)
     function changeMainMedia(productId, imageIndex) {
         mainImageIndexMap[productId] = imageIndex;
         renderStoreProducts();
@@ -421,7 +422,6 @@
 
         try {
             if (editingProductId) {
-                // تعديل منتج موجود
                 productData.id = editingProductId;
                 const res = await fetch(`${CONFIG.API_BASE_URL}?action=updateProduct`, {
                     method: 'POST',
@@ -440,7 +440,6 @@
                     throw new Error('فشل تحديث المنتج');
                 }
             } else {
-                // إضافة منتج جديد
                 productData.id = Date.now();
                 const res = await fetch(`${CONFIG.API_BASE_URL}?action=addProduct`, {
                     method: 'POST',
@@ -686,3 +685,4 @@
 </script>
 </body>
 </html>
+```
