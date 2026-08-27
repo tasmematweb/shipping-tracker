@@ -1,11 +1,11 @@
 // ==================================================
 // CONFIGURATION - H.L LeVance Store
-// جميع بيانات الربط في ملف واحد منفصل
+// جميع بيانات الربط والإعدادات العامة للمتجر
 // ==================================================
 
 const CONFIG = {
     // ==============================================
-    // Google Sheets API - الرابط الجديد
+    // Google Sheets API - الرابط المفعل
     // ==============================================
     API_BASE_URL: 'https://script.google.com/macros/s/AKfycbzQ1ZzQtn1M8AI_9ppSpCPYauVod2JTIHj0a1lO6x3-gLb-khqqfW8EtcWZVg8wJcAf/exec',
     
@@ -17,13 +17,13 @@ const CONFIG = {
     STORE_EMAIL: 'info@hllevance.com',
     
     // ==============================================
-    // إعدادات Admin
+    // إعدادات لوحة التحكم (Admin)
     // ==============================================
     ADMIN_PHONE: '111',
     ADMIN_PASSWORD: '111',
     
     // ==============================================
-    // مفاتيح التخزين المحلي (localStorage) - للنسخ الاحتياطي
+    // مفاتيح التخزين المحلي (localStorage)
     // ==============================================
     STORAGE_KEY_PRODUCTS: 'hl_products',
     STORAGE_KEY_CATEGORIES: 'hl_categories',
@@ -37,31 +37,31 @@ const CONFIG = {
     WHATSAPP_MESSAGE: 'مرحباً، أريد الاستفسار عن منتجاتكم',
     
     // ==============================================
-    // إعدادات أخرى
+    // إعدادات العامة للمنتجات والملفات
     // ==============================================
     DEFAULT_CURRENCY: 'جنيه',
     DEFAULT_WEIGHT: 1,
-    MAX_FILE_SIZE: 5,
+    MAX_FILE_SIZE_MB: 5,
     ALLOWED_FILE_TYPES: ['image/jpeg', 'image/png', 'image/gif', 'image/webp', 'video/mp4', 'video/webm'],
 
     // ==============================================
-    // Cloudinary - رفع الصور والفيديو (اختياري)
+    // Cloudinary - رفع الصور والفيديو (Unsigned)
     // ==============================================
     CLOUDINARY: {
         CLOUD_NAME: 'q2tqddel',
-        API_KEY: '518715792296824',
-        API_SECRET: 'اضف_المفتاح_السري_هنا'
+        UPLOAD_PRESET: 'ml_default', // يُفضل إعداد Unsigned Upload Preset داخل Cloudinary Dashboard
+        API_KEY: '518715792296824'
     },
     
     CLOUDINARY_UPLOAD_URL: 'https://api.cloudinary.com/v1_1/q2tqddel/upload'
 };
 
-// تصدير للاستخدام في المتصفح
+// تصدير للاستخدام في المتصفح (Browser Environment)
 if (typeof window !== 'undefined') {
     window.CONFIG = CONFIG;
 }
 
-// تصدير للاستخدام في Node.js
+// تصدير للاستخدام في Node.js (Module Environment)
 if (typeof module !== 'undefined' && module.exports) {
     module.exports = CONFIG;
 }
