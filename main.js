@@ -1,1318 +1,1775 @@
-```javascript
-/* ==================================================
-   MAIN.JS - H.L LeVance Store - الإصدار النهائي مع رفع Cloudinary
-================================================== */
+```html
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
 
-// ==================================================
-// تعريف API_BASE_URL في النطاق العام (GLOBAL)
-// ==================================================
-var API_BASE_URL = 'https://script.google.com/macros/s/AKfycbzuajhu983jCQWr_V4ezz6SHpanxinydY5L4Vf7spqyuWTtoOLBmH4536yWz6jboSxm/exec';
-
-// التأكد من وجود CONFIG
-if (typeof window.CONFIG === 'undefined') {
-    window.CONFIG = {
-        API_BASE_URL: API_BASE_URL,
-        STORE_NAME: 'H.L LeVance',
-        STORE_PHONE: '201234567890',
-        ADMIN_PHONE: '111',
-        ADMIN_PASSWORD: '111',
-        STORAGE_KEY_PRODUCTS: 'hl_products',
-        STORAGE_KEY_CATEGORIES: 'hl_categories',
-        STORAGE_KEY_CART: 'hl_cart',
-        STORAGE_KEY_ORDERS: 'hl_orders',
-        CLOUDINARY: {
-            CLOUD_NAME: 'q2tqddel',
-            API_KEY: '518715792296824',
-            API_SECRET: '' // سيتم تعبئته
-        }
-    };
-    console.log('✅ CONFIG created with fallback values');
-}
-
-console.log('✅ API_BASE_URL:', API_BASE_URL);
-
-/* ==================================================
-   INTRO - التحكم بشاشة الترحيب
-================================================== */
-const intro = document.getElementById("intro");
-const video = document.getElementById("introVideo");
-const store = document.getElementById("store");
-
-function enterStore() {
-  if (intro.classList.contains("hide")) return;
-  intro.classList.add("hide");
-  store.classList.add("show");
-  document.body.style.overflow = "auto";
-  if (video) video.pause();
-  
-  setTimeout(() => {
-    try {
-      loadData();
-    } catch(e) {
-      console.error('Load data error:', e);
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>H.L LeVance | المتجر</title>
+  <link rel="stylesheet" href="styles.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/cloudinary-core/2.12.0/cloudinary-core-shrinkwrap.min.js">
+  </script>
+  <style>
+    :root {
+      --yellow-main: #FDD95A;
+      --yellow-light: #FDE35E;
+      --yellow-soft: #FCD649;
+      --yellow-dark: #F4C83E;
+      --brown: #57080E;
+      --brown-light: #6A1017;
     }
-  }, 300);
-}
 
-if (video) {
-  video.addEventListener("ended", enterStore);
-  
-  setTimeout(function() {
-    if (!intro.classList.contains("hide")) {
-      console.log("⏰ Timeout - forcing enter store");
-      enterStore();
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
     }
-  }, 5000);
-}
 
-function startVideo() {
-  if (!video) {
-    enterStore();
-    return;
-  }
-  const promise = video.play();
-  if (promise !== undefined) {
-    promise.catch(function(error) {
-      console.log("تعذر التشغيل التلقائي:", error);
-      enterStore();
-    });
-  }
-}
+    html {
+      width: 100%;
+      min-height: 100%;
+      scroll-behavior: smooth;
+    }
 
-if (video && video.readyState >= 2) {
-  startVideo();
-} else if (video) {
-  video.addEventListener("loadeddata", startVideo, { once: true });
-} else {
-  enterStore();
-}
+    body {
+      width: 100%;
+      min-height: 100vh;
+      font-family: Arial, sans-serif;
+      background: var(--yellow-main);
+      color: var(--brown);
+    }
 
-if (video) {
-  video.addEventListener("error", function() {
-    console.warn("تعذر تحميل intro.mp4");
-    enterStore();
-  });
-}
+    #intro {
+      position: fixed;
+      inset: 0;
+      width: 100vw;
+      height: 100vh;
+      height: 100dvh;
+      background: var(--yellow-main);
+      z-index: 99999;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      transition: transform 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+      transform: translateX(0);
+    }
 
-document.body.style.overflow = "hidden";
+    #intro.hide {
+      transform: translateX(-100%);
+      pointer-events: none;
+    }
 
-/* ==================================================
-   ZOOM FUNCTIONALITY
-================================================== */
-let zoomMedia = [];
-let zoomIndex = 0;
-let zoomProductId = null;
+    #intro video {
+      position: absolute;
+      inset: 0;
+      width: 100vw;
+      height: 100vh;
+      height: 100dvh;
+      display: block;
+      object-fit: cover;
+      object-position: center center;
+      background: var(--yellow-main);
+    }
 
-function openZoom(productId) {
-  const product = products.find(p => p.id === productId);
-  if (!product || !product.media || product.media.length === 0) {
-    alert("لا توجد صور أو فيديوهات لعرضها.");
-    return;
-  }
+    #store {
+      min-height: 100vh;
+      opacity: 1;
+      transform: translateX(0);
+      visibility: visible;
+      background: var(--yellow-main);
+      transition: all 0.3s ease;
+    }
 
-  zoomMedia = product.media;
-  zoomIndex = 0;
-  zoomProductId = productId;
-  showZoomMedia(0);
-  document.getElementById('zoomModal').classList.add('active');
-  document.body.style.overflow = 'hidden';
-}
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      background: var(--yellow-main);
+      color: var(--brown);
+      border-bottom: 3px solid var(--brown);
+    }
 
-function closeZoom() {
-  document.getElementById('zoomModal').classList.remove('active');
-  document.body.style.overflow = 'auto';
-  const video = document.getElementById('zoomVideo');
-  if (video) video.pause();
-}
+    .top-header {
+      min-height: 78px;
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      padding: 10px 4%;
+      background: var(--yellow-main);
+    }
 
-function showZoomMedia(index) {
-  const media = zoomMedia[index];
-  if (!media) return;
+    .logo {
+      color: var(--brown);
+      text-decoration: none;
+      font-family: Georgia, serif;
+      font-size: 30px;
+      font-weight: bold;
+      white-space: nowrap;
+      line-height: 1;
+    }
 
-  const img = document.getElementById('zoomImage');
-  const video = document.getElementById('zoomVideo');
-  const videoSource = document.getElementById('zoomVideoSource');
-  const counter = document.getElementById('zoomCounter');
+    .logo span {
+      display: block;
+      font-size: 13px;
+      color: var(--brown);
+      margin-top: 5px;
+      text-align: center;
+      letter-spacing: 1px;
+    }
 
-  img.style.display = 'none';
-  video.style.display = 'none';
+    .search-box {
+      flex: 1;
+      display: flex;
+      height: 46px;
+      max-width: 800px;
+      margin: auto;
+      border: 2px solid var(--brown);
+      border-radius: 8px;
+      overflow: hidden;
+      background: var(--yellow-light);
+    }
 
-  if (media.type === 'video') {
-    videoSource.src = media.url || media.data;
-    video.load();
-    video.style.display = 'block';
-    video.play().catch(() => {});
-  } else {
-    img.src = media.url || media.data;
-    img.style.display = 'block';
-  }
+    .search-box input {
+      width: 100%;
+      border: none;
+      outline: none;
+      background: var(--yellow-light);
+      color: var(--brown);
+      padding: 0 18px;
+      font-size: 16px;
+      direction: rtl;
+    }
 
-  counter.textContent = `${index + 1} / ${zoomMedia.length}`;
-  zoomIndex = index;
-}
+    .search-box input::placeholder {
+      color: var(--brown);
+      opacity: .75;
+    }
 
-function zoomPrev() {
-  if (zoomIndex > 0) {
-    showZoomMedia(zoomIndex - 1);
-  } else {
-    showZoomMedia(zoomMedia.length - 1);
-  }
-}
+    .search-box button {
+      width: 60px;
+      border: none;
+      border-right: 2px solid var(--brown);
+      background: var(--brown);
+      color: var(--yellow-light);
+      cursor: pointer;
+      font-size: 20px;
+    }
 
-function zoomNext() {
-  if (zoomIndex < zoomMedia.length - 1) {
-    showZoomMedia(zoomIndex + 1);
-  } else {
-    showZoomMedia(0);
-  }
-}
+    .search-box button:hover {
+      background: var(--brown-light);
+    }
 
-document.addEventListener('keydown', function(e) {
-  if (document.getElementById('zoomModal').classList.contains('active')) {
-    if (e.key === 'Escape') closeZoom();
-    if (e.key === 'ArrowRight') zoomNext();
-    if (e.key === 'ArrowLeft') zoomPrev();
-  }
-});
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
 
-document.getElementById('zoomModal').addEventListener('click', function(e) {
-  if (e.target === this) closeZoom();
-});
+    .login-btn {
+      background: var(--brown);
+      border: none;
+      color: var(--yellow-light);
+      font-size: 16px;
+      cursor: pointer;
+      white-space: nowrap;
+      padding: 12px 18px;
+      border-radius: 8px;
+      font-weight: bold;
+      transition: background 0.2s;
+    }
 
-/* ==================================================
-   API HELPER FUNCTIONS
-================================================== */
+    .login-btn:hover {
+      background: var(--brown-light);
+    }
 
-async function apiGet(action) {
-  try {
-    const url = `${API_BASE_URL}?action=${action}`;
-    console.log('Fetching (GET):', url);
-    const response = await fetch(url, {
-      method: 'GET',
-      redirect: 'follow',
-      headers: {
-        'Accept': 'application/json',
+    .login-btn.hidden {
+      display: none;
+    }
+
+    .cart {
+      background: var(--brown);
+      border: none;
+      color: var(--yellow-light);
+      font-size: 16px;
+      cursor: pointer;
+      white-space: nowrap;
+      padding: 12px 18px;
+      border-radius: 8px;
+      font-weight: bold;
+    }
+
+    .cart:hover {
+      background: var(--brown-light);
+    }
+
+    .nav {
+      background: var(--yellow-soft);
+      padding: 12px 4%;
+      display: flex;
+      gap: 28px;
+      overflow-x: auto;
+      border-top: 2px solid var(--brown);
+    }
+
+    .nav a {
+      color: var(--brown);
+      text-decoration: none;
+      white-space: nowrap;
+      font-size: 15px;
+      font-weight: bold;
+    }
+
+    .nav a:hover {
+      color: var(--brown-light);
+    }
+
+    .hero {
+      min-height: 420px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      background: linear-gradient(135deg, var(--yellow-light), var(--yellow-main), var(--yellow-soft));
+      padding: 60px 20px;
+      border-bottom: 3px solid var(--brown);
+    }
+
+    .hero-content {
+      max-width: 850px;
+    }
+
+    .hero h1 {
+      font-family: Georgia, serif;
+      font-size: clamp(48px, 9vw, 90px);
+      color: var(--brown);
+      margin-bottom: 18px;
+      line-height: 1.05;
+    }
+
+    .hero p {
+      font-size: clamp(18px, 3vw, 25px);
+      color: var(--brown);
+      margin-bottom: 30px;
+      font-weight: bold;
+    }
+
+    .shop-btn {
+      display: inline-block;
+      padding: 15px 38px;
+      background: var(--brown);
+      color: var(--yellow-light);
+      border: 2px solid var(--brown);
+      border-radius: 8px;
+      text-decoration: none;
+      font-weight: bold;
+      transition: transform .25s ease, background .25s ease;
+    }
+
+    .shop-btn:hover {
+      transform: translateY(-3px);
+      background: var(--brown-light);
+    }
+
+    .categories {
+      padding: 45px 4%;
+      background: var(--yellow-main);
+      border-bottom: 3px solid var(--brown);
+    }
+
+    .section-title {
+      font-family: Georgia, serif;
+      color: var(--brown);
+      font-size: 30px;
+      margin-bottom: 28px;
+    }
+
+    .category-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: 18px;
+    }
+
+    .category {
+      background: var(--yellow-light);
+      border: 2px solid var(--brown);
+      border-radius: 12px;
+      padding: 28px 15px;
+      text-align: center;
+      cursor: pointer;
+      color: var(--brown);
+      transition: transform .25s ease, background .25s ease;
+      position: relative;
+    }
+
+    .category:hover {
+      transform: translateY(-5px);
+      background: var(--yellow-soft);
+    }
+
+    .category .icon {
+      font-size: 45px;
+      margin-bottom: 12px;
+      display: block;
+    }
+
+    .category .category-image {
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      object-fit: cover;
+      margin: 0 auto 10px;
+      border: 2px solid var(--brown);
+      display: block;
+    }
+
+    .category h3 {
+      color: var(--brown);
+      font-size: 18px;
+    }
+
+    .category .delete-cat {
+      position: absolute;
+      top: 5px;
+      left: 5px;
+      background: var(--brown);
+      color: var(--yellow-light);
+      border: none;
+      border-radius: 50%;
+      width: 28px;
+      height: 28px;
+      cursor: pointer;
+      font-size: 14px;
+      display: none;
+    }
+
+    .category .delete-cat:hover {
+      background: var(--brown-light);
+    }
+
+    .products {
+      padding: 45px 4%;
+      background: var(--yellow-soft);
+      border-bottom: 3px solid var(--brown);
+    }
+
+    .product-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      gap: 22px;
+    }
+
+    .product {
+      background: var(--yellow-light);
+      border: 2px solid var(--brown);
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 5px 0 var(--brown);
+      transition: transform .25s ease, box-shadow .25s ease;
+      position: relative;
+    }
+
+    .product:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 9px 0 var(--brown);
+    }
+
+    .zoom-btn {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      background: var(--brown);
+      color: var(--yellow-light);
+      border: none;
+      border-radius: 50%;
+      width: 40px;
+      height: 40px;
+      font-size: 20px;
+      cursor: pointer;
+      z-index: 15;
+      transition: transform 0.2s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .zoom-btn:hover {
+      transform: scale(1.1);
+      background: var(--brown-light);
+    }
+
+    .product-image {
+      width: 100%;
+      height: 280px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--yellow-main);
+      color: var(--brown);
+      border-bottom: 2px solid var(--brown);
+      overflow: hidden;
+      position: relative;
+    }
+
+    .product-image .main-media {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .product-image .main-media img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .product-image .main-media video {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .product-image .product-icon {
+      font-size: 90px;
+    }
+
+    .product-image .delete-prod {
+      position: absolute;
+      top: 5px;
+      left: 5px;
+      background: var(--brown);
+      color: var(--yellow-light);
+      border: none;
+      border-radius: 50%;
+      width: 30px;
+      height: 30px;
+      cursor: pointer;
+      font-size: 16px;
+      display: none;
+      z-index: 10;
+    }
+
+    .product-image .delete-prod:hover {
+      background: var(--brown-light);
+    }
+
+    .product-image .image-gallery {
+      display: flex;
+      gap: 5px;
+      position: absolute;
+      bottom: 10px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: rgba(0, 0, 0, 0.6);
+      padding: 5px 10px;
+      border-radius: 20px;
+      z-index: 5;
+      max-width: 90%;
+      overflow-x: auto;
+    }
+
+    .product-image .image-gallery img,
+    .product-image .image-gallery video {
+      width: 40px;
+      height: 40px;
+      border-radius: 4px;
+      border: 2px solid var(--yellow-main);
+      cursor: pointer;
+      object-fit: cover;
+      flex-shrink: 0;
+    }
+
+    .product-image .image-gallery img.active,
+    .product-image .image-gallery video.active {
+      border-color: var(--brown);
+    }
+
+    .product-info {
+      padding: 18px;
+      background: var(--yellow-light);
+    }
+
+    .product-info h3 {
+      font-size: 18px;
+      margin-bottom: 10px;
+      color: var(--brown);
+    }
+
+    .rating {
+      color: var(--brown);
+      margin-bottom: 10px;
+      letter-spacing: 2px;
+    }
+
+    .price {
+      font-size: 23px;
+      font-weight: bold;
+      color: var(--brown);
+      margin-bottom: 10px;
+    }
+
+    .price .original-price {
+      text-decoration: line-through;
+      font-size: 16px;
+      opacity: 0.6;
+      margin-left: 10px;
+    }
+
+    .sizes {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-bottom: 12px;
+    }
+
+    .sizes .size-btn {
+      padding: 5px 12px;
+      border: 2px solid var(--brown);
+      border-radius: 6px;
+      background: var(--yellow-light);
+      color: var(--brown);
+      cursor: pointer;
+      font-weight: bold;
+      font-size: 13px;
+      transition: all 0.2s;
+    }
+
+    .sizes .size-btn:hover {
+      background: var(--brown);
+      color: var(--yellow-light);
+    }
+
+    .sizes .size-btn.selected {
+      background: var(--brown);
+      color: var(--yellow-light);
+    }
+
+    .add-cart {
+      width: 100%;
+      padding: 12px;
+      border: 2px solid var(--brown);
+      border-radius: 7px;
+      background: var(--brown);
+      color: var(--yellow-light);
+      cursor: pointer;
+      font-size: 15px;
+      font-weight: bold;
+      transition: background 0.2s;
+    }
+
+    .add-cart:hover {
+      background: var(--brown-light);
+    }
+
+    .zoom-modal {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.9);
+      z-index: 99999;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      padding: 20px;
+    }
+
+    .zoom-modal.active {
+      display: flex;
+    }
+
+    .zoom-modal .zoom-close {
+      position: absolute;
+      top: 20px;
+      left: 20px;
+      background: var(--brown);
+      color: var(--yellow-light);
+      border: none;
+      border-radius: 50%;
+      width: 50px;
+      height: 50px;
+      font-size: 28px;
+      cursor: pointer;
+      z-index: 10;
+      transition: transform 0.2s;
+    }
+
+    .zoom-modal .zoom-close:hover {
+      transform: scale(1.1);
+    }
+
+    .zoom-modal .zoom-content {
+      width: 100%;
+      max-width: 900px;
+      max-height: 80vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+    }
+
+    .zoom-modal .zoom-content img,
+    .zoom-modal .zoom-content video {
+      max-width: 100%;
+      max-height: 80vh;
+      border-radius: 12px;
+      border: 3px solid var(--yellow-main);
+      object-fit: contain;
+    }
+
+    .zoom-modal .zoom-nav {
+      display: flex;
+      gap: 15px;
+      margin-top: 20px;
+      align-items: center;
+    }
+
+    .zoom-modal .zoom-nav button {
+      background: var(--brown);
+      color: var(--yellow-light);
+      border: none;
+      padding: 12px 25px;
+      border-radius: 8px;
+      font-size: 18px;
+      cursor: pointer;
+      font-weight: bold;
+      transition: background 0.2s;
+    }
+
+    .zoom-modal .zoom-nav button:hover {
+      background: var(--brown-light);
+    }
+
+    .zoom-modal .zoom-nav .zoom-counter {
+      color: var(--yellow-light);
+      font-size: 18px;
+      font-weight: bold;
+      padding: 0 15px;
+    }
+
+    #orderFormPage {
+      display: none;
+      padding: 30px 4%;
+      background: var(--yellow-soft);
+      min-height: 100vh;
+    }
+
+    #orderFormPage.active {
+      display: block;
+    }
+
+    .order-form-container {
+      max-width: 700px;
+      margin: 0 auto;
+      background: var(--yellow-light);
+      border: 3px solid var(--brown);
+      border-radius: 16px;
+      padding: 35px 30px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    }
+
+    .order-form-container h2 {
+      text-align: center;
+      color: var(--brown);
+      font-family: Georgia, serif;
+      font-size: 28px;
+      margin-bottom: 25px;
+    }
+
+    .order-form-container .order-summary {
+      background: var(--yellow-main);
+      border: 2px solid var(--brown);
+      border-radius: 10px;
+      padding: 15px;
+      margin-bottom: 20px;
+    }
+
+    .order-form-container .order-summary h3 {
+      color: var(--brown);
+      margin-bottom: 10px;
+      font-size: 18px;
+    }
+
+    .order-form-container .order-summary .cart-items {
+      max-height: 150px;
+      overflow-y: auto;
+      font-size: 14px;
+      color: var(--brown);
+    }
+
+    .order-form-container .order-summary .cart-items .item {
+      padding: 5px 0;
+      border-bottom: 1px solid rgba(87, 8, 14, 0.1);
+    }
+
+    .order-form-container .order-summary .total-price {
+      text-align: left;
+      font-weight: bold;
+      font-size: 20px;
+      color: var(--brown);
+      margin-top: 10px;
+      padding-top: 10px;
+      border-top: 2px solid var(--brown);
+    }
+
+    .order-form-container .form-group {
+      margin-bottom: 16px;
+    }
+
+    .order-form-container .form-group label {
+      display: block;
+      font-weight: 700;
+      color: var(--brown);
+      margin-bottom: 5px;
+      font-size: 15px;
+    }
+
+    .order-form-container .form-group label .required {
+      color: red;
+    }
+
+    .order-form-container .form-group input,
+    .order-form-container .form-group select,
+    .order-form-container .form-group textarea {
+      width: 100%;
+      padding: 12px 15px;
+      border: 2px solid var(--brown);
+      border-radius: 8px;
+      font-size: 15px;
+      font-family: Arial, sans-serif;
+      background: var(--yellow-light);
+      color: var(--brown);
+      transition: 0.3s;
+      direction: rtl;
+    }
+
+    .order-form-container .form-group input:focus,
+    .order-form-container .form-group select:focus,
+    .order-form-container .form-group textarea:focus {
+      border-color: var(--brown-light);
+      outline: none;
+      box-shadow: 0 0 0 3px rgba(87, 8, 14, 0.1);
+    }
+
+    .order-form-container .form-group textarea {
+      height: 80px;
+      resize: vertical;
+    }
+
+    .order-form-container .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 15px;
+    }
+
+    .order-form-container .submit-order-btn {
+      width: 100%;
+      padding: 15px;
+      background: var(--brown);
+      color: var(--yellow-light);
+      border: none;
+      border-radius: 8px;
+      font-size: 20px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: background 0.3s;
+      margin-top: 10px;
+    }
+
+    .order-form-container .submit-order-btn:hover {
+      background: var(--brown-light);
+    }
+
+    .order-form-container .submit-order-btn:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+
+    .order-form-container .back-to-store {
+      display: block;
+      text-align: center;
+      margin-top: 15px;
+      color: var(--brown);
+      cursor: pointer;
+      font-weight: bold;
+      text-decoration: underline;
+    }
+
+    .order-form-container .back-to-store:hover {
+      color: var(--brown-light);
+    }
+
+    footer {
+      margin-top: 0;
+      padding: 45px 5%;
+      background: var(--yellow-main);
+      color: var(--brown);
+      text-align: center;
+      border-top: 3px solid var(--brown);
+    }
+
+    footer h2 {
+      font-family: Georgia, serif;
+      font-size: 32px;
+      margin-bottom: 10px;
+    }
+
+    footer p {
+      color: var(--brown);
+      font-weight: bold;
+    }
+
+    .whatsapp-float {
+      position: fixed;
+      bottom: 25px;
+      right: 25px;
+      z-index: 9999;
+      background: var(--brown);
+      color: var(--yellow-light);
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 32px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+      text-decoration: none;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      border: 2px solid var(--yellow-main);
+    }
+
+    .whatsapp-float:hover {
+      transform: scale(1.1);
+      box-shadow: 0 6px 16px rgba(0, 0, 0, 0.4);
+      background: var(--brown-light);
+    }
+
+    .modal-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.5);
+      z-index: 10000;
+      align-items: center;
+      justify-content: center;
+      backdrop-filter: blur(4px);
+    }
+
+    .modal-overlay.active {
+      display: flex;
+    }
+
+    .modal-box {
+      background: var(--yellow-main);
+      border: 3px solid var(--brown);
+      border-radius: 16px;
+      padding: 35px 30px;
+      width: 90%;
+      max-width: 400px;
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+      text-align: center;
+    }
+
+    .modal-box h2 {
+      color: var(--brown);
+      font-family: Georgia, serif;
+      font-size: 28px;
+      margin-bottom: 25px;
+    }
+
+    .modal-box input {
+      width: 100%;
+      padding: 14px 16px;
+      margin-bottom: 16px;
+      border: 2px solid var(--brown);
+      border-radius: 8px;
+      background: var(--yellow-light);
+      color: var(--brown);
+      font-size: 16px;
+      direction: rtl;
+    }
+
+    .modal-box input::placeholder {
+      color: var(--brown);
+      opacity: 0.7;
+    }
+
+    .modal-box .btn-login-submit {
+      width: 100%;
+      padding: 14px;
+      background: var(--brown);
+      color: var(--yellow-light);
+      border: none;
+      border-radius: 8px;
+      font-size: 18px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: background 0.2s;
+      margin-top: 8px;
+    }
+
+    .modal-box .btn-login-submit:hover {
+      background: var(--brown-light);
+    }
+
+    .modal-box .signup-link {
+      display: block;
+      margin-top: 18px;
+      color: var(--brown);
+      font-weight: bold;
+      cursor: pointer;
+      text-decoration: underline;
+      font-size: 15px;
+    }
+
+    .modal-box .signup-link:hover {
+      color: var(--brown-light);
+    }
+
+    .modal-box .close-modal {
+      margin-top: 15px;
+      background: transparent;
+      border: 2px solid var(--brown);
+      color: var(--brown);
+      padding: 8px 20px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: bold;
+    }
+
+    .modal-box .close-modal:hover {
+      background: var(--brown);
+      color: var(--yellow-light);
+    }
+
+    #adminPanel {
+      display: none;
+      padding: 30px 4%;
+      background: var(--yellow-dark);
+      border-bottom: 3px solid var(--brown);
+    }
+
+    #adminPanel.active {
+      display: block;
+    }
+
+    #adminPanel h2 {
+      color: var(--brown);
+      font-family: Georgia, serif;
+      font-size: 28px;
+      margin-bottom: 20px;
+    }
+
+    .admin-section {
+      background: var(--yellow-light);
+      border: 2px solid var(--brown);
+      border-radius: 12px;
+      padding: 20px;
+      margin-bottom: 20px;
+    }
+
+    .admin-section h3 {
+      color: var(--brown);
+      margin-bottom: 15px;
+      font-size: 20px;
+    }
+
+    .admin-controls {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-bottom: 15px;
+    }
+
+    .admin-controls input,
+    .admin-controls select {
+      padding: 12px 16px;
+      border: 2px solid var(--brown);
+      border-radius: 8px;
+      background: var(--yellow-light);
+      color: var(--brown);
+      font-size: 15px;
+      flex: 1;
+      min-width: 150px;
+    }
+
+    .admin-controls input::placeholder {
+      color: var(--brown);
+      opacity: 0.7;
+    }
+
+    .admin-controls button {
+      background: var(--brown);
+      color: var(--yellow-light);
+      border: none;
+      padding: 12px 24px;
+      border-radius: 8px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: background 0.2s;
+      font-size: 15px;
+      white-space: nowrap;
+    }
+
+    .admin-controls button:hover {
+      background: var(--brown-light);
+    }
+
+    .admin-controls .size-checkboxes {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      align-items: center;
+      padding: 5px 10px;
+      background: var(--yellow-main);
+      border-radius: 8px;
+      border: 2px solid var(--brown);
+    }
+
+    .admin-controls .size-checkboxes label {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      font-weight: bold;
+      color: var(--brown);
+      font-size: 14px;
+      cursor: pointer;
+    }
+
+    .admin-controls .size-checkboxes input[type="checkbox"] {
+      width: 16px;
+      height: 16px;
+      accent-color: var(--brown);
+      flex: 0 0 auto;
+      min-width: unset;
+      padding: 0;
+    }
+
+    .media-files-container {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      width: 100%;
+      padding: 10px;
+      background: var(--yellow-soft);
+      border-radius: 8px;
+      border: 2px solid var(--brown);
+    }
+
+    .media-file-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .media-file-row input[type="file"] {
+      flex: 1;
+      padding: 8px;
+      background: var(--yellow-light);
+      border: 2px solid var(--brown);
+      border-radius: 6px;
+      min-width: 150px;
+    }
+
+    .media-file-row .file-preview {
+      width: 50px;
+      height: 50px;
+      border-radius: 6px;
+      object-fit: cover;
+      border: 2px solid var(--brown);
+      display: none;
+    }
+
+    .media-file-row .file-preview.show {
+      display: block;
+    }
+
+    .media-file-row .remove-file-btn {
+      background: var(--brown);
+      color: var(--yellow-light);
+      border: none;
+      border-radius: 50%;
+      width: 30px;
+      height: 30px;
+      cursor: pointer;
+      font-size: 16px;
+      font-weight: bold;
+      display: none;
+    }
+
+    .media-file-row .remove-file-btn.show {
+      display: block;
+    }
+
+    .media-file-row .remove-file-btn:hover {
+      background: var(--brown-light);
+    }
+
+    .add-file-btn {
+      background: var(--brown);
+      color: var(--yellow-light);
+      border: none;
+      padding: 8px 16px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: bold;
+      font-size: 14px;
+      white-space: nowrap;
+      align-self: flex-start;
+    }
+
+    .add-file-btn:hover {
+      background: var(--brown-light);
+    }
+
+    .admin-list {
+      background: var(--yellow-light);
+      border: 2px solid var(--brown);
+      border-radius: 12px;
+      padding: 15px;
+      max-height: 300px;
+      overflow-y: auto;
+    }
+
+    .admin-list-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px 0;
+      border-bottom: 1px solid var(--brown);
+    }
+
+    .admin-list-item:last-child {
+      border-bottom: none;
+    }
+
+    .admin-list-item .item-info {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .admin-list-item .item-info img {
+      width: 40px;
+      height: 40px;
+      border-radius: 8px;
+      object-fit: cover;
+      border: 1px solid var(--brown);
+    }
+
+    .admin-list-item .item-info video {
+      width: 40px;
+      height: 40px;
+      border-radius: 8px;
+      object-fit: cover;
+      border: 1px solid var(--brown);
+    }
+
+    .admin-list-item .item-info span {
+      font-weight: bold;
+      color: var(--brown);
+    }
+
+    .admin-list-item .item-info .size-tags {
+      display: flex;
+      gap: 4px;
+    }
+
+    .admin-list-item .item-info .size-tags span {
+      background: var(--brown);
+      color: var(--yellow-light);
+      padding: 2px 8px;
+      border-radius: 4px;
+      font-size: 11px;
+      font-weight: bold;
+    }
+
+    .admin-list-item button {
+      background: var(--brown);
+      color: var(--yellow-light);
+      border: none;
+      padding: 6px 14px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: bold;
+      font-size: 13px;
+    }
+
+    .admin-list-item button:hover {
+      background: var(--brown-light);
+    }
+
+    .spinner {
+      display: none;
+      width: 40px;
+      height: 40px;
+      margin: 20px auto;
+      border: 4px solid var(--yellow-light);
+      border-top: 4px solid var(--brown);
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+    }
+
+    .spinner.active {
+      display: block;
+    }
+
+    @keyframes spin {
+      0% {
+        transform: rotate(0deg);
       }
-    });
-    if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
-    }
-    const data = await response.json();
-    console.log('API GET Response:', data);
-    return data;
-  } catch (error) {
-    console.error('API GET Error:', error);
-    return { error: error.toString() };
-  }
-}
-
-async function apiPost(data) {
-  try {
-    console.log('Posting data:', data);
-    
-    const formData = new FormData();
-    formData.append('payload', JSON.stringify(data));
-    
-    const response = await fetch(API_BASE_URL, {
-      method: 'POST',
-      redirect: 'follow',
-      mode: 'no-cors',
-      body: formData
-    });
-    
-    console.log('✅ POST request sent successfully');
-    return { success: true, message: 'تم الإرسال بنجاح' };
-  } catch (error) {
-    console.error('❌ API POST Error:', error);
-    return { error: error.toString() };
-  }
-}
-
-/* ==================================================
-   MEDIA FILE INPUTS
-================================================== */
-let fileRows = 1;
-
-function addFileRow() {
-  const container = document.getElementById('mediaFilesContainer');
-  const template = document.getElementById('fileRowTemplate');
-  
-  const newRow = template.cloneNode(true);
-  newRow.id = 'fileRow_' + Date.now();
-  newRow.style.display = 'flex';
-  
-  const fileInput = newRow.querySelector('input[type="file"]');
-  fileInput.value = '';
-  fileInput.onchange = function() { previewFile(this); };
-  
-  const imgPreview = newRow.querySelector('#previewImg');
-  if (imgPreview) {
-    imgPreview.id = 'previewImg_' + Date.now();
-    imgPreview.className = 'file-preview';
-    imgPreview.style.display = 'none';
-  }
-  
-  const videoPreview = newRow.querySelector('#previewVideo');
-  if (videoPreview) {
-    videoPreview.id = 'previewVideo_' + Date.now();
-    videoPreview.className = 'file-preview';
-    videoPreview.style.display = 'none';
-  }
-  
-  const removeBtn = newRow.querySelector('.remove-file-btn');
-  removeBtn.className = 'remove-file-btn show';
-  removeBtn.onclick = function() { removeFileRow(this); };
-  
-  container.appendChild(newRow);
-  fileRows++;
-}
-
-function previewFile(input) {
-  const row = input.closest('.media-file-row');
-  const file = input.files[0];
-  if (!file) return;
-  
-  const isVideo = file.type.startsWith('video/');
-  const imgPreview = row.querySelector('img.file-preview');
-  const videoPreview = row.querySelector('video.file-preview');
-  
-  const reader = new FileReader();
-  reader.onload = function(e) {
-    if (isVideo) {
-      if (videoPreview) {
-        videoPreview.src = e.target.result;
-        videoPreview.style.display = 'block';
-        videoPreview.className = 'file-preview show';
-      }
-      if (imgPreview) {
-        imgPreview.style.display = 'none';
-        imgPreview.className = 'file-preview';
-      }
-    } else {
-      if (imgPreview) {
-        imgPreview.src = e.target.result;
-        imgPreview.style.display = 'block';
-        imgPreview.className = 'file-preview show';
-      }
-      if (videoPreview) {
-        videoPreview.style.display = 'none';
-        videoPreview.className = 'file-preview';
+      100% {
+        transform: rotate(360deg);
       }
     }
-  };
-  reader.readAsDataURL(file);
-}
 
-function removeFileRow(btn) {
-  const row = btn.closest('.media-file-row');
-  const container = document.getElementById('mediaFilesContainer');
-  if (container.querySelectorAll('.media-file-row').length <= 1) {
-    const fileInput = row.querySelector('input[type="file"]');
-    fileInput.value = '';
-    const imgPreview = row.querySelector('img.file-preview');
-    if (imgPreview) {
-      imgPreview.style.display = 'none';
-      imgPreview.className = 'file-preview';
-    }
-    const videoPreview = row.querySelector('video.file-preview');
-    if (videoPreview) {
-      videoPreview.style.display = 'none';
-      videoPreview.className = 'file-preview';
-    }
-    const removeBtn = row.querySelector('.remove-file-btn');
-    removeBtn.className = 'remove-file-btn';
-    return;
-  }
-  row.remove();
-  fileRows--;
-}
-
-function getMediaFiles() {
-  const rows = document.querySelectorAll('.media-file-row');
-  const media = [];
-  
-  rows.forEach(row => {
-    const fileInput = row.querySelector('input[type="file"]');
-    if (fileInput && fileInput.files && fileInput.files[0]) {
-      const file = fileInput.files[0];
-      const isVideo = file.type.startsWith('video/');
-      media.push({
-        file: file,
-        type: isVideo ? 'video' : 'image',
-        name: file.name
-      });
-    }
-  });
-  
-  return media;
-}
-
-/* ==================================================
-   رفع الملفات إلى Cloudinary (صور + فيديو)
-================================================== */
-async function uploadToCloudinary(file) {
-    try {
-        const CLOUD_NAME = CONFIG.CLOUDINARY.CLOUD_NAME;
-        const UPLOAD_URL = `https://api.cloudinary.com/v1_1/${CLOUD_NAME}/upload`;
-        
-        const formData = new FormData();
-        formData.append('file', file);
-        formData.append('upload_preset', 'ml_default'); // استخدام upload preset الافتراضي
-        
-        console.log('📤 Uploading to Cloudinary:', file.name);
-        
-        const response = await fetch(UPLOAD_URL, {
-            method: 'POST',
-            body: formData
-        });
-        
-        if (!response.ok) {
-            throw new Error(`Upload failed: ${response.status}`);
-        }
-        
-        const result = await response.json();
-        console.log('✅ Uploaded successfully:', result.secure_url);
-        
-        return {
-            success: true,
-            url: result.secure_url,
-            public_id: result.public_id,
-            type: file.type.startsWith('video/') ? 'video' : 'image'
-        };
-        
-    } catch (error) {
-        console.error('❌ Cloudinary upload error:', error);
-        return {
-            success: false,
-            error: error.message
-        };
-    }
-}
-
-/* ==================================================
-   CART
-================================================== */
-let cart = [];
-let cartTotal = 0;
-
-function addToCart(productName, price, size) {
-  const item = size ? `${productName} (مقاس ${size})` : productName;
-  cart.push({ name: item, price: price });
-  cartTotal += price;
-  alert("تمت إضافة " + item + " إلى السلة 🛒");
-}
-
-function showCart() {
-  if (cart.length === 0) {
-    alert("السلة فارغة.");
-    return;
-  }
-  let msg = "المنتجات في السلة:\n\n";
-  cart.forEach((item, index) => {
-    msg += `${index + 1}. ${item.name} - ${item.price} جنيه\n`;
-  });
-  msg += `\nالإجمالي: ${cartTotal} جنيه`;
-  msg += `\n\nهل تريد تأكيد الطلبية؟`;
-  if (confirm(msg)) {
-    showOrderForm();
-  }
-}
-
-/* ==================================================
-   ORDER FORM - صفحة الطلب
-================================================== */
-const governorates = {
-  'الشرقية': ['بلبيس', 'انشاص الرمل', 'أولاد صقر', 'الحسينية', 'ديرب نجم', 'فاقوس', 'كفر صقر', 'مشتول السوق', 'منيا القمح', 'الصالحية القديمة', 'الصالحية الجديدة', 'صان الحجر', 'مدينة العاشر من رمضان'],
-  'الجيزة': ['مدينة السادس من أكتوبر', 'مدينة الشيخ زايد', 'العياط', 'الحوامدية', 'البدرشين', 'الصف', 'العمرانية', 'أطفيح', 'الواحات البحرية', 'الجيزة', 'حدائق الاهرام', 'فيصل', 'الهرم', 'أبو النمرس', 'العجوزة', 'الوراق', 'أوسيم', 'بولاق الدكرور', 'الدقي', 'أرض اللواء', 'المهندسين', 'كرداسة', 'إمبابة', 'منشأة القناطر'],
-  'الغربية': ['كفر الزيات', 'المحلة الكبرى', 'سمنود', 'بسيون', 'السنطة', 'زفتى', 'قطور', 'طنطا'],
-  'الدقهلية': ['المنصورة', 'أجا', 'المنزلة', 'بلقاس', 'دكرنس', 'السنبلاوين', 'منية النصر', 'ميت غمر', 'شربين', 'طلخا'],
-  'الإسكندرية': ['الدخيلة', 'العامرية', 'برج العرب', 'محرم بيك', 'باب شرقي', 'الساحل الشمالي', 'سيدي جابر', 'العطارين', 'المنشية', 'اللبان', 'الجمرك', 'مينا البصل', 'كرموز', 'الرمل', 'المنتزه'],
-  'أسيوط': ['أبنوب', 'أبوتيج', 'البداري', 'الغنايم', 'الفتح', 'القوصية', 'ديروط', 'ساحل سليم', 'صدفا', 'مدينة أسيوط', 'منفلوط', 'منقباد'],
-  'أسوان': ['أسوان', 'كوم امبو', 'دراو', 'إدفو'],
-  'بني سويف': ['الواسطى', 'ناصر', 'مدينة بني سويف', 'مركز بني سويف', 'أهناسيا', 'ببا', 'سمسطا', 'الفشن'],
-  'القليوبية': ['بنها', 'الخانكة', 'العبور', 'القناطر الخيرية', 'شبين القناطر', 'طوخ', 'كفر شكر', 'قليوب', 'شبرا الخيمة'],
-  'القاهرة': ['عابدين', 'العباسية', 'الأزبكية', 'القطامية', 'المنيل', 'المقطم', 'دار السلام', 'البساتين', 'الجمالية', 'السيدة زينب', 'حلوان', 'المعادي', 'مصر القديمة', 'قصر النيل', 'الخليفة', 'طرة', 'الزمالك', 'الشروق', 'مدينة بدر', 'عين شمس', 'مدينتي', 'الزيتون', 'مدينة نصر', 'القاهرة الجديدة', 'هليوبوليس', 'الأميرية', 'السلام', 'الوايلي', 'الشرابية', 'المرج', 'المطرية', 'النزهة', 'حدائق القبة', 'شبرا مصر', 'كورنيش النيل'],
-  'البحيرة': ['دمنهور', 'كفر الدوار', 'أبو حمص', 'المحمودية', 'وادي النطرون', 'النوبارية', 'أبوالمطامير', 'حوش عيسي', 'إيتاي البارود', 'شبراخيت', 'رشيد', 'إدكوا', 'مركز بدر', 'الدلنجات', 'الرحمانية', 'كوم حمادة'],
-  'دمياط': ['فارسكور', 'دمياط القديمة', 'كفر سعد', 'الزرقا', 'كفر البطيخ', 'دمياط الجديدة', 'رأس البر', 'عزبة البرج'],
-  'الفيوم': ['طامية', 'سنورس', 'مركز الفيوم', 'مدينة الفيوم', 'أطسا', 'أبشواي', 'يوسف الصديق'],
-  'البحر الأحمر': ['الغردقة', 'رأس غارب', 'سفاجا', 'القصير', 'مرسى علم'],
-  'الإسماعيلية': ['الإسماعيلية'],
-  'كفر الشيخ': ['كفر الشيخ', 'دسوق', 'فوه', 'مطوبس', 'بلطيم', 'الحامول', 'الرياض', 'بيلا', 'قلين', 'سيدى سالم'],
-  'الأقصر': ['مدينة الأقصر', 'أرمنت', 'أسنا', 'القرنة'],
-  'مرسى مطروح': ['مرسى مطروح'],
-  'المنيا': ['العدوة', 'مغاغة', 'بني مزار', 'مطاي', 'سمالوط', 'مركز المنيا', 'مدينة المنيا', 'أبو قرقاص', 'ملوي', 'دير مواس'],
-  'بور سعيد': ['بورسعيد'],
-  'قنا': ['قنا', 'قوص', 'مدينة قفط', 'دشنا', 'نقادة', 'نجع حمادي', 'فرشوط', 'أبوتشت'],
-  'المنوفية': ['قويسنا', 'بركة السبع', 'السادات', 'الشهداء', 'تلا', 'شبين الكوم', 'الباجور', 'منوف', 'أشمون'],
-  'سوهاج': ['طما', 'طهطا', 'جهينة', 'مدينة سوهاج', 'المراغة', 'أخميم', 'ساقلته', 'المنشأة', 'جرجا', 'البلينا', 'دار السلام', 'العسيرات'],
-  'السويس': ['السويس'],
-  'الوادي الجديد': ['الخارجة', 'الداخلة', 'الفرافرة'],
-  'جنوب سيناء': ['جنوب سيناء', 'شرم الشيخ', 'دهب']
-};
-
-function populateOrderGovernorates() {
-  const select = document.getElementById('orderGovernorate');
-  select.innerHTML = '<option value="">اختر المحافظة</option>';
-  Object.keys(governorates).forEach(gov => {
-    const option = document.createElement('option');
-    option.value = gov;
-    option.textContent = gov;
-    select.appendChild(option);
-  });
-}
-
-function updateOrderCities() {
-  const govSelect = document.getElementById('orderGovernorate');
-  const citySelect = document.getElementById('orderCity');
-  const selected = govSelect.value;
-  citySelect.innerHTML = '<option value="">اختر المدينة</option>';
-  if (selected && governorates[selected]) {
-    governorates[selected].forEach(city => {
-      const option = document.createElement('option');
-      option.value = city;
-      option.textContent = city;
-      citySelect.appendChild(option);
-    });
-  }
-}
-
-function showOrderForm() {
-  document.getElementById('store').style.display = 'none';
-  document.getElementById('orderFormPage').classList.add('active');
-  
-  const itemsDiv = document.getElementById('orderCartItems');
-  itemsDiv.innerHTML = '';
-  cart.forEach(item => {
-    const div = document.createElement('div');
-    div.className = 'item';
-    div.textContent = `${item.name} - ${item.price} جنيه`;
-    itemsDiv.appendChild(div);
-  });
-  document.getElementById('orderTotalPrice').textContent = cartTotal;
-  
-  populateOrderGovernorates();
-}
-
-function showStore() {
-  document.getElementById('store').style.display = 'block';
-  document.getElementById('orderFormPage').classList.remove('active');
-}
-
-/* ==================================================
-   SUBMIT ORDER - إرسال الطلب
-================================================== */
-let isOrderSubmitting = false;
-
-async function submitOrder() {
-  if (isOrderSubmitting) {
-    alert('يتم معالجة الطلب حالياً، يرجى الانتظار...');
-    return;
-  }
-
-  const customerName = document.getElementById('orderCustomerName').value.trim();
-  const customerPhone = document.getElementById('orderCustomerPhone').value.trim();
-  const customerPhone2 = document.getElementById('orderCustomerPhone2').value.trim();
-  const governorate = document.getElementById('orderGovernorate').value;
-  const city = document.getElementById('orderCity').value;
-  const address = document.getElementById('orderAddress').value.trim();
-  const amount = document.getElementById('orderAmount').value.trim();
-  const weight = document.getElementById('orderWeight').value.trim() || '1';
-  const notes = document.getElementById('orderNotes').value.trim();
-  const errorDiv = document.getElementById('orderError');
-
-  if (!customerName || !customerPhone || !governorate || !city || !address || !amount) {
-    errorDiv.textContent = '⚠️ يرجى ملء جميع الحقول المطلوبة';
-    return;
-  }
-  if (customerPhone.length !== 11) {
-    errorDiv.textContent = '⚠️ رقم هاتف المستلم يجب أن يكون 11 رقم';
-    return;
-  }
-  if (customerPhone2 && customerPhone2.length !== 11) {
-    errorDiv.textContent = '⚠️ رقم الهاتف الآخر يجب أن يكون 11 رقم';
-    return;
-  }
-
-  const orderData = {
-    action: 'addOrder',
-    customerName: customerName,
-    customerPhone: customerPhone,
-    customerPhone2: customerPhone2,
-    governorate: governorate,
-    city: city,
-    address: address,
-    amount: amount,
-    weight: weight,
-    notes: notes,
-    products: cart.map(item => item.name).join('، '),
-    totalPrice: cartTotal.toString()
-  };
-
-  isOrderSubmitting = true;
-  const submitBtn = document.getElementById('submitOrderBtn');
-  submitBtn.disabled = true;
-  submitBtn.textContent = '⏳ جاري الإرسال...';
-
-  try {
-    const result = await apiPost(orderData);
-    
-    if (result && !result.error) {
-      errorDiv.textContent = '';
-      alert(`✅ تم تأكيد الطلبية بنجاح!`);
-      
-      cart = [];
-      cartTotal = 0;
-      showStore();
-      
-      document.getElementById('orderCustomerName').value = '';
-      document.getElementById('orderCustomerPhone').value = '';
-      document.getElementById('orderCustomerPhone2').value = '';
-      document.getElementById('orderGovernorate').value = '';
-      document.getElementById('orderCity').innerHTML = '<option value="">اختر المحافظة أولا</option>';
-      document.getElementById('orderAddress').value = '';
-      document.getElementById('orderAmount').value = '';
-      document.getElementById('orderWeight').value = '1';
-      document.getElementById('orderNotes').value = '';
-    } else {
-      errorDiv.textContent = result?.error || '❌ فشل إرسال الطلب، حاول مرة أخرى';
-    }
-  } catch (error) {
-    errorDiv.textContent = '❌ حدث خطأ في الاتصال بالخادم';
-    console.error('Order submission error:', error);
-  }
-
-  isOrderSubmitting = false;
-  submitBtn.disabled = false;
-  submitBtn.textContent = '🛒 تأكيد الطلبية';
-}
-
-/* ==================================================
-   SEARCH
-================================================== */
-function searchProducts() {
-  const query = document.getElementById("search").value.trim().toLowerCase();
-  const products = document.querySelectorAll(".product");
-  products.forEach(product => {
-    const name = product.querySelector("h3").textContent.toLowerCase();
-    product.style.display = !query || name.includes(query) ? "" : "none";
-  });
-}
-
-document.getElementById("search").addEventListener("keydown", function(event) {
-  if (event.key === "Enter") {
-    searchProducts();
-  }
-});
-
-/* ==================================================
-   LOGIN MODAL
-================================================== */
-let isLoggedIn = false;
-let isAdmin = false;
-let currentUser = null;
-
-function openLoginModal() {
-  document.getElementById("loginModal").classList.add("active");
-}
-
-function closeLoginModal() {
-  document.getElementById("loginModal").classList.remove("active");
-}
-
-async function handleLogin() {
-  const phone = document.getElementById("loginPhone").value.trim();
-  const password = document.getElementById("loginPassword").value.trim();
-
-  if (!phone || !password) {
-    alert("⚠️ يرجى إدخال رقم الهاتف وكلمة المرور.");
-    return;
-  }
-
-  if (phone === CONFIG.ADMIN_PHONE && password === CONFIG.ADMIN_PASSWORD) {
-    isLoggedIn = true;
-    isAdmin = true;
-    currentUser = "admin";
-    document.getElementById("loginBtn").classList.add("hidden");
-    closeLoginModal();
-    document.getElementById("adminPanel").classList.add("active");
-    showDeleteButtons(true);
-    alert("✅ مرحباً Admin! تم تسجيل الدخول بنجاح.");
-    return;
-  }
-
-  const result = await apiPost({
-    action: 'loginUser',
-    phone: phone,
-    password: password
-  });
-
-  if (result && result.success) {
-    isLoggedIn = true;
-    isAdmin = false;
-    currentUser = phone;
-    document.getElementById("loginBtn").classList.add("hidden");
-    closeLoginModal();
-    document.getElementById("adminPanel").classList.remove("active");
-    showDeleteButtons(false);
-    alert("✅ مرحباً " + (result.user?.name || phone) + "! تم تسجيل الدخول بنجاح.");
-  } else {
-    alert("❌ " + (result?.error || "رقم الهاتف أو كلمة المرور غير صحيحة."));
-  }
-}
-
-async function handleSignup() {
-  const phone = document.getElementById("loginPhone").value.trim();
-  const password = document.getElementById("loginPassword").value.trim();
-
-  if (!phone || !password) {
-    alert("⚠️ يرجى إدخال رقم الهاتف وكلمة المرور لإنشاء الحساب.");
-    return;
-  }
-
-  if (phone === CONFIG.ADMIN_PHONE) {
-    alert("⚠️ هذا الرقم محجوز للإدمن.");
-    return;
-  }
-
-  const result = await apiPost({
-    action: 'registerUser',
-    phone: phone,
-    password: password,
-    name: phone
-  });
-
-  if (result && result.success) {
-    alert("✅ تم إنشاء الحساب بنجاح! يمكنك الآن تسجيل الدخول.");
-    document.getElementById("loginPhone").value = "";
-    document.getElementById("loginPassword").value = "";
-  } else {
-    alert("❌ " + (result?.error || "حدث خطأ أثناء إنشاء الحساب."));
-  }
-}
-
-document.getElementById("loginModal").addEventListener("click", function(e) {
-  if (e.target === this) {
-    closeLoginModal();
-  }
-});
-
-/* ==================================================
-   LOAD DATA FROM GOOGLE SHEETS
-================================================== */
-let products = [];
-let categories = [];
-
-function loadFromLocalStorage() {
-  const savedProducts = localStorage.getItem(CONFIG.STORAGE_KEY_PRODUCTS);
-  const savedCategories = localStorage.getItem(CONFIG.STORAGE_KEY_CATEGORIES);
-  
-  if (savedProducts) {
-    try {
-      products = JSON.parse(savedProducts);
-    } catch (e) {
-      products = getSampleProducts();
-      localStorage.setItem(CONFIG.STORAGE_KEY_PRODUCTS, JSON.stringify(products));
-    }
-  } else {
-    products = getSampleProducts();
-    localStorage.setItem(CONFIG.STORAGE_KEY_PRODUCTS, JSON.stringify(products));
-  }
-  
-  if (savedCategories) {
-    try {
-      categories = JSON.parse(savedCategories);
-    } catch (e) {
-      categories = getSampleCategories();
-      localStorage.setItem(CONFIG.STORAGE_KEY_CATEGORIES, JSON.stringify(categories));
-    }
-  } else {
-    categories = getSampleCategories();
-    localStorage.setItem(CONFIG.STORAGE_KEY_CATEGORIES, JSON.stringify(categories));
-  }
-}
-
-function saveToLocalStorage() {
-  try {
-    localStorage.setItem(CONFIG.STORAGE_KEY_PRODUCTS, JSON.stringify(products));
-    localStorage.setItem(CONFIG.STORAGE_KEY_CATEGORIES, JSON.stringify(categories));
-  } catch (e) {
-    console.error('❌ localStorage full!');
-    alert('⚠️ مساحة التخزين ممتلئة! حاول تقليل حجم الصور أو عدد المنتجات.');
-  }
-}
-
-async function loadData() {
-  loadFromLocalStorage();
-  renderStoreProducts();
-  renderStoreCategories();
-  
-  await loadProductsFromAPI();
-  await loadCategoriesFromAPI();
-}
-
-async function loadProductsFromAPI() {
-  const spinner = document.getElementById('productSpinner');
-  spinner.classList.add('active');
-
-  try {
-    const result = await apiGet('getProducts');
-    spinner.classList.remove('active');
-
-    if (result && !result.error && result.products && result.products.length > 0) {
-      products = result.products;
-      localStorage.setItem(CONFIG.STORAGE_KEY_PRODUCTS, JSON.stringify(products));
-      renderStoreProducts();
-      if (isAdmin) renderAdminProducts();
-      console.log('✅ Products loaded from API');
-    } else {
-      console.log('Using cached products from localStorage');
-    }
-  } catch (error) {
-    spinner.classList.remove('active');
-    console.error('Load products error:', error);
-  }
-}
-
-async function loadCategoriesFromAPI() {
-  const spinner = document.getElementById('categorySpinner');
-  spinner.classList.add('active');
-
-  try {
-    const result = await apiGet('getCategories');
-    spinner.classList.remove('active');
-
-    if (result && !result.error && result.categories && result.categories.length > 0) {
-      categories = result.categories;
-      localStorage.setItem(CONFIG.STORAGE_KEY_CATEGORIES, JSON.stringify(categories));
-      renderStoreCategories();
-      if (isAdmin) renderAdminCategories();
-      console.log('✅ Categories loaded from API');
-    } else {
-      console.log('Using cached categories from localStorage');
-    }
-  } catch (error) {
-    spinner.classList.remove('active');
-    console.error('Load categories error:', error);
-  }
-}
-
-/* ==================================================
-   SAMPLE DATA
-================================================== */
-function getSampleProducts() {
-  return [
-    { id: 1, name: "قميص أنيق", price: 499, discount: 0, icon: "👕", media: [], sizes: ["S", "M", "L", "XL"] },
-    { id: 2, name: "فستان أنيق", price: 799, discount: 0, icon: "👗", media: [], sizes: ["S", "M", "L"] },
-    { id: 3, name: "حذاء أنيق", price: 599, discount: 0, icon: "👡", media: [], sizes: ["40", "41", "42", "43"] },
-    { id: 4, name: "مستحضرات تجميل", price: 299, discount: 0, icon: "💄", media: [], sizes: [] }
-  ];
-}
-
-function getSampleCategories() {
-  return [
-    { id: 1, name: "الملابس", icon: "👕", image: null },
-    { id: 2, name: "فساتين", icon: "👗", image: null },
-    { id: 3, name: "الأحذية", icon: "👠", image: null },
-    { id: 4, name: "الجمال", icon: "💄", image: null },
-    { id: 5, name: "الهدايا", icon: "🎁", image: null }
-  ];
-}
-
-/* ==================================================
-   RENDER FUNCTIONS
-================================================== */
-function getProductPriceWithDiscount(product) {
-  if (product.discount && product.discount > 0) {
-    const discounted = product.price - (product.price * product.discount / 100);
-    return {
-      final: Math.round(discounted),
-      original: product.price,
-      hasDiscount: true
-    };
-  }
-  return {
-    final: product.price,
-    original: null,
-    hasDiscount: false
-  };
-}
-
-function renderStoreProducts() {
-  const grid = document.getElementById("productGrid");
-  if (!grid) return;
-  grid.innerHTML = "";
-
-  if (!products || products.length === 0) {
-    grid.innerHTML = '<p style="text-align:center;color:var(--brown);font-size:18px;padding:40px 0;">لا توجد منتجات حالياً</p>';
-    return;
-  }
-
-  products.forEach((p) => {
-    const priceInfo = getProductPriceWithDiscount(p);
-    const article = document.createElement("article");
-    article.className = "product";
-    article.dataset.id = p.id;
-
-    let mainMedia = '';
-    let galleryHtml = '';
-    const hasMedia = p.media && p.media.length > 0;
-
-    if (hasMedia) {
-      const firstMedia = p.media[0];
-      if (firstMedia.type === 'video') {
-        mainMedia = `<video controls muted playsinline><source src="${firstMedia.url || firstMedia.data}" type="video/mp4"></video>`;
-      } else {
-        mainMedia = `<img src="${firstMedia.url || firstMedia.data}" alt="${p.name}">`;
+    @media (max-width: 700px) {
+      .top-header {
+        gap: 8px;
+        padding: 10px 3%;
       }
-
-      if (p.media.length > 1) {
-        galleryHtml = `<div class="image-gallery">`;
-        p.media.forEach((m, index) => {
-          if (m.type === 'video') {
-            galleryHtml += `<video muted playsinline onclick="changeMainMedia(this, ${p.id}, ${index})"><source src="${m.url || m.data}" type="video/mp4"></video>`;
-          } else {
-            galleryHtml += `<img src="${m.url || m.data}" alt="${p.name}" onclick="changeMainMedia(this, ${p.id}, ${index})">`;
-          }
-        });
-        galleryHtml += `</div>`;
+      .logo {
+        font-size: 21px;
       }
-    } else {
-      mainMedia = `<span class="product-icon">${p.icon || '📦'}</span>`;
+      .logo span {
+        font-size: 9px;
+      }
+      .cart {
+        font-size: 0;
+        padding: 10px 12px;
+      }
+      .cart::after {
+        content: "🛒";
+        font-size: 22px;
+      }
+      .login-btn {
+        font-size: 0;
+        padding: 10px 12px;
+      }
+      .login-btn::after {
+        content: "🔑";
+        font-size: 22px;
+      }
+      .search-box {
+        height: 40px;
+      }
+      .search-box button {
+        width: 45px;
+        font-size: 17px;
+      }
+      .search-box input {
+        font-size: 14px;
+        padding: 0 10px;
+      }
+      .nav {
+        gap: 20px;
+        padding: 10px 3%;
+      }
+      .nav a {
+        font-size: 14px;
+      }
+      .hero {
+        min-height: 320px;
+        padding: 45px 15px;
+      }
+      .hero h1 {
+        font-size: 48px;
+      }
+      .hero p {
+        font-size: 17px;
+      }
+      .shop-btn {
+        padding: 13px 30px;
+      }
+      .categories {
+        padding: 35px 3%;
+      }
+      .products {
+        padding: 35px 3%;
+      }
+      .section-title {
+        font-size: 26px;
+      }
+      .category-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 12px;
+      }
+      .category {
+        padding: 20px 10px;
+      }
+      .category .icon {
+        font-size: 38px;
+      }
+      .product-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 12px;
+      }
+      .product-image {
+        height: 180px;
+        font-size: 65px;
+      }
+      .product-image .image-gallery img,
+      .product-image .image-gallery video {
+        width: 30px;
+        height: 30px;
+      }
+      .zoom-btn {
+        width: 32px;
+        height: 32px;
+        font-size: 16px;
+        top: 6px;
+        right: 6px;
+      }
+      .product-info {
+        padding: 12px;
+      }
+      .product-info h3 {
+        font-size: 14px;
+      }
+      .price {
+        font-size: 16px;
+      }
+      .sizes .size-btn {
+        font-size: 11px;
+        padding: 3px 8px;
+      }
+      .add-cart {
+        font-size: 13px;
+        padding: 10px 5px;
+      }
+      .whatsapp-float {
+        width: 50px;
+        height: 50px;
+        font-size: 26px;
+        bottom: 18px;
+        right: 18px;
+      }
+      .modal-box {
+        padding: 25px 20px;
+      }
+      .admin-controls {
+        flex-direction: column;
+      }
+      .admin-controls input,
+      .admin-controls select {
+        min-width: unset;
+      }
+      .admin-controls .size-checkboxes {
+        flex-wrap: wrap;
+        justify-content: center;
+      }
+      .media-file-row {
+        flex-direction: column;
+        align-items: stretch;
+      }
+      .media-file-row .file-preview {
+        align-self: center;
+      }
+      .zoom-modal .zoom-content {
+        max-height: 60vh;
+      }
+      .zoom-modal .zoom-nav button {
+        padding: 8px 15px;
+        font-size: 14px;
+      }
+      .zoom-modal .zoom-close {
+        width: 40px;
+        height: 40px;
+        font-size: 22px;
+        top: 10px;
+        left: 10px;
+      }
+      .order-form-container {
+        padding: 20px 15px;
+      }
+      .order-form-container .form-row {
+        grid-template-columns: 1fr;
+        gap: 0;
+      }
     }
 
-    let sizesHtml = '';
-    if (p.sizes && p.sizes.length > 0) {
-      sizesHtml = `<div class="sizes">`;
-      p.sizes.forEach(size => {
-        sizesHtml += `<button class="size-btn" onclick="selectSize(this)">${size}</button>`;
-      });
-      sizesHtml += `</div>`;
+    @media (max-width: 700px) and (orientation: portrait) {
+      #intro {
+        width: 100vw;
+        height: 100dvh;
+      }
+      #intro video {
+        width: 100vw;
+        height: 100dvh;
+        object-fit: cover;
+        object-position: center center;
+      }
     }
 
-    article.innerHTML = `
-      <div class="product-image" id="productImage_${p.id}">
-        <div class="main-media">${mainMedia}</div>
-        ${galleryHtml}
-        <button class="zoom-btn" onclick="openZoom(${p.id})" title="عرض الصور بحجم كبير">🔍</button>
-        <button class="delete-prod" onclick="deleteProduct(${p.id})">🗑</button>
-      </div>
-      <div class="product-info">
-        <h3>${p.name}</h3>
-        <div class="rating">★★★★★</div>
-        <div class="price">
-          ${priceInfo.hasDiscount ? `<span class="original-price">${priceInfo.original} جنيه</span>` : ''}
-          ${priceInfo.final} جنيه
-          ${priceInfo.hasDiscount ? `<span style="color:red;font-size:14px;"> (خصم ${p.discount}%)</span>` : ''}
+    @media (max-width: 900px) and (orientation: landscape) {
+      #intro video {
+        width: 100vw;
+        height: 100dvh;
+        object-fit: cover;
+        object-position: center center;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- ==================================================
+       INTRO VIDEO
+  ================================================== -->
+  <section id="intro">
+    <video id="introVideo" autoplay muted playsinline webkit-playsinline preload="auto">
+      <source src="intro.mp4" type="video/mp4">
+      متصفحك لا يدعم تشغيل الفيديو.
+    </video>
+  </section>
+
+  <!-- ==================================================
+       STORE
+  ================================================== -->
+  <main id="store">
+
+    <!-- HEADER -->
+    <header>
+      <div class="top-header">
+        <a href="#" class="logo">
+          H.L
+          <span>LeVance</span>
+        </a>
+
+        <div class="search-box">
+          <input type="search" id="search" placeholder="ابحث عن منتج...">
+          <button onclick="searchProducts()">🔍</button>
         </div>
-        ${sizesHtml}
-        <button class="add-cart" onclick="addToCartWithSize(this, ${priceInfo.final})">أضف إلى السلة</button>
+
+        <div class="header-actions">
+          <button class="login-btn" id="loginBtn" onclick="openLoginModal()">🔑 تسجيل</button>
+          <button class="cart" onclick="showCart()">🛒 السلة</button>
+        </div>
       </div>
-    `;
-    grid.appendChild(article);
-  });
 
-  if (isAdmin) {
-    showDeleteButtons(true);
-  }
-}
+      <nav class="nav">
+        <a href="#" onclick="showStore()">الرئيسية</a>
+        <a href="#products">جميع المنتجات</a>
+        <a href="#categories">الأقسام</a>
+      </nav>
+    </header>
 
-function selectSize(btn) {
-  const parent = btn.parentElement;
-  parent.querySelectorAll('.size-btn').forEach(b => b.classList.remove('selected'));
-  btn.classList.add('selected');
-}
+    <!-- HERO -->
+    <section class="hero">
+      <div class="hero-content">
+        <h1>H.L LeVance</h1>
+        <p>اكتشف منتجاتنا واختر ما يناسبك</p>
+        <a href="#products" class="shop-btn">تسوق الآن</a>
+      </div>
+    </section>
 
-function addToCartWithSize(btn, price) {
-  const productCard = btn.closest('.product');
-  const name = productCard.querySelector('h3').textContent;
-  let size = null;
-  const selected = productCard.querySelector('.size-btn.selected');
-  if (selected) {
-    size = selected.textContent;
-  }
-  addToCart(name, price, size);
-}
+    <!-- CATEGORIES -->
+    <section class="categories" id="categories">
+      <h2 class="section-title">تصفح الأقسام</h2>
+      <div class="spinner" id="categorySpinner"></div>
+      <div class="category-grid" id="categoryGrid"></div>
+    </section>
 
-function changeMainMedia(element, productId, index) {
-  const container = document.getElementById(`productImage_${productId}`);
-  if (!container) return;
-  
-  const mainMedia = container.querySelector('.main-media');
-  if (!mainMedia) return;
-  
-  const product = products.find(p => p.id === productId);
-  if (!product || !product.media) return;
-  
-  const media = product.media[index];
-  if (!media) return;
-  
-  if (media.type === 'video') {
-    mainMedia.innerHTML = `<video controls muted playsinline><source src="${media.url || media.data}" type="video/mp4"></video>`;
-    const videoEl = mainMedia.querySelector('video');
-    if (videoEl) videoEl.play();
-  } else {
-    mainMedia.innerHTML = `<img src="${media.url || media.data}" alt="${product.name}">`;
-  }
-  
-  const gallery = container.querySelector('.image-gallery');
-  if (gallery) {
-    gallery.querySelectorAll('img, video').forEach((el, i) => {
-      el.classList.toggle('active', i === index);
-    });
-  }
-}
+    <!-- PRODUCTS -->
+    <section class="products" id="products">
+      <h2 class="section-title">المنتجات المميزة</h2>
+      <div class="spinner" id="productSpinner"></div>
+      <div class="product-grid" id="productGrid"></div>
+    </section>
 
-function renderAdminProducts() {
-  const list = document.getElementById("adminProductList");
-  if (!list) return;
-  list.innerHTML = "";
+    <!-- ADMIN PANEL -->
+    <section id="adminPanel">
+      <h2>🛠 لوحة التحكم - Admin</h2>
 
-  if (!products || products.length === 0) {
-    list.innerHTML = '<p style="text-align:center;color:var(--brown);padding:20px 0;">لا توجد منتجات</p>';
-    return;
-  }
+      <!-- قسم إدارة المنتجات -->
+      <div class="admin-section">
+        <h3>📦 إدارة المنتجات</h3>
+        <div class="admin-controls">
+          <input type="text" id="newProductName" placeholder="اسم المنتج">
+          <input type="number" id="newProductPrice" placeholder="السعر">
+          <input type="number" id="newProductDiscount" placeholder="الخصم %">
+          <input type="text" id="newProductIcon" placeholder="أيقونة (مثال: 👕)">
 
-  products.forEach(p => {
-    const priceInfo = getProductPriceWithDiscount(p);
-    const div = document.createElement("div");
-    div.className = "admin-list-item";
-    let mediaPreview = '';
-    if (p.media && p.media.length > 0) {
-      const first = p.media[0];
-      if (first.type === 'video') {
-        mediaPreview = `<video style="width:40px;height:40px;object-fit:cover;border-radius:8px;" muted><source src="${first.url || first.data}" type="video/mp4"></video>`;
+          <div class="size-checkboxes">
+            <label><input type="checkbox" value="S"> S</label>
+            <label><input type="checkbox" value="M"> M</label>
+            <label><input type="checkbox" value="L"> L</label>
+            <label><input type="checkbox" value="XL"> XL</label>
+            <label><input type="checkbox" value="2XL"> 2XL</label>
+            <label><input type="checkbox" value="3XL"> 3XL</label>
+          </div>
+
+          <div class="media-files-container" id="mediaFilesContainer">
+            <div class="media-file-row" id="fileRowTemplate">
+              <input type="file" accept="image/*,video/*" onchange="previewFile(this)">
+              <img class="file-preview" id="previewImg" alt="معاينة">
+              <video class="file-preview" id="previewVideo" muted></video>
+              <button class="remove-file-btn" onclick="removeFileRow(this)">✕</button>
+            </div>
+          </div>
+          <button class="add-file-btn" onclick="addFileRow()">➕ إضافة ملف آخر</button>
+
+          <button onclick="addProduct()">➕ إضافة منتج</button>
+          <button onclick="resetProducts()">🔄 إعادة ضبط</button>
+        </div>
+        <div class="admin-list" id="adminProductList"></div>
+      </div>
+
+      <!-- قسم إدارة الأقسام -->
+      <div class="admin-section">
+        <h3>🏷️ إدارة الأقسام</h3>
+        <div class="admin-controls">
+          <input type="text" id="newCategoryName" placeholder="اسم القسم">
+          <input type="text" id="newCategoryIcon" placeholder="أيقونة (مثال: 👕)">
+          <input type="file" id="newCategoryImage" accept="image/*">
+          <button onclick="addCategory()">➕ إضافة قسم</button>
+          <button onclick="resetCategories()">🔄 إعادة ضبط</button>
+        </div>
+        <div class="admin-list" id="adminCategoryList"></div>
+      </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer>
+      <h2>H.L LeVance</h2>
+      <p>متجرك الإلكتروني</p>
+      <br>
+      <p>© 2026 جميع الحقوق محفوظة</p>
+    </footer>
+  </main>
+
+  <!-- ==================================================
+       ORDER FORM PAGE - صفحة طلب العميل
+  ================================================== -->
+  <section id="orderFormPage">
+    <div class="order-form-container">
+      <h2>📋 طلبية جديدة</h2>
+
+      <div class="order-summary">
+        <h3>🛒 ملخص الطلبية</h3>
+        <div class="cart-items" id="orderCartItems"></div>
+        <div class="total-price">
+          الإجمالي: <span id="orderTotalPrice">0</span> جنيه
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label>اسم المستلم <span class="required">*</span></label>
+        <input type="text" id="orderCustomerName" placeholder="أدخل اسم المستلم">
+      </div>
+
+      <div class="form-group">
+        <label>هاتف المستلم <span class="required">*</span></label>
+        <input type="tel" id="orderCustomerPhone" placeholder="مثال: 01012345678" dir="ltr" maxlength="11" oninput="this.value=this.value.replace(/[^0-9]/g,'')">
+      </div>
+
+      <div class="form-group">
+        <label>هاتف آخر للمستلم</label>
+        <input type="tel" id="orderCustomerPhone2" placeholder="هاتف آخر (اختياري)" dir="ltr" maxlength="11" oninput="this.value=this.value.replace(/[^0-9]/g,'')">
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label>المحافظة <span class="required">*</span></label>
+          <select id="orderGovernorate" onchange="updateOrderCities()">
+            <option value="">اختر المحافظة</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>المدينة <span class="required">*</span></label>
+          <select id="orderCity">
+            <option value="">اختر المحافظة أولا</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label>العنوان التفصيلي <span class="required">*</span></label>
+        <input type="text" id="orderAddress" placeholder="العنوان بالتفصيل (مثال: الحي الأول، شارع ...)">
+      </div>
+
+      <div class="form-group">
+        <label>المبلغ المطلوب تحصيله شامل الشحن <span class="required">*</span></label>
+        <input type="number" id="orderAmount" placeholder="المبلغ بالجنيه" dir="ltr">
+      </div>
+
+      <div class="form-group">
+        <label>وزن الشحنة <span class="required">*</span></label>
+        <input type="number" id="orderWeight" placeholder="الوزن بالكيلو" dir="ltr" value="1">
+      </div>
+
+      <div class="form-group">
+        <label>ملاحظات</label>
+        <textarea id="orderNotes" placeholder="ملاحظات إضافية (اختياري)"></textarea>
+      </div>
+
+      <button class="submit-order-btn" id="submitOrderBtn" onclick="submitOrder()">
+        🛒 تأكيد الطلبية
+      </button>
+
+      <span class="back-to-store" onclick="showStore()">← العودة للمتجر</span>
+
+      <p id="orderError" style="color:red;margin-top:10px;text-align:center;"></p>
+    </div>
+  </section>
+
+  <!-- ==================================================
+       ZOOM MODAL
+  ================================================== -->
+  <div class="zoom-modal" id="zoomModal">
+    <button class="zoom-close" onclick="closeZoom()">✕</button>
+    <div class="zoom-content" id="zoomContent">
+      <img id="zoomImage" src="" alt="تكبير" style="display:none;">
+      <video id="zoomVideo" controls muted playsinline style="display:none;">
+        <source id="zoomVideoSource" src="" type="video/mp4">
+      </video>
+    </div>
+    <div class="zoom-nav">
+      <button onclick="zoomPrev()">◀ السابق</button>
+      <span class="zoom-counter" id="zoomCounter">1 / 1</span>
+      <button onclick="zoomNext()">التالي ▶</button>
+    </div>
+  </div>
+
+  <!-- ==================================================
+       WHATSAPP BUTTON
+  ================================================== -->
+  <a href="https://wa.me/201234567890" target="_blank" class="whatsapp-float" aria-label="WhatsApp">
+    💬
+  </a>
+
+  <!-- ==================================================
+       LOGIN MODAL
+  ================================================== -->
+  <div class="modal-overlay" id="loginModal">
+    <div class="modal-box">
+      <h2>🔐 تسجيل الدخول</h2>
+      <input type="text" id="loginPhone" placeholder="رقم الهاتف" dir="rtl">
+      <input type="password" id="loginPassword" placeholder="كلمة المرور" dir="rtl">
+      <button class="btn-login-submit" onclick="handleLogin()">تسجيل</button>
+      <span class="signup-link" onclick="handleSignup()">➕ إنشاء حساب جديد</span>
+      <br>
+      <button class="close-modal" onclick="closeLoginModal()">إغلاق</button>
+    </div>
+  </div>
+
+  <!-- ==================================================
+       JAVASCRIPT
+  ================================================== -->
+  <script src="config.js">
+  </script>
+  <script src="main.js">
+  </script>
+
+  <script>
+    // ==========================================
+    // دوال تسجيل الدخول - تعريف مباشر
+    // ==========================================
+    function openLoginModal() {
+      var modal = document.getElementById('loginModal');
+      if (modal) {
+        modal.classList.add('active');
+        console.log('✅ Login modal opened');
       } else {
-        mediaPreview = `<img src="${first.url || first.data}" alt="${p.name}">`;
+        console.error('❌ Login modal not found');
       }
-    } else {
-      mediaPreview = `<span style="font-size:30px;">${p.icon || '📦'}</span>`;
     }
 
-    const sizeTags = p.sizes && p.sizes.length > 0 ? 
-      `<div class="size-tags">${p.sizes.map(s => `<span>${s}</span>`).join('')}</div>` : '';
-
-    div.innerHTML = `
-      <div class="item-info">
-        ${mediaPreview}
-        <span>${p.name} - ${priceInfo.final} جنيه ${priceInfo.hasDiscount ? `(خصم ${p.discount}%)` : ''}</span>
-        ${sizeTags}
-        <span style="font-size:12px;opacity:0.7;">📎 ${p.media ? p.media.length : 0} ملف</span>
-      </div>
-      <button onclick="deleteProduct(${p.id})">🗑 حذف</button>
-    `;
-    list.appendChild(div);
-  });
-}
-
-function renderStoreCategories() {
-  const grid = document.getElementById("categoryGrid");
-  if (!grid) return;
-  grid.innerHTML = "";
-
-  if (!categories || categories.length === 0) {
-    grid.innerHTML = '<p style="text-align:center;color:var(--brown);font-size:18px;padding:40px 0;">لا توجد أقسام حالياً</p>';
-    return;
-  }
-
-  categories.forEach(c => {
-    const div = document.createElement("div");
-    div.className = "category";
-    div.dataset.id = c.id;
-    let imageHtml = '';
-    if (c.image) {
-      imageHtml = `<img src="${c.image}" alt="${c.name}" class="category-image">`;
-    } else {
-      imageHtml = `<span class="icon">${c.icon || '🏷️'}</span>`;
+    function closeLoginModal() {
+      var modal = document.getElementById('loginModal');
+      if (modal) {
+        modal.classList.remove('active');
+        console.log('✅ Login modal closed');
+      }
     }
-    div.innerHTML = `
-      ${imageHtml}
-      <h3>${c.name}</h3>
-      <button class="delete-cat" onclick="deleteCategory(${c.id})">🗑</button>
-    `;
-    grid.appendChild(div);
-  });
-  if (isAdmin) {
-    document.querySelectorAll('.delete-cat').forEach(btn => btn.style.display = 'block');
-  }
-}
 
-function renderAdminCategories() {
-  const list = document.getElementById("adminCategoryList");
-  if (!list) return;
-  list.innerHTML = "";
+    function handleLogin() {
+      var phone = document.getElementById('loginPhone').value.trim();
+      var password = document.getElementById('loginPassword').value.trim();
 
-  if (!categories || categories.length === 0) {
-    list.innerHTML = '<p style="text-align:center;color:var(--brown);padding:20px 0;">لا توجد أقسام</p>';
-    return;
-  }
+      if (!phone || !password) {
+        alert('⚠️ يرجى إدخال رقم الهاتف وكلمة المرور.');
+        return;
+      }
 
-  categories.forEach(c => {
-    const div = document.createElement("div");
-    div.className = "admin-list-item";
-    let imagePreview = '';
-    if (c.image) {
-      imagePreview = `<img src="${c.image}" alt="${c.name}">`;
-    } else {
-      imagePreview = `<span style="font-size:30px;">${c.icon || '🏷️'}</span>`;
-    }
-    div.innerHTML = `
-      <div class="item-info">
-        ${imagePreview}
-        <span>${c.name}</span>
-      </div>
-      <button onclick="deleteCategory(${c.id})">🗑 حذف</button>
-    `;
-    list.appendChild(div);
-  });
-}
-
-function showDeleteButtons(show) {
-  document.querySelectorAll('.delete-prod').forEach(btn => {
-    btn.style.display = show ? 'block' : 'none';
-  });
-  document.querySelectorAll('.delete-cat').forEach(btn => {
-    btn.style.display = show ? 'block' : 'none';
-  });
-}
-
-/* ==================================================
-   PRODUCT MANAGEMENT - مع رفع Cloudinary
-================================================== */
-async function addProduct() {
-  const nameInput = document.getElementById("newProductName");
-  const priceInput = document.getElementById("newProductPrice");
-  const discountInput = document.getElementById("newProductDiscount");
-  const iconInput = document.getElementById("newProductIcon");
-
-  const name = nameInput.value.trim();
-  const price = parseFloat(priceInput.value.trim());
-  const discount = parseFloat(discountInput.value.trim()) || 0;
-  const icon = iconInput.value.trim() || '📦';
-
-  const sizeCheckboxes = document.querySelectorAll('.size-checkboxes input[type="checkbox"]:checked');
-  const sizes = Array.from(sizeCheckboxes).map(cb => cb.value);
-
-  if (!name || isNaN(price) || price <= 0) {
-    alert("⚠️ يرجى إدخال اسم المنتج وسعر صحيح.");
-    return;
-  }
-
-  // ==========================================
-  // رفع الملفات إلى Cloudinary
-  // ==========================================
-  const mediaFiles = getMediaFiles();
-  const media = [];
-  
-  if (mediaFiles.length > 0) {
-    const uploadPromises = mediaFiles.map(async (mf) => {
-      const result = await uploadToCloudinary(mf.file);
-      if (result.success) {
-        media.push({
-          type: result.type,
-          url: result.url,
-          name: mf.name
+      if (phone === '111' && password === '111') {
+        alert('✅ مرحباً Admin! تم تسجيل الدخول بنجاح.');
+        document.getElementById('loginBtn').classList.add('hidden');
+        document.getElementById('adminPanel').classList.add('active');
+        closeLoginModal();
+        document.querySelectorAll('.delete-prod, .delete-cat').forEach(function(el) {
+          el.style.display = 'block';
         });
-        console.log('✅ File uploaded:', result.url);
       } else {
-        throw new Error(`فشل رفع الملف: ${mf.name} - ${result.error}`);
+        alert('❌ رقم الهاتف أو كلمة المرور غير صحيحة.');
       }
-    });
-    
-    try {
-      await Promise.all(uploadPromises);
-    } catch (error) {
-      alert(`❌ ${error.message}`);
-      return;
     }
-  }
 
-  // ==========================================
-  // حفظ المنتج
-  // ==========================================
-  const newProduct = {
-    id: Date.now(),
-    name: name,
-    price: price,
-    discount: discount,
-    icon: icon,
-    media: media,  // الآن يحتوي على روابط Cloudinary فقط
-    sizes: sizes
-  };
-
-  products.push(newProduct);
-  saveToLocalStorage();
-  renderStoreProducts();
-  renderAdminProducts();
-
-  const result = await apiPost({
-    action: 'addProduct',
-    name: name,
-    price: price,
-    discount: discount,
-    icon: icon,
-    media: media,
-    sizes: sizes
-  });
-
-  if (result && !result.error) {
-    // تنظيف الحقول
-    document.getElementById("newProductName").value = "";
-    document.getElementById("newProductPrice").value = "";
-    document.getElementById("newProductDiscount").value = "";
-    document.getElementById("newProductIcon").value = "";
-    document.querySelectorAll('.media-file-row input[type="file"]').forEach(input => {
-      input.value = '';
-    });
-    document.querySelectorAll('.media-file-row .file-preview').forEach(preview => {
-      preview.style.display = 'none';
-      preview.className = 'file-preview';
-    });
-    document.querySelectorAll('.media-file-row .remove-file-btn').forEach(btn => {
-      btn.className = 'remove-file-btn';
-    });
-    const container = document.getElementById('mediaFilesContainer');
-    const rows = container.querySelectorAll('.media-file-row');
-    rows.forEach((row, index) => {
-      if (index > 0) row.remove();
-    });
-    document.querySelectorAll('.size-checkboxes input[type="checkbox"]').forEach(cb => cb.checked = false);
-    await loadProductsFromAPI();
-    alert("✅ تم إضافة المنتج بنجاح!");
-  } else {
-    alert("⚠️ تم إضافة المنتج محلياً ولكن قد يكون هناك خطأ في المزامنة مع الخادم.");
-  }
-}
-
-async function deleteProduct(id) {
-  if (confirm("هل أنت متأكد من حذف هذا المنتج؟")) {
-    products = products.filter(p => p.id !== id);
-    saveToLocalStorage();
-    renderStoreProducts();
-    renderAdminProducts();
-
-    const result = await apiPost({
-      action: 'deleteProduct',
-      id: id
-    });
-
-    if (result && !result.error) {
-      await loadProductsFromAPI();
-      alert("🗑 تم حذف المنتج.");
-    } else {
-      alert("⚠️ تم حذف المنتج محلياً ولكن قد يكون هناك خطأ في المزامنة مع الخادم.");
+    function handleSignup() {
+      alert('📝 سيتم تفعيل إنشاء الحساب قريباً');
     }
-  }
-}
 
-async function resetProducts() {
-  if (confirm("⚠️ سيتم إعادة ضبط المنتجات إلى الوضع الافتراضي. هل أنت متأكد؟")) {
-    products = getSampleProducts();
-    saveToLocalStorage();
-    renderStoreProducts();
-    renderAdminProducts();
-    alert("🔄 تم إعادة ضبط المنتجات محلياً.");
-  }
-}
-
-/* ==================================================
-   CATEGORY MANAGEMENT
-================================================== */
-async function addCategory() {
-  const nameInput = document.getElementById("newCategoryName");
-  const iconInput = document.getElementById("newCategoryIcon");
-  const fileInput = document.getElementById("newCategoryImage");
-
-  const name = nameInput.value.trim();
-  const icon = iconInput.value.trim() || '🏷️';
-
-  if (!name) {
-    alert("⚠️ يرجى إدخال اسم القسم.");
-    return;
-  }
-
-  let imageData = null;
-  if (fileInput.files && fileInput.files[0]) {
-    const reader = new FileReader();
-    imageData = await new Promise((resolve) => {
-      reader.onload = function(e) {
-        resolve(e.target.result);
-      };
-      reader.readAsDataURL(fileInput.files[0]);
-    });
-  }
-
-  const newCategory = {
-    id: Date.now(),
-    name: name,
-    icon: icon,
-    image: imageData
-  };
-
-  categories.push(newCategory);
-  saveToLocalStorage();
-  renderStoreCategories();
-  renderAdminCategories();
-
-  const result = await apiPost({
-    action: 'addCategory',
-    name: name,
-    icon: icon,
-    image: imageData
-  });
-
-  if (result && !result.error) {
-    document.getElementById("newCategoryName").value = "";
-    document.getElementById("newCategoryIcon").value = "";
-    document.getElementById("newCategoryImage").value = "";
-    await loadCategoriesFromAPI();
-    alert("✅ تم إضافة القسم بنجاح!");
-  } else {
-    alert("⚠️ تم إضافة القسم محلياً ولكن قد يكون هناك خطأ في المزامنة مع الخادم.");
-  }
-}
-
-async function deleteCategory(id) {
-  if (confirm("هل أنت متأكد من حذف هذا القسم؟")) {
-    categories = categories.filter(c => c.id !== id);
-    saveToLocalStorage();
-    renderStoreCategories();
-    renderAdminCategories();
-
-    const result = await apiPost({
-      action: 'deleteCategory',
-      id: id
-    });
-
-    if (result && !result.error) {
-      await loadCategoriesFromAPI();
-      alert("🗑 تم حذف القسم.");
-    } else {
-      alert("⚠️ تم حذف القسم محلياً ولكن قد يكون هناك خطأ في المزامنة مع الخادم.");
+    function showCart() {
+      alert('🛒 السلة فارغة حالياً');
     }
-  }
-}
 
-async function resetCategories() {
-  if (confirm("⚠️ سيتم إعادة ضبط الأقسام إلى الوضع الافتراضي. هل أنت متأكد؟")) {
-    categories = getSampleCategories();
-    saveToLocalStorage();
-    renderStoreCategories();
-    renderAdminCategories();
-    alert("🔄 تم إعادة ضبط الأقسام محلياً.");
-  }
-}
+    console.log('✅ All login functions loaded successfully');
 
-// ==================================================
-// بدء التحميل عند اكتمال تحميل الصفحة
-// ==================================================
-document.addEventListener('DOMContentLoaded', function() {
-  loadFromLocalStorage();
-  renderStoreProducts();
-  renderStoreCategories();
+    // ==========================================
+    // تأثير تقليب الصفحة عند انتهاء الفيديو
+    // ==========================================
+    document.addEventListener('DOMContentLoaded', function() {
+      const intro = document.getElementById('intro');
+      const store = document.getElementById('store');
+      const video = document.getElementById('introVideo');
 
-  setTimeout(() => {
-    loadProductsFromAPI();
-    loadCategoriesFromAPI();
-  }, 1000);
-});
+      function transitionToStore() {
+        if (intro.classList.contains('hide')) return;
+        console.log('📖 Flipping page - transitioning to store');
+        intro.classList.add('hide');
+        document.body.style.overflow = 'auto';
+
+        setTimeout(() => {
+          try {
+            if (typeof loadData === 'function') {
+              loadData();
+            }
+          } catch (e) {
+            console.error('Load data error:', e);
+          }
+        }, 500);
+      }
+
+      if (video) {
+        video.addEventListener('ended', function() {
+          console.log('🎬 Video ended - flipping page now');
+          transitionToStore();
+        });
+
+        const promise = video.play();
+        if (promise !== undefined) {
+          promise.catch(function(error) {
+            console.log('Video autoplay failed:', error);
+            setTimeout(transitionToStore, 5000);
+          });
+        }
+
+        video.addEventListener('error', function() {
+          console.warn('⚠️ Video error - flipping page after 5 seconds');
+          setTimeout(transitionToStore, 5000);
+        });
+      }
+
+      document.body.style.overflow = 'hidden';
+    });
+  </script>
+
+</body>
+
+</html>
 ```
