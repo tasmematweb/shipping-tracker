@@ -6,9 +6,60 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <title>H.L LeVance | المتجر</title>
   <link rel="stylesheet" href="styles.css">
-  <!-- إضافة مكتبة لرفع الملفات مباشرة -->
+  <!-- إضافة مكتبة Cloudinary -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/cloudinary-core/2.12.0/cloudinary-core-shrinkwrap.min.js">
   </script>
+  <style>
+    /* إضافة تأثير الانزلاق */
+    #intro {
+      position: fixed;
+      inset: 0;
+      width: 100vw;
+      height: 100vh;
+      height: 100dvh;
+      background: var(--yellow-main);
+      z-index: 99999;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      transition: transform 1s cubic-bezier(0.4, 0, 0.2, 1);
+      transform: translateX(0);
+    }
+
+    #intro.hide {
+      transform: translateX(-100%);
+      /* الانزلاق إلى اليسار مثل تقليب صفحة */
+      pointer-events: none;
+    }
+
+    #intro video {
+      position: absolute;
+      inset: 0;
+      width: 100vw;
+      height: 100vh;
+      height: 100dvh;
+      display: block;
+      object-fit: cover;
+      object-position: center center;
+      background: var(--yellow-main);
+    }
+
+    #store {
+      min-height: 100vh;
+      opacity: 1;
+      transform: translateX(0);
+      visibility: visible;
+      background: var(--yellow-main);
+      transition: all 0.3s ease;
+    }
+
+    /* إضافة طبقة خلفية للموقع */
+    #store-wrapper {
+      position: relative;
+      z-index: 1;
+    }
+  </style>
 </head>
 
 <body>
@@ -254,44 +305,72 @@
   </div>
 
   <!-- ==================================================
-       JAVASCRIPT - ترتيب التحميل الصحيح
+       JAVASCRIPT
   ================================================== -->
-  <!-- 1. تحميل CONFIG أولاً -->
   <script src="config.js"></script>
-  
-  <!-- 2. تحميل MAIN.JS -->
   <script src="main.js"></script>
-  
-  <!-- 3. إضافة تعريف API_BASE_URL كاحتياطي -->
+
   <script>
-    // تعريف احتياطي في حال لم يتم تحميله من config.js
+    // تعريف احتياطي
     if (typeof API_BASE_URL === 'undefined') {
       var API_BASE_URL = 'https://script.google.com/macros/s/AKfycbzuajhu983jCQWr_V4ezz6SHpanxinydY5L4Vf7spqyuWTtoOLBmH4536yWz6jboSxm/exec';
-      console.warn('⚠️ API_BASE_URL defined as fallback in index.html');
     }
-    
-    // تأكد من وجود CONFIG في window
-    if (typeof window.CONFIG === 'undefined') {
-      window.CONFIG = {
-        API_BASE_URL: API_BASE_URL,
-        STORE_NAME: 'H.L LeVance',
-        STORE_PHONE: '201234567890',
-        ADMIN_PHONE: '111',
-        ADMIN_PASSWORD: '111',
-        STORAGE_KEY_PRODUCTS: 'hl_products',
-        STORAGE_KEY_CATEGORIES: 'hl_categories',
-        STORAGE_KEY_CART: 'hl_cart',
-        STORAGE_KEY_ORDERS: 'hl_orders',
-        CLOUDINARY: {
-          CLOUD_NAME: 'q2tqddel',
-          API_KEY: '518715792296824',
-          API_SECRET: '' // اتركه فارغاً، سيتم تعبئته من config.js
+
+    // ==========================================
+    // تأثير تقليب الصفحة عند انتهاء الفيديو
+    // ==========================================
+    document.addEventListener('DOMContentLoaded', function() {
+      const intro = document.getElementById('intro');
+      const store = document.getElementById('store');
+      const video = document.getElementById('introVideo');
+
+      // دالة الانتقال إلى الموقع بتأثير الانزلاق
+      function transitionToStore() {
+        if (intro.classList.contains('hide')) return;
+
+        console.log('📖 Flipping page - transitioning to store');
+        intro.classList.add('hide');
+        document.body.style.overflow = 'auto';
+
+        // تحميل البيانات بعد الانتقال
+        setTimeout(() => {
+          try {
+            if (typeof loadData === 'function') {
+              loadData();
+            }
+          } catch(e) {
+            console.error('Load data error:', e);
+          }
+        }, 500);
+      }
+
+      // عند انتهاء الفيديو - الانتقال فوراً
+      if (video) {
+        video.addEventListener('ended', function() {
+          console.log('🎬 Video ended - flipping page now');
+          transitionToStore();
+        });
+
+        // تشغيل الفيديو
+        const promise = video.play();
+        if (promise !== undefined) {
+          promise.catch(function(error) {
+            console.log('Video autoplay failed:', error);
+            // إذا فشل التشغيل، ننتقل بعد 5 ثواني
+            setTimeout(transitionToStore, 5000);
+          });
         }
-      };
-      console.log('✅ CONFIG created with fallback values');
-    }
-    
-    console.log('✅ All configurations loaded successfully');
+
+        // إذا حدث خطأ في الفيديو
+        video.addEventListener('error', function() {
+          console.warn('⚠️ Video error - flipping page after 5 seconds');
+          setTimeout(transitionToStore, 5000);
+        });
+      }
+
+      // منع التمرير أثناء شاشة الترحيب
+      document.body.style.overflow = 'hidden';
+    });
   </script>
 
 </body>
