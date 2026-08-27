@@ -645,7 +645,7 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 // ==================================================
-// دوال تسجيل الدخول
+// دوال تسجيل الدخول (تتحقق محلياً وعبر API)
 // ==================================================
 
 function openLoginModal() {
@@ -657,22 +657,41 @@ function closeLoginModal() {
 }
 
 async function handleLogin() {
-    const phone = document.getElementById('loginPhone').value.trim();
-    const password = document.getElementById('loginPassword').value.trim();
+    const phoneInput = document.getElementById('loginPhone');
+    const passwordInput = document.getElementById('loginPassword');
+
+    if (!phoneInput || !passwordInput) return;
+
+    const phone = phoneInput.value.trim();
+    const password = passwordInput.value.trim();
 
     if (!phone || !password) {
         alert('⚠️ يرجى إدخال رقم الهاتف وكلمة المرور.');
         return;
     }
 
+    // 1. تحقق محلي مباشر باستخدام بيانات الادمن في config.js
+    if (phone === CONFIG.ADMIN_PHONE && password === CONFIG.ADMIN_PASSWORD) {
+        alert('✅ مرحباً Admin! تم تسجيل الدخول بنجاح.');
+        const loginBtn = document.getElementById('loginBtn');
+        const adminPanel = document.getElementById('adminPanel');
+
+        if (loginBtn) loginBtn.classList.add('hidden');
+        if (adminPanel) adminPanel.classList.add('active');
+
+        closeLoginModal();
+        document.querySelectorAll('.delete-prod, .delete-cat').forEach(el => el.style.display = 'block');
+        return;
+    }
+
+    // 2. إذا لم تتطابق البيانات المحليه، نفحص عبر الشيت
     const result = await callAPI('loginUser', { phone: phone, password: password });
 
     if (result.success) {
-        alert('✅ مرحباً Admin! تم تسجيل الدخول بنجاح.');
-        document.getElementById('loginBtn').classList.add('hidden');
-        document.getElementById('adminPanel').classList.add('active');
+        alert('✅ تم تسجيل الدخول بنجاح.');
+        const loginBtn = document.getElementById('loginBtn');
+        if (loginBtn) loginBtn.classList.add('hidden');
         closeLoginModal();
-        document.querySelectorAll('.delete-prod, .delete-cat').forEach(el => el.style.display = 'block');
     } else {
         alert('❌ رقم الهاتف أو كلمة المرور غير صحيحة.');
     }
