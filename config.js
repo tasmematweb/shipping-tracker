@@ -7,7 +7,7 @@ const CONFIG = {
     // ==============================================
     // Google Sheets API - الرابط الجديد
     // ==============================================
-    API_BASE_URL: 'https://script.google.com/macros/s/AKfycbzuajhu983jCQWr_V4ezz6SHpanxinydY5L4Vf7spqyuWTtoOLBmH4536yWz6jboSxm/exec',
+    API_BASE_URL: 'https://script.google.com/macros/s/AKfycbzQ1ZzQtn1M8AI_9ppSpCPYauVod2JTIHj0a1lO6x3-gLb-khqqfW8EtcWZVg8wJcAf/exec',
     
     // ==============================================
     // إعدادات المتجر
@@ -23,7 +23,7 @@ const CONFIG = {
     ADMIN_PASSWORD: '111',
     
     // ==============================================
-    // مفاتيح التخزين المحلي (localStorage)
+    // مفاتيح التخزين المحلي (localStorage) - للنسخ الاحتياطي
     // ==============================================
     STORAGE_KEY_PRODUCTS: 'hl_products',
     STORAGE_KEY_CATEGORIES: 'hl_categories',
@@ -45,15 +45,14 @@ const CONFIG = {
     ALLOWED_FILE_TYPES: ['image/jpeg', 'image/png', 'image/gif', 'image/webp', 'video/mp4', 'video/webm'],
 
     // ==============================================
-    // Cloudinary - رفع الصور والفيديو
+    // Cloudinary - رفع الصور والفيديو (اختياري)
     // ==============================================
     CLOUDINARY: {
         CLOUD_NAME: 'q2tqddel',
         API_KEY: '518715792296824',
-        API_SECRET: 'اضف_المفتاح_السري_هنا'  // ضع الـ API Secret من Cloudinary
+        API_SECRET: 'اضف_المفتاح_السري_هنا'
     },
     
-    // رابط API الخاص بـ Cloudinary للرفع
     CLOUDINARY_UPLOAD_URL: 'https://api.cloudinary.com/v1_1/q2tqddel/upload'
 };
 
