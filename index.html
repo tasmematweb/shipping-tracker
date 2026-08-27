@@ -26,18 +26,19 @@
     #store { min-height:100vh; opacity:0; transform:translateY(15px); visibility:hidden; background:var(--yellow-main); transition:opacity .8s, transform .8s; }
     #store.show { opacity:1; transform:translateY(0); visibility:visible; }
     header { position:sticky; top:0; z-index:1000; background:var(--yellow-main); border-bottom:3px solid var(--brown); }
-    .top-header { min-height:78px; display:flex; align-items:center; gap:20px; padding:10px 4%; background:var(--yellow-main); }
-    .logo { color:var(--brown); text-decoration:none; font-family:Georgia,serif; font-size:30px; font-weight:bold; white-space:nowrap; }
-    .logo span { display:block; font-size:13px; margin-top:5px; text-align:center; letter-spacing:1px; }
-    .search-box { flex:1; display:flex; height:46px; max-width:800px; margin:auto; border:2px solid var(--brown); border-radius:8px; overflow:hidden; background:var(--yellow-light); }
+    .top-header { min-height:70px; display:flex; align-items:center; justify-content:space-between; gap:15px; padding:10px 4%; background:var(--yellow-main); }
+    .logo { color:var(--brown); text-decoration:none; font-family:Georgia,serif; font-size:28px; font-weight:bold; white-space:nowrap; }
+    .logo span { display:block; font-size:12px; margin-top:3px; text-align:center; letter-spacing:1px; }
+    .header-actions { display:flex; align-items:center; gap:10px; }
+    .login-btn, .cart { background:var(--brown); border:none; color:var(--yellow-light); font-size:16px; cursor:pointer; white-space:nowrap; padding:12px 20px; border-radius:8px; font-weight:bold; transition:background .2s; }
+    .login-btn:hover, .cart:hover { background:var(--brown-light); }
+    .login-btn.hidden { display:none; }
+    .search-bar { padding:10px 4% 15px; background:var(--yellow-main); }
+    .search-box { display:flex; height:46px; max-width:100%; border:2px solid var(--brown); border-radius:8px; overflow:hidden; background:var(--yellow-light); }
     .search-box input { width:100%; border:none; outline:none; background:var(--yellow-light); color:var(--brown); padding:0 18px; font-size:16px; direction:rtl; }
     .search-box input::placeholder { color:var(--brown); opacity:.75; }
     .search-box button { width:60px; border:none; border-right:2px solid var(--brown); background:var(--brown); color:var(--yellow-light); cursor:pointer; font-size:20px; }
     .search-box button:hover { background:var(--brown-light); }
-    .header-actions { display:flex; align-items:center; gap:10px; }
-    .login-btn, .cart { background:var(--brown); border:none; color:var(--yellow-light); font-size:16px; cursor:pointer; white-space:nowrap; padding:12px 18px; border-radius:8px; font-weight:bold; transition:background .2s; }
-    .login-btn:hover, .cart:hover { background:var(--brown-light); }
-    .login-btn.hidden { display:none; }
     .nav { background:var(--yellow-soft); padding:12px 4%; display:flex; gap:28px; overflow-x:auto; border-top:2px solid var(--brown); }
     .nav a { color:var(--brown); text-decoration:none; white-space:nowrap; font-size:15px; font-weight:bold; }
     .nav a:hover { color:var(--brown-light); }
@@ -157,12 +158,13 @@
     @keyframes spin { 0%{transform:rotate(0)} 100%{transform:rotate(360deg)} }
     @media (max-width:700px) {
       .top-header { gap:8px; padding:10px 3%; }
-      .logo { font-size:21px; }
+      .logo { font-size:20px; }
       .logo span { font-size:9px; }
       .cart { font-size:0; padding:10px 12px; }
-      .cart::after { content:"🛒"; font-size:22px; }
+      .cart::after { content:"🛒"; font-size:20px; }
       .login-btn { font-size:14px; padding:10px 15px; }
-      .search-box { height:40px; }
+      .search-bar { padding:8px 3% 12px; }
+      .search-box { height:42px; }
       .search-box button { width:45px; font-size:17px; }
       .search-box input { font-size:14px; padding:0 10px; }
       .nav { gap:20px; padding:10px 3%; }
@@ -211,11 +213,13 @@
   <header>
     <div class="top-header">
       <a href="#" class="logo">H.L LeVance<span>متجر فاخر</span></a>
-      <div class="search-box"><input type="text" id="search" placeholder="بحث..." oninput="searchProducts()"><button onclick="searchProducts()">🔍</button></div>
       <div class="header-actions">
         <button class="login-btn" id="loginBtn" onclick="openLoginModal()">دخول</button>
         <button class="cart" onclick="showCart()">🛒</button>
       </div>
+    </div>
+    <div class="search-bar">
+      <div class="search-box"><input type="text" id="search" placeholder="بحث..." oninput="searchProducts()"><button onclick="searchProducts()">🔍</button></div>
     </div>
     <div class="nav"><a href="#categories">الأقسام</a><a href="#products">المنتجات</a><a href="#" onclick="document.getElementById('orderFormPage').classList.toggle('active');document.getElementById('orderFormPage').style.display=document.getElementById('orderFormPage').classList.contains('active')?'block':'none'">طلب</a></div>
   </header>
@@ -455,7 +459,6 @@ async function handleLogin() {
   const password = document.getElementById('loginPassword').value.trim();
   if(!phone||!password) return alert('⚠️ يرجى إدخال رقم الهاتف وكلمة المرور.');
   
-  // Admin فقط
   if(phone === String(CONFIG.ADMIN_PHONE) && password === String(CONFIG.ADMIN_PASSWORD)) {
     alert('✅ مرحباً Admin! تم تسجيل الدخول بنجاح.');
     localStorage.setItem('hl_admin','true');
@@ -468,7 +471,6 @@ async function handleLogin() {
     return;
   }
   
-  // مستخدم عادي - لا يرى الأدمن
   const result = await callAPI('loginUser', {phone,password});
   if(result?.success){ 
     alert('✅ تم تسجيل الدخول بنجاح.'); 
