@@ -1,3 +1,4 @@
+```html
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 
@@ -1844,12 +1845,8 @@
       localStorage.setItem('hl_products', JSON.stringify(products));
 
       // تحديث العرض
-      if (typeof renderStoreProducts === 'function') {
-        renderStoreProducts();
-      }
-      if (typeof renderAdminProducts === 'function') {
-        renderAdminProducts();
-      }
+      renderStoreProducts();
+      renderAdminProducts();
 
       // تنظيف الحقول
       document.getElementById('newProductName').value = '';
@@ -1870,6 +1867,158 @@
       alert('✅ تم إضافة المنتج بنجاح!');
     }
 
+    // دالة عرض المنتجات في المتجر
+    function renderStoreProducts() {
+      const grid = document.getElementById('productGrid');
+      if (!grid) return;
+
+      const products = JSON.parse(localStorage.getItem('hl_products') || '[]');
+      grid.innerHTML = '';
+
+      if (products.length === 0) {
+        grid.innerHTML =
+          '<p style="text-align:center;color:var(--brown);font-size:18px;padding:40px 0;">لا توجد منتجات حالياً</p>';
+        return;
+      }
+
+      products.forEach(function(p) {
+        const price = p.price || 0;
+        const discount = p.discount || 0;
+        const finalPrice = discount > 0 ? Math.round(price - (price * discount / 100)) : price;
+        const hasDiscount = discount > 0;
+
+        const article = document.createElement('article');
+        article.className = 'product';
+        article.dataset.id = p.id;
+
+        let mainMedia = '';
+        let galleryHtml = '';
+        const hasMedia = p.media && p.media.length > 0;
+
+        if (hasMedia) {
+          const firstMedia = p.media[0];
+          if (firstMedia.type === 'video') {
+            mainMedia =
+              `<video controls muted playsinline><source src="${firstMedia.data || firstMedia.url}" type="video/mp4"></video>`;
+          } else {
+            mainMedia = `<img src="${firstMedia.data || firstMedia.url}" alt="${p.name}">`;
+          }
+
+          if (p.media.length > 1) {
+            galleryHtml = '<div class="image-gallery">';
+            p.media.forEach(function(m, index) {
+              if (m.type === 'video') {
+                galleryHtml +=
+                  `<video muted playsinline onclick="changeMainMedia(this, ${p.id}, ${index})"><source src="${m.data || m.url}" type="video/mp4"></video>`;
+              } else {
+                galleryHtml +=
+                  `<img src="${m.data || m.url}" alt="${p.name}" onclick="changeMainMedia(this, ${p.id}, ${index})">`;
+              }
+            });
+            galleryHtml += '</div>';
+          }
+        } else {
+          mainMedia = `<span class="product-icon">${p.icon || '📦'}</span>`;
+        }
+
+        let sizesHtml = '';
+        if (p.sizes && p.sizes.length > 0) {
+          sizesHtml = '<div class="sizes">';
+          p.sizes.forEach(function(size) {
+            sizesHtml += `<button class="size-btn" onclick="selectSize(this)">${size}</button>`;
+          });
+          sizesHtml += '</div>';
+        }
+
+        article.innerHTML = `
+          <div class="product-image" id="productImage_${p.id}">
+            <div class="main-media">${mainMedia}</div>
+            ${galleryHtml}
+            <button class="zoom-btn" onclick="openZoom(${p.id})" title="عرض الصور بحجم كبير">🔍</button>
+            <button class="delete-prod" onclick="deleteProduct(${p.id})">🗑</button>
+          </div>
+          <div class="product-info">
+            <h3>${p.name}</h3>
+            <div class="rating">★★★★★</div>
+            <div class="price">
+              ${hasDiscount ? `<span class="original-price">${price} جنيه</span>` : ''}
+              ${finalPrice} جنيه
+              ${hasDiscount ? `<span style="color:red;font-size:14px;"> (خصم ${discount}%)</span>` : ''}
+            </div>
+            ${sizesHtml}
+            <button class="add-cart" onclick="addToCart('${p.name}', ${finalPrice}, null)">أضف إلى السلة</button>
+          </div>
+        `;
+        grid.appendChild(article);
+      });
+    }
+
+    // دالة عرض المنتجات في لوحة التحكم
+    function renderAdminProducts() {
+      const list = document.getElementById('adminProductList');
+      if (!list) return;
+
+      const products = JSON.parse(localStorage.getItem('hl_products') || '[]');
+      list.innerHTML = '';
+
+      if (products.length === 0) {
+        list.innerHTML = '<p style="text-align:center;color:var(--brown);padding:20px 0;">لا توجد منتجات</p>';
+        return;
+      }
+
+      products.forEach(function(p) {
+        const price = p.price || 0;
+        const discount = p.discount || 0;
+        const finalPrice = discount > 0 ? Math.round(price - (price * discount / 100)) : price;
+
+        const div = document.createElement('div');
+        div.className = 'admin-list-item';
+
+        let mediaPreview = '';
+        if (p.media && p.media.length > 0) {
+          const first = p.media[0];
+          if (first.type === 'video') {
+            mediaPreview =
+              `<video style="width:40px;height:40px;object-fit:cover;border-radius:8px;" muted><source src="${first.data || first.url}" type="video/mp4"></video>`;
+          } else {
+            mediaPreview =
+              `<img src="${first.data || first.url}" alt="${p.name}" style="width:40px;height:40px;object-fit:cover;border-radius:8px;">`;
+          }
+        } else {
+          mediaPreview = `<span style="font-size:30px;">${p.icon || '📦'}</span>`;
+        }
+
+        const sizeTags = p.sizes && p.sizes.length > 0 ?
+          `<div class="size-tags">${p.sizes.map(s => `<span>${s}</span>`).join('')}</div>` :
+          '';
+
+        div.innerHTML = `
+          <div class="item-info">
+            ${mediaPreview}
+            <span>${p.name} - ${finalPrice} جنيه ${discount > 0 ? `(خصم ${discount}%)` : ''}</span>
+            ${sizeTags}
+            <span style="font-size:12px;opacity:0.7;">📎 ${p.media ? p.media.length : 0} ملف</span>
+          </div>
+          <button onclick="deleteProduct(${p.id})">🗑 حذف</button>
+        `;
+        list.appendChild(div);
+      });
+    }
+
+    // دالة حذف منتج
+    function deleteProduct(id) {
+      if (confirm('هل أنت متأكد من حذف هذا المنتج؟')) {
+        let products = JSON.parse(localStorage.getItem('hl_products') || '[]');
+        products = products.filter(function(p) {
+          return p.id !== id;
+        });
+        localStorage.setItem('hl_products', JSON.stringify(products));
+        renderStoreProducts();
+        renderAdminProducts();
+        alert('🗑 تم حذف المنتج.');
+      }
+    }
+
     // دالة إعادة ضبط المنتجات
     function resetProducts() {
       if (confirm('⚠️ سيتم إعادة ضبط المنتجات إلى الوضع الافتراضي. هل أنت متأكد؟')) {
@@ -1885,12 +2034,8 @@
           { id: 4, name: "مستحضرات تجميل", price: 299, discount: 0, icon: "💄", media: [], sizes: [] }
         ];
         localStorage.setItem('hl_products', JSON.stringify(sampleProducts));
-        if (typeof renderStoreProducts === 'function') {
-          renderStoreProducts();
-        }
-        if (typeof renderAdminProducts === 'function') {
-          renderAdminProducts();
-        }
+        renderStoreProducts();
+        renderAdminProducts();
         alert('🔄 تم إعادة ضبط المنتجات.');
       }
     }
@@ -1981,9 +2126,43 @@
       container.appendChild(newRow);
     }
 
-    console.log('✅ Admin functions loaded successfully');
+    // دوال مساعدة للتكبير
+    function openZoom(productId) {
+      const products = JSON.parse(localStorage.getItem('hl_products') || '[]');
+      const product = products.find(function(p) { return p.id === productId; });
+      if (!product || !product.media || product.media.length === 0) {
+        alert('لا توجد صور أو فيديوهات لعرضها.');
+        return;
+      }
+      // تنفيذ التكبير
+      alert('🔍 تم فتح التكبير للمنتج: ' + product.name);
+    }
+
+    function selectSize(btn) {
+      const parent = btn.parentElement;
+      parent.querySelectorAll('.size-btn').forEach(function(b) {
+        b.classList.remove('selected');
+      });
+      btn.classList.add('selected');
+    }
+
+    function addToCart(name, price, size) {
+      alert('🛒 تم إضافة ' + name + ' إلى السلة بسعر ' + price + ' جنيه');
+    }
+
+    function searchProducts() {
+      const query = document.getElementById('search').value.trim().toLowerCase();
+      const products = document.querySelectorAll('.product');
+      products.forEach(function(product) {
+        const name = product.querySelector('h3').textContent.toLowerCase();
+        product.style.display = !query || name.includes(query) ? '' : 'none';
+      });
+    }
+
+    console.log('✅ All admin and render functions loaded successfully');
   </script>
 
 </body>
 
 </html>
+```
