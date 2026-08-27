@@ -273,7 +273,7 @@
 <script>
 // ======= CONFIG =======
 const CONFIG = {
-  API_BASE_URL: 'https://script.google.com/macros/s/AKfycbzQ1ZzQtn1M8AI_9ppSpCPYauVod2JTIHj0a1lO6x3-gLb-khqqfW8EtcWZVg8wJcAf/exec',
+  API_BASE_URL: 'https://script.google.com/macros/s/AKfycbztS-khDlCBwBfV4_b6v5Eoiw90Kw3ht7ZbgZ1YA5OcbjpVMxn9cjge0Riidc4VXFRz/exec',
   STORE_NAME: 'H.L LeVance',
   ADMIN_PHONE: '111',
   ADMIN_PASSWORD: '111',
@@ -321,20 +321,10 @@ function renderStoreProducts() {
   grid.innerHTML = products.length===0 ? '<p style="text-align:center;color:var(--brown);font-size:18px;padding:40px 0;">لا توجد منتجات حالياً</p>' : '';
   products.forEach(p => {
     const price = p.price||0, disc = p.discount||0, final = disc>0 ? Math.round(price-(price*disc/100)) : price;
-    const hasMedia = p.media && p.media.length>0;
-    let mainMedia = hasMedia ? (p.media[0].type==='video' ? `<video controls muted playsinline><source src="${p.media[0].data||p.media[0].url}" type="video/mp4"></video>` : `<img src="${p.media[0].data||p.media[0].url}" alt="${p.name}">`) : `<span class="product-icon">${p.icon||'📦'}</span>`;
+    let mainMedia = `<span class="product-icon">${p.icon||'📦'}</span>`;
     let gallery = '';
-    if(hasMedia && p.media.length>1) {
-      gallery = '<div class="image-gallery">';
-      p.media.forEach((m,i) => {
-        if(m.type==='video') gallery += `<video muted playsinline onclick="changeMainMedia(this,${p.id},${i})"><source src="${m.data||m.url}" type="video/mp4"></video>`;
-        else gallery += `<img src="${m.data||m.url}" alt="${p.name}" onclick="changeMainMedia(this,${p.id},${i})">`;
-      });
-      gallery += '</div>';
-    }
-    let sizesHtml = p.sizes?.length ? '<div class="sizes">'+p.sizes.map(s=>`<button class="size-btn" onclick="selectSize(this)">${s}</button>`).join('')+'</div>' : '';
     const art = document.createElement('article'); art.className='product'; art.dataset.id=p.id;
-    art.innerHTML = `<div class="product-image" id="productImage_${p.id}"><div class="main-media">${mainMedia}</div>${gallery}<button class="zoom-btn" onclick="openZoom(${p.id})">🔍</button><button class="delete-prod" onclick="deleteProduct(${p.id})">🗑</button></div><div class="product-info"><h3>${p.name}</h3><div class="rating">★★★★★</div><div class="price">${disc>0?`<span class="original-price">${price} جنيه</span>`:''} ${final} جنيه ${disc>0?`<span style="color:red;font-size:14px;"> (خصم ${disc}%)</span>`:''}</div>${sizesHtml}<button class="add-cart" onclick="addToCart('${p.name}',${final},null)">أضف إلى السلة</button></div>`;
+    art.innerHTML = `<div class="product-image" id="productImage_${p.id}"><div class="main-media">${mainMedia}</div>${gallery}<button class="zoom-btn" onclick="openZoom(${p.id})">🔍</button><button class="delete-prod" onclick="deleteProduct(${p.id})">🗑</button></div><div class="product-info"><h3>${p.name}</h3><div class="rating">★★★★★</div><div class="price">${disc>0?`<span class="original-price">${price} جنيه</span>`:''} ${final} جنيه ${disc>0?`<span style="color:red;font-size:14px;"> (خصم ${disc}%)</span>`:''}</div>${p.sizes?.length ? '<div class="sizes">'+p.sizes.map(s=>`<button class="size-btn" onclick="selectSize(this)">${s}</button>`).join('')+'</div>' : ''}<button class="add-cart" onclick="addToCart('${p.name}',${final},null)">أضف إلى السلة</button></div>`;
     grid.appendChild(art);
   });
 }
@@ -344,7 +334,7 @@ function renderCategories() {
   grid.innerHTML = cats.length===0 ? '<p style="text-align:center;color:var(--brown);padding:20px 0;">لا توجد أقسام</p>' : '';
   cats.forEach(c => {
     const div = document.createElement('div'); div.className='category';
-    div.innerHTML = `<button class="delete-cat" onclick="deleteCategory(${c.id})">🗑</button>${c.image?`<img class="category-image" src="${c.image}" alt="${c.name}">`:`<span class="icon">${c.icon||'🏷️'}</span>`}<h3>${c.name}</h3>`;
+    div.innerHTML = `<button class="delete-cat" onclick="deleteCategory(${c.id})">🗑</button><span class="icon">${c.icon||'🏷️'}</span><h3>${c.name}</h3>`;
     grid.appendChild(div);
   });
 }
@@ -354,10 +344,9 @@ function renderAdminProducts() {
   list.innerHTML = products.length===0 ? '<p style="text-align:center;color:var(--brown);padding:20px 0;">لا توجد منتجات</p>' : '';
   products.forEach(p => {
     const price = p.price||0, disc = p.discount||0, final = disc>0 ? Math.round(price-(price*disc/100)) : price;
-    let mediaPrev = p.media?.length ? (p.media[0].type==='video' ? `<video style="width:40px;height:40px;object-fit:cover;border-radius:8px;" muted><source src="${p.media[0].data||p.media[0].url}" type="video/mp4"></video>` : `<img src="${p.media[0].data||p.media[0].url}" style="width:40px;height:40px;object-fit:cover;border-radius:8px;">`) : `<span style="font-size:30px;">${p.icon||'📦'}</span>`;
     const sizeTags = p.sizes?.length ? `<div class="size-tags">${p.sizes.map(s=>`<span>${s}</span>`).join('')}</div>` : '';
     const div = document.createElement('div'); div.className='admin-list-item';
-    div.innerHTML = `<div class="item-info">${mediaPrev}<span>${p.name} - ${final} جنيه ${disc>0?`(خصم ${disc}%)`:''}</span>${sizeTags}<span style="font-size:12px;opacity:0.7;">📎 ${p.media?.length||0} ملف</span></div><button onclick="deleteProduct(${p.id})">🗑 حذف</button>`;
+    div.innerHTML = `<div class="item-info"><span style="font-size:30px;">${p.icon||'📦'}</span><span>${p.name} - ${final} جنيه ${disc>0?`(خصم ${disc}%)`:''}</span>${sizeTags}</div><button onclick="deleteProduct(${p.id})">🗑 حذف</button>`;
     list.appendChild(div);
   });
 }
@@ -380,8 +369,7 @@ async function addProduct() {
   const icon = document.getElementById('newProductIcon').value.trim()||'📦';
   if(!name || isNaN(price) || price<=0) return alert('⚠️ يرجى إدخال اسم المنتج وسعر صحيح.');
   const sizes = [...document.querySelectorAll('.size-checkboxes input[type="checkbox"]:checked')].map(cb=>cb.value);
-  const media = [];
-  const result = await callAPI('addProduct', {name,price,discount,icon,sizes,media});
+  const result = await callAPI('addProduct', {name,price,discount,icon,sizes,media:[]});
   if(result.success){ alert('✅ تم إضافة المنتج بنجاح!'); await loadData(); clearAddProduct(); }
   else alert('❌ فشل إضافة المنتج: '+(result.error||'خطأ'));
 }
@@ -505,17 +493,6 @@ function showZoomItem() {
 function nextZoom(){ if(zoomIndex<zoomData.length-1){ zoomIndex++; showZoomItem(); } }
 function prevZoom(){ if(zoomIndex>0){ zoomIndex--; showZoomItem(); } }
 function closeZoom(){ document.getElementById('zoomModal').classList.remove('active'); }
-window.changeMainMedia = function(el, id, idx) {
-  const container = document.getElementById('productImage_'+id);
-  if(!container) return;
-  const main = container.querySelector('.main-media');
-  const media = JSON.parse(localStorage.getItem(CONFIG.STORAGE_KEY_PRODUCTS)||'[]').find(p=>p.id===id)?.media;
-  if(!media || !media[idx]) return;
-  const m = media[idx];
-  main.innerHTML = m.type==='video' ? `<video controls muted playsinline><source src="${m.data||m.url}" type="video/mp4"></video>` : `<img src="${m.data||m.url}" alt="main">`;
-  container.querySelectorAll('.image-gallery img, .image-gallery video').forEach(e=>e.classList.remove('active'));
-  el.classList.add('active');
-};
 
 // ======= CITIES =======
 const EGYPT_GOVERNORATES = {
