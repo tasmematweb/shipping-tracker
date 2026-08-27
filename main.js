@@ -1,5 +1,5 @@
 // ==================================================
-// MAIN.JS - تم إصلاح الخطأ البرمجي الذي يسبب تعليق الموقع
+// MAIN.JS - تم إصلاح الخطأ البرمجي (Syntax Error) الذي يمنع الموقع من العمل
 // ==================================================
 
 async function callAPI(action, data = {}) {
@@ -339,15 +339,14 @@ document.addEventListener('DOMContentLoaded', function() {
         setTimeout(function() { loadData(); }, 500);
     }
 
-    // أهم نقطة: الانتقال للمتجر بعد 5 ثوانٍ بالضبط، بدون الاعتماد على الفيديو
+    // الانتقال للمتجر بعد 5 ثوانٍ بالضبط، دون انتظار الفيديو
     setTimeout(transitionToStore, 5000);
 
     if (video) {
-        // إزالة الأحداث القديمة
+        // إزالة الأحداث القديمة التي كانت تسبب التعليق
         video.removeEventListener('ended', transitionToStore);
         video.removeEventListener('error', transitionToStore);
         
-        // تشغيل الفيديو كخلفية معتمة فقط
         video.muted = true;
         video.play().catch(function() {});
     }
