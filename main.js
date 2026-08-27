@@ -1,6 +1,6 @@
 // ==================================================
 // MAIN.JS - H.L LeVance Store
-// متصل بـ Google Sheets عبر Apps Script
+// متصل بـ Google Sheets عبر Apps Script (معدل بالكامل)
 // ==================================================
 
 // ==================================================
@@ -15,18 +15,15 @@ async function callAPI(action, data = {}) {
         const payload = { action, ...data };
         const response = await fetch(CONFIG.API_BASE_URL, {
             method: 'POST',
-            mode: 'no-cors', // مهم لتجاوز مشاكل CORS
+            redirect: 'follow',
             headers: {
-                'Content-Type': 'application/json',
+                'Content-Type': 'text/plain;charset=utf-8' // يمنع مشاكل CORS ويسمح بجوجل سكريبت بقراءة البيانات
             },
             body: JSON.stringify(payload)
         });
 
-        // بسبب mode: 'no-cors'، لا يمكن قراءة الرد مباشرة
-        // لذلك نستخدم طريقة بديلة: إرسال البيانات عبر GET مع معامل payload
-        // أو نستخدم طريقة GET مباشرة لجلب البيانات
-        
-        return { success: true, message: 'تم الإرسال بنجاح' };
+        const result = await response.json();
+        return result;
     } catch (error) {
         console.error('API Error:', error);
         return { success: false, error: error.message };
@@ -56,7 +53,7 @@ async function loadData() {
     try {
         // جلب المنتجات
         const productsResult = await fetchFromAPI('getProducts');
-        if (productsResult.products) {
+        if (productsResult && productsResult.products) {
             localStorage.setItem(CONFIG.STORAGE_KEY_PRODUCTS, JSON.stringify(productsResult.products));
             renderStoreProducts();
             renderAdminProducts();
@@ -64,7 +61,7 @@ async function loadData() {
 
         // جلب الأقسام
         const categoriesResult = await fetchFromAPI('getCategories');
-        if (categoriesResult.categories) {
+        if (categoriesResult && categoriesResult.categories) {
             localStorage.setItem(CONFIG.STORAGE_KEY_CATEGORIES, JSON.stringify(categoriesResult.categories));
             renderCategories();
             renderAdminCategories();
@@ -174,9 +171,6 @@ async function deleteProduct(id) {
 
 async function resetProducts() {
     if (!confirm('⚠️ سيتم حذف جميع المنتجات. هل أنت متأكد؟')) return;
-    
-    // ملاحظة: هذه الدالة تحتاج إلى إضافة action جديدة في الـ Backend
-    // أو يمكن حذفها يدوياً من Google Sheets
     alert('⚠️ هذه الميزة تحتاج إلى تنفيذ في الـ Backend.');
 }
 
@@ -443,7 +437,6 @@ async function submitOrder() {
     const weight = parseFloat(document.getElementById('orderWeight').value.trim()) || 1;
     const notes = document.getElementById('orderNotes').value.trim();
 
-    // التحقق من الحقول المطلوبة
     if (!customerName || !customerPhone || !governorate || !city || !address || isNaN(amount) || amount <= 0) {
         document.getElementById('orderError').textContent = '⚠️ يرجى ملء جميع الحقول المطلوبة.';
         return;
@@ -470,7 +463,6 @@ async function submitOrder() {
 
     if (result.success) {
         alert(`✅ تم إرسال الطلبية بنجاح!\nرقم الطلب: ${result.orderId || 'تم الإرسال'}`);
-        // تنظيف الحقول
         document.getElementById('orderCustomerName').value = '';
         document.getElementById('orderCustomerPhone').value = '';
         document.getElementById('orderCustomerPhone2').value = '';
@@ -624,15 +616,15 @@ function previewFile(input) {
 // ==================================================
 
 document.addEventListener('DOMContentLoaded', function() {
-    // بعد انتهاء الفيديو، يتم تحميل البيانات
     const intro = document.getElementById('intro');
     const video = document.getElementById('introVideo');
 
     function transitionToStore() {
-        if (intro.classList.contains('hide')) return;
-        intro.classList.add('hide');
+        if (intro && intro.classList.contains('hide')) return;
+        if (intro) intro.classList.add('hide');
         document.body.style.overflow = 'auto';
-        document.getElementById('store').classList.add('show');
+        const store = document.getElementById('store');
+        if (store) store.classList.add('show');
         
         setTimeout(function() {
             loadData();
@@ -647,6 +639,8 @@ document.addEventListener('DOMContentLoaded', function() {
         video.play().catch(function() {
             setTimeout(transitionToStore, 2000);
         });
+    } else {
+        loadData();
     }
 });
 
@@ -671,7 +665,6 @@ async function handleLogin() {
         return;
     }
 
-    // إرسال طلب تسجيل الدخول إلى الـ API
     const result = await callAPI('loginUser', { phone: phone, password: password });
 
     if (result.success) {
@@ -739,7 +732,6 @@ function updateOrderCities() {
     }
 }
 
-// تعبئة قائمة المحافظات عند تحميل الصفحة
 document.addEventListener('DOMContentLoaded', function() {
     const governorateSelect = document.getElementById('orderGovernorate');
     if (governorateSelect) {
@@ -752,4 +744,4 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 });
 
-console.log('✅ Main.js loaded successfully with Google Sheets integration');
+console.log('✅ Main.js fixed and loaded successfully');
