@@ -1,6 +1,5 @@
-```javascript
 // ==================================================
-// MAIN.JS - تم إصلاح مشكلة الانتقال من شاشة الفيديو
+// MAIN.JS - تم إصلاح الخطأ البرمجي الذي يسبب تعليق الموقع
 // ==================================================
 
 async function callAPI(action, data = {}) {
@@ -315,7 +314,7 @@ function updateOrderCities() {
     }
 }
 
-// تشغيل الموقع - إصلاح مشكلة التعليق
+// تشغيل الموقع
 document.addEventListener('DOMContentLoaded', function() {
     const governorateSelect = document.getElementById('orderGovernorate');
     if (governorateSelect) {
@@ -330,7 +329,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const intro = document.getElementById('intro');
     const video = document.getElementById('introVideo');
 
-    // هذه هي الدالة التي تنقل المستخدم إلى المتجر
+    // الدالة التي تنقل المستخدم للمتجر
     function transitionToStore() {
         if (intro && intro.classList.contains('hide')) return;
         if (intro) intro.classList.add('hide');
@@ -340,20 +339,18 @@ document.addEventListener('DOMContentLoaded', function() {
         setTimeout(function() { loadData(); }, 500);
     }
 
-    // التشغيل الذكي: لا ننتظر الفيديو مهما كان حجمه أو حالته
-    // يتم الانتقال إلى المتجر بعد 5 ثوانٍ بالضبط مهما حدث
+    // أهم نقطة: الانتقال للمتجر بعد 5 ثوانٍ بالضبط، بدون الاعتماد على الفيديو
     setTimeout(transitionToStore, 5000);
 
-    // محاولة تشغيل الفيديو، وإن لم ينجح فلا مشكلة لأننا انتقلنا بالفعل
     if (video) {
-        // إزالة مستمعي الأحداث الذين كانوا يسببون التعليق
+        // إزالة الأحداث القديمة
         video.removeEventListener('ended', transitionToStore);
         video.removeEventListener('error', transitionToStore);
         
+        // تشغيل الفيديو كخلفية معتمة فقط
         video.muted = true;
         video.play().catch(function() {});
     }
 });
 
-console.log('✅ Main.js loaded successfully - Intro fixed');
-```
+console.log('✅ Main.js loaded successfully');
