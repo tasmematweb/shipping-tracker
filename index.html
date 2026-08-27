@@ -29,7 +29,6 @@
 
     #intro.hide {
       transform: translateX(-100%);
-      /* الانزلاق إلى اليسار مثل تقليب صفحة */
       pointer-events: none;
     }
 
@@ -54,10 +53,112 @@
       transition: all 0.3s ease;
     }
 
-    /* إضافة طبقة خلفية للموقع */
     #store-wrapper {
       position: relative;
       z-index: 1;
+    }
+
+    /* تعديلات إضافية لضمان ظهور النوافذ المنبثقة */
+    .modal-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.5);
+      z-index: 10000;
+      align-items: center;
+      justify-content: center;
+      backdrop-filter: blur(4px);
+    }
+
+    .modal-overlay.active {
+      display: flex;
+    }
+
+    .modal-box {
+      background: var(--yellow-main);
+      border: 3px solid var(--brown);
+      border-radius: 16px;
+      padding: 35px 30px;
+      width: 90%;
+      max-width: 400px;
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+      text-align: center;
+    }
+
+    .modal-box h2 {
+      color: var(--brown);
+      font-family: Georgia, serif;
+      font-size: 28px;
+      margin-bottom: 25px;
+    }
+
+    .modal-box input {
+      width: 100%;
+      padding: 14px 16px;
+      margin-bottom: 16px;
+      border: 2px solid var(--brown);
+      border-radius: 8px;
+      background: var(--yellow-light);
+      color: var(--brown);
+      font-size: 16px;
+      direction: rtl;
+    }
+
+    .modal-box input::placeholder {
+      color: var(--brown);
+      opacity: 0.7;
+    }
+
+    .modal-box .btn-login-submit {
+      width: 100%;
+      padding: 14px;
+      background: var(--brown);
+      color: var(--yellow-light);
+      border: none;
+      border-radius: 8px;
+      font-size: 18px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: background 0.2s;
+      margin-top: 8px;
+    }
+
+    .modal-box .btn-login-submit:hover {
+      background: var(--brown-light);
+    }
+
+    .modal-box .signup-link {
+      display: block;
+      margin-top: 18px;
+      color: var(--brown);
+      font-weight: bold;
+      cursor: pointer;
+      text-decoration: underline;
+      font-size: 15px;
+    }
+
+    .modal-box .signup-link:hover {
+      color: var(--brown-light);
+    }
+
+    .modal-box .close-modal {
+      margin-top: 15px;
+      background: transparent;
+      border: 2px solid var(--brown);
+      color: var(--brown);
+      padding: 8px 20px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: bold;
+    }
+
+    .modal-box .close-modal:hover {
+      background: var(--brown);
+      color: var(--yellow-light);
+    }
+
+    .login-btn.hidden {
+      display: none;
     }
   </style>
 </head>
@@ -311,10 +412,58 @@
   <script src="main.js"></script>
 
   <script>
-    // تعريف احتياطي
-    if (typeof API_BASE_URL === 'undefined') {
-      var API_BASE_URL = 'https://script.google.com/macros/s/AKfycbzuajhu983jCQWr_V4ezz6SHpanxinydY5L4Vf7spqyuWTtoOLBmH4536yWz6jboSxm/exec';
+    // ==========================================
+    // دوال تسجيل الدخول - تعريف مباشر
+    // ==========================================
+    function openLoginModal() {
+      var modal = document.getElementById('loginModal');
+      if (modal) {
+        modal.classList.add('active');
+        console.log('✅ Login modal opened');
+      } else {
+        console.error('❌ Login modal not found');
+      }
     }
+
+    function closeLoginModal() {
+      var modal = document.getElementById('loginModal');
+      if (modal) {
+        modal.classList.remove('active');
+        console.log('✅ Login modal closed');
+      }
+    }
+
+    function handleLogin() {
+      var phone = document.getElementById('loginPhone').value.trim();
+      var password = document.getElementById('loginPassword').value.trim();
+
+      if (!phone || !password) {
+        alert('⚠️ يرجى إدخال رقم الهاتف وكلمة المرور.');
+        return;
+      }
+
+      if (phone === '111' && password === '111') {
+        alert('✅ مرحباً Admin! تم تسجيل الدخول بنجاح.');
+        document.getElementById('loginBtn').classList.add('hidden');
+        document.getElementById('adminPanel').classList.add('active');
+        closeLoginModal();
+        document.querySelectorAll('.delete-prod, .delete-cat').forEach(function(el) {
+          el.style.display = 'block';
+        });
+      } else {
+        alert('❌ رقم الهاتف أو كلمة المرور غير صحيحة.');
+      }
+    }
+
+    function handleSignup() {
+      alert('📝 سيتم تفعيل إنشاء الحساب قريباً');
+    }
+
+    function showCart() {
+      alert('🛒 السلة فارغة حالياً');
+    }
+
+    console.log('✅ All login functions loaded successfully');
 
     // ==========================================
     // تأثير تقليب الصفحة عند انتهاء الفيديو
@@ -324,15 +473,12 @@
       const store = document.getElementById('store');
       const video = document.getElementById('introVideo');
 
-      // دالة الانتقال إلى الموقع بتأثير الانزلاق
       function transitionToStore() {
         if (intro.classList.contains('hide')) return;
-
         console.log('📖 Flipping page - transitioning to store');
         intro.classList.add('hide');
         document.body.style.overflow = 'auto';
 
-        // تحميل البيانات بعد الانتقال
         setTimeout(() => {
           try {
             if (typeof loadData === 'function') {
@@ -344,31 +490,26 @@
         }, 500);
       }
 
-      // عند انتهاء الفيديو - الانتقال فوراً
       if (video) {
         video.addEventListener('ended', function() {
           console.log('🎬 Video ended - flipping page now');
           transitionToStore();
         });
 
-        // تشغيل الفيديو
         const promise = video.play();
         if (promise !== undefined) {
           promise.catch(function(error) {
             console.log('Video autoplay failed:', error);
-            // إذا فشل التشغيل، ننتقل بعد 5 ثواني
             setTimeout(transitionToStore, 5000);
           });
         }
 
-        // إذا حدث خطأ في الفيديو
         video.addEventListener('error', function() {
           console.warn('⚠️ Video error - flipping page after 5 seconds');
           setTimeout(transitionToStore, 5000);
         });
       }
 
-      // منع التمرير أثناء شاشة الترحيب
       document.body.style.overflow = 'hidden';
     });
   </script>
