@@ -207,7 +207,7 @@
   </style>
 </head>
 <body>
-<div id="intro"><video id="introVideo" muted playsinline><source src="https://res.cloudinary.com/q2tqddel/video/upload/v1740000000/intro_hllevance.mp4" type="video/mp4"></video></div>
+<div id="intro"><video id="introVideo" muted playsinline><source src="intro.mp4" type="video/mp4"></video></div>
 <div id="store">
   <header>
     <div class="top-header">
@@ -223,7 +223,7 @@
   <section class="hero"><div class="hero-content"><h1>اكتشف الأناقة</h1><p>تشكيلة راقية من المنتجات الفاخرة</p><a href="#products" class="shop-btn">تسوق الآن</a></div></section>
   <section class="categories" id="categories"><h2 class="section-title">📂 الأقسام</h2><div class="category-grid" id="categoryGrid"></div></section>
   <section class="products" id="products"><h2 class="section-title">🛍️ المنتجات</h2><div class="product-grid" id="productGrid"></div></section>
-  <div id="adminPanel"><h2>⚙️ لوحة التحكم</h2>
+  <div id="adminPanel" style="display:none;"><h2>⚙️ لوحة التحكم</h2>
     <div class="admin-section"><h3>➕ إضافة منتج</h3><div class="admin-controls">
       <input type="text" id="newProductName" placeholder="اسم المنتج">
       <input type="number" id="newProductPrice" placeholder="السعر">
@@ -231,7 +231,6 @@
       <input type="text" id="newProductIcon" placeholder="أيقونة 📦">
       <div class="size-checkboxes"><label><input type="checkbox" value="S"> S</label><label><input type="checkbox" value="M"> M</label><label><input type="checkbox" value="L"> L</label><label><input type="checkbox" value="XL"> XL</label></div>
     </div>
-    <!-- تم حذف أزرار رفع الصور والفيديوهات -->
     <button onclick="addProduct()" style="margin-top:15px;background:var(--brown);color:var(--yellow-light);border:none;padding:12px 30px;border-radius:8px;font-weight:bold;cursor:pointer;">إضافة المنتج</button>
     </div>
     <div class="admin-section"><h3>📦 قائمة المنتجات</h3><div class="admin-list" id="adminProductList"></div></div>
@@ -381,7 +380,7 @@ async function addProduct() {
   const icon = document.getElementById('newProductIcon').value.trim()||'📦';
   if(!name || isNaN(price) || price<=0) return alert('⚠️ يرجى إدخال اسم المنتج وسعر صحيح.');
   const sizes = [...document.querySelectorAll('.size-checkboxes input[type="checkbox"]:checked')].map(cb=>cb.value);
-  const media = []; // تم حذف رفع الملفات، نرسل مصفوفة فارغة
+  const media = [];
   const result = await callAPI('addProduct', {name,price,discount,icon,sizes,media});
   if(result.success){ alert('✅ تم إضافة المنتج بنجاح!'); await loadData(); clearAddProduct(); }
   else alert('❌ فشل إضافة المنتج: '+(result.error||'خطأ'));
@@ -405,7 +404,7 @@ async function addCategory() {
   const name = document.getElementById('newCategoryName').value.trim();
   const icon = document.getElementById('newCategoryIcon').value.trim()||'🏷️';
   if(!name) return alert('⚠️ يرجى إدخال اسم القسم.');
-  const result = await callAPI('addCategory', {name,icon,image:''}); // بدون صورة
+  const result = await callAPI('addCategory', {name,icon,image:''});
   if(result.success){ alert('✅ تم إضافة القسم بنجاح!'); await loadData(); document.getElementById('newCategoryName').value=''; document.getElementById('newCategoryIcon').value=''; }
   else alert('❌ فشل إضافة القسم: '+(result.error||'خطأ'));
 }
@@ -472,6 +471,7 @@ async function handleLogin() {
     alert('✅ مرحباً Admin! تم تسجيل الدخول بنجاح.');
     localStorage.setItem('hl_admin','true');
     document.getElementById('loginBtn').classList.add('hidden');
+    document.getElementById('adminPanel').style.display='block';
     document.getElementById('adminPanel').classList.add('active');
     closeLoginModal();
     document.querySelectorAll('.delete-prod, .delete-cat').forEach(el=>el.style.display='block');
@@ -574,6 +574,7 @@ document.addEventListener('DOMContentLoaded', function() {
   else transitionToStore();
   if(localStorage.getItem('hl_admin')==='true') {
     document.getElementById('loginBtn').classList.add('hidden');
+    document.getElementById('adminPanel').style.display='block';
     document.getElementById('adminPanel').classList.add('active');
     document.querySelectorAll('.delete-prod, .delete-cat').forEach(el=>el.style.display='block');
   }
