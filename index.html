@@ -132,6 +132,20 @@
     .modal-box .signup-link { display:block; margin-top:18px; color:var(--brown); font-weight:bold; cursor:pointer; text-decoration:underline; font-size:15px; }
     .modal-box .close-modal { margin-top:15px; background:transparent; border:2px solid var(--brown); color:var(--brown); padding:8px 20px; border-radius:6px; cursor:pointer; font-weight:bold; }
     .modal-box .close-modal:hover { background:var(--brown); color:var(--yellow-light); }
+    .cart-modal { display:none; position:fixed; inset:0; background:rgba(0,0,0,.5); z-index:10001; align-items:center; justify-content:center; backdrop-filter:blur(4px); }
+    .cart-modal.active { display:flex; }
+    .cart-box { background:var(--yellow-main); border:3px solid var(--brown); border-radius:16px; padding:25px; width:90%; max-width:500px; box-shadow:0 20px 40px rgba(0,0,0,.4); text-align:center; max-height:80vh; overflow-y:auto; }
+    .cart-box h2 { color:var(--brown); font-family:Georgia,serif; font-size:24px; margin-bottom:20px; }
+    .cart-items-list { text-align:right; margin-bottom:15px; }
+    .cart-item { display:flex; justify-content:space-between; align-items:center; padding:10px 0; border-bottom:1px solid var(--brown); }
+    .cart-item .item-name { font-weight:bold; font-size:14px; }
+    .cart-item .item-price { font-size:14px; }
+    .cart-item .remove-item { background:red; color:white; border:none; border-radius:50%; width:25px; height:25px; cursor:pointer; font-size:14px; }
+    .cart-total { font-size:20px; font-weight:bold; margin:15px 0; }
+    .cart-checkout-btn { width:100%; padding:14px; background:var(--brown); color:var(--yellow-light); border:none; border-radius:8px; font-size:18px; font-weight:bold; cursor:pointer; margin-top:10px; }
+    .cart-checkout-btn:hover { background:var(--brown-light); }
+    .cart-close-btn { margin-top:10px; background:transparent; border:2px solid var(--brown); color:var(--brown); padding:8px 20px; border-radius:6px; cursor:pointer; font-weight:bold; }
+    .cart-close-btn:hover { background:var(--brown); color:var(--yellow-light); }
     #adminPanel { display:none; padding:30px 4%; background:var(--yellow-dark); border-bottom:3px solid var(--brown); }
     #adminPanel.active { display:block; }
     #adminPanel h2 { color:var(--brown); font-family:Georgia,serif; font-size:28px; margin-bottom:20px; }
@@ -191,7 +205,7 @@
       .sizes .size-btn { font-size:11px; padding:3px 8px; }
       .add-cart { font-size:13px; padding:10px 5px; }
       .whatsapp-float { width:50px; height:50px; font-size:26px; bottom:18px; right:18px; }
-      .modal-box { padding:25px 20px; }
+      .modal-box, .cart-box { padding:20px 15px; }
       .admin-controls { flex-direction:column; }
       .admin-controls input, .admin-controls select { min-width:unset; }
       .admin-controls .size-checkboxes { flex-wrap:wrap; justify-content:center; }
@@ -218,13 +232,13 @@
       <div class="header-actions">
         <button class="login-btn" id="loginBtn" onclick="openLoginModal()">👤 دخول</button>
         <button class="logout-btn hidden" id="logoutBtn" onclick="handleLogout()">🚪 خروج</button>
-        <button class="cart" onclick="showCart()">🛒</button>
+        <button class="cart" onclick="showCart()">🛒 <span id="cartCount">0</span></button>
       </div>
     </div>
     <div class="search-bar">
       <div class="search-box"><input type="text" id="search" placeholder="بحث..." oninput="searchProducts()"><button onclick="searchProducts()">🔍</button></div>
     </div>
-    <div class="nav"><a href="#categories">الأقسام</a><a href="#products">المنتجات</a><a href="#" onclick="document.getElementById('orderFormPage').classList.toggle('active');document.getElementById('orderFormPage').style.display=document.getElementById('orderFormPage').classList.contains('active')?'block':'none'">طلب</a></div>
+    <div class="nav"><a href="#categories">الأقسام</a><a href="#products">المنتجات</a></div>
   </header>
   <section class="hero"><div class="hero-content"><h1>اكتشف الأناقة</h1><p>تشكيلة راقية من المنتجات الفاخرة</p><a href="#products" class="shop-btn">تسوق الآن</a></div></section>
   <section class="categories" id="categories"><h2 class="section-title">📂 الأقسام</h2><div class="category-grid" id="categoryGrid"></div></section>
@@ -249,7 +263,7 @@
   </div>
   <div id="orderFormPage">
     <div class="order-form-container">
-      <h2>📋 طلبية جديدة</h2>
+      <h2>📋 بيانات العنوان</h2>
       <div class="order-summary"><h3>ملخص الطلب</h3><div class="cart-items" id="orderCartItems"></div><div class="total-price">الإجمالي: <span id="orderTotalPrice">0</span> جنيه</div></div>
       <div class="form-group"><label>الاسم <span class="required">*</span></label><input type="text" id="orderCustomerName" placeholder="اسم العميل"></div>
       <div class="form-row">
@@ -268,13 +282,22 @@
       <div class="form-group"><label>ملاحظات</label><textarea id="orderNotes" placeholder="ملاحظات إضافية"></textarea></div>
       <div id="orderError" style="color:red;margin:8px 0;"></div>
       <button class="submit-order-btn" id="submitOrderBtn" onclick="submitOrder()">🛒 تأكيد الطلبية</button>
-      <span class="back-to-store" onclick="document.getElementById('orderFormPage').classList.remove('active');document.getElementById('orderFormPage').style.display='none'">⬅ العودة للمتجر</span>
+      <span class="back-to-store" onclick="closeOrderForm()">⬅ العودة للمتجر</span>
     </div>
   </div>
   <footer><h2>H.L LeVance</h2><p>© 2025 جميع الحقوق محفوظة</p></footer>
   <a href="https://wa.me/201234567890?text=مرحباً، أريد الاستفسار عن منتجاتكم" class="whatsapp-float" target="_blank">💬</a>
 </div>
 <div class="modal-overlay" id="loginModal"><div class="modal-box"><h2>🔐 تسجيل الدخول</h2><input type="text" id="loginPhone" placeholder="رقم الهاتف"><input type="password" id="loginPassword" placeholder="كلمة المرور"><button class="btn-login-submit" onclick="handleLogin()">دخول</button><span class="signup-link" onclick="handleSignup()">إنشاء حساب جديد</span><button class="close-modal" onclick="closeLoginModal()">إغلاق</button></div></div>
+<div class="cart-modal" id="cartModal">
+  <div class="cart-box">
+    <h2>🛒 سلة المشتريات</h2>
+    <div class="cart-items-list" id="cartItemsList"></div>
+    <div class="cart-total">الإجمالي: <span id="cartTotal">0</span> جنيه</div>
+    <button class="cart-checkout-btn" onclick="checkout()">✅ تأكيد الطلب</button>
+    <button class="cart-close-btn" onclick="closeCart()">إغلاق</button>
+  </div>
+</div>
 <div class="zoom-modal" id="zoomModal"><button class="zoom-close" onclick="closeZoom()">✕</button><div class="zoom-content" id="zoomContent"></div><div class="zoom-nav"><button onclick="prevZoom()">◀</button><span class="zoom-counter" id="zoomCounter">1 / 1</span><button onclick="nextZoom()">▶</button></div></div>
 <script>
 // ======= CONFIG =======
@@ -290,6 +313,113 @@ const CONFIG = {
   WHATSAPP_NUMBER: '201234567890',
   WHATSAPP_MESSAGE: 'مرحباً، أريد الاستفسار عن منتجاتكم'
 };
+
+// ======= CART =======
+let cart = JSON.parse(localStorage.getItem(CONFIG.STORAGE_KEY_CART)||'[]');
+
+function saveCart() {
+  localStorage.setItem(CONFIG.STORAGE_KEY_CART, JSON.stringify(cart));
+  updateCartCount();
+}
+
+function updateCartCount() {
+  const count = cart.reduce((sum,item)=>sum+item.quantity,0);
+  const cartCount = document.getElementById('cartCount');
+  if(cartCount) cartCount.textContent = count;
+}
+
+function addToCart(name, price, size) {
+  const selectedSize = size || (event?.target?.parentElement?.querySelector('.size-btn.selected')?.textContent) || '';
+  const existingItem = cart.find(item => item.name === name && item.size === selectedSize);
+  if(existingItem) {
+    existingItem.quantity++;
+  } else {
+    cart.push({name, price, size: selectedSize, quantity: 1});
+  }
+  saveCart();
+  alert(`✅ تم إضافة ${name} إلى السلة`);
+}
+
+function removeFromCart(index) {
+  cart.splice(index, 1);
+  saveCart();
+  renderCart();
+}
+
+function renderCart() {
+  const cartItemsList = document.getElementById('cartItemsList');
+  const cartTotal = document.getElementById('cartTotal');
+  if(!cartItemsList || !cartTotal) return;
+  
+  if(cart.length === 0) {
+    cartItemsList.innerHTML = '<p style="text-align:center;">السلة فارغة</p>';
+    cartTotal.textContent = '0';
+    return;
+  }
+  
+  cartItemsList.innerHTML = '';
+  let total = 0;
+  cart.forEach((item, index) => {
+    const itemTotal = item.price * item.quantity;
+    total += itemTotal;
+    const div = document.createElement('div');
+    div.className = 'cart-item';
+    div.innerHTML = `
+      <span class="item-name">${item.name} ${item.size ? '('+item.size+')' : ''} x${item.quantity}</span>
+      <span class="item-price">${itemTotal} جنيه</span>
+      <button class="remove-item" onclick="removeFromCart(${index})">✕</button>
+    `;
+    cartItemsList.appendChild(div);
+  });
+  cartTotal.textContent = total;
+}
+
+function showCart() {
+  renderCart();
+  document.getElementById('cartModal').classList.add('active');
+}
+
+function closeCart() {
+  document.getElementById('cartModal').classList.remove('active');
+}
+
+function checkout() {
+  if(cart.length === 0) {
+    alert('⚠️ السلة فارغة');
+    return;
+  }
+  closeCart();
+  populateOrderForm();
+  document.getElementById('orderFormPage').style.display = 'block';
+  document.getElementById('orderFormPage').classList.add('active');
+  window.scrollTo(0, 0);
+}
+
+function populateOrderForm() {
+  const orderCartItems = document.getElementById('orderCartItems');
+  const orderTotalPrice = document.getElementById('orderTotalPrice');
+  const orderAmount = document.getElementById('orderAmount');
+  
+  if(!orderCartItems || !orderTotalPrice || !orderAmount) return;
+  
+  orderCartItems.innerHTML = '';
+  let total = 0;
+  cart.forEach(item => {
+    const itemTotal = item.price * item.quantity;
+    total += itemTotal;
+    const div = document.createElement('div');
+    div.className = 'item';
+    div.textContent = `${item.name} ${item.size ? '('+item.size+')' : ''} x${item.quantity} = ${itemTotal} جنيه`;
+    orderCartItems.appendChild(div);
+  });
+  orderTotalPrice.textContent = total;
+  orderAmount.value = total;
+}
+
+function closeOrderForm() {
+  document.getElementById('orderFormPage').style.display = 'none';
+  document.getElementById('orderFormPage').classList.remove('active');
+}
 
 // ======= HELPERS =======
 async function callAPI(action, data = {}) {
@@ -432,10 +562,13 @@ async function submitOrder() {
   document.getElementById('submitOrderBtn').textContent='🛒 تأكيد الطلبية';
   if(result.success) {
     alert(`✅ تم إرسال الطلبية بنجاح!\nرقم الطلب: ${result.orderId||'تم الإرسال'}`);
+    cart = [];
+    saveCart();
     ['orderCustomerName','orderCustomerPhone','orderCustomerPhone2','orderAddress','orderAmount','orderNotes'].forEach(id=>document.getElementById(id).value='');
     document.getElementById('orderWeight').value='1';
     document.getElementById('orderGovernorate').value='';
     document.getElementById('orderCity').innerHTML='<option value="">اختر المحافظة أولا</option>';
+    closeOrderForm();
   } else {
     document.getElementById('orderError').textContent='❌ فشل إرسال الطلبية: '+(result.error||'خطأ');
   }
@@ -453,8 +586,6 @@ function selectSize(btn) {
   btn.parentElement.querySelectorAll('.size-btn').forEach(b=>b.classList.remove('selected'));
   btn.classList.add('selected');
 }
-function addToCart(name,price,size){ alert(`🛒 تم إضافة ${name} إلى السلة بسعر ${price} جنيه`); }
-function showCart(){ alert('🛒 السلة فارغة حالياً'); }
 function openLoginModal(){ document.getElementById('loginModal').classList.add('active'); }
 function closeLoginModal(){ document.getElementById('loginModal').classList.remove('active'); }
 async function handleLogin() {
@@ -580,6 +711,8 @@ document.addEventListener('DOMContentLoaded', function() {
   setTimeout(transitionToStore, 6000);
   if(video) { video.addEventListener('ended', transitionToStore); video.addEventListener('error', transitionToStore); video.play().catch(transitionToStore); }
   else transitionToStore();
+  
+  updateCartCount();
   
   if(localStorage.getItem('hl_admin')==='true' || localStorage.getItem('hl_user')==='true') {
     document.getElementById('loginBtn').classList.add('hidden');
