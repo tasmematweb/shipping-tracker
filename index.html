@@ -26,8 +26,7 @@
     #store.show { opacity:1; transform:translateY(0); visibility:visible; }
     header { position:sticky; top:0; z-index:1000; background:var(--yellow-main); border-bottom:3px solid var(--brown); }
     .top-header { min-height:70px; display:flex; align-items:center; justify-content:space-between; gap:15px; padding:10px 4%; background:var(--yellow-main); }
-    .logo { color:var(--brown); text-decoration:none; font-family:Georgia,serif; font-size:28px; font-weight:bold; white-space:nowrap; }
-    .logo span { display:block; font-size:12px; margin-top:3px; text-align:center; letter-spacing:1px; }
+    .logo { color:var(--brown); text-decoration:none; font-family:Georgia,serif; font-size:56px; font-weight:bold; white-space:nowrap; }
     .header-actions { display:flex; align-items:center; gap:10px; }
     .login-btn, .logout-btn, .cart { background:var(--brown); border:none; color:var(--yellow-light); font-size:16px; cursor:pointer; white-space:nowrap; padding:12px 20px; border-radius:8px; font-weight:bold; transition:background .2s; }
     .logout-btn { background:#dc3545; }
@@ -169,8 +168,7 @@
     @keyframes spin { 0%{transform:rotate(0)} 100%{transform:rotate(360deg)} }
     @media (max-width:700px) {
       .top-header { gap:8px; padding:10px 3%; }
-      .logo { font-size:20px; }
-      .logo span { font-size:9px; }
+      .logo { font-size:36px; }
       .cart { font-size:0; padding:10px 12px; }
       .cart::after { content:"🛒"; font-size:20px; }
       .login-btn, .logout-btn { font-size:14px; padding:10px 15px; }
@@ -220,7 +218,7 @@
 <div id="store">
   <header>
     <div class="top-header">
-      <a href="#" class="logo">H.L LeVance<span>متجر فاخر</span></a>
+      <a href="#" class="logo">H.L LeVance</a>
       <div class="header-actions">
         <button class="login-btn" id="loginBtn" onclick="openLoginModal()">👤 دخول</button>
         <button class="logout-btn hidden" id="logoutBtn" onclick="handleLogout()">🚪 خروج</button>
@@ -307,6 +305,38 @@ const CONFIG = {
 };
 
 let cart = JSON.parse(localStorage.getItem(CONFIG.STORAGE_KEY_CART)||'[]');
+
+const SHIPPING_COSTS = {
+  'القليوبية': 68,
+  'الجيزة': 68,
+  'القاهرة': 68,
+  'الإسكندرية': 68,
+  'السويس': 70,
+  'البحيرة': 79,
+  'الغربية': 79,
+  'الدقهلية': 79,
+  'دمياط': 79,
+  'بور سعيد': 79,
+  'المنوفية': 79,
+  'الشرقية': 79,
+  'الإسماعيلية': 79,
+  'كفر الشيخ': 79,
+  'مطوبس': 79,
+  'قنا': 85,
+  'الفيوم': 85,
+  'المنيا': 85,
+  'بني سويف': 85,
+  'الأقصر': 85,
+  'أسيوط': 85,
+  'مرسى مطروح': 85,
+  'البحر الأحمر': 85,
+  'أسوان': 85,
+  'سوهاج': 85,
+  'المراغة': 15,
+  'الوادي الجديد': 154,
+  'جنوب سيناء': 154,
+  'شمال سيناء': 154
+};
 
 function saveCart() {
   localStorage.setItem(CONFIG.STORAGE_KEY_CART, JSON.stringify(cart));
@@ -749,6 +779,7 @@ const EGYPT_GOVERNORATES = {
   'الوادي الجديد':['الخارجة','الداخلة','الفرافرة'],
   'جنوب سيناء':['جنوب سيناء','شرم الشيخ','دهب']
 };
+
 function updateOrderCities() {
   const gov = document.getElementById('orderGovernorate').value;
   const citySel = document.getElementById('orderCity');
@@ -756,6 +787,16 @@ function updateOrderCities() {
   if(gov && EGYPT_GOVERNORATES[gov]) {
     EGYPT_GOVERNORATES[gov].forEach(c => { const opt=document.createElement('option'); opt.value=c; opt.textContent=c; citySel.appendChild(opt); });
   }
+  updateOrderTotal();
+}
+
+function updateOrderTotal() {
+  const gov = document.getElementById('orderGovernorate').value;
+  const shipping = SHIPPING_COSTS[gov] || 0;
+  const cartTotal = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+  const total = cartTotal + shipping;
+  document.getElementById('orderTotalPrice').textContent = total;
+  document.getElementById('orderAmount').value = total;
 }
 
 document.addEventListener('DOMContentLoaded', function() {
