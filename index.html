@@ -41,10 +41,6 @@
     .search-box input::placeholder { color:var(--brown); opacity:.75; }
     .search-box button { width:60px; border:none; border-right:2px solid var(--brown); background:var(--brown); color:var(--yellow-light); cursor:pointer; font-size:20px; }
     .search-box button:hover { background:var(--brown-light); }
-    .nav { background:var(--yellow-soft); padding:12px 4%; display:flex; gap:28px; overflow-x:auto; border-top:2px solid var(--brown); }
-    .nav a { color:var(--brown); text-decoration:none; white-space:nowrap; font-size:15px; font-weight:bold; cursor:pointer; }
-    .nav a:hover { color:var(--brown-light); }
-    .nav a.active { background:var(--brown); color:var(--yellow-light); padding:5px 15px; border-radius:20px; }
     .offers-section { padding:45px 4%; background:linear-gradient(135deg,var(--yellow-light),var(--yellow-main),var(--yellow-soft)); border-bottom:3px solid var(--brown); }
     .offers-grid { display:flex; gap:22px; overflow-x:auto; padding-bottom:20px; scroll-snap-type:x mandatory; }
     .offer-card { min-width:280px; max-width:280px; background:var(--yellow-light); border:2px solid var(--brown); border-radius:12px; overflow:hidden; box-shadow:0 5px 0 var(--brown); transition:transform .25s, box-shadow .25s; position:relative; scroll-snap-align:start; flex-shrink:0; }
@@ -76,7 +72,6 @@
     .product-image .image-gallery img.active, .product-image .image-gallery video.active { border-color:var(--brown); }
     .product-info { padding:18px; background:var(--yellow-light); }
     .product-info h3 { font-size:18px; margin-bottom:10px; color:var(--brown); }
-    .product-info .product-category { font-size:13px; background:var(--brown); color:var(--yellow-light); padding:3px 10px; border-radius:12px; display:inline-block; margin-bottom:10px; }
     .price { font-size:23px; font-weight:bold; color:var(--brown); margin-bottom:10px; }
     .price .original-price { text-decoration:line-through; font-size:16px; opacity:.6; margin-left:10px; }
     .sizes { display:flex; gap:8px; flex-wrap:wrap; margin-bottom:12px; }
@@ -183,8 +178,6 @@
       .search-box { height:42px; }
       .search-box button { width:45px; font-size:17px; }
       .search-box input { font-size:14px; padding:0 10px; }
-      .nav { gap:20px; padding:10px 3%; }
-      .nav a { font-size:14px; }
       .offers-section { padding:35px 3%; }
       .offers-grid { gap:12px; }
       .offer-card { min-width:240px; max-width:240px; }
@@ -237,10 +230,6 @@
     <div class="search-bar">
       <div class="search-box"><input type="text" id="search" placeholder="بحث..." oninput="searchProducts()"><button onclick="searchProducts()">🔍</button></div>
     </div>
-    <div class="nav" id="navBar">
-      <a class="active" data-category="all" onclick="filterByCategory('all', this)">الكل</a>
-      <a data-category="offers" onclick="scrollToOffers()">🔥 العروض</a>
-    </div>
   </header>
   <section class="offers-section" id="offers"><h2 class="section-title">🔥 العروض</h2><div class="offers-grid" id="offersGrid"></div></section>
   <section class="products" id="products"><h2 class="section-title">🛍️ المنتجات</h2><div class="product-grid" id="productGrid"></div></section>
@@ -259,18 +248,11 @@
       <input type="number" id="newProductPrice" placeholder="السعر">
       <input type="number" id="newProductDiscount" placeholder="خصم %" value="0">
       <input type="text" id="newProductIcon" placeholder="أيقونة 📦">
-      <select id="newProductCategory"><option value="">بدون قسم</option></select>
       <div class="size-checkboxes"><label><input type="checkbox" value="S"> S</label><label><input type="checkbox" value="M"> M</label><label><input type="checkbox" value="L"> L</label><label><input type="checkbox" value="XL"> XL</label></div>
     </div>
     <button onclick="addProduct()" style="margin-top:15px;background:var(--brown);color:var(--yellow-light);border:none;padding:12px 30px;border-radius:8px;font-weight:bold;cursor:pointer;">إضافة المنتج</button>
     </div>
     <div class="admin-section"><h3>📦 قائمة المنتجات</h3><div class="admin-list" id="adminProductList"></div></div>
-    <div class="admin-section"><h3>➕ إضافة قسم</h3><div class="admin-controls">
-      <input type="text" id="newCategoryName" placeholder="اسم القسم">
-      <input type="text" id="newCategoryIcon" placeholder="أيقونة 🏷️">
-      <button onclick="addCategory()">إضافة القسم</button>
-    </div></div>
-    <div class="admin-section"><h3>📂 قائمة الأقسام</h3><div class="admin-list" id="adminCategoryList"></div></div>
   </div>
   <div id="orderFormPage">
     <div class="order-form-container">
@@ -326,7 +308,6 @@ const CONFIG = {
 };
 
 let cart = JSON.parse(localStorage.getItem(CONFIG.STORAGE_KEY_CART)||'[]');
-let currentCategoryFilter = 'all';
 
 function saveCart() {
   localStorage.setItem(CONFIG.STORAGE_KEY_CART, JSON.stringify(cart));
@@ -440,10 +421,6 @@ function closeOrderForm() {
   document.getElementById('orderFormPage').classList.remove('active');
 }
 
-function scrollToOffers() {
-  document.getElementById('offers').scrollIntoView({behavior:'smooth'});
-}
-
 function renderOffers() {
   const grid = document.getElementById('offersGrid');
   if(!grid) return;
@@ -542,75 +519,20 @@ async function loadData() {
     const o = await fetchFromAPI('getOffers');
     if(o?.offers) localStorage.setItem(CONFIG.STORAGE_KEY_OFFERS, JSON.stringify(o.offers));
   } catch(e){ console.error(e); }
-  renderNavCategories();
-  renderStoreProducts(); renderAdminProducts(); renderAdminCategories(); renderOffers(); renderAdminOffers();
-}
-
-function renderNavCategories() {
-  const nav = document.getElementById('navBar');
-  if(!nav) return;
-  const cats = JSON.parse(localStorage.getItem(CONFIG.STORAGE_KEY_CATEGORIES)||'[]');
-  nav.querySelectorAll('.category-link').forEach(el=>el.remove());
-  cats.forEach(c => {
-    const a = document.createElement('a');
-    a.className = 'category-link';
-    a.dataset.category = c.id;
-    a.textContent = `${c.icon||'🏷️'} ${c.name}`;
-    a.onclick = () => filterByCategory(c.id, a);
-    nav.appendChild(a);
-  });
-  updateProductCategorySelect();
-}
-
-function updateProductCategorySelect() {
-  const select = document.getElementById('newProductCategory');
-  if(!select) return;
-  const cats = JSON.parse(localStorage.getItem(CONFIG.STORAGE_KEY_CATEGORIES)||'[]');
-  const currentVal = select.value;
-  select.innerHTML = '<option value="">بدون قسم</option>';
-  cats.forEach(c => {
-    const opt = document.createElement('option');
-    opt.value = c.id;
-    opt.textContent = c.name;
-    select.appendChild(opt);
-  });
-  if(currentVal) select.value = currentVal;
-}
-
-function filterByCategory(catId, linkEl) {
-  currentCategoryFilter = catId;
-  document.querySelectorAll('.nav a').forEach(a => a.classList.remove('active'));
-  if(linkEl) linkEl.classList.add('active');
-  else {
-    const targetLink = document.querySelector(`.nav a[data-category="${catId}"]`);
-    if(targetLink) targetLink.classList.add('active');
-  }
-  
-  const cats = JSON.parse(localStorage.getItem(CONFIG.STORAGE_KEY_CATEGORIES)||'[]');
-  const catObj = cats.find(c => String(c.id) === String(catId));
-  const catName = catObj ? catObj.name : '';
-  
-  const searchInput = document.getElementById('search');
-  if(searchInput) {
-    searchInput.value = catName;
-    searchProducts();
-  }
+  renderStoreProducts(); renderAdminProducts(); renderOffers(); renderAdminOffers();
 }
 
 function searchProducts() {
   const q = document.getElementById('search').value.trim().toLowerCase();
   const products = JSON.parse(localStorage.getItem(CONFIG.STORAGE_KEY_PRODUCTS)||'[]');
-  const cats = JSON.parse(localStorage.getItem(CONFIG.STORAGE_KEY_CATEGORIES)||'[]');
   const grid = document.getElementById('productGrid');
   
   grid.innerHTML = '';
   
   const filtered = products.filter(p => {
     if(!q) return true;
-    const catObj = cats.find(c => String(c.id) === String(p.category));
-    const catName = catObj ? catObj.name.toLowerCase() : '';
     const name = (p.name||'').toLowerCase();
-    return name.includes(q) || catName.includes(q);
+    return name.includes(q);
   });
   
   if(filtered.length === 0) {
@@ -619,11 +541,9 @@ function searchProducts() {
   }
   
   filtered.forEach(p => {
-    const catObj = cats.find(c => String(c.id) === String(p.category));
-    const catName = catObj ? catObj.name : '';
     const price = p.price||0, disc = p.discount||0, final = disc>0 ? Math.round(price-(price*disc/100)) : price;
     const art = document.createElement('article'); art.className='product'; art.dataset.id=p.id;
-    art.innerHTML = `<div class="product-image" id="productImage_${p.id}"><div class="main-media"><span class="product-icon">${p.icon||'📦'}</span></div><button class="zoom-btn" onclick="openZoom(${p.id})">🔍</button><button class="delete-prod" onclick="deleteProduct(${p.id})">🗑</button></div><div class="product-info"><h3>${p.name}</h3>${catName ? `<span class="product-category">${catName}</span>` : ''}<div class="price">${disc>0?`<span class="original-price">${price} جنيه</span>`:''} ${final} جنيه ${disc>0?`<span style="color:red;font-size:14px;"> (خصم ${disc}%)</span>`:''}</div>${p.sizes?.length ? '<div class="sizes">'+p.sizes.map(s=>`<button class="size-btn" onclick="selectSize(this)">${s}</button>`).join('')+'</div>' : ''}<button class="add-cart" onclick="addToCart('${p.name}',${final},null,event)">أضف إلى السلة</button></div>`;
+    art.innerHTML = `<div class="product-image" id="productImage_${p.id}"><div class="main-media"><span class="product-icon">${p.icon||'📦'}</span></div><button class="zoom-btn" onclick="openZoom(${p.id})">🔍</button><button class="delete-prod" onclick="deleteProduct(${p.id})">🗑</button></div><div class="product-info"><h3>${p.name}</h3><div class="price">${disc>0?`<span class="original-price">${price} جنيه</span>`:''} ${final} جنيه ${disc>0?`<span style="color:red;font-size:14px;"> (خصم ${disc}%)</span>`:''}</div>${p.sizes?.length ? '<div class="sizes">'+p.sizes.map(s=>`<button class="size-btn" onclick="selectSize(this)">${s}</button>`).join('')+'</div>' : ''}<button class="add-cart" onclick="addToCart('${p.name}',${final},null,event)">أضف إلى السلة</button></div>`;
     grid.appendChild(art);
   });
 }
@@ -631,14 +551,11 @@ function searchProducts() {
 function renderStoreProducts() {
   const grid = document.getElementById('productGrid'); if(!grid) return;
   const products = JSON.parse(localStorage.getItem(CONFIG.STORAGE_KEY_PRODUCTS)||'[]');
-  const cats = JSON.parse(localStorage.getItem(CONFIG.STORAGE_KEY_CATEGORIES)||'[]');
   grid.innerHTML = products.length===0 ? '<p style="text-align:center;color:var(--brown);font-size:18px;padding:40px 0;">لا توجد منتجات حالياً</p>' : '';
   products.forEach(p => {
-    const catObj = cats.find(c => String(c.id) === String(p.category));
-    const catName = catObj ? catObj.name : '';
     const price = p.price||0, disc = p.discount||0, final = disc>0 ? Math.round(price-(price*disc/100)) : price;
     const art = document.createElement('article'); art.className='product'; art.dataset.id=p.id;
-    art.innerHTML = `<div class="product-image" id="productImage_${p.id}"><div class="main-media"><span class="product-icon">${p.icon||'📦'}</span></div><button class="zoom-btn" onclick="openZoom(${p.id})">🔍</button><button class="delete-prod" onclick="deleteProduct(${p.id})">🗑</button></div><div class="product-info"><h3>${p.name}</h3>${catName ? `<span class="product-category">${catName}</span>` : ''}<div class="price">${disc>0?`<span class="original-price">${price} جنيه</span>`:''} ${final} جنيه ${disc>0?`<span style="color:red;font-size:14px;"> (خصم ${disc}%)</span>`:''}</div>${p.sizes?.length ? '<div class="sizes">'+p.sizes.map(s=>`<button class="size-btn" onclick="selectSize(this)">${s}</button>`).join('')+'</div>' : ''}<button class="add-cart" onclick="addToCart('${p.name}',${final},null,event)">أضف إلى السلة</button></div>`;
+    art.innerHTML = `<div class="product-image" id="productImage_${p.id}"><div class="main-media"><span class="product-icon">${p.icon||'📦'}</span></div><button class="zoom-btn" onclick="openZoom(${p.id})">🔍</button><button class="delete-prod" onclick="deleteProduct(${p.id})">🗑</button></div><div class="product-info"><h3>${p.name}</h3><div class="price">${disc>0?`<span class="original-price">${price} جنيه</span>`:''} ${final} جنيه ${disc>0?`<span style="color:red;font-size:14px;"> (خصم ${disc}%)</span>`:''}</div>${p.sizes?.length ? '<div class="sizes">'+p.sizes.map(s=>`<button class="size-btn" onclick="selectSize(this)">${s}</button>`).join('')+'</div>' : ''}<button class="add-cart" onclick="addToCart('${p.name}',${final},null,event)">أضف إلى السلة</button></div>`;
     grid.appendChild(art);
   });
 }
@@ -646,25 +563,12 @@ function renderStoreProducts() {
 function renderAdminProducts() {
   const list = document.getElementById('adminProductList'); if(!list) return;
   const products = JSON.parse(localStorage.getItem(CONFIG.STORAGE_KEY_PRODUCTS)||'[]');
-  const cats = JSON.parse(localStorage.getItem(CONFIG.STORAGE_KEY_CATEGORIES)||'[]');
   list.innerHTML = products.length===0 ? '<p style="text-align:center;color:var(--brown);padding:20px 0;">لا توجد منتجات</p>' : '';
   products.forEach(p => {
-    const catObj = cats.find(c => String(c.id) === String(p.category));
-    const catName = catObj ? catObj.name : 'بدون قسم';
     const price = p.price||0, disc = p.discount||0, final = disc>0 ? Math.round(price-(price*disc/100)) : price;
     const sizeTags = p.sizes?.length ? `<div class="size-tags">${p.sizes.map(s=>`<span>${s}</span>`).join('')}</div>` : '';
     const div = document.createElement('div'); div.className='admin-list-item';
-    div.innerHTML = `<div class="item-info"><span style="font-size:30px;">${p.icon||'📦'}</span><span>${p.name} - ${final} جنيه ${disc>0?`(خصم ${disc}%)`:''} - قسم: ${catName}</span>${sizeTags}</div><button onclick="deleteProduct(${p.id})">🗑 حذف</button>`;
-    list.appendChild(div);
-  });
-}
-function renderAdminCategories() {
-  const list = document.getElementById('adminCategoryList'); if(!list) return;
-  const cats = JSON.parse(localStorage.getItem(CONFIG.STORAGE_KEY_CATEGORIES)||'[]');
-  list.innerHTML = cats.length===0 ? '<p style="text-align:center;color:var(--brown);padding:20px 0;">لا توجد أقسام</p>' : '';
-  cats.forEach(c => {
-    const div = document.createElement('div'); div.className='admin-list-item';
-    div.innerHTML = `<div class="item-info"><span>${c.icon||'🏷️'} ${c.name}</span></div><button onclick="deleteCategory(${c.id})">🗑 حذف</button>`;
+    div.innerHTML = `<div class="item-info"><span style="font-size:30px;">${p.icon||'📦'}</span><span>${p.name} - ${final} جنيه ${disc>0?`(خصم ${disc}%)`:''}</span>${sizeTags}</div><button onclick="deleteProduct(${p.id})">🗑 حذف</button>`;
     list.appendChild(div);
   });
 }
@@ -674,10 +578,9 @@ async function addProduct() {
   const price = parseFloat(document.getElementById('newProductPrice').value.trim());
   const discount = parseFloat(document.getElementById('newProductDiscount').value.trim())||0;
   const icon = document.getElementById('newProductIcon').value.trim()||'📦';
-  const category = document.getElementById('newProductCategory').value;
   if(!name || isNaN(price) || price<=0) return alert('⚠️ يرجى إدخال اسم المنتج وسعر صحيح.');
   const sizes = [...document.querySelectorAll('.size-checkboxes input[type="checkbox"]:checked')].map(cb=>cb.value);
-  const result = await callAPI('addProduct', {name,price,discount,icon,sizes,media:[],category});
+  const result = await callAPI('addProduct', {name,price,discount,icon,sizes,media:[]});
   if(result.success){ alert('✅ تم إضافة المنتج بنجاح!'); await loadData(); clearAddProduct(); }
   else alert('❌ فشل إضافة المنتج: '+(result.error||'خطأ'));
 }
@@ -686,7 +589,6 @@ function clearAddProduct() {
   document.getElementById('newProductPrice').value='';
   document.getElementById('newProductDiscount').value='';
   document.getElementById('newProductIcon').value='';
-  document.getElementById('newProductCategory').value='';
   document.querySelectorAll('.size-checkboxes input[type="checkbox"]').forEach(cb=>cb.checked=false);
 }
 async function deleteProduct(id) {
@@ -694,21 +596,6 @@ async function deleteProduct(id) {
   const result = await callAPI('deleteProduct', {id});
   if(result.success){ alert('🗑 تم حذف المنتج.'); await loadData(); }
   else alert('❌ فشل حذف المنتج: '+(result.error||'خطأ'));
-}
-
-async function addCategory() {
-  const name = document.getElementById('newCategoryName').value.trim();
-  const icon = document.getElementById('newCategoryIcon').value.trim()||'🏷️';
-  if(!name) return alert('⚠️ يرجى إدخال اسم القسم.');
-  const result = await callAPI('addCategory', {name,icon,image:''});
-  if(result.success){ alert('✅ تم إضافة القسم بنجاح!'); await loadData(); document.getElementById('newCategoryName').value=''; document.getElementById('newCategoryIcon').value=''; }
-  else alert('❌ فشل إضافة القسم: '+(result.error||'خطأ'));
-}
-async function deleteCategory(id) {
-  if(!confirm('هل أنت متأكد من حذف هذا القسم؟')) return;
-  const result = await callAPI('deleteCategory', {id});
-  if(result.success){ alert('🗑 تم حذف القسم.'); await loadData(); }
-  else alert('❌ فشل حذف القسم: '+(result.error||'خطأ'));
 }
 
 async function submitOrder() {
