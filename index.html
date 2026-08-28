@@ -317,9 +317,8 @@
 </div>
 <div class="zoom-modal" id="zoomModal"><button class="zoom-close" onclick="closeZoom()">✕</button><div class="zoom-content" id="zoomContent"></div><div class="zoom-nav"><button onclick="prevZoom()">◀</button><span class="zoom-counter" id="zoomCounter">1 / 1</span><button onclick="nextZoom()">▶</button></div></div>
 <script>
-// ======= CONFIG =======
 const CONFIG = {
-  API_BASE_URL: 'https://script.google.com/macros/s/AKfycbxZNfGJwt3M0Og0BABUnas5O-uHTRX773Vk0jHKPIjo0at2asjcDjKBu1thF7caJ7d9/exec',
+  API_BASE_URL: 'https://script.google.com/macros/s/AKfycbwYYvkjwR9xJDLdSK5Qq6PusRKHDDs6FQ7c1s0BL_OszVlEuK0GC6OEQR4fQ5aVCkFw/exec',
   STORE_NAME: 'H.L LeVance',
   ADMIN_PHONE: '111',
   ADMIN_PASSWORD: '111',
@@ -332,7 +331,6 @@ const CONFIG = {
   WHATSAPP_MESSAGE: 'مرحباً، أريد الاستفسار عن منتجاتكم'
 };
 
-// ======= CART =======
 let cart = JSON.parse(localStorage.getItem(CONFIG.STORAGE_KEY_CART)||'[]');
 
 function saveCart() {
@@ -443,7 +441,6 @@ function closeOrderForm() {
   document.getElementById('orderFormPage').classList.remove('active');
 }
 
-// ======= OFFERS =======
 function renderOffers() {
   const grid = document.getElementById('offersGrid');
   if(!grid) return;
@@ -515,7 +512,6 @@ async function deleteOffer(id) {
   }
 }
 
-// ======= HELPERS =======
 async function callAPI(action, data = {}) {
   try {
     const res = await fetch(CONFIG.API_BASE_URL, {
@@ -533,7 +529,6 @@ async function fetchFromAPI(action) {
   } catch(e){ return {error:e.message}; }
 }
 
-// ======= DATA LOAD =======
 async function loadData() {
   try {
     const p = await fetchFromAPI('getProducts');
@@ -546,7 +541,6 @@ async function loadData() {
   renderStoreProducts(); renderCategories(); renderAdminProducts(); renderAdminCategories(); renderOffers(); renderAdminOffers();
 }
 
-// ======= RENDER =======
 function renderStoreProducts() {
   const grid = document.getElementById('productGrid'); if(!grid) return;
   const products = JSON.parse(localStorage.getItem(CONFIG.STORAGE_KEY_PRODUCTS)||'[]');
@@ -593,7 +587,6 @@ function renderAdminCategories() {
   });
 }
 
-// ======= PRODUCT CRUD =======
 async function addProduct() {
   const name = document.getElementById('newProductName').value.trim();
   const price = parseFloat(document.getElementById('newProductPrice').value.trim());
@@ -619,7 +612,6 @@ async function deleteProduct(id) {
   else alert('❌ فشل حذف المنتج: '+(result.error||'خطأ'));
 }
 
-// ======= CATEGORY CRUD =======
 async function addCategory() {
   const name = document.getElementById('newCategoryName').value.trim();
   const icon = document.getElementById('newCategoryIcon').value.trim()||'🏷️';
@@ -635,7 +627,6 @@ async function deleteCategory(id) {
   else alert('❌ فشل حذف القسم: '+(result.error||'خطأ'));
 }
 
-// ======= ORDER =======
 async function submitOrder() {
   const name = document.getElementById('orderCustomerName').value.trim();
   const phone = document.getElementById('orderCustomerPhone').value.trim();
@@ -676,7 +667,7 @@ async function submitOrder() {
   document.getElementById('submitOrderBtn').textContent='🛒 تأكيد الطلبية';
   
   if(result.success) {
-    alert(`✅ تم إرسال الطلبية بنجاح!\nرقم الطلب: ${result.orderId||'تم الإرسال'}`);
+    alert(`✅ تم إرسال الطلبية بنجاح!`);
     cart = [];
     saveCart();
     ['orderCustomerName','orderCustomerPhone','orderCustomerPhone2','orderAddress','orderAmount','orderNotes'].forEach(id=>document.getElementById(id).value='');
@@ -689,7 +680,6 @@ async function submitOrder() {
   }
 }
 
-// ======= UI HELPERS =======
 function searchProducts() {
   const q = document.getElementById('search').value.trim().toLowerCase();
   document.querySelectorAll('.product').forEach(p => {
@@ -748,7 +738,6 @@ function handleLogout() {
 }
 function handleSignup(){ alert('📝 سيتم تفعيل إنشاء الحساب قريباً'); }
 
-// ======= ZOOM =======
 let zoomData = [];
 let zoomIndex = 0;
 function openZoom(id) {
@@ -771,7 +760,6 @@ function nextZoom(){ if(zoomIndex<zoomData.length-1){ zoomIndex++; showZoomItem(
 function prevZoom(){ if(zoomIndex>0){ zoomIndex--; showZoomItem(); } }
 function closeZoom(){ document.getElementById('zoomModal').classList.remove('active'); }
 
-// ======= CITIES =======
 const EGYPT_GOVERNORATES = {
   'القاهرة':['مدينة نصر','مصر الجديدة','المعادي','وسط البلد','الدقي','المهندسين','الزمالك','شبرا'],
   'الإسكندرية':['سيدي جابر','رشدي','الساحل الشمالي','وسط البلد','المعمورة','العجمي'],
@@ -809,7 +797,6 @@ function updateOrderCities() {
   }
 }
 
-// ======= INIT =======
 document.addEventListener('DOMContentLoaded', function() {
   const gov = document.getElementById('orderGovernorate');
   if(gov) Object.keys(EGYPT_GOVERNORATES).forEach(g => { const opt=document.createElement('option'); opt.value=g; opt.textContent=g; gov.appendChild(opt); });
