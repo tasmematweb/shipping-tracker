@@ -585,16 +585,39 @@ function filterByCategory(catId, linkEl) {
     const targetLink = document.querySelector(`.nav a[data-category="${catId}"]`);
     if(targetLink) targetLink.classList.add('active');
   }
-  renderStoreProducts();
-  document.getElementById('products').scrollIntoView({behavior:'smooth'});
+  
+  const cats = JSON.parse(localStorage.getItem(CONFIG.STORAGE_KEY_CATEGORIES)||'[]');
+  const catObj = cats.find(c => String(c.id) === String(catId));
+  const catName = catObj ? catObj.name : '';
+  
+  const searchInput = document.getElementById('search');
+  if(searchInput) {
+    searchInput.value = catName;
+    searchProducts();
+  }
 }
 
-function renderStoreProducts() {
-  const grid = document.getElementById('productGrid'); if(!grid) return;
+function searchProducts() {
+  const q = document.getElementById('search').value.trim().toLowerCase();
   const products = JSON.parse(localStorage.getItem(CONFIG.STORAGE_KEY_PRODUCTS)||'[]');
   const cats = JSON.parse(localStorage.getItem(CONFIG.STORAGE_KEY_CATEGORIES)||'[]');
-  const filtered = currentCategoryFilter === 'all' ? products : products.filter(p => String(p.category) === String(currentCategoryFilter));
-  grid.innerHTML = filtered.length===0 ? '<p style="text-align:center;color:var(--brown);font-size:18px;padding:40px 0;">لا توجد منتجات في هذا القسم</p>' : '';
+  const grid = document.getElementById('productGrid');
+  
+  grid.innerHTML = '';
+  
+  const filtered = products.filter(p => {
+    if(!q) return true;
+    const catObj = cats.find(c => String(c.id) === String(p.category));
+    const catName = catObj ? catObj.name.toLowerCase() : '';
+    const name = (p.name||'').toLowerCase();
+    return name.includes(q) || catName.includes(q);
+  });
+  
+  if(filtered.length === 0) {
+    grid.innerHTML = '<p style="text-align:center;color:var(--brown);font-size:18px;padding:40px 0;">لا توجد منتجات مطابقة</p>';
+    return;
+  }
+  
   filtered.forEach(p => {
     const catObj = cats.find(c => String(c.id) === String(p.category));
     const catName = catObj ? catObj.name : '';
@@ -604,6 +627,22 @@ function renderStoreProducts() {
     grid.appendChild(art);
   });
 }
+
+function renderStoreProducts() {
+  const grid = document.getElementById('productGrid'); if(!grid) return;
+  const products = JSON.parse(localStorage.getItem(CONFIG.STORAGE_KEY_PRODUCTS)||'[]');
+  const cats = JSON.parse(localStorage.getItem(CONFIG.STORAGE_KEY_CATEGORIES)||'[]');
+  grid.innerHTML = products.length===0 ? '<p style="text-align:center;color:var(--brown);font-size:18px;padding:40px 0;">لا توجد منتجات حالياً</p>' : '';
+  products.forEach(p => {
+    const catObj = cats.find(c => String(c.id) === String(p.category));
+    const catName = catObj ? catObj.name : '';
+    const price = p.price||0, disc = p.discount||0, final = disc>0 ? Math.round(price-(price*disc/100)) : price;
+    const art = document.createElement('article'); art.className='product'; art.dataset.id=p.id;
+    art.innerHTML = `<div class="product-image" id="productImage_${p.id}"><div class="main-media"><span class="product-icon">${p.icon||'📦'}</span></div><button class="zoom-btn" onclick="openZoom(${p.id})">🔍</button><button class="delete-prod" onclick="deleteProduct(${p.id})">🗑</button></div><div class="product-info"><h3>${p.name}</h3>${catName ? `<span class="product-category">${catName}</span>` : ''}<div class="price">${disc>0?`<span class="original-price">${price} جنيه</span>`:''} ${final} جنيه ${disc>0?`<span style="color:red;font-size:14px;"> (خصم ${disc}%)</span>`:''}</div>${p.sizes?.length ? '<div class="sizes">'+p.sizes.map(s=>`<button class="size-btn" onclick="selectSize(this)">${s}</button>`).join('')+'</div>' : ''}<button class="add-cart" onclick="addToCart('${p.name}',${final},null,event)">أضف إلى السلة</button></div>`;
+    grid.appendChild(art);
+  });
+}
+
 function renderAdminProducts() {
   const list = document.getElementById('adminProductList'); if(!list) return;
   const products = JSON.parse(localStorage.getItem(CONFIG.STORAGE_KEY_PRODUCTS)||'[]');
@@ -725,13 +764,6 @@ async function submitOrder() {
   }
 }
 
-function searchProducts() {
-  const q = document.getElementById('search').value.trim().toLowerCase();
-  document.querySelectorAll('.product').forEach(p => {
-    const name = p.querySelector('h3')?.textContent.toLowerCase()||'';
-    p.style.display = !q || name.includes(q) ? '' : 'none';
-  });
-}
 function selectSize(btn) {
   btn.parentElement.querySelectorAll('.size-btn').forEach(b=>b.classList.remove('selected'));
   btn.classList.add('selected');
