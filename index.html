@@ -44,12 +44,18 @@
     .nav { background:var(--yellow-soft); padding:12px 4%; display:flex; gap:28px; overflow-x:auto; border-top:2px solid var(--brown); }
     .nav a { color:var(--brown); text-decoration:none; white-space:nowrap; font-size:15px; font-weight:bold; }
     .nav a:hover { color:var(--brown-light); }
-    .hero { min-height:420px; display:flex; align-items:center; justify-content:center; text-align:center; background:linear-gradient(135deg,var(--yellow-light),var(--yellow-main),var(--yellow-soft)); padding:60px 20px; border-bottom:3px solid var(--brown); }
-    .hero-content { max-width:850px; }
-    .hero h1 { font-family:Georgia,serif; font-size:clamp(48px,9vw,90px); color:var(--brown); margin-bottom:18px; line-height:1.05; }
-    .hero p { font-size:clamp(18px,3vw,25px); color:var(--brown); margin-bottom:30px; font-weight:bold; }
-    .shop-btn { display:inline-block; padding:15px 38px; background:var(--brown); color:var(--yellow-light); border:2px solid var(--brown); border-radius:8px; text-decoration:none; font-weight:bold; transition:transform .25s, background .25s; }
-    .shop-btn:hover { transform:translateY(-3px); background:var(--brown-light); }
+    .offers-section { padding:45px 4%; background:linear-gradient(135deg,var(--yellow-light),var(--yellow-main),var(--yellow-soft)); border-bottom:3px solid var(--brown); }
+    .offers-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(280px,1fr)); gap:22px; }
+    .offer-card { background:var(--yellow-light); border:2px solid var(--brown); border-radius:12px; overflow:hidden; box-shadow:0 5px 0 var(--brown); transition:transform .25s, box-shadow .25s; position:relative; }
+    .offer-card:hover { transform:translateY(-5px); box-shadow:0 9px 0 var(--brown); }
+    .offer-image { width:100%; height:200px; display:flex; align-items:center; justify-content:center; background:var(--yellow-main); border-bottom:2px solid var(--brown); font-size:80px; }
+    .offer-info { padding:18px; background:var(--yellow-light); }
+    .offer-info h3 { font-size:18px; margin-bottom:10px; color:var(--brown); }
+    .offer-info p { font-size:14px; color:var(--brown); margin-bottom:10px; }
+    .offer-info .offer-price { font-size:22px; font-weight:bold; color:var(--brown); }
+    .offer-info .offer-old-price { text-decoration:line-through; font-size:16px; opacity:.6; margin-left:10px; }
+    .offer-delete { position:absolute; top:5px; left:5px; background:var(--brown); color:var(--yellow-light); border:none; border-radius:50%; width:30px; height:30px; cursor:pointer; font-size:16px; display:none; z-index:10; }
+    .offer-delete:hover { background:var(--brown-light); }
     .categories { padding:45px 4%; background:var(--yellow-main); border-bottom:3px solid var(--brown); }
     .section-title { font-family:Georgia,serif; color:var(--brown); font-size:30px; margin-bottom:28px; }
     .category-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(150px,1fr)); gap:18px; }
@@ -185,10 +191,12 @@
       .search-box input { font-size:14px; padding:0 10px; }
       .nav { gap:20px; padding:10px 3%; }
       .nav a { font-size:14px; }
-      .hero { min-height:320px; padding:45px 15px; }
-      .hero h1 { font-size:48px; }
-      .hero p { font-size:17px; }
-      .shop-btn { padding:13px 30px; }
+      .offers-section { padding:35px 3%; }
+      .offers-grid { grid-template-columns:repeat(2,minmax(0,1fr)); gap:12px; }
+      .offer-image { height:140px; font-size:60px; }
+      .offer-info { padding:12px; }
+      .offer-info h3 { font-size:14px; }
+      .offer-info .offer-price { font-size:16px; }
       .categories { padding:35px 3%; }
       .products { padding:35px 3%; }
       .section-title { font-size:26px; }
@@ -238,12 +246,21 @@
     <div class="search-bar">
       <div class="search-box"><input type="text" id="search" placeholder="بحث..." oninput="searchProducts()"><button onclick="searchProducts()">🔍</button></div>
     </div>
-    <div class="nav"><a href="#categories">الأقسام</a><a href="#products">المنتجات</a></div>
+    <div class="nav"><a href="#offers">العروض</a><a href="#categories">الأقسام</a><a href="#products">المنتجات</a></div>
   </header>
-  <section class="hero"><div class="hero-content"><h1>اكتشف الأناقة</h1><p>تشكيلة راقية من المنتجات الفاخرة</p><a href="#products" class="shop-btn">تسوق الآن</a></div></section>
+  <section class="offers-section" id="offers"><h2 class="section-title">🔥 العروض</h2><div class="offers-grid" id="offersGrid"></div></section>
   <section class="categories" id="categories"><h2 class="section-title">📂 الأقسام</h2><div class="category-grid" id="categoryGrid"></div></section>
   <section class="products" id="products"><h2 class="section-title">🛍️ المنتجات</h2><div class="product-grid" id="productGrid"></div></section>
   <div id="adminPanel" style="display:none;"><h2>⚙️ لوحة التحكم</h2>
+    <div class="admin-section"><h3>➕ إضافة عرض</h3><div class="admin-controls">
+      <input type="text" id="newOfferTitle" placeholder="عنوان العرض">
+      <input type="text" id="newOfferDescription" placeholder="وصف العرض">
+      <input type="number" id="newOfferPrice" placeholder="السعر الجديد">
+      <input type="number" id="newOfferOldPrice" placeholder="السعر القديم">
+      <input type="text" id="newOfferIcon" placeholder="أيقونة العرض 🎉">
+      <button onclick="addOffer()">إضافة العرض</button>
+    </div></div>
+    <div class="admin-section"><h3>📋 قائمة العروض</h3><div class="admin-list" id="adminOfferList"></div></div>
     <div class="admin-section"><h3>➕ إضافة منتج</h3><div class="admin-controls">
       <input type="text" id="newProductName" placeholder="اسم المنتج">
       <input type="number" id="newProductPrice" placeholder="السعر">
@@ -308,6 +325,7 @@ const CONFIG = {
   ADMIN_PASSWORD: '111',
   STORAGE_KEY_PRODUCTS: 'hl_products',
   STORAGE_KEY_CATEGORIES: 'hl_categories',
+  STORAGE_KEY_OFFERS: 'hl_offers',
   STORAGE_KEY_CART: 'hl_cart',
   STORAGE_KEY_ORDERS: 'hl_orders',
   WHATSAPP_NUMBER: '201234567890',
@@ -390,9 +408,14 @@ function checkout() {
   }
   closeCart();
   populateOrderForm();
-  document.getElementById('orderFormPage').style.display = 'block';
-  document.getElementById('orderFormPage').classList.add('active');
-  window.scrollTo(0, 0);
+  const orderFormPage = document.getElementById('orderFormPage');
+  orderFormPage.style.display = 'block';
+  orderFormPage.classList.add('active');
+  
+  // السحب التلقائي لصفحة النموذج
+  setTimeout(() => {
+    orderFormPage.scrollIntoView({behavior: 'smooth', block: 'start'});
+  }, 100);
 }
 
 function populateOrderForm() {
@@ -421,6 +444,86 @@ function closeOrderForm() {
   document.getElementById('orderFormPage').classList.remove('active');
 }
 
+// ======= OFFERS =======
+function renderOffers() {
+  const grid = document.getElementById('offersGrid');
+  if(!grid) return;
+  const offers = JSON.parse(localStorage.getItem(CONFIG.STORAGE_KEY_OFFERS)||'[]');
+  grid.innerHTML = offers.length===0 ? '<p style="text-align:center;color:var(--brown);padding:20px 0;">لا توجد عروض حالياً</p>' : '';
+  offers.forEach(offer => {
+    const div = document.createElement('div');
+    div.className = 'offer-card';
+    div.innerHTML = `
+      <button class="offer-delete" onclick="deleteOffer(${offer.id})">🗑</button>
+      <div class="offer-image">${offer.icon||'🎉'}</div>
+      <div class="offer-info">
+        <h3>${offer.title}</h3>
+        <p>${offer.description||''}</p>
+        <div class="offer-price">
+          ${offer.oldPrice ? `<span class="offer-old-price">${offer.oldPrice} جنيه</span>` : ''}
+          ${offer.price} جنيه
+        </div>
+      </div>
+    `;
+    grid.appendChild(div);
+  });
+}
+
+function renderAdminOffers() {
+  const list = document.getElementById('adminOfferList');
+  if(!list) return;
+  const offers = JSON.parse(localStorage.getItem(CONFIG.STORAGE_KEY_OFFERS)||'[]');
+  list.innerHTML = offers.length===0 ? '<p style="text-align:center;color:var(--brown);padding:20px 0;">لا توجد عروض</p>' : '';
+  offers.forEach(offer => {
+    const div = document.createElement('div');
+    div.className = 'admin-list-item';
+    div.innerHTML = `<div class="item-info"><span style="font-size:30px;">${offer.icon||'🎉'}</span><span>${offer.title} - ${offer.price} جنيه</span></div><button onclick="deleteOffer(${offer.id})">🗑 حذف</button>`;
+    list.appendChild(div);
+  });
+}
+
+async function addOffer() {
+  const title = document.getElementById('newOfferTitle').value.trim();
+  const description = document.getElementById('newOfferDescription').value.trim();
+  const price = parseFloat(document.getElementById('newOfferPrice').value.trim());
+  const oldPrice = parseFloat(document.getElementById('newOfferOldPrice').value.trim())||0;
+  const icon = document.getElementById('newOfferIcon').value.trim()||'🎉';
+  
+  if(!title || isNaN(price) || price<=0) return alert('⚠️ يرجى إدخال عنوان العرض والسعر.');
+  
+  const offers = JSON.parse(localStorage.getItem(CONFIG.STORAGE_KEY_OFFERS)||'[]');
+  const newOffer = {
+    id: Date.now(),
+    title,
+    description,
+    price,
+    oldPrice,
+    icon
+  };
+  offers.push(newOffer);
+  localStorage.setItem(CONFIG.STORAGE_KEY_OFFERS, JSON.stringify(offers));
+  
+  document.getElementById('newOfferTitle').value='';
+  document.getElementById('newOfferDescription').value='';
+  document.getElementById('newOfferPrice').value='';
+  document.getElementById('newOfferOldPrice').value='';
+  document.getElementById('newOfferIcon').value='';
+  
+  renderOffers();
+  renderAdminOffers();
+  alert('✅ تم إضافة العرض بنجاح!');
+}
+
+function deleteOffer(id) {
+  if(!confirm('هل أنت متأكد من حذف هذا العرض؟')) return;
+  let offers = JSON.parse(localStorage.getItem(CONFIG.STORAGE_KEY_OFFERS)||'[]');
+  offers = offers.filter(o=>o.id!==id);
+  localStorage.setItem(CONFIG.STORAGE_KEY_OFFERS, JSON.stringify(offers));
+  renderOffers();
+  renderAdminOffers();
+  alert('🗑 تم حذف العرض.');
+}
+
 // ======= HELPERS =======
 async function callAPI(action, data = {}) {
   try {
@@ -447,7 +550,7 @@ async function loadData() {
     const c = await fetchFromAPI('getCategories');
     if(c?.categories) localStorage.setItem(CONFIG.STORAGE_KEY_CATEGORIES, JSON.stringify(c.categories));
   } catch(e){ console.error(e); }
-  renderStoreProducts(); renderCategories(); renderAdminProducts(); renderAdminCategories();
+  renderStoreProducts(); renderCategories(); renderAdminProducts(); renderAdminCategories(); renderOffers(); renderAdminOffers();
 }
 
 // ======= RENDER =======
@@ -602,7 +705,7 @@ async function handleLogin() {
     document.getElementById('adminPanel').style.display='block';
     document.getElementById('adminPanel').classList.add('active');
     closeLoginModal();
-    document.querySelectorAll('.delete-prod, .delete-cat').forEach(el=>el.style.display='block');
+    document.querySelectorAll('.delete-prod, .delete-cat, .offer-delete').forEach(el=>el.style.display='block');
     return;
   }
   
@@ -615,7 +718,7 @@ async function handleLogin() {
     document.getElementById('logoutBtn').classList.remove('hidden');
     document.getElementById('adminPanel').style.display='none';
     document.getElementById('adminPanel').classList.remove('active');
-    document.querySelectorAll('.delete-prod, .delete-cat').forEach(el=>el.style.display='none');
+    document.querySelectorAll('.delete-prod, .delete-cat, .offer-delete').forEach(el=>el.style.display='none');
     closeLoginModal(); 
   }
   else alert('❌ رقم الهاتف أو كلمة المرور غير صحيحة.');
@@ -628,7 +731,7 @@ function handleLogout() {
   document.getElementById('logoutBtn').classList.add('hidden');
   document.getElementById('adminPanel').style.display='none';
   document.getElementById('adminPanel').classList.remove('active');
-  document.querySelectorAll('.delete-prod, .delete-cat').forEach(el=>el.style.display='none');
+  document.querySelectorAll('.delete-prod, .delete-cat, .offer-delete').forEach(el=>el.style.display='none');
   alert('✅ تم تسجيل الخروج بنجاح');
 }
 function handleSignup(){ alert('📝 سيتم تفعيل إنشاء الحساب قريباً'); }
@@ -713,6 +816,8 @@ document.addEventListener('DOMContentLoaded', function() {
   else transitionToStore();
   
   updateCartCount();
+  renderOffers();
+  renderAdminOffers();
   
   if(localStorage.getItem('hl_admin')==='true' || localStorage.getItem('hl_user')==='true') {
     document.getElementById('loginBtn').classList.add('hidden');
@@ -721,7 +826,7 @@ document.addEventListener('DOMContentLoaded', function() {
     if(localStorage.getItem('hl_admin')==='true') {
       document.getElementById('adminPanel').style.display='block';
       document.getElementById('adminPanel').classList.add('active');
-      document.querySelectorAll('.delete-prod, .delete-cat').forEach(el=>el.style.display='block');
+      document.querySelectorAll('.delete-prod, .delete-cat, .offer-delete').forEach(el=>el.style.display='block');
     }
   } else {
     document.getElementById('loginBtn').classList.remove('hidden');
