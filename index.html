@@ -19,7 +19,8 @@
     #store.show { opacity:1; transform:translateY(0); visibility:visible; }
     header { position:sticky; top:0; z-index:1000; background:var(--yellow-main); border-bottom:3px solid var(--brown); }
     .top-header { min-height:70px; display:flex; align-items:center; justify-content:space-between; gap:15px; padding:10px 4%; background:var(--yellow-main); }
-    .logo { color:var(--brown); text-decoration:none; font-family:Georgia,serif; font-size:clamp(28px, 5vw, 56px); font-weight:bold; white-space:nowrap; }
+    .logo { color:var(--brown); text-decoration:none; font-family:Georgia,serif; font-size:clamp(22px, 4vw, 40px); font-weight:bold; text-align:center; line-height:1.1; display:block; }
+    .logo span { display:block; }
     .header-actions { display:flex; align-items:center; gap:8px; }
     .login-btn, .logout-btn, .cart { background:var(--brown); border:none; color:var(--yellow-light); font-size:clamp(12px, 2vw, 16px); cursor:pointer; white-space:nowrap; padding:clamp(8px, 1.5vw, 12px) clamp(12px, 2vw, 20px); border-radius:8px; font-weight:bold; transition:background .2s; }
     .logout-btn { background:#dc3545; }
@@ -34,7 +35,9 @@
     .search-box button { width:60px; border:none; border-right:2px solid var(--brown); background:var(--brown); color:var(--yellow-light); cursor:pointer; font-size:20px; }
     .search-box button:hover { background:var(--brown-light); }
     .offers-section { padding:clamp(25px, 5vw, 45px) 4%; background:linear-gradient(135deg,var(--yellow-light),var(--yellow-main),var(--yellow-soft)); border-bottom:3px solid var(--brown); }
-    .offers-grid { display:flex; gap:clamp(12px, 2vw, 22px); overflow-x:auto; padding-bottom:20px; scroll-snap-type:x mandatory; }
+    .products-section { padding:clamp(25px, 5vw, 45px) 4%; background:var(--yellow-soft); border-bottom:3px solid var(--brown); }
+    .products-section h2 { font-size:clamp(22px, 4vw, 30px); margin-bottom:15px; }
+    .offers-grid, .products-grid-horizontal { display:flex; gap:clamp(12px, 2vw, 22px); overflow-x:auto; padding-bottom:20px; scroll-snap-type:x mandatory; }
     .offer-card { min-width:clamp(220px, 40vw, 280px); max-width:280px; background:var(--yellow-light); border:2px solid var(--brown); border-radius:12px; overflow:hidden; box-shadow:0 5px 0 var(--brown); transition:transform .25s, box-shadow .25s; position:relative; scroll-snap-align:start; flex-shrink:0; }
     .offer-card:hover { transform:translateY(-5px); box-shadow:0 9px 0 var(--brown); }
     .offer-image { width:100%; height:clamp(120px, 25vw, 200px); display:flex; align-items:center; justify-content:center; background:var(--yellow-main); border-bottom:2px solid var(--brown); overflow:hidden; cursor:pointer; position:relative; }
@@ -48,12 +51,9 @@
     .offer-add-cart:hover { background:var(--brown-light); }
     .offer-delete { position:absolute; top:5px; left:5px; background:var(--brown); color:var(--yellow-light); border:none; border-radius:50%; width:30px; height:30px; cursor:pointer; font-size:16px; display:none; z-index:10; }
     .offer-delete:hover { background:var(--brown-light); }
-    .products { padding:clamp(25px, 5vw, 45px) 4%; background:var(--yellow-soft); border-bottom:3px solid var(--brown); }
-    .section-title { font-size:clamp(22px, 4vw, 30px); }
-    .product-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(clamp(150px, 25vw, 260px),1fr)); gap:clamp(10px, 2vw, 22px); }
-    .product { background:var(--yellow-light); border:2px solid var(--brown); border-radius:12px; overflow:hidden; box-shadow:0 5px 0 var(--brown); transition:transform .25s, box-shadow .25s; position:relative; }
+    .product { min-width:clamp(220px, 40vw, 280px); max-width:280px; background:var(--yellow-light); border:2px solid var(--brown); border-radius:12px; overflow:hidden; box-shadow:0 5px 0 var(--brown); transition:transform .25s, box-shadow .25s; position:relative; scroll-snap-align:start; flex-shrink:0; }
     .product:hover { transform:translateY(-5px); box-shadow:0 9px 0 var(--brown); }
-    .product-image { width:100%; height:clamp(150px, 35vw, 280px); display:flex; align-items:center; justify-content:center; background:var(--yellow-main); border-bottom:2px solid var(--brown); overflow:hidden; position:relative; cursor:pointer; }
+    .product-image { width:100%; height:clamp(150px, 25vw, 250px); display:flex; align-items:center; justify-content:center; background:var(--yellow-main); border-bottom:2px solid var(--brown); overflow:hidden; position:relative; cursor:pointer; }
     .product-image .main-media { width:100%; height:100%; display:flex; align-items:center; justify-content:center; }
     .product-image .main-media img { width:100%; height:100%; object-fit:cover; }
     .product-image .product-icon { font-size:clamp(60px, 12vw, 90px); }
@@ -182,8 +182,8 @@
       .search-box input { font-size:14px; padding:0 10px; }
       .offers-section { padding:25px 2%; }
       .offers-grid { gap:10px; }
-      .products { padding:25px 2%; }
-      .product-grid { gap:10px; }
+      .products-section { padding:25px 2%; }
+      .products-grid-horizontal { gap:10px; }
       .zoom-modal .zoom-close { width:40px; height:40px; font-size:22px; top:10px; left:10px; }
       .order-form-container { padding:15px 10px; }
       .order-form-container .form-row { grid-template-columns:1fr; gap:0; }
@@ -200,7 +200,7 @@
 <div id="store">
   <header>
     <div class="top-header">
-      <a href="#" class="logo">H.L LeVance</a>
+      <a href="#" class="logo"><span>H.L</span><span>LeVance</span></a>
       <div class="header-actions">
         <button class="login-btn" id="loginBtn" onclick="openLoginModal()">دخول</button>
         <button class="logout-btn hidden" id="logoutBtn" onclick="handleLogout()">خروج</button>
@@ -212,7 +212,8 @@
     </div>
   </header>
   <section class="offers-section" id="offers"><h2 class="section-title">العروض</h2><div class="offers-grid" id="offersGrid"></div></section>
-  <section class="products" id="products"><h2 class="section-title">المنتجات</h2><div class="product-grid" id="productGrid"></div></section>
+  <section class="products-section" id="skincareSection"><h2>منتجات عنايه بالبشره</h2><div class="products-grid-horizontal" id="skincareGrid"></div></section>
+  <section class="products-section" id="clothingSection"><h2>ملابس</h2><div class="products-grid-horizontal" id="clothingGrid"></div></section>
   <div id="adminPanel" style="display:none;"><h2>لوحة التحكم</h2>
     <div class="admin-section"><h3>إضافة عرض</h3><div class="admin-controls">
       <input type="text" id="newOfferTitle" placeholder="عنوان العرض">
@@ -234,6 +235,10 @@
       <input type="number" id="newProductDiscount" placeholder="خصم %" value="0">
       <input type="text" id="newProductIcon" placeholder="أيقونة">
       <input type="text" id="newProductVideoUrl" placeholder="رابط الفيديو الشرحي">
+      <select id="newProductCategory">
+        <option value="skincare">منتجات عنايه بالبشره</option>
+        <option value="clothing">ملابس</option>
+      </select>
       <div class="size-checkboxes">
         <label><input type="checkbox" value="S"> S</label>
         <label><input type="checkbox" value="M"> M</label>
@@ -305,7 +310,7 @@
 </div>
 <script>
 const CONFIG = {
-  API_BASE_URL: 'https://script.google.com/macros/s/AKfycbxhLOcMLXUMq4s85lPs4ObKz0AEin9TnzCtBWUrTBs8zmqPX76xcXLiX3I-1BZ-31R0/exec',
+  API_BASE_URL: 'https://script.google.com/macros/s/AKfycbySmkCbzWlGVAEaurr1o9i_kPWdf-HMgvhT_pUh-Xs52Vxx8J24l2WK8dguWV7-kQxL/exec',
   STORE_NAME: 'H.L LeVance',
   ADMIN_PHONE: '111',
   ADMIN_PASSWORD: '111',
@@ -537,18 +542,33 @@ async function loadData() {
 function searchProducts() {
   const q = document.getElementById('search').value.trim().toLowerCase();
   const products = JSON.parse(localStorage.getItem(CONFIG.STORAGE_KEY_PRODUCTS)||'[]');
-  const grid = document.getElementById('productGrid');
-  grid.innerHTML = '';
+  const skincareGrid = document.getElementById('skincareGrid');
+  const clothingGrid = document.getElementById('clothingGrid');
+  skincareGrid.innerHTML = '';
+  clothingGrid.innerHTML = '';
   const filtered = products.filter(p => { if(!q) return true; const name = (p.name||'').toLowerCase(); return name.includes(q); });
-  if(filtered.length === 0) { grid.innerHTML = '<p style="text-align:center;color:var(--brown);font-size:18px;padding:40px 0;">لا توجد منتجات مطابقة</p>'; return; }
-  filtered.forEach(p => renderProductCard(p, grid));
+  if(filtered.length === 0) {
+    skincareGrid.innerHTML = '<p style="text-align:center;color:var(--brown);font-size:18px;padding:40px 0;">لا توجد منتجات مطابقة</p>';
+    clothingGrid.innerHTML = '<p style="text-align:center;color:var(--brown);font-size:18px;padding:40px 0;">لا توجد منتجات مطابقة</p>';
+    return;
+  }
+  filtered.forEach(p => {
+    if(p.category === 'clothing') renderProductCard(p, clothingGrid);
+    else renderProductCard(p, skincareGrid);
+  });
 }
 
 function renderStoreProducts() {
-  const grid = document.getElementById('productGrid'); if(!grid) return;
+  const skincareGrid = document.getElementById('skincareGrid');
+  const clothingGrid = document.getElementById('clothingGrid');
+  if(!skincareGrid || !clothingGrid) return;
   const products = JSON.parse(localStorage.getItem(CONFIG.STORAGE_KEY_PRODUCTS)||'[]');
-  grid.innerHTML = products.length===0 ? '<p style="text-align:center;color:var(--brown);font-size:18px;padding:40px 0;">لا توجد منتجات حالياً</p>' : '';
-  products.forEach(p => renderProductCard(p, grid));
+  skincareGrid.innerHTML = products.filter(p => p.category !== 'clothing').length === 0 ? '<p style="text-align:center;color:var(--brown);font-size:18px;padding:40px 0;">لا توجد منتجات</p>' : '';
+  clothingGrid.innerHTML = products.filter(p => p.category === 'clothing').length === 0 ? '<p style="text-align:center;color:var(--brown);font-size:18px;padding:40px 0;">لا توجد منتجات</p>' : '';
+  products.forEach(p => {
+    if(p.category === 'clothing') renderProductCard(p, clothingGrid);
+    else renderProductCard(p, skincareGrid);
+  });
 }
 
 function renderProductCard(p, grid) {
@@ -583,7 +603,7 @@ function renderAdminProducts() {
     const sizeTags = p.sizes?.length ? `<div class="size-tags">${p.sizes.map(s=>`<span>${s}</span>`).join('')}</div>` : '';
     const mediaHtml = p.media?.length ? p.media.map(m => `<img src="${m}" alt="صورة">`).join('') : '';
     const div = document.createElement('div'); div.className='admin-list-item';
-    div.innerHTML = `<div class="item-info">${mediaHtml || `<span style="font-size:30px;">${p.icon||''}</span>`}<span>${p.name} - ${final} جنيه ${disc>0?`(خصم ${disc}%)`:''}</span>${sizeTags}${p.videoUrl ? '<span>🎬</span>' : ''}</div><button onclick="deleteProduct(${p.id})">حذف</button>`;
+    div.innerHTML = `<div class="item-info">${mediaHtml || `<span style="font-size:30px;">${p.icon||''}</span>`}<span>${p.name} - ${final} جنيه ${disc>0?`(خصم ${disc}%)`:''} ${p.category==='clothing'?'(ملابس)':'(عناية)'}</span>${sizeTags}${p.videoUrl ? '<span>🎬</span>' : ''}</div><button onclick="deleteProduct(${p.id})">حذف</button>`;
     list.appendChild(div);
   });
 }
@@ -594,10 +614,11 @@ async function addProduct() {
   const discount = parseFloat(document.getElementById('newProductDiscount').value.trim())||0;
   const icon = document.getElementById('newProductIcon').value.trim()||'';
   const videoUrl = document.getElementById('newProductVideoUrl').value.trim()||'';
+  const category = document.getElementById('newProductCategory').value;
   if(!name || isNaN(price) || price<=0) return showToast('يرجى إدخال اسم المنتج وسعر صحيح.', 'error');
   const sizes = [...document.querySelectorAll('.size-checkboxes input[type="checkbox"]:checked')].map(cb=>cb.value);
   await uploadProductImages();
-  const result = await callAPI('addProduct', {name, price, discount, icon, sizes, media: uploadedImages, videoUrl});
+  const result = await callAPI('addProduct', {name, price, discount, icon, sizes, media: uploadedImages, videoUrl, category});
   if(result.success) { showToast('تم إضافة المنتج بنجاح!'); await loadData(); clearAddProduct(); }
   else showToast('فشل إضافة المنتج: '+(result.error||'خطأ'), 'error');
 }
@@ -608,6 +629,7 @@ function clearAddProduct() {
   document.getElementById('newProductDiscount').value='';
   document.getElementById('newProductIcon').value='';
   document.getElementById('newProductVideoUrl').value='';
+  document.getElementById('newProductCategory').value='skincare';
   document.querySelectorAll('.size-checkboxes input[type="checkbox"]').forEach(cb=>cb.checked=false);
   uploadedImages = [];
   document.getElementById('uploadedImagesPreview').innerHTML='';
