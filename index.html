@@ -104,11 +104,30 @@
     footer { padding:45px 5%; background:var(--yellow-main); color:var(--brown); text-align:center; border-top:3px solid var(--brown); }
     footer h2 { font-family:Georgia,serif; font-size:clamp(24px, 4vw, 32px); margin-bottom:10px; }
     footer p { font-weight:bold; }
-    .whatsapp-float { position:fixed; bottom:25px; right:25px; z-index:99999; background:#25D366; color:white; width:60px; height:60px; border-radius:50%; display:flex; align-items:center; justify-content:center; box-shadow:0 4px 12px rgba(0,0,0,.3); text-decoration:none; border:2px solid white; animation:whatsappPulse 1.5s ease-in-out infinite; }
+    .whatsapp-float {
+      position: fixed;
+      bottom: 25px;
+      left: 25px;
+      z-index: 99999;
+      background: #25D366;
+      color: white;
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 4px 12px rgba(0,0,0,.3);
+      text-decoration: none;
+      border: 2px solid white;
+      animation: whatsappPulse 1.5s ease-in-out infinite;
+    }
     .whatsapp-float:hover { transform:scale(1.1); box-shadow:0 6px 16px rgba(0,0,0,.4); }
     @keyframes whatsappPulse { 0%,100%{transform:scale(1)} 50%{transform:scale(1.1)} }
     .whatsapp-float::after { content:''; position:absolute; inset:-5px; border-radius:50%; border:3px solid #25D366; animation:whatsappRing 1.5s ease-out infinite; }
     @keyframes whatsappRing { 0%{opacity:1; transform:scale(1)} 100%{opacity:0; transform:scale(1.5)} }
+    @keyframes toastIn { from { opacity:0; transform:translateX(-50%) translateY(-20px); } to { opacity:1; transform:translateX(-50%) translateY(0); } }
+    @keyframes toastOut { from { opacity:1; } to { opacity:0; } }
     .modal-overlay { display:none; position:fixed; inset:0; background:rgba(0,0,0,.5); z-index:10000; align-items:center; justify-content:center; backdrop-filter:blur(4px); }
     .modal-overlay.active { display:flex; }
     .modal-box { background:var(--yellow-main); border:3px solid var(--brown); border-radius:16px; padding:35px 30px; width:90%; max-width:400px; box-shadow:0 20px 40px rgba(0,0,0,.4); text-align:center; }
@@ -169,7 +188,7 @@
       .modal-box, .cart-box { padding:15px 10px; }
       .admin-controls { flex-direction:column; }
       .admin-controls input, .admin-controls select { min-width:unset; }
-      .whatsapp-float { width:50px; height:50px; bottom:15px; right:15px; }
+      .whatsapp-float { width:50px; height:50px; bottom:15px; left:15px; }
     }
   </style>
 </head>
@@ -246,10 +265,12 @@
     </div>
   </div>
   <footer><h2>H.L LeVance</h2><p>© 2025 جميع الحقوق محفوظة</p></footer>
-  <a href="https://wa.me/201042452177" class="whatsapp-float" target="_blank">
-    <svg width="30" height="30" viewBox="0 0 24 24" fill="white"><path d="M12 2C6.48 2 2 6.48 2 12c0 1.77.47 3.43 1.28 4.88L2 22l5.28-1.38A9.96 9.96 0 0012 22c5.52 0 10-4.48 10-10S17.52 2 12 2zm5.85 14.15c-.25.7-1.45 1.35-2.02 1.4-.52.05-1.18.24-3.98-.83-3.35-1.28-5.47-4.6-5.64-4.81-.17-.21-1.35-1.8-1.35-3.43 0-1.63.85-2.43 1.15-2.77.3-.33.66-.42.88-.42.22 0 .44 0 .63.01.2.01.47-.08.74.56.27.65.93 2.25 1.01 2.41.08.17.13.36.02.58-.1.21-.15.34-.3.52-.15.18-.32.4-.46.54-.15.15-.31.31-.13.61.18.3.8 1.32 1.72 2.14 1.18 1.05 2.17 1.38 2.48 1.53.3.15.48.13.66-.08.18-.21.75-.87.95-1.17.2-.3.4-.25.68-.15.28.1 1.77.83 2.07.98.3.15.5.22.57.35.08.13.08.73-.17 1.43z"/></svg>
-  </a>
 </div>
+
+<a href="https://wa.me/201042452177" class="whatsapp-float" target="_blank">
+  <svg width="30" height="30" viewBox="0 0 24 24" fill="white"><path d="M12 2C6.48 2 2 6.48 2 12c0 1.77.47 3.43 1.28 4.88L2 22l5.28-1.38A9.96 9.96 0 0012 22c5.52 0 10-4.48 10-10S17.52 2 12 2zm5.85 14.15c-.25.7-1.45 1.35-2.02 1.4-.52.05-1.18.24-3.98-.83-3.35-1.28-5.47-4.6-5.64-4.81-.17-.21-1.35-1.8-1.35-3.43 0-1.63.85-2.43 1.15-2.77.3-.33.66-.42.88-.42.22 0 .44 0 .63.01.2.01.47-.08.74.56.27.65.93 2.25 1.01 2.41.08.17.13.36.02.58-.1.21-.15.34-.3.52-.15.18-.32.4-.46.54-.15.15-.31.31-.13.61.18.3.8 1.32 1.72 2.14 1.18 1.05 2.17 1.38 2.48 1.53.3.15.48.13.66-.08.18-.21.75-.87.95-1.17.2-.3.4-.25.68-.15.28.1 1.77.83 2.07.98.3.15.5.22.57.35.08.13.08.73-.17 1.43z"/></svg>
+</a>
+
 <div class="modal-overlay" id="loginModal"><div class="modal-box"><h2>تسجيل الدخول</h2><input type="text" id="loginPhone" placeholder="رقم الهاتف"><input type="password" id="loginPassword" placeholder="كلمة المرور"><button class="btn-login-submit" onclick="handleLogin()">دخول</button><span class="signup-link" onclick="handleSignup()">إنشاء حساب جديد</span><button class="close-modal" onclick="closeLoginModal()">إغلاق</button></div></div>
 <div class="cart-modal" id="cartModal">
   <div class="cart-box">
@@ -296,6 +317,36 @@ const SHIPPING_COSTS = {
   'أسيوط': 85, 'مرسى مطروح': 85, 'البحر الأحمر': 85, 'أسوان': 85,
   'سوهاج': 85, 'المراغة': 15, 'الوادي الجديد': 154, 'جنوب سيناء': 154, 'شمال سيناء': 154
 };
+
+function showToast(message, type = 'success') {
+  const existingToast = document.querySelector('.custom-toast');
+  if(existingToast) existingToast.remove();
+  const toast = document.createElement('div');
+  toast.className = 'custom-toast';
+  toast.textContent = message;
+  toast.style.cssText = `
+    position: fixed;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: ${type === 'success' ? '#28a745' : '#dc3545'};
+    color: white;
+    padding: 15px 25px;
+    border-radius: 8px;
+    font-weight: bold;
+    font-size: 16px;
+    z-index: 999999;
+    box-shadow: 0 4px 15px rgba(0,0,0,.3);
+    animation: toastIn .3s ease-out;
+    text-align: center;
+    direction: rtl;
+  `;
+  document.body.appendChild(toast);
+  setTimeout(() => {
+    toast.style.animation = 'toastOut .3s ease-in';
+    setTimeout(() => toast.remove(), 300);
+  }, 2500);
+}
 
 function addOfferImageField() {
   const container = document.getElementById('offerImagesContainer');
@@ -370,7 +421,7 @@ function addToCart(name, price, size, event) {
   const selectedSize = size || (event?.target?.parentElement?.querySelector('.size-btn.selected')?.textContent) || '';
   const existingItem = cart.find(item => item.name === name && item.size === selectedSize);
   if(existingItem) { existingItem.quantity++; } else { cart.push({name, price, size: selectedSize, quantity: 1}); }
-  saveCart(); alert(`تم إضافة ${name} إلى السلة`);
+  saveCart(); showToast(`تم إضافة ${name} إلى السلة`);
 }
 function addOfferToCart(name, price, event) { addToCart(name, price, '', event); }
 function removeFromCart(index) { cart.splice(index, 1); saveCart(); renderCart(); }
@@ -394,7 +445,7 @@ function renderCart() {
 function showCart() { renderCart(); document.getElementById('cartModal').classList.add('active'); }
 function closeCart() { document.getElementById('cartModal').classList.remove('active'); }
 function checkout() {
-  if(cart.length === 0) { alert('السلة فارغة'); return; }
+  if(cart.length === 0) { showToast('السلة فارغة', 'error'); return; }
   closeCart(); populateOrderForm();
   const orderFormPage = document.getElementById('orderFormPage');
   orderFormPage.style.display = 'block'; orderFormPage.classList.add('active');
@@ -450,17 +501,17 @@ async function addOffer() {
   const price = parseFloat(document.getElementById('newOfferPrice').value.trim());
   const oldPrice = parseFloat(document.getElementById('newOfferOldPrice').value.trim())||0;
   const icon = document.getElementById('newOfferIcon').value.trim()||'';
-  if(!title || isNaN(price) || price<=0) return alert('يرجى إدخال عنوان العرض والسعر.');
+  if(!title || isNaN(price) || price<=0) return showToast('يرجى إدخال عنوان العرض والسعر.', 'error');
   await uploadOfferImages();
   const result = await callAPI('addOffer', {title, description, price, oldPrice, icon, media: offerImages});
-  if(result.success) { alert('تم إضافة العرض بنجاح!'); document.getElementById('newOfferTitle').value=''; document.getElementById('newOfferDescription').value=''; document.getElementById('newOfferPrice').value=''; document.getElementById('newOfferOldPrice').value=''; document.getElementById('newOfferIcon').value=''; document.getElementById('offerImagesContainer').innerHTML=''; document.getElementById('offerImagesPreview').innerHTML=''; await loadData(); }
-  else alert('فشل إضافة العرض: '+(result.error||'خطأ'));
+  if(result.success) { showToast('تم إضافة العرض بنجاح!'); document.getElementById('newOfferTitle').value=''; document.getElementById('newOfferDescription').value=''; document.getElementById('newOfferPrice').value=''; document.getElementById('newOfferOldPrice').value=''; document.getElementById('newOfferIcon').value=''; document.getElementById('offerImagesContainer').innerHTML=''; document.getElementById('offerImagesPreview').innerHTML=''; await loadData(); }
+  else showToast('فشل إضافة العرض: '+(result.error||'خطأ'), 'error');
 }
 async function deleteOffer(id) {
   if(!confirm('هل أنت متأكد من حذف هذا العرض؟')) return;
   const result = await callAPI('deleteOffer', {id});
-  if(result.success) { alert('تم حذف العرض.'); await loadData(); }
-  else alert('فشل حذف العرض: '+(result.error||'خطأ'));
+  if(result.success) { showToast('تم حذف العرض.'); await loadData(); }
+  else showToast('فشل حذف العرض: '+(result.error||'خطأ'), 'error');
 }
 async function callAPI(action, data = {}) {
   try {
@@ -546,12 +597,12 @@ async function addProduct() {
   const price = parseFloat(document.getElementById('newProductPrice').value.trim());
   const discount = parseFloat(document.getElementById('newProductDiscount').value.trim())||0;
   const icon = document.getElementById('newProductIcon').value.trim()||'';
-  if(!name || isNaN(price) || price<=0) return alert('يرجى إدخال اسم المنتج وسعر صحيح.');
+  if(!name || isNaN(price) || price<=0) return showToast('يرجى إدخال اسم المنتج وسعر صحيح.', 'error');
   const sizes = [...document.querySelectorAll('.size-checkboxes input[type="checkbox"]:checked')].map(cb=>cb.value);
   await uploadProductImages();
   const result = await callAPI('addProduct', {name, price, discount, icon, sizes, media: uploadedImages});
-  if(result.success) { alert('تم إضافة المنتج بنجاح!'); await loadData(); clearAddProduct(); }
-  else alert('فشل إضافة المنتج: '+(result.error||'خطأ'));
+  if(result.success) { showToast('تم إضافة المنتج بنجاح!'); await loadData(); clearAddProduct(); }
+  else showToast('فشل إضافة المنتج: '+(result.error||'خطأ'), 'error');
 }
 
 function clearAddProduct() {
@@ -569,8 +620,8 @@ function clearAddProduct() {
 async function deleteProduct(id) {
   if(!confirm('هل أنت متأكد من حذف هذا المنتج؟')) return;
   const result = await callAPI('deleteProduct', {id});
-  if(result.success){ alert('تم حذف المنتج.'); await loadData(); }
-  else alert('فشل حذف المنتج: '+(result.error||'خطأ'));
+  if(result.success){ showToast('تم حذف المنتج.'); await loadData(); }
+  else showToast('فشل حذف المنتج: '+(result.error||'خطأ'), 'error');
 }
 
 async function submitOrder() {
@@ -600,7 +651,7 @@ async function submitOrder() {
   document.getElementById('submitOrderBtn').disabled=false;
   document.getElementById('submitOrderBtn').textContent='تأكيد الطلبية';
   if(result.success) {
-    alert('تم إرسال الطلبية بنجاح!');
+    showToast('تم إرسال الطلبية بنجاح!');
     cart = []; saveCart();
     ['orderCustomerName','orderCustomerPhone','orderCustomerPhone2','orderAddress','orderAmount','orderNotes'].forEach(id=>document.getElementById(id).value='');
     document.getElementById('orderWeight').value='1';
@@ -621,9 +672,9 @@ function closeLoginModal(){ document.getElementById('loginModal').classList.remo
 async function handleLogin() {
   const phone = document.getElementById('loginPhone').value.trim();
   const password = document.getElementById('loginPassword').value.trim();
-  if(!phone||!password) return alert('يرجى إدخال رقم الهاتف وكلمة المرور.');
+  if(!phone||!password) return showToast('يرجى إدخال رقم الهاتف وكلمة المرور.', 'error');
   if(phone === String(CONFIG.ADMIN_PHONE) && password === String(CONFIG.ADMIN_PASSWORD)) {
-    alert('مرحباً Admin! تم تسجيل الدخول بنجاح.');
+    showToast('مرحباً Admin! تم تسجيل الدخول بنجاح.');
     localStorage.setItem('hl_admin','true'); localStorage.removeItem('hl_user');
     document.getElementById('loginBtn').classList.add('hidden');
     document.getElementById('logoutBtn').classList.remove('hidden');
@@ -635,7 +686,7 @@ async function handleLogin() {
   }
   const result = await callAPI('loginUser', {phone,password});
   if(result?.success){ 
-    alert('تم تسجيل الدخول بنجاح.'); 
+    showToast('تم تسجيل الدخول بنجاح.'); 
     localStorage.setItem('hl_user','true'); localStorage.removeItem('hl_admin');
     document.getElementById('loginBtn').classList.add('hidden');
     document.getElementById('logoutBtn').classList.remove('hidden');
@@ -644,7 +695,7 @@ async function handleLogin() {
     document.querySelectorAll('.delete-prod, .offer-delete').forEach(el=>el.style.display='none');
     closeLoginModal(); 
   }
-  else alert('رقم الهاتف أو كلمة المرور غير صحيحة.');
+  else showToast('رقم الهاتف أو كلمة المرور غير صحيحة.', 'error');
 }
 function handleLogout() {
   if(!confirm('هل أنت متأكد من تسجيل الخروج؟')) return;
@@ -654,16 +705,16 @@ function handleLogout() {
   document.getElementById('adminPanel').style.display='none';
   document.getElementById('adminPanel').classList.remove('active');
   document.querySelectorAll('.delete-prod, .offer-delete').forEach(el=>el.style.display='none');
-  alert('تم تسجيل الخروج بنجاح');
+  showToast('تم تسجيل الخروج بنجاح');
 }
-function handleSignup(){ alert('سيتم تفعيل إنشاء الحساب قريباً'); }
+function handleSignup(){ showToast('سيتم تفعيل إنشاء الحساب قريباً', 'error'); }
 
 let zoomData = [];
 let zoomIndex = 0;
 function openZoom(id) {
   const products = JSON.parse(localStorage.getItem(CONFIG.STORAGE_KEY_PRODUCTS)||'[]');
   const p = products.find(x=>x.id===id);
-  if(!p?.media?.length) return alert('لا توجد صور.');
+  if(!p?.media?.length) return showToast('لا توجد صور.', 'error');
   zoomData = p.media;
   zoomIndex = 0;
   showZoomItem();
@@ -672,7 +723,7 @@ function openZoom(id) {
 function openOfferZoom(id) {
   const offers = JSON.parse(localStorage.getItem(CONFIG.STORAGE_KEY_OFFERS)||'[]');
   const o = offers.find(x=>x.id===id);
-  if(!o?.media?.length) return alert('لا توجد صور.');
+  if(!o?.media?.length) return showToast('لا توجد صور.', 'error');
   zoomData = o.media;
   zoomIndex = 0;
   showZoomItem();
