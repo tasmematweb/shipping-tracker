@@ -67,8 +67,8 @@
     .product-image .delete-prod { position:absolute; top:5px; left:5px; background:var(--brown); color:var(--yellow-light); border:none; border-radius:50%; width:30px; height:30px; cursor:pointer; font-size:16px; display:none; z-index:10; }
     .product-image .delete-prod:hover { background:var(--brown-light); }
     .product-image .image-gallery { display:flex; gap:5px; position:absolute; bottom:10px; left:50%; transform:translateX(-50%); background:rgba(0,0,0,.6); padding:5px 10px; border-radius:20px; z-index:5; max-width:90%; overflow-x:auto; }
-    .product-image .image-gallery img, .product-image .image-gallery video { width:40px; height:40px; border-radius:4px; border:2px solid var(--yellow-main); cursor:pointer; object-fit:cover; flex-shrink:0; }
-    .product-image .image-gallery img.active, .product-image .image-gallery video.active { border-color:var(--brown); }
+    .product-image .image-gallery img { width:40px; height:40px; border-radius:4px; border:2px solid var(--yellow-main); cursor:pointer; object-fit:cover; flex-shrink:0; }
+    .product-image .image-gallery img.active { border-color:var(--brown); }
     .product-info { padding:18px; background:var(--yellow-light); }
     .product-info h3 { font-size:18px; margin-bottom:10px; color:var(--brown); }
     .price { font-size:23px; font-weight:bold; color:var(--brown); margin-bottom:10px; }
@@ -84,7 +84,7 @@
     .zoom-modal .zoom-close { position:absolute; top:20px; left:20px; background:var(--brown); color:var(--yellow-light); border:none; border-radius:50%; width:50px; height:50px; font-size:28px; cursor:pointer; z-index:10; }
     .zoom-modal .zoom-close:hover { transform:scale(1.1); }
     .zoom-modal .zoom-content { width:100%; max-width:900px; max-height:80vh; display:flex; align-items:center; justify-content:center; position:relative; }
-    .zoom-modal .zoom-content img, .zoom-modal .zoom-content video { max-width:100%; max-height:80vh; border-radius:12px; border:3px solid var(--yellow-main); object-fit:contain; }
+    .zoom-modal .zoom-content img { max-width:100%; max-height:80vh; border-radius:12px; border:3px solid var(--yellow-main); object-fit:contain; }
     .zoom-modal .zoom-nav { display:flex; gap:15px; margin-top:20px; align-items:center; }
     .zoom-modal .zoom-nav button { background:var(--brown); color:var(--yellow-light); border:none; padding:12px 25px; border-radius:8px; font-size:18px; cursor:pointer; font-weight:bold; }
     .zoom-modal .zoom-nav button:hover { background:var(--brown-light); }
@@ -157,7 +157,7 @@
     .admin-list-item { display:flex; justify-content:space-between; align-items:center; padding:10px 0; border-bottom:1px solid var(--brown); }
     .admin-list-item:last-child { border-bottom:none; }
     .admin-list-item .item-info { display:flex; align-items:center; gap:12px; flex-wrap:wrap; }
-    .admin-list-item .item-info img, .admin-list-item .item-info video { width:40px; height:40px; border-radius:8px; object-fit:cover; border:1px solid var(--brown); }
+    .admin-list-item .item-info img { width:40px; height:40px; border-radius:8px; object-fit:cover; border:1px solid var(--brown); }
     .admin-list-item .item-info span { font-weight:bold; color:var(--brown); }
     .admin-list-item .item-info .size-tags { display:flex; gap:4px; }
     .admin-list-item .item-info .size-tags span { background:var(--brown); color:var(--yellow-light); padding:2px 8px; border-radius:4px; font-size:11px; font-weight:bold; }
@@ -186,7 +186,7 @@
       .section-title { font-size:26px; }
       .product-grid { grid-template-columns:repeat(2,minmax(0,1fr)); gap:12px; }
       .product-image { height:180px; font-size:65px; }
-      .product-image .image-gallery img, .product-image .image-gallery video { width:30px; height:30px; }
+      .product-image .image-gallery img { width:30px; height:30px; }
       .zoom-btn { width:32px; height:32px; font-size:16px; top:6px; right:6px; }
       .product-info { padding:12px; }
       .product-info h3 { font-size:14px; }
@@ -298,7 +298,7 @@
 <div class="zoom-modal" id="zoomModal"><button class="zoom-close" onclick="closeZoom()">✕</button><div class="zoom-content" id="zoomContent"></div><div class="zoom-nav"><button onclick="prevZoom()">◀</button><span class="zoom-counter" id="zoomCounter">1 / 1</span><button onclick="nextZoom()">▶</button></div></div>
 <script>
 const CONFIG = {
-  API_BASE_URL: 'https://script.google.com/macros/s/AKfycbyHmc5A8iIq5bW6F7iuKMtgo2qAhIF7tXYTwFiTt6cL8ghwETegzxMKSAp3EzasnLRG/exec',
+  API_BASE_URL: 'https://script.google.com/macros/s/AKfycbxdYfSVeWVAOCbaBMNyKE2px9aXq8Gmd-iXafN427FOkUrYM_o59xMpWIUeRqly66lW/exec',
   STORE_NAME: 'H.L LeVance',
   ADMIN_PHONE: '111',
   ADMIN_PASSWORD: '111',
@@ -307,8 +307,7 @@ const CONFIG = {
   STORAGE_KEY_CART: 'hl_cart',
   STORAGE_KEY_ORDERS: 'hl_orders',
   WHATSAPP_NUMBER: '201234567890',
-  WHATSAPP_MESSAGE: 'مرحباً، أريد الاستفسار عن منتجاتكم',
-  FREEIMAGE_API_KEY: '6d207e02198a847aa98d0a2a901485a5'
+  WHATSAPP_MESSAGE: 'مرحباً، أريد الاستفسار عن منتجاتكم'
 };
 
 let cart = JSON.parse(localStorage.getItem(CONFIG.STORAGE_KEY_CART)||'[]');
@@ -461,86 +460,40 @@ async function uploadProductImages() {
   
   for(let i = 0; i < files.length; i++) {
     try {
-      const url = await uploadImageToFreeImage(files[i]);
-      if(url) {
-        uploadedImages.push(url);
+      status.textContent = `⏳ جاري رفع الصورة ${i+1} من ${files.length}...`;
+      
+      const base64 = await new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = e => resolve(e.target.result.split(',')[1]);
+        reader.onerror = reject;
+        reader.readAsDataURL(files[i]);
+      });
+      
+      const result = await callAPI('uploadImage', {image: base64, fileName: files[i].name});
+      
+      if(result.success && result.url) {
+        uploadedImages.push(result.url);
         const img = document.createElement('img');
-        img.src = url;
+        img.src = result.url;
         img.className = 'upload-preview';
         img.style.display = 'block';
         previewContainer.appendChild(img);
         status.textContent = `✅ تم رفع ${i+1} من ${files.length} صورة`;
+        status.style.color = 'green';
+      } else {
+        throw new Error(result.error || 'فشل الرفع');
       }
     } catch(e) {
       console.error(e);
-      status.textContent = `❌ فشل رفع الصورة ${i+1}`;
+      status.textContent = `❌ فشل رفع الصورة ${i+1}: ${e.message}`;
       status.style.color = 'red';
     }
   }
   
   uploadBtn.disabled = false;
-  status.textContent = `✅ تم رفع ${uploadedImages.length} صورة بنجاح`;
+  status.textContent = `✅ اكتمل الرفع. تم رفع ${uploadedImages.length} صورة بنجاح`;
   status.style.color = 'green';
   fileInput.value = '';
-}
-
-async function uploadImageToFreeImage(file) {
-  const apiKey = CONFIG.FREEIMAGE_API_KEY;
-  
-  return new Promise((resolve, reject) => {
-    const reader = new FileReader();
-    reader.onload = function(e) {
-      const base64 = e.target.result.split(',')[1];
-      
-      const iframe = document.createElement('iframe');
-      iframe.style.display = 'none';
-      iframe.name = 'upload_frame_' + Date.now();
-      document.body.appendChild(iframe);
-      
-      const form = document.createElement('form');
-      form.method = 'POST';
-      form.action = 'https://freeimage.host/api/1/upload';
-      form.target = iframe.name;
-      
-      const keyInput = document.createElement('input');
-      keyInput.type = 'hidden'; keyInput.name = 'key'; keyInput.value = apiKey;
-      
-      const actionInput = document.createElement('input');
-      actionInput.type = 'hidden'; actionInput.name = 'action'; actionInput.value = 'upload';
-      
-      const sourceInput = document.createElement('input');
-      sourceInput.type = 'hidden'; sourceInput.name = 'source'; sourceInput.value = base64;
-      
-      const formatInput = document.createElement('input');
-      formatInput.type = 'hidden'; formatInput.name = 'format'; formatInput.value = 'json';
-      
-      form.appendChild(keyInput);
-      form.appendChild(actionInput);
-      form.appendChild(sourceInput);
-      form.appendChild(formatInput);
-      document.body.appendChild(form);
-      
-      iframe.onload = function() {
-        try {
-          const response = iframe.contentDocument.body.textContent;
-          const data = JSON.parse(response);
-          if(data.status_code === 200 && data.image) {
-            resolve(data.image.url);
-          } else {
-            reject(new Error('فشل الرفع'));
-          }
-        } catch(err) {
-          reject(err);
-        }
-        document.body.removeChild(iframe);
-        document.body.removeChild(form);
-      };
-      
-      form.submit();
-    };
-    reader.onerror = reject;
-    reader.readAsDataURL(file);
-  });
 }
 
 function searchProducts() {
