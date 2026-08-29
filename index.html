@@ -546,16 +546,20 @@ function searchProducts() {
   const clothingGrid = document.getElementById('clothingGrid');
   skincareGrid.innerHTML = '';
   clothingGrid.innerHTML = '';
+  
   const filtered = products.filter(p => { if(!q) return true; const name = (p.name||'').toLowerCase(); return name.includes(q); });
-  if(filtered.length === 0) {
+  
+  const skincareProducts = filtered.filter(p => p.category === 'skincare');
+  const clothingProducts = filtered.filter(p => p.category === 'clothing');
+  
+  if(skincareProducts.length === 0 && clothingProducts.length === 0) {
     skincareGrid.innerHTML = '<p style="text-align:center;color:var(--brown);font-size:18px;padding:40px 0;">لا توجد منتجات مطابقة</p>';
     clothingGrid.innerHTML = '<p style="text-align:center;color:var(--brown);font-size:18px;padding:40px 0;">لا توجد منتجات مطابقة</p>';
     return;
   }
-  filtered.forEach(p => {
-    if(p.category === 'clothing') renderProductCard(p, clothingGrid);
-    else renderProductCard(p, skincareGrid);
-  });
+  
+  skincareProducts.forEach(p => renderProductCard(p, skincareGrid));
+  clothingProducts.forEach(p => renderProductCard(p, clothingGrid));
 }
 
 function renderStoreProducts() {
@@ -563,12 +567,15 @@ function renderStoreProducts() {
   const clothingGrid = document.getElementById('clothingGrid');
   if(!skincareGrid || !clothingGrid) return;
   const products = JSON.parse(localStorage.getItem(CONFIG.STORAGE_KEY_PRODUCTS)||'[]');
-  skincareGrid.innerHTML = products.filter(p => p.category !== 'clothing').length === 0 ? '<p style="text-align:center;color:var(--brown);font-size:18px;padding:40px 0;">لا توجد منتجات</p>' : '';
-  clothingGrid.innerHTML = products.filter(p => p.category === 'clothing').length === 0 ? '<p style="text-align:center;color:var(--brown);font-size:18px;padding:40px 0;">لا توجد منتجات</p>' : '';
-  products.forEach(p => {
-    if(p.category === 'clothing') renderProductCard(p, clothingGrid);
-    else renderProductCard(p, skincareGrid);
-  });
+  
+  const skincareProducts = products.filter(p => p.category === 'skincare');
+  const clothingProducts = products.filter(p => p.category === 'clothing');
+  
+  skincareGrid.innerHTML = skincareProducts.length === 0 ? '<p style="text-align:center;color:var(--brown);font-size:18px;padding:40px 0;">لا توجد منتجات</p>' : '';
+  clothingGrid.innerHTML = clothingProducts.length === 0 ? '<p style="text-align:center;color:var(--brown);font-size:18px;padding:40px 0;">لا توجد منتجات</p>' : '';
+  
+  skincareProducts.forEach(p => renderProductCard(p, skincareGrid));
+  clothingProducts.forEach(p => renderProductCard(p, clothingGrid));
 }
 
 function renderProductCard(p, grid) {
