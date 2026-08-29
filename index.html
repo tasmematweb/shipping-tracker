@@ -11,15 +11,8 @@
       --yellow-dark: #F4C83E; --brown: #57080E; --brown-light: #6A1017;
     }
     html { scroll-behavior:smooth; }
-    body {
-      width:100%; min-height:100vh; font-family:Arial, sans-serif;
-      background:var(--yellow-main); color:var(--brown);
-    }
-    #intro {
-      position:fixed; inset:0; width:100vw; height:100dvh; background:var(--yellow-main);
-      z-index:99999; display:flex; align-items:center; justify-content:center;
-      overflow:hidden; transition:opacity .8s, visibility .8s;
-    }
+    body { width:100%; min-height:100vh; font-family:Arial, sans-serif; background:var(--yellow-main); color:var(--brown); }
+    #intro { position:fixed; inset:0; width:100vw; height:100dvh; background:var(--yellow-main); z-index:99999; display:flex; align-items:center; justify-content:center; overflow:hidden; transition:opacity .8s, visibility .8s; }
     #intro video { position:absolute; inset:0; width:100%; height:100%; display:block; object-fit:cover; background:var(--yellow-main); }
     #intro.hide { opacity:0; visibility:hidden; pointer-events:none; }
     #store { min-height:100vh; opacity:0; transform:translateY(15px); visibility:hidden; background:var(--yellow-main); transition:opacity .8s, transform .8s; }
@@ -398,12 +391,13 @@ async function deleteOffer(id) {
 async function callAPI(action, data = {}) {
   try {
     const res = await fetch(CONFIG.API_BASE_URL, {
-      method:'POST', redirect:'follow',
-      headers:{'Content-Type':'text/plain;charset=utf-8'},
-      body:JSON.stringify({action,...data})
+      method: 'POST',
+      headers: {'Content-Type': 'text/plain;charset=utf-8'},
+      body: JSON.stringify({action, ...data})
     });
-    return await res.json();
-  } catch(e){ return {success:false, error:e.message}; }
+    const text = await res.text();
+    return JSON.parse(text);
+  } catch(e) { return {success: false, error: e.message}; }
 }
 async function fetchFromAPI(action) {
   try { const res = await fetch(CONFIG.API_BASE_URL+'?action='+action); return await res.json(); }
@@ -424,27 +418,21 @@ async function uploadProductImages() {
   const files = fileInput.files;
   const status = document.getElementById('uploadStatus');
   const previewContainer = document.getElementById('uploadedImagesPreview');
-  
   if(files.length === 0) return;
-  
   uploadedImages = [];
   previewContainer.innerHTML = '';
   status.textContent = '⏳ جاري رفع الصور...';
   status.style.color = 'var(--brown)';
-  
   for(let i = 0; i < files.length; i++) {
     try {
       status.textContent = `⏳ جاري رفع الصورة ${i+1} من ${files.length}...`;
-      
       const base64 = await new Promise((resolve, reject) => {
         const reader = new FileReader();
         reader.onload = e => resolve(e.target.result.split(',')[1]);
         reader.onerror = reject;
         reader.readAsDataURL(files[i]);
       });
-      
       const result = await callAPI('uploadImage', {image: base64, fileName: files[i].name});
-      
       if(result.success && result.url) {
         uploadedImages.push(result.url);
         const img = document.createElement('img');
@@ -463,7 +451,6 @@ async function uploadProductImages() {
       status.style.color = 'red';
     }
   }
-  
   status.textContent = `✅ اكتمل الرفع. تم رفع ${uploadedImages.length} صورة بنجاح`;
   status.style.color = 'green';
   fileInput.value = '';
@@ -726,11 +713,9 @@ document.addEventListener('DOMContentLoaded', function() {
   setTimeout(transitionToStore, 6000);
   if(video) { video.addEventListener('ended', transitionToStore); video.addEventListener('error', transitionToStore); video.play().catch(transitionToStore); }
   else transitionToStore();
-  
   updateCartCount();
   renderOffers();
   renderAdminOffers();
-  
   if(localStorage.getItem('hl_admin')==='true' || localStorage.getItem('hl_user')==='true') {
     document.getElementById('loginBtn').classList.add('hidden');
     document.getElementById('logoutBtn').classList.remove('hidden');
