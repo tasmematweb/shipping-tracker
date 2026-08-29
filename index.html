@@ -37,7 +37,8 @@
     .offers-grid { display:flex; gap:clamp(12px, 2vw, 22px); overflow-x:auto; padding-bottom:20px; scroll-snap-type:x mandatory; }
     .offer-card { min-width:clamp(220px, 40vw, 280px); max-width:280px; background:var(--yellow-light); border:2px solid var(--brown); border-radius:12px; overflow:hidden; box-shadow:0 5px 0 var(--brown); transition:transform .25s, box-shadow .25s; position:relative; scroll-snap-align:start; flex-shrink:0; }
     .offer-card:hover { transform:translateY(-5px); box-shadow:0 9px 0 var(--brown); }
-    .offer-image { width:100%; height:clamp(120px, 25vw, 200px); display:flex; align-items:center; justify-content:center; background:var(--yellow-main); border-bottom:2px solid var(--brown); font-size:clamp(50px, 10vw, 80px); cursor:pointer; }
+    .offer-image { width:100%; height:clamp(120px, 25vw, 200px); display:flex; align-items:center; justify-content:center; background:var(--yellow-main); border-bottom:2px solid var(--brown); overflow:hidden; cursor:pointer; position:relative; }
+    .offer-image img { width:100%; height:100%; object-fit:cover; }
     .offer-info { padding:clamp(10px, 2vw, 18px); background:var(--yellow-light); }
     .offer-info h3 { font-size:clamp(14px, 2vw, 18px); margin-bottom:10px; color:var(--brown); }
     .offer-info p { font-size:14px; color:var(--brown); margin-bottom:10px; }
@@ -103,9 +104,11 @@
     footer { padding:45px 5%; background:var(--yellow-main); color:var(--brown); text-align:center; border-top:3px solid var(--brown); }
     footer h2 { font-family:Georgia,serif; font-size:clamp(24px, 4vw, 32px); margin-bottom:10px; }
     footer p { font-weight:bold; }
-    .whatsapp-float { position:fixed; bottom:25px; right:25px; z-index:9999; background:var(--brown); color:white; width:60px; height:60px; border-radius:50%; display:flex; align-items:center; justify-content:center; box-shadow:0 4px 12px rgba(0,0,0,.3); text-decoration:none; transition:transform .3s, box-shadow .3s; border:2px solid var(--yellow-main); animation:float 3s ease-in-out infinite; }
-    .whatsapp-float:hover { transform:scale(1.1); box-shadow:0 6px 16px rgba(0,0,0,.4); background:var(--brown-light); }
-    @keyframes float { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-10px)} }
+    .whatsapp-float { position:fixed; bottom:25px; right:25px; z-index:9999; background:#25D366; color:white; width:60px; height:60px; border-radius:50%; display:flex; align-items:center; justify-content:center; box-shadow:0 4px 12px rgba(0,0,0,.3); text-decoration:none; border:2px solid white; animation:whatsappPulse 1.5s ease-in-out infinite; }
+    .whatsapp-float:hover { transform:scale(1.1); box-shadow:0 6px 16px rgba(0,0,0,.4); }
+    @keyframes whatsappPulse { 0%,100%{transform:scale(1)} 50%{transform:scale(1.1)} }
+    .whatsapp-float::after { content:''; position:absolute; inset:-5px; border-radius:50%; border:3px solid #25D366; animation:whatsappRing 1.5s ease-out infinite; }
+    @keyframes whatsappRing { 0%{opacity:1; transform:scale(1)} 100%{opacity:0; transform:scale(1.5)} }
     .modal-overlay { display:none; position:fixed; inset:0; background:rgba(0,0,0,.5); z-index:10000; align-items:center; justify-content:center; backdrop-filter:blur(4px); }
     .modal-overlay.active { display:flex; }
     .modal-box { background:var(--yellow-main); border:3px solid var(--brown); border-radius:16px; padding:35px 30px; width:90%; max-width:400px; box-shadow:0 20px 40px rgba(0,0,0,.4); text-align:center; }
