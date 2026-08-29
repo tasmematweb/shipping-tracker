@@ -104,7 +104,7 @@
     footer { padding:45px 5%; background:var(--yellow-main); color:var(--brown); text-align:center; border-top:3px solid var(--brown); }
     footer h2 { font-family:Georgia,serif; font-size:clamp(24px, 4vw, 32px); margin-bottom:10px; }
     footer p { font-weight:bold; }
-    .whatsapp-float { position:fixed; bottom:25px; right:25px; z-index:9999; background:#25D366; color:white; width:60px; height:60px; border-radius:50%; display:flex; align-items:center; justify-content:center; box-shadow:0 4px 12px rgba(0,0,0,.3); text-decoration:none; border:2px solid white; animation:whatsappPulse 1.5s ease-in-out infinite; }
+    .whatsapp-float { position:fixed; bottom:25px; right:25px; z-index:99999; background:#25D366; color:white; width:60px; height:60px; border-radius:50%; display:flex; align-items:center; justify-content:center; box-shadow:0 4px 12px rgba(0,0,0,.3); text-decoration:none; border:2px solid white; animation:whatsappPulse 1.5s ease-in-out infinite; }
     .whatsapp-float:hover { transform:scale(1.1); box-shadow:0 6px 16px rgba(0,0,0,.4); }
     @keyframes whatsappPulse { 0%,100%{transform:scale(1)} 50%{transform:scale(1.1)} }
     .whatsapp-float::after { content:''; position:absolute; inset:-5px; border-radius:50%; border:3px solid #25D366; animation:whatsappRing 1.5s ease-out infinite; }
