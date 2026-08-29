@@ -107,10 +107,10 @@
     .whatsapp-float {
       position: fixed;
       bottom: 25px;
-      left: 25px;
+      left: -80px;
       z-index: 99999;
-      background: #25D366;
-      color: white;
+      background: var(--brown);
+      color: var(--yellow-light);
       width: 60px;
       height: 60px;
       border-radius: 50%;
@@ -119,13 +119,15 @@
       justify-content: center;
       box-shadow: 0 4px 12px rgba(0,0,0,.3);
       text-decoration: none;
-      border: 2px solid white;
-      animation: whatsappPulse 1.5s ease-in-out infinite;
+      border: 2px solid var(--yellow-main);
+      opacity: 0;
+      transition: left .5s ease-out, opacity .5s ease-out, transform .3s;
+    }
+    .whatsapp-float.show {
+      left: 25px;
+      opacity: 1;
     }
     .whatsapp-float:hover { transform:scale(1.1); box-shadow:0 6px 16px rgba(0,0,0,.4); }
-    @keyframes whatsappPulse { 0%,100%{transform:scale(1)} 50%{transform:scale(1.1)} }
-    .whatsapp-float::after { content:''; position:absolute; inset:-5px; border-radius:50%; border:3px solid #25D366; animation:whatsappRing 1.5s ease-out infinite; }
-    @keyframes whatsappRing { 0%{opacity:1; transform:scale(1)} 100%{opacity:0; transform:scale(1.5)} }
     @keyframes toastIn { from { opacity:0; transform:translateX(-50%) translateY(-20px); } to { opacity:1; transform:translateX(-50%) translateY(0); } }
     @keyframes toastOut { from { opacity:1; } to { opacity:0; } }
     .modal-overlay { display:none; position:fixed; inset:0; background:rgba(0,0,0,.5); z-index:10000; align-items:center; justify-content:center; backdrop-filter:blur(4px); }
@@ -188,7 +190,8 @@
       .modal-box, .cart-box { padding:15px 10px; }
       .admin-controls { flex-direction:column; }
       .admin-controls input, .admin-controls select { min-width:unset; }
-      .whatsapp-float { width:50px; height:50px; bottom:15px; left:15px; }
+      .whatsapp-float { width:50px; height:50px; bottom:15px; }
+      .whatsapp-float.show { left: 15px; }
     }
   </style>
 </head>
@@ -804,6 +807,12 @@ document.addEventListener('DOMContentLoaded', function() {
   setTimeout(transitionToStore, 6000);
   if(video) { video.addEventListener('ended', transitionToStore); video.addEventListener('error', transitionToStore); video.play().catch(transitionToStore); }
   else transitionToStore();
+  
+  setTimeout(() => {
+    const wa = document.querySelector('.whatsapp-float');
+    if(wa) wa.classList.add('show');
+  }, 5000);
+  
   updateCartCount();
   renderOffers();
   renderAdminOffers();
