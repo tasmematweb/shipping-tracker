@@ -417,44 +417,40 @@ async function uploadProductImages() {
   const files = fileInput.files;
   const status = document.getElementById('uploadStatus');
   const previewContainer = document.getElementById('uploadedImagesPreview');
-  if(files.length === 0) return;
+  if (files.length === 0) return;
+
   uploadedImages = [];
   previewContainer.innerHTML = '';
   status.textContent = '⏳ جاري رفع الصور...';
-  status.style.color = 'var(--brown)';
-  for(let i = 0; i < files.length; i++) {
+
+  for (let i = 0; i < files.length; i++) {
     try {
-      status.textContent = `⏳ جاري رفع الصورة ${i+1} من ${files.length}...`;
       const base64 = await new Promise((resolve, reject) => {
         const reader = new FileReader();
         reader.onload = e => resolve(e.target.result.split(',')[1]);
         reader.onerror = reject;
         reader.readAsDataURL(files[i]);
       });
-      const url = CONFIG.API_BASE_URL + '?action=uploadImage&image=' + encodeURIComponent(base64) + '&fileName=' + encodeURIComponent(files[i].name);
-      const response = await fetch(url);
-      const result = await response.json();
-      if(result.success && result.url) {
+
+      const result = await callAPI('uploadImage', {
+        image: base64,
+        fileName: files[i].name
+      });
+
+      if (result.success && result.url) {
         uploadedImages.push(result.url);
         const img = document.createElement('img');
         img.src = result.url;
         img.className = 'upload-preview';
-        img.style.display = 'block';
         previewContainer.appendChild(img);
-        status.textContent = `✅ تم رفع ${i+1} من ${files.length} صورة`;
-        status.style.color = 'green';
       } else {
         throw new Error(result.error || 'فشل الرفع');
       }
-    } catch(e) {
-      console.error(e);
-      status.textContent = `❌ فشل رفع الصورة ${i+1}: ${e.message}`;
-      status.style.color = 'red';
+    } catch (e) {
+      alert(`خطأ في رفع الصورة: ${e.message}`);
     }
   }
-  status.textContent = `✅ اكتمل الرفع. تم رفع ${uploadedImages.length} صورة بنجاح`;
-  status.style.color = 'green';
-  fileInput.value = '';
+  status.textContent = '✅ تم الرفع بنجاح!';
 }
 
 function searchProducts() {
