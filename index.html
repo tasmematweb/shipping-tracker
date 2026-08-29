@@ -1,3 +1,4 @@
+```html
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
@@ -267,7 +268,7 @@
 <div class="zoom-modal" id="zoomModal"><button class="zoom-close" onclick="closeZoom()">✕</button><div class="zoom-content" id="zoomContent"></div><div class="zoom-nav"><button onclick="prevZoom()">◀</button><span class="zoom-counter" id="zoomCounter">1 / 1</span><button onclick="nextZoom()">▶</button></div></div>
 <script>
 const CONFIG = {
-  API_BASE_URL: 'https://script.google.com/macros/s/AKfycbzS5aa9oVCiw4Qpdg8VDD5mhMHSNTPlG0ypIzGR57p_RWUUr-y5iQO6awMLygTg0nCC/exec',
+  API_BASE_URL: 'https://script.google.com/macros/s/AKfycbyom_zwqRrOt5qSUr80HGXyw7-pwFawt2rG-8VQ0w7U7sMYsxkN_cSeCvx1Hp9w4XA/exec',
   STORE_NAME: 'H.L LeVance',
   ADMIN_PHONE: '111',
   ADMIN_PASSWORD: '111',
@@ -390,14 +391,16 @@ async function deleteOffer(id) {
 }
 async function callAPI(action, data = {}) {
   try {
+    console.log('Sending:', action, data);
     const res = await fetch(CONFIG.API_BASE_URL, {
       method: 'POST',
       headers: {'Content-Type': 'text/plain;charset=utf-8'},
       body: JSON.stringify({action, ...data})
     });
     const text = await res.text();
+    console.log('Response:', text);
     return JSON.parse(text);
-  } catch(e) { return {success: false, error: e.message}; }
+  } catch(e) { console.error('Error:', e); return {success: false, error: e.message}; }
 }
 async function fetchFromAPI(action) {
   try { const res = await fetch(CONFIG.API_BASE_URL+'?action='+action); return await res.json(); }
@@ -426,13 +429,16 @@ async function uploadProductImages() {
   for(let i = 0; i < files.length; i++) {
     try {
       status.textContent = `⏳ جاري رفع الصورة ${i+1} من ${files.length}...`;
+      console.log('Reading file:', files[i].name, files[i].size);
       const base64 = await new Promise((resolve, reject) => {
         const reader = new FileReader();
         reader.onload = e => resolve(e.target.result.split(',')[1]);
         reader.onerror = reject;
         reader.readAsDataURL(files[i]);
       });
+      console.log('Base64 length:', base64.length);
       const result = await callAPI('uploadImage', {image: base64, fileName: files[i].name});
+      console.log('Upload result:', result);
       if(result.success && result.url) {
         uploadedImages.push(result.url);
         const img = document.createElement('img');
@@ -446,7 +452,7 @@ async function uploadProductImages() {
         throw new Error(result.error || 'فشل الرفع');
       }
     } catch(e) {
-      console.error(e);
+      console.error('Upload error:', e);
       status.textContent = `❌ فشل رفع الصورة ${i+1}: ${e.message}`;
       status.style.color = 'red';
     }
@@ -733,3 +739,4 @@ console.log('✅ H.L LeVance Store loaded');
 </script>
 </body>
 </html>
+```
