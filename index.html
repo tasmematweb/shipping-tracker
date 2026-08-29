@@ -1,4 +1,3 @@
-...
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
@@ -280,6 +279,8 @@ const CONFIG = {
   WHATSAPP_MESSAGE: 'مرحباً، أريد الاستفسار عن منتجاتكم'
 };
 
+const IMGBB_API_KEY = 'b61d706bd2139f3676166a0e6be68f0a';
+
 let cart = JSON.parse(localStorage.getItem(CONFIG.STORAGE_KEY_CART)||'[]');
 let uploadedImages = [];
 
@@ -418,40 +419,59 @@ async function uploadProductImages() {
   const files = fileInput.files;
   const status = document.getElementById('uploadStatus');
   const previewContainer = document.getElementById('uploadedImagesPreview');
-  if (files.length === 0) return;
+  
+  if (!files || files.length === 0) return;
 
   uploadedImages = [];
-  previewContainer.innerHTML = '';
+  if (previewContainer) previewContainer.innerHTML = '';
   status.textContent = '⏳ جاري رفع الصور...';
+  status.style.color = '#8B4513';
 
   for (let i = 0; i < files.length; i++) {
     try {
-      const base64 = await new Promise((resolve, reject) => {
-        const reader = new FileReader();
-        reader.onload = e => resolve(e.target.result.split(',')[1]);
-        reader.onerror = reject;
-        reader.readAsDataURL(files[i]);
+      status.textContent = `⏳ جاري رفع الصورة ${i + 1} من ${files.length}...`;
+      
+      const formData = new FormData();
+      formData.append('image', files[i]);
+
+      const response = await fetch(`https://api.imgbb.com/1/upload?key=${IMGBB_API_KEY}`, {
+        method: 'POST',
+        body: formData
       });
 
-      const result = await callAPI('uploadImage', {
-        image: base64,
-        fileName: files[i].name
-      });
+      const result = await response.json();
 
-      if (result.success && result.url) {
-        uploadedImages.push(result.url);
-        const img = document.createElement('img');
-        img.src = result.url;
-        img.className = 'upload-preview';
-        previewContainer.appendChild(img);
+      if (result.success && result.data && result.data.url) {
+        const imageUrl = result.data.url;
+        uploadedImages.push(imageUrl);
+
+        if (previewContainer) {
+          const img = document.createElement('img');
+          img.src = imageUrl;
+          img.className = 'upload-preview';
+          img.style.width = '70px';
+          img.style.height = '70px';
+          img.style.objectFit = 'cover';
+          img.style.margin = '5px';
+          img.style.borderRadius = '5px';
+          previewContainer.appendChild(img);
+        }
+
+        status.textContent = `✅ تم رفع ${i + 1} من ${files.length} صورة`;
+        status.style.color = 'green';
       } else {
-        throw new Error(result.error || 'فشل الرفع');
+        throw new Error(result.error ? result.error.message : 'فشل الرفع');
       }
     } catch (e) {
-      alert(`خطأ في رفع الصورة: ${e.message}`);
+      console.error(e);
+      status.textContent = `❌ فشل رفع الصورة ${i + 1}: ${e.message}`;
+      status.style.color = 'red';
     }
   }
-  status.textContent = '✅ تم الرفع بنجاح!';
+
+  status.textContent = `✅ تم رفع ${uploadedImages.length} صورة بنجاح!`;
+  status.style.color = 'green';
+  fileInput.value = '';
 }
 
 function searchProducts() {
