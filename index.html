@@ -33,18 +33,18 @@
     .search-box input::placeholder { color:var(--brown); opacity:.75; }
     .search-box button { width:60px; border:none; border-right:2px solid var(--brown); background:var(--brown); color:var(--yellow-light); cursor:pointer; font-size:20px; }
     .search-box button:hover { background:var(--brown-light); }
-    .offers-section { padding:clamp(25px, 5vw, 45px) 4%; background:linear-gradient(135deg,var(--yellow-light),var(--yellow-main),var(--yellow-soft)); border-bottom:3px solid var(--brown); }
-    .offers-grid { display:flex; gap:clamp(12px, 2vw, 22px); overflow-x:auto; padding-bottom:20px; scroll-snap-type:x mandatory; }
-    .offer-card { min-width:clamp(220px, 40vw, 280px); max-width:280px; background:var(--yellow-light); border:2px solid var(--brown); border-radius:12px; overflow:hidden; box-shadow:0 5px 0 var(--brown); transition:transform .25s, box-shadow .25s; position:relative; scroll-snap-align:start; flex-shrink:0; }
+    .offers-section { padding:clamp(25px, 5vw, 45px) 4%; background:var(--yellow-soft); border-bottom:3px solid var(--brown); }
+    .offers-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(clamp(150px, 25vw, 260px),1fr)); gap:clamp(10px, 2vw, 22px); }
+    .offer-card { background:var(--yellow-light); border:2px solid var(--brown); border-radius:12px; overflow:hidden; box-shadow:0 5px 0 var(--brown); transition:transform .25s, box-shadow .25s; position:relative; }
     .offer-card:hover { transform:translateY(-5px); box-shadow:0 9px 0 var(--brown); }
-    .offer-image { width:100%; height:clamp(120px, 25vw, 200px); display:flex; align-items:center; justify-content:center; background:var(--yellow-main); border-bottom:2px solid var(--brown); overflow:hidden; cursor:pointer; position:relative; }
+    .offer-image { width:100%; height:clamp(150px, 35vw, 280px); display:flex; align-items:center; justify-content:center; background:var(--yellow-main); border-bottom:2px solid var(--brown); overflow:hidden; cursor:pointer; position:relative; }
     .offer-image img { width:100%; height:100%; object-fit:cover; }
     .offer-info { padding:clamp(10px, 2vw, 18px); background:var(--yellow-light); }
     .offer-info h3 { font-size:clamp(14px, 2vw, 18px); margin-bottom:10px; color:var(--brown); }
     .offer-info p { font-size:14px; color:var(--brown); margin-bottom:10px; }
     .offer-info .offer-price { font-size:clamp(16px, 2.5vw, 22px); font-weight:bold; color:var(--brown); }
-    .offer-info .offer-old-price { text-decoration:line-through; font-size:16px; opacity:.6; margin-left:10px; }
-    .offer-add-cart { width:100%; padding:12px; border:2px solid var(--brown); border-radius:7px; background:var(--brown); color:var(--yellow-light); cursor:pointer; font-size:clamp(13px, 1.5vw, 15px); font-weight:bold; transition:background .2s; margin-top:10px; }
+    .offer-info .offer-old-price { text-decoration:line-through; font-size:clamp(12px, 1.5vw, 16px); opacity:.6; margin-left:10px; }
+    .offer-add-cart { width:100%; padding:clamp(8px, 1.5vw, 12px); border:2px solid var(--brown); border-radius:7px; background:var(--brown); color:var(--yellow-light); cursor:pointer; font-size:clamp(12px, 1.5vw, 15px); font-weight:bold; transition:background .2s; margin-top:10px; }
     .offer-add-cart:hover { background:var(--brown-light); }
     .offer-delete { position:absolute; top:5px; left:5px; background:var(--brown); color:var(--yellow-light); border:none; border-radius:50%; width:30px; height:30px; cursor:pointer; font-size:16px; display:none; z-index:10; }
     .offer-delete:hover { background:var(--brown-light); }
@@ -197,7 +197,6 @@
       <input type="text" id="newOfferDescription" placeholder="وصف العرض">
       <input type="number" id="newOfferPrice" placeholder="السعر الجديد">
       <input type="number" id="newOfferOldPrice" placeholder="السعر القديم">
-      <input type="text" id="newOfferIcon" placeholder="أيقونة العرض">
     </div>
     <div id="offerImagesContainer"></div>
     <button class="add-image-btn" onclick="addOfferImageField()">إضافة صورة</button>
@@ -210,7 +209,6 @@
       <input type="text" id="newProductName" placeholder="اسم المنتج">
       <input type="number" id="newProductPrice" placeholder="السعر">
       <input type="number" id="newProductDiscount" placeholder="خصم %" value="0">
-      <input type="text" id="newProductIcon" placeholder="أيقونة">
       <div class="size-checkboxes"><label><input type="checkbox" value="S"> S</label><label><input type="checkbox" value="M"> M</label><label><input type="checkbox" value="L"> L</label><label><input type="checkbox" value="XL"> XL</label></div>
     </div>
     <div id="productImagesContainer"></div>
@@ -428,7 +426,7 @@ function renderOffers() {
     const div = document.createElement('div');
     div.className = 'offer-card';
     const mainImage = offer.media && offer.media.length > 0 ? offer.media[0] : '';
-    div.innerHTML = `<button class="offer-delete" onclick="deleteOffer(${offer.id})">🗑</button><div class="offer-image" onclick="openOfferZoom(${offer.id})">${mainImage ? `<img src="${mainImage}" style="width:100%;height:100%;object-fit:cover;">` : offer.icon||''}</div><div class="offer-info"><h3>${offer.title}</h3><p>${offer.description||''}</p><div class="offer-price">${offer.oldPrice ? `<span class="offer-old-price">${offer.oldPrice} جنيه</span>` : ''}${offer.price} جنيه</div><button class="offer-add-cart" onclick="addOfferToCart('${offer.title}', ${offer.price}, event)">أضف إلى السلة</button></div>`;
+    div.innerHTML = `<button class="offer-delete" onclick="deleteOffer(${offer.id})">🗑</button><div class="offer-image" onclick="openOfferZoom(${offer.id})">${mainImage ? `<img src="${mainImage}" alt="${offer.title}">` : ''}</div><div class="offer-info"><h3>${offer.title}</h3><p>${offer.description||''}</p><div class="offer-price">${offer.oldPrice ? `<span class="offer-old-price">${offer.oldPrice} جنيه</span>` : ''}${offer.price} جنيه</div><button class="offer-add-cart" onclick="addOfferToCart('${offer.title}', ${offer.price}, event)">أضف إلى السلة</button></div>`;
     grid.appendChild(div);
   });
 }
@@ -449,11 +447,10 @@ async function addOffer() {
   const description = document.getElementById('newOfferDescription').value.trim();
   const price = parseFloat(document.getElementById('newOfferPrice').value.trim());
   const oldPrice = parseFloat(document.getElementById('newOfferOldPrice').value.trim())||0;
-  const icon = document.getElementById('newOfferIcon').value.trim()||'';
   if(!title || isNaN(price) || price<=0) return alert('يرجى إدخال عنوان العرض والسعر.');
   await uploadOfferImages();
-  const result = await callAPI('addOffer', {title, description, price, oldPrice, icon, media: offerImages});
-  if(result.success) { alert('تم إضافة العرض بنجاح!'); document.getElementById('newOfferTitle').value=''; document.getElementById('newOfferDescription').value=''; document.getElementById('newOfferPrice').value=''; document.getElementById('newOfferOldPrice').value=''; document.getElementById('newOfferIcon').value=''; document.getElementById('offerImagesContainer').innerHTML=''; document.getElementById('offerImagesPreview').innerHTML=''; await loadData(); }
+  const result = await callAPI('addOffer', {title, description, price, oldPrice, media: offerImages});
+  if(result.success) { alert('تم إضافة العرض بنجاح!'); document.getElementById('newOfferTitle').value=''; document.getElementById('newOfferDescription').value=''; document.getElementById('newOfferPrice').value=''; document.getElementById('newOfferOldPrice').value=''; document.getElementById('offerImagesContainer').innerHTML=''; document.getElementById('offerImagesPreview').innerHTML=''; await loadData(); }
   else alert('فشل إضافة العرض: '+(result.error||'خطأ'));
 }
 async function deleteOffer(id) {
@@ -499,7 +496,7 @@ function searchProducts() {
     const mainImage = media.length > 0 ? media[0] : '';
     const galleryHtml = media.length > 1 ? `<div class="image-gallery">${media.map((m,i) => `<img src="${m}" class="${i===0?'active':''}" onclick="changeMainImage(this, '${m}')">`).join('')}</div>` : '';
     const art = document.createElement('article'); art.className='product'; art.dataset.id=p.id;
-    art.innerHTML = `<div class="product-image" onclick="openZoom(${p.id})"><div class="main-media">${mainImage ? `<img src="${mainImage}" alt="${p.name}">` : `<span class="product-icon">${p.icon||''}</span>`}</div>${galleryHtml}<button class="delete-prod" onclick="deleteProduct(${p.id})">🗑</button></div><div class="product-info"><h3>${p.name}</h3><div class="price">${disc>0?`<span class="original-price">${price} جنيه</span>`:''} ${final} جنيه ${disc>0?`<span style="color:red;font-size:14px;"> (خصم ${disc}%)</span>`:''}</div>${p.sizes?.length ? '<div class="sizes">'+p.sizes.map(s=>`<button class="size-btn" onclick="selectSize(this)">${s}</button>`).join('')+'</div>' : ''}<button class="add-cart" onclick="addToCart('${p.name}',${final},null,event)">أضف إلى السلة</button></div>`;
+    art.innerHTML = `<div class="product-image" onclick="openZoom(${p.id})"><div class="main-media">${mainImage ? `<img src="${mainImage}" alt="${p.name}">` : ''}</div>${galleryHtml}<button class="delete-prod" onclick="deleteProduct(${p.id})">🗑</button></div><div class="product-info"><h3>${p.name}</h3><div class="price">${disc>0?`<span class="original-price">${price} جنيه</span>`:''} ${final} جنيه ${disc>0?`<span style="color:red;font-size:14px;"> (خصم ${disc}%)</span>`:''}</div>${p.sizes?.length ? '<div class="sizes">'+p.sizes.map(s=>`<button class="size-btn" onclick="selectSize(this)">${s}</button>`).join('')+'</div>' : ''}<button class="add-cart" onclick="addToCart('${p.name}',${final},null,event)">أضف إلى السلة</button></div>`;
     grid.appendChild(art);
   });
 }
@@ -514,7 +511,7 @@ function renderStoreProducts() {
     const mainImage = media.length > 0 ? media[0] : '';
     const galleryHtml = media.length > 1 ? `<div class="image-gallery">${media.map((m,i) => `<img src="${m}" class="${i===0?'active':''}" onclick="changeMainImage(this, '${m}')">`).join('')}</div>` : '';
     const art = document.createElement('article'); art.className='product'; art.dataset.id=p.id;
-    art.innerHTML = `<div class="product-image" onclick="openZoom(${p.id})"><div class="main-media">${mainImage ? `<img src="${mainImage}" alt="${p.name}">` : `<span class="product-icon">${p.icon||''}</span>`}</div>${galleryHtml}<button class="delete-prod" onclick="deleteProduct(${p.id})">🗑</button></div><div class="product-info"><h3>${p.name}</h3><div class="price">${disc>0?`<span class="original-price">${price} جنيه</span>`:''} ${final} جنيه ${disc>0?`<span style="color:red;font-size:14px;"> (خصم ${disc}%)</span>`:''}</div>${p.sizes?.length ? '<div class="sizes">'+p.sizes.map(s=>`<button class="size-btn" onclick="selectSize(this)">${s}</button>`).join('')+'</div>' : ''}<button class="add-cart" onclick="addToCart('${p.name}',${final},null,event)">أضف إلى السلة</button></div>`;
+    art.innerHTML = `<div class="product-image" onclick="openZoom(${p.id})"><div class="main-media">${mainImage ? `<img src="${mainImage}" alt="${p.name}">` : ''}</div>${galleryHtml}<button class="delete-prod" onclick="deleteProduct(${p.id})">🗑</button></div><div class="product-info"><h3>${p.name}</h3><div class="price">${disc>0?`<span class="original-price">${price} جنيه</span>`:''} ${final} جنيه ${disc>0?`<span style="color:red;font-size:14px;"> (خصم ${disc}%)</span>`:''}</div>${p.sizes?.length ? '<div class="sizes">'+p.sizes.map(s=>`<button class="size-btn" onclick="selectSize(this)">${s}</button>`).join('')+'</div>' : ''}<button class="add-cart" onclick="addToCart('${p.name}',${final},null,event)">أضف إلى السلة</button></div>`;
     grid.appendChild(art);
   });
 }
@@ -536,7 +533,7 @@ function renderAdminProducts() {
     const sizeTags = p.sizes?.length ? `<div class="size-tags">${p.sizes.map(s=>`<span>${s}</span>`).join('')}</div>` : '';
     const mediaHtml = p.media?.length ? p.media.map(m => `<img src="${m}" alt="صورة">`).join('') : '';
     const div = document.createElement('div'); div.className='admin-list-item';
-    div.innerHTML = `<div class="item-info">${mediaHtml || `<span style="font-size:30px;">${p.icon||''}</span>`}<span>${p.name} - ${final} جنيه ${disc>0?`(خصم ${disc}%)`:''}</span>${sizeTags}</div><button onclick="deleteProduct(${p.id})">حذف</button>`;
+    div.innerHTML = `<div class="item-info">${mediaHtml}<span>${p.name} - ${final} جنيه ${disc>0?`(خصم ${disc}%)`:''}</span>${sizeTags}</div><button onclick="deleteProduct(${p.id})">حذف</button>`;
     list.appendChild(div);
   });
 }
@@ -545,11 +542,10 @@ async function addProduct() {
   const name = document.getElementById('newProductName').value.trim();
   const price = parseFloat(document.getElementById('newProductPrice').value.trim());
   const discount = parseFloat(document.getElementById('newProductDiscount').value.trim())||0;
-  const icon = document.getElementById('newProductIcon').value.trim()||'';
   if(!name || isNaN(price) || price<=0) return alert('يرجى إدخال اسم المنتج وسعر صحيح.');
   const sizes = [...document.querySelectorAll('.size-checkboxes input[type="checkbox"]:checked')].map(cb=>cb.value);
   await uploadProductImages();
-  const result = await callAPI('addProduct', {name, price, discount, icon, sizes, media: uploadedImages});
+  const result = await callAPI('addProduct', {name, price, discount, sizes, media: uploadedImages});
   if(result.success) { alert('تم إضافة المنتج بنجاح!'); await loadData(); clearAddProduct(); }
   else alert('فشل إضافة المنتج: '+(result.error||'خطأ'));
 }
@@ -558,7 +554,6 @@ function clearAddProduct() {
   document.getElementById('newProductName').value='';
   document.getElementById('newProductPrice').value='';
   document.getElementById('newProductDiscount').value='';
-  document.getElementById('newProductIcon').value='';
   document.querySelectorAll('.size-checkboxes input[type="checkbox"]').forEach(cb=>cb.checked=false);
   uploadedImages = [];
   document.getElementById('uploadedImagesPreview').innerHTML='';
