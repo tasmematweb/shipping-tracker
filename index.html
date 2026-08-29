@@ -1,3 +1,4 @@
+```html
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
@@ -18,10 +19,10 @@
     #store { min-height:100vh; opacity:0; transform:translateY(15px); visibility:hidden; background:var(--yellow-main); transition:opacity .8s, transform .8s; }
     #store.show { opacity:1; transform:translateY(0); visibility:visible; }
     header { position:sticky; top:0; z-index:1000; background:var(--yellow-main); border-bottom:3px solid var(--brown); }
-    .top-header { min-height:70px; display:flex; align-items:center; justify-content:space-between; gap:15px; padding:10px 4%; background:var(--yellow-main); }
-    .logo { color:var(--brown); text-decoration:none; font-family:Georgia,serif; font-size:clamp(22px, 4vw, 40px); font-weight:bold; text-align:center; line-height:1.1; display:block; }
+    .top-header { min-height:80px; display:flex; align-items:center; justify-content:center; gap:15px; padding:10px 4%; background:var(--yellow-main); position:relative; }
+    .logo { color:var(--brown); text-decoration:none; font-family:Georgia,serif; font-size:clamp(30px, 5vw, 48px); font-weight:bold; text-align:center; line-height:1.1; display:block; }
     .logo span { display:block; }
-    .header-actions { display:flex; align-items:center; gap:8px; }
+    .header-actions { display:flex; align-items:center; gap:8px; position:absolute; left:4%; }
     .login-btn, .logout-btn, .cart { background:var(--brown); border:none; color:var(--yellow-light); font-size:clamp(12px, 2vw, 16px); cursor:pointer; white-space:nowrap; padding:clamp(8px, 1.5vw, 12px) clamp(12px, 2vw, 20px); border-radius:8px; font-weight:bold; transition:background .2s; }
     .logout-btn { background:#dc3545; }
     .logout-btn:hover { background:#c82333; }
@@ -173,7 +174,9 @@
     .upload-preview { max-width:100px; max-height:100px; border:2px solid var(--brown); border-radius:8px; margin:5px; display:none; }
     .add-image-btn { background:var(--brown); color:var(--yellow-light); border:none; padding:10px 20px; border-radius:8px; cursor:pointer; font-weight:bold; font-size:14px; margin-top:10px; }
     @media (max-width:700px) {
-      .top-header { gap:6px; padding:8px 2%; }
+      .top-header { gap:6px; padding:8px 2%; min-height:60px; }
+      .logo { font-size:clamp(24px, 6vw, 32px); }
+      .header-actions { left:2%; }
       .cart { font-size:0; padding:8px 10px; }
       .cart::after { content:"🛒"; font-size:18px; }
       .search-bar { padding:8px 2% 10px; }
@@ -235,10 +238,7 @@
       <input type="number" id="newProductDiscount" placeholder="خصم %" value="0">
       <input type="text" id="newProductIcon" placeholder="أيقونة">
       <input type="text" id="newProductVideoUrl" placeholder="رابط الفيديو الشرحي">
-      <select id="newProductCategory">
-        <option value="skincare">منتجات عنايه بالبشره</option>
-        <option value="clothing">ملابس</option>
-      </select>
+      <input type="text" id="newProductCategory" placeholder="القسم (ملابس أو عنايه بالبشره)">
       <div class="size-checkboxes">
         <label><input type="checkbox" value="S"> S</label>
         <label><input type="checkbox" value="M"> M</label>
@@ -549,8 +549,8 @@ function searchProducts() {
   
   const filtered = products.filter(p => { if(!q) return true; const name = (p.name||'').toLowerCase(); return name.includes(q); });
   
-  const skincareProducts = filtered.filter(p => p.category === 'skincare');
-  const clothingProducts = filtered.filter(p => p.category === 'clothing');
+  const skincareProducts = filtered.filter(p => p.category === 'عنايه بالبشره' || p.category === 'skincare' || !p.category);
+  const clothingProducts = filtered.filter(p => p.category === 'ملابس' || p.category === 'clothing');
   
   if(skincareProducts.length === 0 && clothingProducts.length === 0) {
     skincareGrid.innerHTML = '<p style="text-align:center;color:var(--brown);font-size:18px;padding:40px 0;">لا توجد منتجات مطابقة</p>';
@@ -568,8 +568,8 @@ function renderStoreProducts() {
   if(!skincareGrid || !clothingGrid) return;
   const products = JSON.parse(localStorage.getItem(CONFIG.STORAGE_KEY_PRODUCTS)||'[]');
   
-  const skincareProducts = products.filter(p => p.category === 'skincare');
-  const clothingProducts = products.filter(p => p.category === 'clothing');
+  const skincareProducts = products.filter(p => p.category === 'عنايه بالبشره' || p.category === 'skincare' || !p.category);
+  const clothingProducts = products.filter(p => p.category === 'ملابس' || p.category === 'clothing');
   
   skincareGrid.innerHTML = skincareProducts.length === 0 ? '<p style="text-align:center;color:var(--brown);font-size:18px;padding:40px 0;">لا توجد منتجات</p>' : '';
   clothingGrid.innerHTML = clothingProducts.length === 0 ? '<p style="text-align:center;color:var(--brown);font-size:18px;padding:40px 0;">لا توجد منتجات</p>' : '';
@@ -610,7 +610,7 @@ function renderAdminProducts() {
     const sizeTags = p.sizes?.length ? `<div class="size-tags">${p.sizes.map(s=>`<span>${s}</span>`).join('')}</div>` : '';
     const mediaHtml = p.media?.length ? p.media.map(m => `<img src="${m}" alt="صورة">`).join('') : '';
     const div = document.createElement('div'); div.className='admin-list-item';
-    div.innerHTML = `<div class="item-info">${mediaHtml || `<span style="font-size:30px;">${p.icon||''}</span>`}<span>${p.name} - ${final} جنيه ${disc>0?`(خصم ${disc}%)`:''} ${p.category==='clothing'?'(ملابس)':'(عناية)'}</span>${sizeTags}${p.videoUrl ? '<span>🎬</span>' : ''}</div><button onclick="deleteProduct(${p.id})">حذف</button>`;
+    div.innerHTML = `<div class="item-info">${mediaHtml || `<span style="font-size:30px;">${p.icon||''}</span>`}<span>${p.name} - ${final} جنيه ${disc>0?`(خصم ${disc}%)`:''} ${p.category ? '('+p.category+')' : ''}</span>${sizeTags}${p.videoUrl ? '<span>🎬</span>' : ''}</div><button onclick="deleteProduct(${p.id})">حذف</button>`;
     list.appendChild(div);
   });
 }
@@ -621,7 +621,7 @@ async function addProduct() {
   const discount = parseFloat(document.getElementById('newProductDiscount').value.trim())||0;
   const icon = document.getElementById('newProductIcon').value.trim()||'';
   const videoUrl = document.getElementById('newProductVideoUrl').value.trim()||'';
-  const category = document.getElementById('newProductCategory').value;
+  const category = document.getElementById('newProductCategory').value.trim();
   if(!name || isNaN(price) || price<=0) return showToast('يرجى إدخال اسم المنتج وسعر صحيح.', 'error');
   const sizes = [...document.querySelectorAll('.size-checkboxes input[type="checkbox"]:checked')].map(cb=>cb.value);
   await uploadProductImages();
@@ -636,7 +636,7 @@ function clearAddProduct() {
   document.getElementById('newProductDiscount').value='';
   document.getElementById('newProductIcon').value='';
   document.getElementById('newProductVideoUrl').value='';
-  document.getElementById('newProductCategory').value='skincare';
+  document.getElementById('newProductCategory').value='';
   document.querySelectorAll('.size-checkboxes input[type="checkbox"]').forEach(cb=>cb.checked=false);
   uploadedImages = [];
   document.getElementById('uploadedImagesPreview').innerHTML='';
@@ -857,3 +857,4 @@ console.log('H.L LeVance Store loaded');
 </script>
 </body>
 </html>
+```
