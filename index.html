@@ -66,10 +66,13 @@
     .product-info h3 { font-size:clamp(14px, 2vw, 18px); margin-bottom:10px; color:var(--brown); }
     .price { font-size:clamp(16px, 2.5vw, 23px); font-weight:bold; color:var(--brown); margin-bottom:10px; }
     .price .original-price { text-decoration:line-through; font-size:clamp(12px, 1.5vw, 16px); opacity:.6; margin-left:10px; }
-    .sizes { display:flex; gap:8px; flex-wrap:wrap; margin-bottom:12px; }
+    .sizes { display:flex; gap:8px; flex-wrap:wrap; margin-bottom:12px; align-items:center; }
     .sizes .size-btn { padding:5px 12px; border:2px solid var(--brown); border-radius:6px; background:var(--yellow-light); color:var(--brown); cursor:pointer; font-weight:bold; font-size:clamp(10px, 1.5vw, 13px); transition:all .2s; }
     .sizes .size-btn:hover { background:var(--brown); color:var(--yellow-light); }
     .sizes .size-btn.selected { background:var(--brown); color:var(--yellow-light); }
+    .color-input { padding:5px 10px; border:2px solid var(--brown); border-radius:6px; background:var(--yellow-light); color:var(--brown); font-weight:bold; font-size:clamp(10px, 1.5vw, 13px); width:90px; direction:rtl; }
+    .video-btn { display:inline-block; margin-top:10px; padding:8px 15px; border:2px solid var(--brown); border-radius:6px; background:var(--yellow-main); color:var(--brown); cursor:pointer; font-weight:bold; font-size:clamp(11px, 1.5vw, 13px); text-decoration:none; transition:background .2s; }
+    .video-btn:hover { background:var(--brown); color:var(--yellow-light); }
     .add-cart { width:100%; padding:clamp(8px, 1.5vw, 12px); border:2px solid var(--brown); border-radius:7px; background:var(--brown); color:var(--yellow-light); cursor:pointer; font-size:clamp(12px, 1.5vw, 15px); font-weight:bold; transition:background .2s; }
     .add-cart:hover { background:var(--brown-light); }
     .zoom-modal { display:none; position:fixed; inset:0; background:rgba(0,0,0,.9); z-index:99999; align-items:center; justify-content:center; flex-direction:column; padding:20px; touch-action:pan-y; }
@@ -123,10 +126,7 @@
       opacity: 0;
       transition: left .5s ease-out, opacity .5s ease-out, transform .3s;
     }
-    .whatsapp-float.show {
-      left: 25px;
-      opacity: 1;
-    }
+    .whatsapp-float.show { left: 25px; opacity: 1; }
     .whatsapp-float:hover { transform:scale(1.1); box-shadow:0 6px 16px rgba(0,0,0,.4); }
     @keyframes toastIn { from { opacity:0; transform:translateX(-50%) translateY(-20px); } to { opacity:1; transform:translateX(-50%) translateY(0); } }
     @keyframes toastOut { from { opacity:1; } to { opacity:0; } }
@@ -233,7 +233,17 @@
       <input type="number" id="newProductPrice" placeholder="السعر">
       <input type="number" id="newProductDiscount" placeholder="خصم %" value="0">
       <input type="text" id="newProductIcon" placeholder="أيقونة">
-      <div class="size-checkboxes"><label><input type="checkbox" value="S"> S</label><label><input type="checkbox" value="M"> M</label><label><input type="checkbox" value="L"> L</label><label><input type="checkbox" value="XL"> XL</label></div>
+      <input type="text" id="newProductVideoUrl" placeholder="رابط الفيديو الشرحي">
+      <div class="size-checkboxes">
+        <label><input type="checkbox" value="S"> S</label>
+        <label><input type="checkbox" value="M"> M</label>
+        <label><input type="checkbox" value="L"> L</label>
+        <label><input type="checkbox" value="XL"> XL</label>
+        <label><input type="checkbox" value="بشره تركيز ٢٠"> بشره تركيز ٢٠</label>
+        <label><input type="checkbox" value="جسم تركيز ٦٠"> جسم تركيز ٦٠</label>
+        <label><input type="checkbox" value="اماكن حساساه تركيز ٤٠"> اماكن حساساه تركيز ٤٠</label>
+        <label><input type="checkbox" value="حقل لون"> حقل لون</label>
+      </div>
     </div>
     <div id="productImagesContainer"></div>
     <button class="add-image-btn" onclick="addProductImageField()">إضافة صورة</button>
@@ -295,7 +305,7 @@
 </div>
 <script>
 const CONFIG = {
-  API_BASE_URL: 'https://script.google.com/macros/s/AKfycbySmkCbzWlGVAEaurr1o9i_kPWdf-HMgvhT_pUh-Xs52Vxx8J24l2WK8dguWV7-kQxL/exec',
+  API_BASE_URL: 'https://script.google.com/macros/s/AKfycbxhLOcMLXUMq4s85lPs4ObKz0AEin9TnzCtBWUrTBs8zmqPX76xcXLiX3I-1BZ-31R0/exec',
   STORE_NAME: 'H.L LeVance',
   ADMIN_PHONE: '111',
   ADMIN_PASSWORD: '111',
@@ -327,28 +337,9 @@ function showToast(message, type = 'success') {
   const toast = document.createElement('div');
   toast.className = 'custom-toast';
   toast.textContent = message;
-  toast.style.cssText = `
-    position: fixed;
-    top: 20px;
-    left: 50%;
-    transform: translateX(-50%);
-    background: ${type === 'success' ? '#28a745' : '#dc3545'};
-    color: white;
-    padding: 15px 25px;
-    border-radius: 8px;
-    font-weight: bold;
-    font-size: 16px;
-    z-index: 999999;
-    box-shadow: 0 4px 15px rgba(0,0,0,.3);
-    animation: toastIn .3s ease-out;
-    text-align: center;
-    direction: rtl;
-  `;
+  toast.style.cssText = `position:fixed;top:20px;left:50%;transform:translateX(-50%);background:${type==='success'?'#28a745':'#dc3545'};color:white;padding:15px 25px;border-radius:8px;font-weight:bold;font-size:16px;z-index:999999;box-shadow:0 4px 15px rgba(0,0,0,.3);animation:toastIn .3s ease-out;text-align:center;direction:rtl;`;
   document.body.appendChild(toast);
-  setTimeout(() => {
-    toast.style.animation = 'toastOut .3s ease-in';
-    setTimeout(() => toast.remove(), 300);
-  }, 2500);
+  setTimeout(() => { toast.style.animation = 'toastOut .3s ease-in'; setTimeout(() => toast.remove(), 300); }, 2500);
 }
 
 function addOfferImageField() {
@@ -420,10 +411,13 @@ async function uploadProductImages() {
 
 function saveCart() { localStorage.setItem(CONFIG.STORAGE_KEY_CART, JSON.stringify(cart)); updateCartCount(); }
 function updateCartCount() { const count = cart.reduce((sum,item)=>sum+item.quantity,0); const cartCount = document.getElementById('cartCount'); if(cartCount) cartCount.textContent = count; }
-function addToCart(name, price, size, event) {
+function addToCart(name, price, size, event, color = '') {
   const selectedSize = size || (event?.target?.parentElement?.querySelector('.size-btn.selected')?.textContent) || '';
-  const existingItem = cart.find(item => item.name === name && item.size === selectedSize);
-  if(existingItem) { existingItem.quantity++; } else { cart.push({name, price, size: selectedSize, quantity: 1}); }
+  const colorInput = event?.target?.parentElement?.querySelector('.color-input');
+  const selectedColor = color || (colorInput ? colorInput.value.trim() : '');
+  const finalSize = selectedSize || (selectedColor ? 'لون: ' + selectedColor : '');
+  const existingItem = cart.find(item => item.name === name && item.size === finalSize);
+  if(existingItem) { existingItem.quantity++; } else { cart.push({name, price, size: finalSize, quantity: 1}); }
   saveCart(); showToast(`تم إضافة ${name} إلى السلة`);
 }
 function addOfferToCart(name, price, event) { addToCart(name, price, '', event); }
@@ -547,30 +541,29 @@ function searchProducts() {
   grid.innerHTML = '';
   const filtered = products.filter(p => { if(!q) return true; const name = (p.name||'').toLowerCase(); return name.includes(q); });
   if(filtered.length === 0) { grid.innerHTML = '<p style="text-align:center;color:var(--brown);font-size:18px;padding:40px 0;">لا توجد منتجات مطابقة</p>'; return; }
-  filtered.forEach(p => {
-    const price = p.price||0, disc = p.discount||0, final = disc>0 ? Math.round(price-(price*disc/100)) : price;
-    const media = p.media || [];
-    const mainImage = media.length > 0 ? media[0] : '';
-    const galleryHtml = media.length > 1 ? `<div class="image-gallery">${media.map((m,i) => `<img src="${m}" class="${i===0?'active':''}" onclick="changeMainImage(this, '${m}')">`).join('')}</div>` : '';
-    const art = document.createElement('article'); art.className='product'; art.dataset.id=p.id;
-    art.innerHTML = `<div class="product-image" onclick="openZoom(${p.id})"><div class="main-media">${mainImage ? `<img src="${mainImage}" alt="${p.name}">` : `<span class="product-icon">${p.icon||''}</span>`}</div>${galleryHtml}<button class="delete-prod" onclick="deleteProduct(${p.id})">🗑</button></div><div class="product-info"><h3>${p.name}</h3><div class="price">${disc>0?`<span class="original-price">${price} جنيه</span>`:''} ${final} جنيه ${disc>0?`<span style="color:red;font-size:14px;"> (خصم ${disc}%)</span>`:''}</div>${p.sizes?.length ? '<div class="sizes">'+p.sizes.map(s=>`<button class="size-btn" onclick="selectSize(this)">${s}</button>`).join('')+'</div>' : ''}<button class="add-cart" onclick="addToCart('${p.name}',${final},null,event)">أضف إلى السلة</button></div>`;
-    grid.appendChild(art);
-  });
+  filtered.forEach(p => renderProductCard(p, grid));
 }
 
 function renderStoreProducts() {
   const grid = document.getElementById('productGrid'); if(!grid) return;
   const products = JSON.parse(localStorage.getItem(CONFIG.STORAGE_KEY_PRODUCTS)||'[]');
   grid.innerHTML = products.length===0 ? '<p style="text-align:center;color:var(--brown);font-size:18px;padding:40px 0;">لا توجد منتجات حالياً</p>' : '';
-  products.forEach(p => {
-    const price = p.price||0, disc = p.discount||0, final = disc>0 ? Math.round(price-(price*disc/100)) : price;
-    const media = p.media || [];
-    const mainImage = media.length > 0 ? media[0] : '';
-    const galleryHtml = media.length > 1 ? `<div class="image-gallery">${media.map((m,i) => `<img src="${m}" class="${i===0?'active':''}" onclick="changeMainImage(this, '${m}')">`).join('')}</div>` : '';
-    const art = document.createElement('article'); art.className='product'; art.dataset.id=p.id;
-    art.innerHTML = `<div class="product-image" onclick="openZoom(${p.id})"><div class="main-media">${mainImage ? `<img src="${mainImage}" alt="${p.name}">` : `<span class="product-icon">${p.icon||''}</span>`}</div>${galleryHtml}<button class="delete-prod" onclick="deleteProduct(${p.id})">🗑</button></div><div class="product-info"><h3>${p.name}</h3><div class="price">${disc>0?`<span class="original-price">${price} جنيه</span>`:''} ${final} جنيه ${disc>0?`<span style="color:red;font-size:14px;"> (خصم ${disc}%)</span>`:''}</div>${p.sizes?.length ? '<div class="sizes">'+p.sizes.map(s=>`<button class="size-btn" onclick="selectSize(this)">${s}</button>`).join('')+'</div>' : ''}<button class="add-cart" onclick="addToCart('${p.name}',${final},null,event)">أضف إلى السلة</button></div>`;
-    grid.appendChild(art);
-  });
+  products.forEach(p => renderProductCard(p, grid));
+}
+
+function renderProductCard(p, grid) {
+  const price = p.price||0, disc = p.discount||0, final = disc>0 ? Math.round(price-(price*disc/100)) : price;
+  const media = p.media || [];
+  const mainImage = media.length > 0 ? media[0] : '';
+  const galleryHtml = media.length > 1 ? `<div class="image-gallery">${media.map((m,i) => `<img src="${m}" class="${i===0?'active':''}" onclick="changeMainImage(this, '${m}')">`).join('')}</div>` : '';
+  const sizes = p.sizes || [];
+  const hasColorField = sizes.includes('حقل لون');
+  const sizeButtons = sizes.filter(s => s !== 'حقل لون').map(s => `<button class="size-btn" onclick="selectSize(this)">${s}</button>`).join('');
+  const colorInputHtml = hasColorField ? `<input type="text" class="color-input" placeholder="اللون">` : '';
+  const videoBtnHtml = p.videoUrl ? `<a href="${p.videoUrl}" target="_blank" class="video-btn">🎬 فيديو شرحي</a>` : '';
+  const art = document.createElement('article'); art.className='product'; art.dataset.id=p.id;
+  art.innerHTML = `<div class="product-image" onclick="openZoom(${p.id})"><div class="main-media">${mainImage ? `<img src="${mainImage}" alt="${p.name}">` : `<span class="product-icon">${p.icon||''}</span>`}</div>${galleryHtml}<button class="delete-prod" onclick="deleteProduct(${p.id})">🗑</button></div><div class="product-info"><h3>${p.name}</h3><div class="price">${disc>0?`<span class="original-price">${price} جنيه</span>`:''} ${final} جنيه ${disc>0?`<span style="color:red;font-size:14px;"> (خصم ${disc}%)</span>`:''}</div>${sizes.length ? `<div class="sizes">${sizeButtons}${colorInputHtml}</div>` : ''}${videoBtnHtml}<button class="add-cart" onclick="addToCart('${p.name}',${final},null,event)">أضف إلى السلة</button></div>`;
+  grid.appendChild(art);
 }
 
 function changeMainImage(imgEl, url) {
@@ -590,7 +583,7 @@ function renderAdminProducts() {
     const sizeTags = p.sizes?.length ? `<div class="size-tags">${p.sizes.map(s=>`<span>${s}</span>`).join('')}</div>` : '';
     const mediaHtml = p.media?.length ? p.media.map(m => `<img src="${m}" alt="صورة">`).join('') : '';
     const div = document.createElement('div'); div.className='admin-list-item';
-    div.innerHTML = `<div class="item-info">${mediaHtml || `<span style="font-size:30px;">${p.icon||''}</span>`}<span>${p.name} - ${final} جنيه ${disc>0?`(خصم ${disc}%)`:''}</span>${sizeTags}</div><button onclick="deleteProduct(${p.id})">حذف</button>`;
+    div.innerHTML = `<div class="item-info">${mediaHtml || `<span style="font-size:30px;">${p.icon||''}</span>`}<span>${p.name} - ${final} جنيه ${disc>0?`(خصم ${disc}%)`:''}</span>${sizeTags}${p.videoUrl ? '<span>🎬</span>' : ''}</div><button onclick="deleteProduct(${p.id})">حذف</button>`;
     list.appendChild(div);
   });
 }
@@ -600,10 +593,11 @@ async function addProduct() {
   const price = parseFloat(document.getElementById('newProductPrice').value.trim());
   const discount = parseFloat(document.getElementById('newProductDiscount').value.trim())||0;
   const icon = document.getElementById('newProductIcon').value.trim()||'';
+  const videoUrl = document.getElementById('newProductVideoUrl').value.trim()||'';
   if(!name || isNaN(price) || price<=0) return showToast('يرجى إدخال اسم المنتج وسعر صحيح.', 'error');
   const sizes = [...document.querySelectorAll('.size-checkboxes input[type="checkbox"]:checked')].map(cb=>cb.value);
   await uploadProductImages();
-  const result = await callAPI('addProduct', {name, price, discount, icon, sizes, media: uploadedImages});
+  const result = await callAPI('addProduct', {name, price, discount, icon, sizes, media: uploadedImages, videoUrl});
   if(result.success) { showToast('تم إضافة المنتج بنجاح!'); await loadData(); clearAddProduct(); }
   else showToast('فشل إضافة المنتج: '+(result.error||'خطأ'), 'error');
 }
@@ -613,6 +607,7 @@ function clearAddProduct() {
   document.getElementById('newProductPrice').value='';
   document.getElementById('newProductDiscount').value='';
   document.getElementById('newProductIcon').value='';
+  document.getElementById('newProductVideoUrl').value='';
   document.querySelectorAll('.size-checkboxes input[type="checkbox"]').forEach(cb=>cb.checked=false);
   uploadedImages = [];
   document.getElementById('uploadedImagesPreview').innerHTML='';
