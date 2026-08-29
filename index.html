@@ -62,7 +62,7 @@
     .zoom-btn:hover { transform:scale(1.1); background:var(--brown-light); }
     .product-image { width:100%; height:280px; display:flex; align-items:center; justify-content:center; background:var(--yellow-main); border-bottom:2px solid var(--brown); overflow:hidden; position:relative; }
     .product-image .main-media { width:100%; height:100%; display:flex; align-items:center; justify-content:center; }
-    .product-image .main-media img, .product-image .main-media video { width:100%; height:100%; object-fit:cover; }
+    .product-image .main-media img { width:100%; height:100%; object-fit:cover; }
     .product-image .product-icon { font-size:90px; }
     .product-image .delete-prod { position:absolute; top:5px; left:5px; background:var(--brown); color:var(--yellow-light); border:none; border-radius:50%; width:30px; height:30px; cursor:pointer; font-size:16px; display:none; z-index:10; }
     .product-image .delete-prod:hover { background:var(--brown-light); }
@@ -82,12 +82,10 @@
     .zoom-modal { display:none; position:fixed; inset:0; background:rgba(0,0,0,.9); z-index:99999; align-items:center; justify-content:center; flex-direction:column; padding:20px; }
     .zoom-modal.active { display:flex; }
     .zoom-modal .zoom-close { position:absolute; top:20px; left:20px; background:var(--brown); color:var(--yellow-light); border:none; border-radius:50%; width:50px; height:50px; font-size:28px; cursor:pointer; z-index:10; }
-    .zoom-modal .zoom-close:hover { transform:scale(1.1); }
     .zoom-modal .zoom-content { width:100%; max-width:900px; max-height:80vh; display:flex; align-items:center; justify-content:center; position:relative; }
     .zoom-modal .zoom-content img { max-width:100%; max-height:80vh; border-radius:12px; border:3px solid var(--yellow-main); object-fit:contain; }
     .zoom-modal .zoom-nav { display:flex; gap:15px; margin-top:20px; align-items:center; }
     .zoom-modal .zoom-nav button { background:var(--brown); color:var(--yellow-light); border:none; padding:12px 25px; border-radius:8px; font-size:18px; cursor:pointer; font-weight:bold; }
-    .zoom-modal .zoom-nav button:hover { background:var(--brown-light); }
     .zoom-modal .zoom-nav .zoom-counter { color:var(--yellow-light); font-size:18px; font-weight:bold; padding:0 15px; }
     #orderFormPage { display:none; padding:30px 4%; background:var(--yellow-soft); min-height:100vh; }
     #orderFormPage.active { display:block; }
@@ -120,12 +118,9 @@
     .modal-box { background:var(--yellow-main); border:3px solid var(--brown); border-radius:16px; padding:35px 30px; width:90%; max-width:400px; box-shadow:0 20px 40px rgba(0,0,0,.4); text-align:center; }
     .modal-box h2 { color:var(--brown); font-family:Georgia,serif; font-size:28px; margin-bottom:25px; }
     .modal-box input { width:100%; padding:14px 16px; margin-bottom:16px; border:2px solid var(--brown); border-radius:8px; background:var(--yellow-light); color:var(--brown); font-size:16px; direction:rtl; }
-    .modal-box input::placeholder { color:var(--brown); opacity:.7; }
-    .modal-box .btn-login-submit { width:100%; padding:14px; background:var(--brown); color:var(--yellow-light); border:none; border-radius:8px; font-size:18px; font-weight:bold; cursor:pointer; transition:background .2s; margin-top:8px; }
-    .modal-box .btn-login-submit:hover { background:var(--brown-light); }
+    .modal-box .btn-login-submit { width:100%; padding:14px; background:var(--brown); color:var(--yellow-light); border:none; border-radius:8px; font-size:18px; font-weight:bold; cursor:pointer; margin-top:8px; }
     .modal-box .signup-link { display:block; margin-top:18px; color:var(--brown); font-weight:bold; cursor:pointer; text-decoration:underline; font-size:15px; }
     .modal-box .close-modal { margin-top:15px; background:transparent; border:2px solid var(--brown); color:var(--brown); padding:8px 20px; border-radius:6px; cursor:pointer; font-weight:bold; }
-    .modal-box .close-modal:hover { background:var(--brown); color:var(--yellow-light); }
     .cart-modal { display:none; position:fixed; inset:0; background:rgba(0,0,0,.5); z-index:10001; align-items:center; justify-content:center; backdrop-filter:blur(4px); }
     .cart-modal.active { display:flex; }
     .cart-box { background:var(--yellow-main); border:3px solid var(--brown); border-radius:16px; padding:25px; width:90%; max-width:500px; box-shadow:0 20px 40px rgba(0,0,0,.4); text-align:center; max-height:80vh; overflow-y:auto; }
@@ -137,9 +132,7 @@
     .cart-item .remove-item { background:red; color:white; border:none; border-radius:50%; width:25px; height:25px; cursor:pointer; font-size:14px; }
     .cart-total { font-size:20px; font-weight:bold; margin:15px 0; }
     .cart-checkout-btn { width:100%; padding:14px; background:var(--brown); color:var(--yellow-light); border:none; border-radius:8px; font-size:18px; font-weight:bold; cursor:pointer; margin-top:10px; }
-    .cart-checkout-btn:hover { background:var(--brown-light); }
     .cart-close-btn { margin-top:10px; background:transparent; border:2px solid var(--brown); color:var(--brown); padding:8px 20px; border-radius:6px; cursor:pointer; font-weight:bold; }
-    .cart-close-btn:hover { background:var(--brown); color:var(--yellow-light); }
     #adminPanel { display:none; padding:30px 4%; background:var(--yellow-dark); border-bottom:3px solid var(--brown); }
     #adminPanel.active { display:block; }
     #adminPanel h2 { color:var(--brown); font-family:Georgia,serif; font-size:28px; margin-bottom:20px; }
@@ -147,22 +140,18 @@
     .admin-section h3 { color:var(--brown); margin-bottom:15px; font-size:20px; }
     .admin-controls { display:flex; flex-wrap:wrap; gap:12px; margin-bottom:15px; }
     .admin-controls input, .admin-controls select { padding:12px 16px; border:2px solid var(--brown); border-radius:8px; background:var(--yellow-light); color:var(--brown); font-size:15px; flex:1; min-width:150px; }
-    .admin-controls input::placeholder { color:var(--brown); opacity:.7; }
-    .admin-controls button { background:var(--brown); color:var(--yellow-light); border:none; padding:12px 24px; border-radius:8px; font-weight:bold; cursor:pointer; transition:background .2s; font-size:15px; white-space:nowrap; }
-    .admin-controls button:hover { background:var(--brown-light); }
+    .admin-controls button { background:var(--brown); color:var(--yellow-light); border:none; padding:12px 24px; border-radius:8px; font-weight:bold; cursor:pointer; font-size:15px; white-space:nowrap; }
     .admin-controls .size-checkboxes { display:flex; flex-wrap:wrap; gap:8px; align-items:center; padding:5px 10px; background:var(--yellow-main); border-radius:8px; border:2px solid var(--brown); }
     .admin-controls .size-checkboxes label { display:flex; align-items:center; gap:4px; font-weight:bold; color:var(--brown); font-size:14px; cursor:pointer; }
     .admin-controls .size-checkboxes input[type="checkbox"] { width:16px; height:16px; accent-color:var(--brown); flex:0 0 auto; min-width:unset; padding:0; }
     .admin-list { background:var(--yellow-light); border:2px solid var(--brown); border-radius:12px; padding:15px; max-height:300px; overflow-y:auto; }
     .admin-list-item { display:flex; justify-content:space-between; align-items:center; padding:10px 0; border-bottom:1px solid var(--brown); }
-    .admin-list-item:last-child { border-bottom:none; }
     .admin-list-item .item-info { display:flex; align-items:center; gap:12px; flex-wrap:wrap; }
     .admin-list-item .item-info img { width:40px; height:40px; border-radius:8px; object-fit:cover; border:1px solid var(--brown); }
     .admin-list-item .item-info span { font-weight:bold; color:var(--brown); }
     .admin-list-item .item-info .size-tags { display:flex; gap:4px; }
     .admin-list-item .item-info .size-tags span { background:var(--brown); color:var(--yellow-light); padding:2px 8px; border-radius:4px; font-size:11px; font-weight:bold; }
     .admin-list-item button { background:var(--brown); color:var(--yellow-light); border:none; padding:6px 14px; border-radius:6px; cursor:pointer; font-weight:bold; font-size:13px; }
-    .admin-list-item button:hover { background:var(--brown-light); }
     .upload-status { font-weight:bold; margin:10px 0; }
     .upload-preview { max-width:100px; max-height:100px; border:2px solid var(--brown); border-radius:8px; margin:5px; display:none; }
     @media (max-width:700px) {
@@ -174,19 +163,14 @@
       .search-bar { padding:8px 3% 12px; }
       .search-box { height:42px; }
       .search-box button { width:45px; font-size:17px; }
-      .search-box input { font-size:14px; padding:0 10px; }
       .offers-section { padding:35px 3%; }
       .offers-grid { gap:12px; }
       .offer-card { min-width:240px; max-width:240px; }
       .offer-image { height:140px; font-size:60px; }
-      .offer-info { padding:12px; }
-      .offer-info h3 { font-size:14px; }
-      .offer-info .offer-price { font-size:16px; }
       .products { padding:35px 3%; }
       .section-title { font-size:26px; }
       .product-grid { grid-template-columns:repeat(2,minmax(0,1fr)); gap:12px; }
       .product-image { height:180px; font-size:65px; }
-      .product-image .image-gallery img { width:30px; height:30px; }
       .zoom-btn { width:32px; height:32px; font-size:16px; top:6px; right:6px; }
       .product-info { padding:12px; }
       .product-info h3 { font-size:14px; }
@@ -197,18 +181,11 @@
       .modal-box, .cart-box { padding:20px 15px; }
       .admin-controls { flex-direction:column; }
       .admin-controls input, .admin-controls select { min-width:unset; }
-      .admin-controls .size-checkboxes { flex-wrap:wrap; justify-content:center; }
       .zoom-modal .zoom-content { max-height:60vh; }
       .zoom-modal .zoom-nav button { padding:8px 15px; font-size:14px; }
       .zoom-modal .zoom-close { width:40px; height:40px; font-size:22px; top:10px; left:10px; }
       .order-form-container { padding:20px 15px; }
       .order-form-container .form-row { grid-template-columns:1fr; gap:0; }
-    }
-    @media (max-width:700px) and (orientation:portrait) {
-      #intro, #intro video { width:100vw; height:100dvh; object-fit:cover; }
-    }
-    @media (max-width:900px) and (orientation:landscape) {
-      #intro video { width:100vw; height:100dvh; object-fit:cover; }
     }
   </style>
 </head>
@@ -249,8 +226,7 @@
     </div>
     <div class="admin-controls" style="flex-direction:column;align-items:flex-start;">
       <label style="font-weight:bold;color:var(--brown);">📸 صور المنتج:</label>
-      <input type="file" id="productImages" accept="image/*" multiple style="padding:10px;">
-      <button onclick="uploadProductImages()" id="uploadImagesBtn" style="background:var(--brown);color:var(--yellow-light);border:none;padding:10px 20px;border-radius:8px;cursor:pointer;font-weight:bold;">⬆️ رفع الصور</button>
+      <input type="file" id="productImages" accept="image/*" multiple style="padding:10px;" onchange="uploadProductImages()">
       <div id="uploadStatus" class="upload-status"></div>
       <div id="uploadedImagesPreview" style="display:flex;flex-wrap:wrap;gap:5px;"></div>
     </div>
@@ -298,7 +274,7 @@
 <div class="zoom-modal" id="zoomModal"><button class="zoom-close" onclick="closeZoom()">✕</button><div class="zoom-content" id="zoomContent"></div><div class="zoom-nav"><button onclick="prevZoom()">◀</button><span class="zoom-counter" id="zoomCounter">1 / 1</span><button onclick="nextZoom()">▶</button></div></div>
 <script>
 const CONFIG = {
-  API_BASE_URL: 'https://script.google.com/macros/s/AKfycbxdYfSVeWVAOCbaBMNyKE2px9aXq8Gmd-iXafN427FOkUrYM_o59xMpWIUeRqly66lW/exec',
+  API_BASE_URL: 'https://script.google.com/macros/s/AKfycbzS5aa9oVCiw4Qpdg8VDD5mhMHSNTPlG0ypIzGR57p_RWUUr-y5iQO6awMLygTg0nCC/exec',
   STORE_NAME: 'H.L LeVance',
   ADMIN_PHONE: '111',
   ADMIN_PASSWORD: '111',
@@ -448,15 +424,13 @@ async function uploadProductImages() {
   const files = fileInput.files;
   const status = document.getElementById('uploadStatus');
   const previewContainer = document.getElementById('uploadedImagesPreview');
-  const uploadBtn = document.getElementById('uploadImagesBtn');
   
-  if(files.length === 0) return alert('اختر صوراً أولاً');
+  if(files.length === 0) return;
   
   uploadedImages = [];
   previewContainer.innerHTML = '';
   status.textContent = '⏳ جاري رفع الصور...';
   status.style.color = 'var(--brown)';
-  uploadBtn.disabled = true;
   
   for(let i = 0; i < files.length; i++) {
     try {
@@ -490,7 +464,6 @@ async function uploadProductImages() {
     }
   }
   
-  uploadBtn.disabled = false;
   status.textContent = `✅ اكتمل الرفع. تم رفع ${uploadedImages.length} صورة بنجاح`;
   status.style.color = 'green';
   fileInput.value = '';
