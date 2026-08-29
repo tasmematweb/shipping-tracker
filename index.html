@@ -19,9 +19,9 @@
     #store.show { opacity:1; transform:translateY(0); visibility:visible; }
     header { position:sticky; top:0; z-index:1000; background:var(--yellow-main); border-bottom:3px solid var(--brown); }
     .top-header { min-height:70px; display:flex; align-items:center; justify-content:space-between; gap:15px; padding:10px 4%; background:var(--yellow-main); }
-    .logo { color:var(--brown); text-decoration:none; font-family:Georgia,serif; font-size:56px; font-weight:bold; white-space:nowrap; }
-    .header-actions { display:flex; align-items:center; gap:10px; }
-    .login-btn, .logout-btn, .cart { background:var(--brown); border:none; color:var(--yellow-light); font-size:16px; cursor:pointer; white-space:nowrap; padding:12px 20px; border-radius:8px; font-weight:bold; transition:background .2s; }
+    .logo { color:var(--brown); text-decoration:none; font-family:Georgia,serif; font-size:clamp(28px, 5vw, 56px); font-weight:bold; white-space:nowrap; }
+    .header-actions { display:flex; align-items:center; gap:8px; }
+    .login-btn, .logout-btn, .cart { background:var(--brown); border:none; color:var(--yellow-light); font-size:clamp(12px, 2vw, 16px); cursor:pointer; white-space:nowrap; padding:clamp(8px, 1.5vw, 12px) clamp(12px, 2vw, 20px); border-radius:8px; font-weight:bold; transition:background .2s; }
     .logout-btn { background:#dc3545; }
     .logout-btn:hover { background:#c82333; }
     .login-btn:hover, .cart:hover { background:var(--brown-light); }
@@ -33,57 +33,56 @@
     .search-box input::placeholder { color:var(--brown); opacity:.75; }
     .search-box button { width:60px; border:none; border-right:2px solid var(--brown); background:var(--brown); color:var(--yellow-light); cursor:pointer; font-size:20px; }
     .search-box button:hover { background:var(--brown-light); }
-    .offers-section { padding:45px 4%; background:linear-gradient(135deg,var(--yellow-light),var(--yellow-main),var(--yellow-soft)); border-bottom:3px solid var(--brown); }
-    .offers-grid { display:flex; gap:22px; overflow-x:auto; padding-bottom:20px; scroll-snap-type:x mandatory; }
-    .offer-card { min-width:280px; max-width:280px; background:var(--yellow-light); border:2px solid var(--brown); border-radius:12px; overflow:hidden; box-shadow:0 5px 0 var(--brown); transition:transform .25s, box-shadow .25s; position:relative; scroll-snap-align:start; flex-shrink:0; }
+    .offers-section { padding:clamp(25px, 5vw, 45px) 4%; background:linear-gradient(135deg,var(--yellow-light),var(--yellow-main),var(--yellow-soft)); border-bottom:3px solid var(--brown); }
+    .offers-grid { display:flex; gap:clamp(12px, 2vw, 22px); overflow-x:auto; padding-bottom:20px; scroll-snap-type:x mandatory; }
+    .offer-card { min-width:clamp(220px, 40vw, 280px); max-width:280px; background:var(--yellow-light); border:2px solid var(--brown); border-radius:12px; overflow:hidden; box-shadow:0 5px 0 var(--brown); transition:transform .25s, box-shadow .25s; position:relative; scroll-snap-align:start; flex-shrink:0; }
     .offer-card:hover { transform:translateY(-5px); box-shadow:0 9px 0 var(--brown); }
-    .offer-image { width:100%; height:200px; display:flex; align-items:center; justify-content:center; background:var(--yellow-main); border-bottom:2px solid var(--brown); font-size:80px; }
-    .offer-info { padding:18px; background:var(--yellow-light); }
-    .offer-info h3 { font-size:18px; margin-bottom:10px; color:var(--brown); }
+    .offer-image { width:100%; height:clamp(120px, 25vw, 200px); display:flex; align-items:center; justify-content:center; background:var(--yellow-main); border-bottom:2px solid var(--brown); font-size:clamp(50px, 10vw, 80px); }
+    .offer-info { padding:clamp(10px, 2vw, 18px); background:var(--yellow-light); }
+    .offer-info h3 { font-size:clamp(14px, 2vw, 18px); margin-bottom:10px; color:var(--brown); }
     .offer-info p { font-size:14px; color:var(--brown); margin-bottom:10px; }
-    .offer-info .offer-price { font-size:22px; font-weight:bold; color:var(--brown); }
+    .offer-info .offer-price { font-size:clamp(16px, 2.5vw, 22px); font-weight:bold; color:var(--brown); }
     .offer-info .offer-old-price { text-decoration:line-through; font-size:16px; opacity:.6; margin-left:10px; }
-    .offer-add-cart { width:100%; padding:12px; border:2px solid var(--brown); border-radius:7px; background:var(--brown); color:var(--yellow-light); cursor:pointer; font-size:15px; font-weight:bold; transition:background .2s; margin-top:10px; }
+    .offer-add-cart { width:100%; padding:12px; border:2px solid var(--brown); border-radius:7px; background:var(--brown); color:var(--yellow-light); cursor:pointer; font-size:clamp(13px, 1.5vw, 15px); font-weight:bold; transition:background .2s; margin-top:10px; }
     .offer-add-cart:hover { background:var(--brown-light); }
     .offer-delete { position:absolute; top:5px; left:5px; background:var(--brown); color:var(--yellow-light); border:none; border-radius:50%; width:30px; height:30px; cursor:pointer; font-size:16px; display:none; z-index:10; }
     .offer-delete:hover { background:var(--brown-light); }
-    .products { padding:45px 4%; background:var(--yellow-soft); border-bottom:3px solid var(--brown); }
-    .product-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(260px,1fr)); gap:22px; }
+    .products { padding:clamp(25px, 5vw, 45px) 4%; background:var(--yellow-soft); border-bottom:3px solid var(--brown); }
+    .section-title { font-size:clamp(22px, 4vw, 30px); }
+    .product-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(clamp(150px, 25vw, 260px),1fr)); gap:clamp(10px, 2vw, 22px); }
     .product { background:var(--yellow-light); border:2px solid var(--brown); border-radius:12px; overflow:hidden; box-shadow:0 5px 0 var(--brown); transition:transform .25s, box-shadow .25s; position:relative; }
     .product:hover { transform:translateY(-5px); box-shadow:0 9px 0 var(--brown); }
-    .zoom-btn { position:absolute; top:10px; right:10px; background:var(--brown); color:var(--yellow-light); border:none; border-radius:50%; width:40px; height:40px; font-size:20px; cursor:pointer; z-index:15; transition:transform .2s; display:flex; align-items:center; justify-content:center; }
-    .zoom-btn:hover { transform:scale(1.1); background:var(--brown-light); }
-    .product-image { width:100%; height:280px; display:flex; align-items:center; justify-content:center; background:var(--yellow-main); border-bottom:2px solid var(--brown); overflow:hidden; position:relative; }
+    .product-image { width:100%; height:clamp(150px, 35vw, 280px); display:flex; align-items:center; justify-content:center; background:var(--yellow-main); border-bottom:2px solid var(--brown); overflow:hidden; position:relative; cursor:pointer; }
     .product-image .main-media { width:100%; height:100%; display:flex; align-items:center; justify-content:center; }
     .product-image .main-media img { width:100%; height:100%; object-fit:cover; }
-    .product-image .product-icon { font-size:90px; }
+    .product-image .product-icon { font-size:clamp(60px, 12vw, 90px); }
     .product-image .delete-prod { position:absolute; top:5px; left:5px; background:var(--brown); color:var(--yellow-light); border:none; border-radius:50%; width:30px; height:30px; cursor:pointer; font-size:16px; display:none; z-index:10; }
     .product-image .delete-prod:hover { background:var(--brown-light); }
     .product-image .image-gallery { display:flex; gap:5px; position:absolute; bottom:10px; left:50%; transform:translateX(-50%); background:rgba(0,0,0,.6); padding:5px 10px; border-radius:20px; z-index:5; max-width:90%; overflow-x:auto; }
-    .product-image .image-gallery img { width:40px; height:40px; border-radius:4px; border:2px solid var(--yellow-main); cursor:pointer; object-fit:cover; flex-shrink:0; }
+    .product-image .image-gallery img { width:clamp(25px, 5vw, 40px); height:clamp(25px, 5vw, 40px); border-radius:4px; border:2px solid var(--yellow-main); cursor:pointer; object-fit:cover; flex-shrink:0; }
     .product-image .image-gallery img.active { border-color:var(--brown); }
-    .product-info { padding:18px; background:var(--yellow-light); }
-    .product-info h3 { font-size:18px; margin-bottom:10px; color:var(--brown); }
-    .price { font-size:23px; font-weight:bold; color:var(--brown); margin-bottom:10px; }
-    .price .original-price { text-decoration:line-through; font-size:16px; opacity:.6; margin-left:10px; }
+    .product-info { padding:clamp(10px, 2vw, 18px); background:var(--yellow-light); }
+    .product-info h3 { font-size:clamp(14px, 2vw, 18px); margin-bottom:10px; color:var(--brown); }
+    .price { font-size:clamp(16px, 2.5vw, 23px); font-weight:bold; color:var(--brown); margin-bottom:10px; }
+    .price .original-price { text-decoration:line-through; font-size:clamp(12px, 1.5vw, 16px); opacity:.6; margin-left:10px; }
     .sizes { display:flex; gap:8px; flex-wrap:wrap; margin-bottom:12px; }
-    .sizes .size-btn { padding:5px 12px; border:2px solid var(--brown); border-radius:6px; background:var(--yellow-light); color:var(--brown); cursor:pointer; font-weight:bold; font-size:13px; transition:all .2s; }
+    .sizes .size-btn { padding:5px 12px; border:2px solid var(--brown); border-radius:6px; background:var(--yellow-light); color:var(--brown); cursor:pointer; font-weight:bold; font-size:clamp(10px, 1.5vw, 13px); transition:all .2s; }
     .sizes .size-btn:hover { background:var(--brown); color:var(--yellow-light); }
     .sizes .size-btn.selected { background:var(--brown); color:var(--yellow-light); }
-    .add-cart { width:100%; padding:12px; border:2px solid var(--brown); border-radius:7px; background:var(--brown); color:var(--yellow-light); cursor:pointer; font-size:15px; font-weight:bold; transition:background .2s; }
+    .add-cart { width:100%; padding:clamp(8px, 1.5vw, 12px); border:2px solid var(--brown); border-radius:7px; background:var(--brown); color:var(--yellow-light); cursor:pointer; font-size:clamp(12px, 1.5vw, 15px); font-weight:bold; transition:background .2s; }
     .add-cart:hover { background:var(--brown-light); }
-    .zoom-modal { display:none; position:fixed; inset:0; background:rgba(0,0,0,.9); z-index:99999; align-items:center; justify-content:center; flex-direction:column; padding:20px; }
+    .zoom-modal { display:none; position:fixed; inset:0; background:rgba(0,0,0,.9); z-index:99999; align-items:center; justify-content:center; flex-direction:column; padding:20px; touch-action:pan-y; }
     .zoom-modal.active { display:flex; }
     .zoom-modal .zoom-close { position:absolute; top:20px; left:20px; background:var(--brown); color:var(--yellow-light); border:none; border-radius:50%; width:50px; height:50px; font-size:28px; cursor:pointer; z-index:10; }
     .zoom-modal .zoom-content { width:100%; max-width:900px; max-height:80vh; display:flex; align-items:center; justify-content:center; position:relative; }
     .zoom-modal .zoom-content img { max-width:100%; max-height:80vh; border-radius:12px; border:3px solid var(--yellow-main); object-fit:contain; }
     .zoom-modal .zoom-nav { display:flex; gap:15px; margin-top:20px; align-items:center; }
-    .zoom-modal .zoom-nav button { background:var(--brown); color:var(--yellow-light); border:none; padding:12px 25px; border-radius:8px; font-size:18px; cursor:pointer; font-weight:bold; }
+    .zoom-modal .zoom-nav button { background:var(--brown); color:var(--yellow-light); border:none; padding:clamp(8px, 2vw, 12px) clamp(15px, 3vw, 25px); border-radius:8px; font-size:18px; cursor:pointer; font-weight:bold; }
     .zoom-modal .zoom-nav .zoom-counter { color:var(--yellow-light); font-size:18px; font-weight:bold; padding:0 15px; }
     #orderFormPage { display:none; padding:30px 4%; background:var(--yellow-soft); min-height:100vh; }
     #orderFormPage.active { display:block; }
-    .order-form-container { max-width:700px; margin:0 auto; background:var(--yellow-light); border:3px solid var(--brown); border-radius:16px; padding:35px 30px; }
-    .order-form-container h2 { text-align:center; color:var(--brown); font-family:Georgia,serif; font-size:28px; margin-bottom:25px; }
+    .order-form-container { max-width:700px; margin:0 auto; background:var(--yellow-light); border:3px solid var(--brown); border-radius:16px; padding:clamp(20px, 4vw, 35px) clamp(15px, 3vw, 30px); }
+    .order-form-container h2 { text-align:center; color:var(--brown); font-family:Georgia,serif; font-size:clamp(22px, 4vw, 28px); margin-bottom:25px; }
     .order-form-container .order-summary { background:var(--yellow-main); border:2px solid var(--brown); border-radius:10px; padding:15px; margin-bottom:20px; }
     .order-form-container .order-summary h3 { color:var(--brown); margin-bottom:10px; font-size:18px; }
     .order-form-container .order-summary .cart-items { max-height:150px; overflow-y:auto; font-size:14px; color:var(--brown); }
@@ -102,7 +101,7 @@
     .order-form-container .submit-order-btn:disabled { opacity:.6; cursor:not-allowed; }
     .order-form-container .back-to-store { display:block; text-align:center; margin-top:15px; color:var(--brown); cursor:pointer; font-weight:bold; text-decoration:underline; }
     footer { padding:45px 5%; background:var(--yellow-main); color:var(--brown); text-align:center; border-top:3px solid var(--brown); }
-    footer h2 { font-family:Georgia,serif; font-size:32px; margin-bottom:10px; }
+    footer h2 { font-family:Georgia,serif; font-size:clamp(24px, 4vw, 32px); margin-bottom:10px; }
     footer p { font-weight:bold; }
     .whatsapp-float { position:fixed; bottom:25px; right:25px; z-index:9999; background:var(--brown); color:var(--yellow-light); width:60px; height:60px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:32px; box-shadow:0 4px 12px rgba(0,0,0,.3); text-decoration:none; transition:transform .3s, box-shadow .3s; border:2px solid var(--yellow-main); }
     .whatsapp-float:hover { transform:scale(1.1); box-shadow:0 6px 16px rgba(0,0,0,.4); background:var(--brown-light); }
@@ -148,37 +147,24 @@
     .upload-status { font-weight:bold; margin:10px 0; }
     .upload-preview { max-width:100px; max-height:100px; border:2px solid var(--brown); border-radius:8px; margin:5px; display:none; }
     @media (max-width:700px) {
-      .top-header { gap:8px; padding:10px 3%; }
-      .logo { font-size:36px; }
-      .cart { font-size:0; padding:10px 12px; }
-      .cart::after { content:"🛒"; font-size:20px; }
-      .login-btn, .logout-btn { font-size:14px; padding:10px 15px; }
-      .search-bar { padding:8px 3% 12px; }
-      .search-box { height:42px; }
-      .search-box button { width:45px; font-size:17px; }
-      .offers-section { padding:35px 3%; }
-      .offers-grid { gap:12px; }
-      .offer-card { min-width:240px; max-width:240px; }
-      .offer-image { height:140px; font-size:60px; }
-      .products { padding:35px 3%; }
-      .section-title { font-size:26px; }
-      .product-grid { grid-template-columns:repeat(2,minmax(0,1fr)); gap:12px; }
-      .product-image { height:180px; font-size:65px; }
-      .zoom-btn { width:32px; height:32px; font-size:16px; top:6px; right:6px; }
-      .product-info { padding:12px; }
-      .product-info h3 { font-size:14px; }
-      .price { font-size:16px; }
-      .sizes .size-btn { font-size:11px; padding:3px 8px; }
-      .add-cart { font-size:13px; padding:10px 5px; }
-      .whatsapp-float { width:50px; height:50px; font-size:26px; bottom:18px; right:18px; }
-      .modal-box, .cart-box { padding:20px 15px; }
+      .top-header { gap:6px; padding:8px 2%; }
+      .cart { font-size:0; padding:8px 10px; }
+      .cart::after { content:"🛒"; font-size:18px; }
+      .search-bar { padding:8px 2% 10px; }
+      .search-box { height:40px; }
+      .search-box button { width:40px; font-size:16px; }
+      .search-box input { font-size:14px; padding:0 10px; }
+      .offers-section { padding:25px 2%; }
+      .offers-grid { gap:10px; }
+      .products { padding:25px 2%; }
+      .product-grid { gap:10px; }
+      .zoom-modal .zoom-close { width:40px; height:40px; font-size:22px; top:10px; left:10px; }
+      .order-form-container { padding:15px 10px; }
+      .order-form-container .form-row { grid-template-columns:1fr; gap:0; }
+      .modal-box, .cart-box { padding:15px 10px; }
       .admin-controls { flex-direction:column; }
       .admin-controls input, .admin-controls select { min-width:unset; }
-      .zoom-modal .zoom-content { max-height:60vh; }
-      .zoom-modal .zoom-nav button { padding:8px 15px; font-size:14px; }
-      .zoom-modal .zoom-close { width:40px; height:40px; font-size:22px; top:10px; left:10px; }
-      .order-form-container { padding:20px 15px; }
-      .order-form-container .form-row { grid-template-columns:1fr; gap:0; }
+      .whatsapp-float { width:50px; height:50px; font-size:26px; bottom:15px; right:15px; }
     }
   </style>
 </head>
@@ -264,7 +250,15 @@
     <button class="cart-close-btn" onclick="closeCart()">إغلاق</button>
   </div>
 </div>
-<div class="zoom-modal" id="zoomModal"><button class="zoom-close" onclick="closeZoom()">✕</button><div class="zoom-content" id="zoomContent"></div><div class="zoom-nav"><button onclick="prevZoom()">◀</button><span class="zoom-counter" id="zoomCounter">1 / 1</span><button onclick="nextZoom()">▶</button></div></div>
+<div class="zoom-modal" id="zoomModal">
+  <button class="zoom-close" onclick="closeZoom()">✕</button>
+  <div class="zoom-content" id="zoomContent" onclick="nextZoom()"></div>
+  <div class="zoom-nav">
+    <button onclick="prevZoom()">◀</button>
+    <span class="zoom-counter" id="zoomCounter">1 / 1</span>
+    <button onclick="nextZoom()">▶</button>
+  </div>
+</div>
 <script>
 const CONFIG = {
   API_BASE_URL: 'https://script.google.com/macros/s/AKfycbzpYHaRuRTQo-SSu6Ge9kViK58lb9gZJoDp8zJdlljwHG76Yn5FR3Cob9tUWDkqVdHA/exec',
@@ -487,7 +481,7 @@ function searchProducts() {
     const mainImage = media.length > 0 ? media[0] : '';
     const galleryHtml = media.length > 1 ? `<div class="image-gallery">${media.map((m,i) => `<img src="${m}" class="${i===0?'active':''}" onclick="changeMainImage(this, '${m}')">`).join('')}</div>` : '';
     const art = document.createElement('article'); art.className='product'; art.dataset.id=p.id;
-    art.innerHTML = `<div class="product-image"><div class="main-media">${mainImage ? `<img src="${mainImage}" alt="${p.name}">` : `<span class="product-icon">${p.icon||'📦'}</span>`}</div>${galleryHtml}<button class="zoom-btn" onclick="openZoom(${p.id})">🔍</button><button class="delete-prod" onclick="deleteProduct(${p.id})">🗑</button></div><div class="product-info"><h3>${p.name}</h3><div class="price">${disc>0?`<span class="original-price">${price} جنيه</span>`:''} ${final} جنيه ${disc>0?`<span style="color:red;font-size:14px;"> (خصم ${disc}%)</span>`:''}</div>${p.sizes?.length ? '<div class="sizes">'+p.sizes.map(s=>`<button class="size-btn" onclick="selectSize(this)">${s}</button>`).join('')+'</div>' : ''}<button class="add-cart" onclick="addToCart('${p.name}',${final},null,event)">أضف إلى السلة</button></div>`;
+    art.innerHTML = `<div class="product-image" onclick="openZoom(${p.id})"><div class="main-media">${mainImage ? `<img src="${mainImage}" alt="${p.name}">` : `<span class="product-icon">${p.icon||'📦'}</span>`}</div>${galleryHtml}<button class="delete-prod" onclick="deleteProduct(${p.id})">🗑</button></div><div class="product-info"><h3>${p.name}</h3><div class="price">${disc>0?`<span class="original-price">${price} جنيه</span>`:''} ${final} جنيه ${disc>0?`<span style="color:red;font-size:14px;"> (خصم ${disc}%)</span>`:''}</div>${p.sizes?.length ? '<div class="sizes">'+p.sizes.map(s=>`<button class="size-btn" onclick="selectSize(this)">${s}</button>`).join('')+'</div>' : ''}<button class="add-cart" onclick="addToCart('${p.name}',${final},null,event)">أضف إلى السلة</button></div>`;
     grid.appendChild(art);
   });
 }
@@ -502,7 +496,7 @@ function renderStoreProducts() {
     const mainImage = media.length > 0 ? media[0] : '';
     const galleryHtml = media.length > 1 ? `<div class="image-gallery">${media.map((m,i) => `<img src="${m}" class="${i===0?'active':''}" onclick="changeMainImage(this, '${m}')">`).join('')}</div>` : '';
     const art = document.createElement('article'); art.className='product'; art.dataset.id=p.id;
-    art.innerHTML = `<div class="product-image"><div class="main-media">${mainImage ? `<img src="${mainImage}" alt="${p.name}">` : `<span class="product-icon">${p.icon||'📦'}</span>`}</div>${galleryHtml}<button class="zoom-btn" onclick="openZoom(${p.id})">🔍</button><button class="delete-prod" onclick="deleteProduct(${p.id})">🗑</button></div><div class="product-info"><h3>${p.name}</h3><div class="price">${disc>0?`<span class="original-price">${price} جنيه</span>`:''} ${final} جنيه ${disc>0?`<span style="color:red;font-size:14px;"> (خصم ${disc}%)</span>`:''}</div>${p.sizes?.length ? '<div class="sizes">'+p.sizes.map(s=>`<button class="size-btn" onclick="selectSize(this)">${s}</button>`).join('')+'</div>' : ''}<button class="add-cart" onclick="addToCart('${p.name}',${final},null,event)">أضف إلى السلة</button></div>`;
+    art.innerHTML = `<div class="product-image" onclick="openZoom(${p.id})"><div class="main-media">${mainImage ? `<img src="${mainImage}" alt="${p.name}">` : `<span class="product-icon">${p.icon||'📦'}</span>`}</div>${galleryHtml}<button class="delete-prod" onclick="deleteProduct(${p.id})">🗑</button></div><div class="product-info"><h3>${p.name}</h3><div class="price">${disc>0?`<span class="original-price">${price} جنيه</span>`:''} ${final} جنيه ${disc>0?`<span style="color:red;font-size:14px;"> (خصم ${disc}%)</span>`:''}</div>${p.sizes?.length ? '<div class="sizes">'+p.sizes.map(s=>`<button class="size-btn" onclick="selectSize(this)">${s}</button>`).join('')+'</div>' : ''}<button class="add-cart" onclick="addToCart('${p.name}',${final},null,event)">أضف إلى السلة</button></div>`;
     grid.appendChild(art);
   });
 }
