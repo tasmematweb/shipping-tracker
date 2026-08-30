@@ -108,27 +108,29 @@
     footer { padding:45px 5%; background:var(--yellow-main); color:var(--brown); text-align:center; border-top:3px solid var(--brown); }
     footer h2 { font-family:Georgia,serif; font-size:clamp(24px, 4vw, 32px); margin-bottom:10px; }
     footer p { font-weight:bold; }
-    .whatsapp-float {
+    .contact-float {
       position: fixed;
       bottom: 25px;
-      left: -80px;
+      left: -120px;
       z-index: 99999;
       background: var(--brown);
       color: var(--yellow-light);
-      width: 60px;
-      height: 60px;
-      border-radius: 50%;
+      padding: 15px 25px;
+      border-radius: 30px;
       display: flex;
       align-items: center;
       justify-content: center;
       box-shadow: 0 4px 12px rgba(0,0,0,.3);
       text-decoration: none;
       border: 2px solid var(--yellow-main);
+      font-weight: bold;
+      font-size: 18px;
       opacity: 0;
       transition: left .5s ease-out, opacity .5s ease-out, transform .3s;
+      white-space: nowrap;
     }
-    .whatsapp-float.show { left: 25px; opacity: 1; }
-    .whatsapp-float:hover { transform:scale(1.1); box-shadow:0 6px 16px rgba(0,0,0,.4); }
+    .contact-float.show { left: 25px; opacity: 1; }
+    .contact-float:hover { transform:scale(1.05); box-shadow:0 6px 16px rgba(0,0,0,.4); }
     @keyframes toastIn { from { opacity:0; transform:translateX(-50%) translateY(-20px); } to { opacity:1; transform:translateX(-50%) translateY(0); } }
     @keyframes toastOut { from { opacity:1; } to { opacity:0; } }
     .modal-overlay { display:none; position:fixed; inset:0; background:rgba(0,0,0,.5); z-index:10000; align-items:center; justify-content:center; backdrop-filter:blur(4px); }
@@ -193,8 +195,8 @@
       .modal-box, .cart-box { padding:15px 10px; }
       .admin-controls { flex-direction:column; }
       .admin-controls input, .admin-controls select { min-width:unset; }
-      .whatsapp-float { width:50px; height:50px; bottom:15px; }
-      .whatsapp-float.show { left: 15px; }
+      .contact-float { padding:12px 18px; font-size:14px; bottom:15px; }
+      .contact-float.show { left: 15px; }
     }
   </style>
 </head>
@@ -224,6 +226,7 @@
       <input type="number" id="newOfferPrice" placeholder="السعر الجديد">
       <input type="number" id="newOfferOldPrice" placeholder="السعر القديم">
       <input type="text" id="newOfferIcon" placeholder="أيقونة العرض">
+      <input type="text" id="newOfferVideoUrl" placeholder="رابط الفيديو الشرحي">
       <div class="size-checkboxes" id="offerSizeCheckboxes">
         <label><input type="checkbox" value="S"> S</label>
         <label><input type="checkbox" value="M"> M</label>
@@ -248,10 +251,15 @@
       <input type="number" id="newProductDiscount" placeholder="خصم %" value="0">
       <input type="text" id="newProductIcon" placeholder="أيقونة">
       <input type="text" id="newProductVideoUrl" placeholder="رابط الفيديو الشرحي">
-      <div class="size-checkboxes">
+      <div class="size-checkboxes" id="productSizeCheckboxes">
+        <label><input type="checkbox" value="S"> S</label>
+        <label><input type="checkbox" value="M"> M</label>
+        <label><input type="checkbox" value="L"> L</label>
+        <label><input type="checkbox" value="XL"> XL</label>
         <label><input type="checkbox" value="بشره تركيز ٢٠"> بشره تركيز ٢٠</label>
         <label><input type="checkbox" value="جسم تركيز ٦٠"> جسم تركيز ٦٠</label>
         <label><input type="checkbox" value="اماكن حساساه تركيز ٤٠"> اماكن حساساه تركيز ٤٠</label>
+        <label><input type="checkbox" value="حقل لون"> حقل لون</label>
       </div>
     </div>
     <div id="productImagesContainer"></div>
@@ -267,11 +275,14 @@
       <input type="number" id="newClothingDiscount" placeholder="خصم %" value="0">
       <input type="text" id="newClothingIcon" placeholder="أيقونة">
       <input type="text" id="newClothingVideoUrl" placeholder="رابط الفيديو الشرحي">
-      <div class="size-checkboxes">
+      <div class="size-checkboxes" id="clothingSizeCheckboxes">
         <label><input type="checkbox" value="S"> S</label>
         <label><input type="checkbox" value="M"> M</label>
         <label><input type="checkbox" value="L"> L</label>
         <label><input type="checkbox" value="XL"> XL</label>
+        <label><input type="checkbox" value="بشره تركيز ٢٠"> بشره تركيز ٢٠</label>
+        <label><input type="checkbox" value="جسم تركيز ٦٠"> جسم تركيز ٦٠</label>
+        <label><input type="checkbox" value="اماكن حساساه تركيز ٤٠"> اماكن حساساه تركيز ٤٠</label>
         <label><input type="checkbox" value="حقل لون"> حقل لون</label>
       </div>
     </div>
@@ -310,9 +321,7 @@
   <footer><h2>H.L LeVance</h2><p>© 2025 جميع الحقوق محفوظة</p></footer>
 </div>
 
-<a href="https://wa.me/201042452177" class="whatsapp-float" target="_blank">
-  <svg width="30" height="30" viewBox="0 0 24 24" fill="white"><path d="M12 2C6.48 2 2 6.48 2 12c0 1.77.47 3.43 1.28 4.88L2 22l5.28-1.38A9.96 9.96 0 0012 22c5.52 0 10-4.48 10-10S17.52 2 12 2zm5.85 14.15c-.25.7-1.45 1.35-2.02 1.4-.52.05-1.18.24-3.98-.83-3.35-1.28-5.47-4.6-5.64-4.81-.17-.21-1.35-1.8-1.35-3.43 0-1.63.85-2.43 1.15-2.77.3-.33.66-.42.88-.42.22 0 .44 0 .63.01.2.01.47-.08.74.56.27.65.93 2.25 1.01 2.41.08.17.13.36.02.58-.1.21-.15.34-.3.52-.15.18-.32.4-.46.54-.15.15-.31.31-.13.61.18.3.8 1.32 1.72 2.14 1.18 1.05 2.17 1.38 2.48 1.53.3.15.48.13.66-.08.18-.21.75-.87.95-1.17.2-.3.4-.25.68-.15.28.1 1.77.83 2.07.98.3.15.5.22.57.35.08.13.08.73-.17 1.43z"/></svg>
-</a>
+<a href="https://wa.me/201042452177" class="contact-float" target="_blank">تواصل معنا</a>
 
 <div class="modal-overlay" id="loginModal"><div class="modal-box"><h2>تسجيل الدخول</h2><input type="text" id="loginPhone" placeholder="رقم الهاتف"><input type="password" id="loginPassword" placeholder="كلمة المرور"><button class="btn-login-submit" onclick="handleLogin()">دخول</button><span class="signup-link" onclick="handleSignup()">إنشاء حساب جديد</span><button class="close-modal" onclick="closeLoginModal()">إغلاق</button></div></div>
 <div class="cart-modal" id="cartModal">
@@ -546,7 +555,8 @@ function renderOffers() {
     const hasColorField = sizes.includes('حقل لون');
     const sizeButtons = sizes.filter(s => s !== 'حقل لون').map(s => `<button class="size-btn" onclick="selectSize(this)">${s}</button>`).join('');
     const colorInputHtml = hasColorField ? `<input type="text" class="color-input" placeholder="اللون">` : '';
-    div.innerHTML = `<button class="offer-delete" onclick="deleteOffer(${offer.id})">🗑</button><div class="offer-image" onclick="openOfferZoom(${offer.id})">${mainImage ? `<img src="${mainImage}" style="width:100%;height:100%;object-fit:cover;">` : offer.icon||''}</div><div class="offer-info"><h3>${offer.title}</h3><p>${offer.description||''}</p><div class="offer-price">${offer.oldPrice ? `<span class="offer-old-price">${offer.oldPrice} جنيه</span>` : ''}${offer.price} جنيه</div>${sizes.length ? `<div class="sizes">${sizeButtons}${colorInputHtml}</div>` : ''}<button class="offer-add-cart" onclick="addOfferToCart('${offer.title}', ${offer.price}, event)">أضف إلى السلة</button></div>`;
+    const videoBtnHtml = offer.videoUrl ? `<a href="${offer.videoUrl}" target="_blank" class="video-btn">🎬 فيديو شرحي</a>` : '';
+    div.innerHTML = `<button class="offer-delete" onclick="deleteOffer(${offer.id})">🗑</button><div class="offer-image" onclick="openOfferZoom(${offer.id})">${mainImage ? `<img src="${mainImage}" style="width:100%;height:100%;object-fit:cover;">` : offer.icon||''}</div><div class="offer-info"><h3>${offer.title}</h3><p>${offer.description||''}</p><div class="offer-price">${offer.oldPrice ? `<span class="offer-old-price">${offer.oldPrice} جنيه</span>` : ''}${offer.price} جنيه</div>${sizes.length ? `<div class="sizes">${sizeButtons}${colorInputHtml}</div>` : ''}${videoBtnHtml}<button class="offer-add-cart" onclick="addOfferToCart('${offer.title}', ${offer.price}, event)">أضف إلى السلة</button></div>`;
     grid.appendChild(div);
   });
 }
@@ -568,11 +578,12 @@ async function addOffer() {
   const price = parseFloat(document.getElementById('newOfferPrice').value.trim());
   const oldPrice = parseFloat(document.getElementById('newOfferOldPrice').value.trim())||0;
   const icon = document.getElementById('newOfferIcon').value.trim()||'';
+  const videoUrl = document.getElementById('newOfferVideoUrl').value.trim()||'';
   if(!title || isNaN(price) || price<=0) return showToast('يرجى إدخال عنوان العرض والسعر.', 'error');
   const sizes = [...document.querySelectorAll('#offerSizeCheckboxes input[type="checkbox"]:checked')].map(cb=>cb.value);
   await uploadOfferImages();
-  const result = await callAPI('addOffer', {title, description, price, oldPrice, icon, media: offerImages, sizes});
-  if(result.success) { showToast('تم إضافة العرض بنجاح!'); document.getElementById('newOfferTitle').value=''; document.getElementById('newOfferDescription').value=''; document.getElementById('newOfferPrice').value=''; document.getElementById('newOfferOldPrice').value=''; document.getElementById('newOfferIcon').value=''; document.querySelectorAll('#offerSizeCheckboxes input[type="checkbox"]').forEach(cb=>cb.checked=false); document.getElementById('offerImagesContainer').innerHTML=''; document.getElementById('offerImagesPreview').innerHTML=''; await loadData(); }
+  const result = await callAPI('addOffer', {title, description, price, oldPrice, icon, media: offerImages, sizes, videoUrl});
+  if(result.success) { showToast('تم إضافة العرض بنجاح!'); document.getElementById('newOfferTitle').value=''; document.getElementById('newOfferDescription').value=''; document.getElementById('newOfferPrice').value=''; document.getElementById('newOfferOldPrice').value=''; document.getElementById('newOfferIcon').value=''; document.getElementById('newOfferVideoUrl').value=''; document.querySelectorAll('#offerSizeCheckboxes input[type="checkbox"]').forEach(cb=>cb.checked=false); document.getElementById('offerImagesContainer').innerHTML=''; document.getElementById('offerImagesPreview').innerHTML=''; await loadData(); }
   else showToast('فشل إضافة العرض: '+(result.error||'خطأ'), 'error');
 }
 async function deleteOffer(id) {
@@ -700,7 +711,7 @@ async function addProduct() {
   const icon = document.getElementById('newProductIcon').value.trim()||'';
   const videoUrl = document.getElementById('newProductVideoUrl').value.trim()||'';
   if(!name || isNaN(price) || price<=0) return showToast('يرجى إدخال اسم المنتج وسعر صحيح.', 'error');
-  const sizes = [...document.querySelectorAll('.admin-section:nth-of-type(3) .size-checkboxes input[type="checkbox"]:checked')].map(cb=>cb.value);
+  const sizes = [...document.querySelectorAll('#productSizeCheckboxes input[type="checkbox"]:checked')].map(cb=>cb.value);
   await uploadProductImages();
   const result = await callAPI('addProduct', {name, price, discount, icon, sizes, media: uploadedImages, videoUrl});
   if(result.success) { showToast('تم إضافة المنتج بنجاح!'); await loadData(); clearAddProduct(); }
@@ -714,7 +725,7 @@ async function addClothing() {
   const icon = document.getElementById('newClothingIcon').value.trim()||'';
   const videoUrl = document.getElementById('newClothingVideoUrl').value.trim()||'';
   if(!name || isNaN(price) || price<=0) return showToast('يرجى إدخال اسم المنتج وسعر صحيح.', 'error');
-  const sizes = [...document.querySelectorAll('.admin-section:nth-of-type(5) .size-checkboxes input[type="checkbox"]:checked')].map(cb=>cb.value);
+  const sizes = [...document.querySelectorAll('#clothingSizeCheckboxes input[type="checkbox"]:checked')].map(cb=>cb.value);
   await uploadClothingImages();
   const result = await callAPI('addClothing', {name, price, discount, icon, sizes, media: clothingImages, videoUrl});
   if(result.success) { showToast('تم إضافة الملابس بنجاح!'); await loadData(); clearAddClothing(); }
@@ -727,7 +738,7 @@ function clearAddProduct() {
   document.getElementById('newProductDiscount').value='';
   document.getElementById('newProductIcon').value='';
   document.getElementById('newProductVideoUrl').value='';
-  document.querySelectorAll('.admin-section:nth-of-type(3) .size-checkboxes input[type="checkbox"]').forEach(cb=>cb.checked=false);
+  document.querySelectorAll('#productSizeCheckboxes input[type="checkbox"]').forEach(cb=>cb.checked=false);
   uploadedImages = [];
   document.getElementById('uploadedImagesPreview').innerHTML='';
   document.getElementById('uploadStatus').textContent='';
@@ -740,7 +751,7 @@ function clearAddClothing() {
   document.getElementById('newClothingDiscount').value='';
   document.getElementById('newClothingIcon').value='';
   document.getElementById('newClothingVideoUrl').value='';
-  document.querySelectorAll('.admin-section:nth-of-type(5) .size-checkboxes input[type="checkbox"]').forEach(cb=>cb.checked=false);
+  document.querySelectorAll('#clothingSizeCheckboxes input[type="checkbox"]').forEach(cb=>cb.checked=false);
   clothingImages = [];
   document.getElementById('clothingImagesPreview').innerHTML='';
   document.getElementById('clothingUploadStatus').textContent='';
@@ -944,8 +955,8 @@ document.addEventListener('DOMContentLoaded', function() {
   else transitionToStore();
   
   setTimeout(() => {
-    const wa = document.querySelector('.whatsapp-float');
-    if(wa) wa.classList.add('show');
+    const contact = document.querySelector('.contact-float');
+    if(contact) contact.classList.add('show');
   }, 5000);
   
   updateCartCount();
