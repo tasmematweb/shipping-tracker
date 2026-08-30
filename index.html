@@ -224,22 +224,7 @@
       <input type="number" id="newOfferPrice" placeholder="السعر الجديد">
       <input type="number" id="newOfferOldPrice" placeholder="السعر القديم">
       <input type="text" id="newOfferIcon" placeholder="أيقونة العرض">
-    </div>
-    <div id="offerImagesContainer"></div>
-    <button class="add-image-btn" onclick="addOfferImageField()">إضافة صورة</button>
-    <div id="offerUploadStatus" class="upload-status"></div>
-    <div id="offerImagesPreview" style="display:flex;flex-wrap:wrap;gap:5px;"></div>
-    <button onclick="addOffer()" style="margin-top:15px;background:var(--brown);color:var(--yellow-light);border:none;padding:12px 30px;border-radius:8px;font-weight:bold;cursor:pointer;">إضافة العرض</button>
-    </div>
-    <div class="admin-section"><h3>قائمة العروض</h3><div class="admin-list" id="adminOfferList"></div></div>
-    <div class="admin-section"><h3>إضافة منتج</h3><div class="admin-controls">
-      <input type="text" id="newProductName" placeholder="اسم المنتج">
-      <input type="number" id="newProductPrice" placeholder="السعر">
-      <input type="number" id="newProductDiscount" placeholder="خصم %" value="0">
-      <input type="text" id="newProductIcon" placeholder="أيقونة">
-      <input type="text" id="newProductVideoUrl" placeholder="رابط الفيديو الشرحي">
-      <input type="text" id="newProductCategory" placeholder="القسم (ملابس أو عنايه بالبشره)">
-      <div class="size-checkboxes">
+      <div class="size-checkboxes" id="offerSizeCheckboxes">
         <label><input type="checkbox" value="S"> S</label>
         <label><input type="checkbox" value="M"> M</label>
         <label><input type="checkbox" value="L"> L</label>
@@ -250,13 +235,53 @@
         <label><input type="checkbox" value="حقل لون"> حقل لون</label>
       </div>
     </div>
+    <div id="offerImagesContainer"></div>
+    <button class="add-image-btn" onclick="addOfferImageField()">إضافة صورة</button>
+    <div id="offerUploadStatus" class="upload-status"></div>
+    <div id="offerImagesPreview" style="display:flex;flex-wrap:wrap;gap:5px;"></div>
+    <button onclick="addOffer()" style="margin-top:15px;background:var(--brown);color:var(--yellow-light);border:none;padding:12px 30px;border-radius:8px;font-weight:bold;cursor:pointer;">إضافة العرض</button>
+    </div>
+    <div class="admin-section"><h3>قائمة العروض</h3><div class="admin-list" id="adminOfferList"></div></div>
+    <div class="admin-section"><h3>إضافة منتج عناية</h3><div class="admin-controls">
+      <input type="text" id="newProductName" placeholder="اسم المنتج">
+      <input type="number" id="newProductPrice" placeholder="السعر">
+      <input type="number" id="newProductDiscount" placeholder="خصم %" value="0">
+      <input type="text" id="newProductIcon" placeholder="أيقونة">
+      <input type="text" id="newProductVideoUrl" placeholder="رابط الفيديو الشرحي">
+      <div class="size-checkboxes">
+        <label><input type="checkbox" value="بشره تركيز ٢٠"> بشره تركيز ٢٠</label>
+        <label><input type="checkbox" value="جسم تركيز ٦٠"> جسم تركيز ٦٠</label>
+        <label><input type="checkbox" value="اماكن حساساه تركيز ٤٠"> اماكن حساساه تركيز ٤٠</label>
+      </div>
+    </div>
     <div id="productImagesContainer"></div>
     <button class="add-image-btn" onclick="addProductImageField()">إضافة صورة</button>
     <div id="uploadStatus" class="upload-status"></div>
     <div id="uploadedImagesPreview" style="display:flex;flex-wrap:wrap;gap:5px;"></div>
     <button onclick="addProduct()" style="margin-top:15px;background:var(--brown);color:var(--yellow-light);border:none;padding:12px 30px;border-radius:8px;font-weight:bold;cursor:pointer;">إضافة المنتج</button>
     </div>
-    <div class="admin-section"><h3>قائمة المنتجات</h3><div class="admin-list" id="adminProductList"></div></div>
+    <div class="admin-section"><h3>قائمة منتجات العناية</h3><div class="admin-list" id="adminProductList"></div></div>
+    <div class="admin-section"><h3>إضافة ملابس</h3><div class="admin-controls">
+      <input type="text" id="newClothingName" placeholder="اسم المنتج">
+      <input type="number" id="newClothingPrice" placeholder="السعر">
+      <input type="number" id="newClothingDiscount" placeholder="خصم %" value="0">
+      <input type="text" id="newClothingIcon" placeholder="أيقونة">
+      <input type="text" id="newClothingVideoUrl" placeholder="رابط الفيديو الشرحي">
+      <div class="size-checkboxes">
+        <label><input type="checkbox" value="S"> S</label>
+        <label><input type="checkbox" value="M"> M</label>
+        <label><input type="checkbox" value="L"> L</label>
+        <label><input type="checkbox" value="XL"> XL</label>
+        <label><input type="checkbox" value="حقل لون"> حقل لون</label>
+      </div>
+    </div>
+    <div id="clothingImagesContainer"></div>
+    <button class="add-image-btn" onclick="addClothingImageField()">إضافة صورة</button>
+    <div id="clothingUploadStatus" class="upload-status"></div>
+    <div id="clothingImagesPreview" style="display:flex;flex-wrap:wrap;gap:5px;"></div>
+    <button onclick="addClothing()" style="margin-top:15px;background:var(--brown);color:var(--yellow-light);border:none;padding:12px 30px;border-radius:8px;font-weight:bold;cursor:pointer;">إضافة ملابس</button>
+    </div>
+    <div class="admin-section"><h3>قائمة الملابس</h3><div class="admin-list" id="adminClothingList"></div></div>
   </div>
   <div id="orderFormPage">
     <div class="order-form-container">
@@ -310,11 +335,12 @@
 </div>
 <script>
 const CONFIG = {
-  API_BASE_URL: 'https://script.google.com/macros/s/AKfycbySmkCbzWlGVAEaurr1o9i_kPWdf-HMgvhT_pUh-Xs52Vxx8J24l2WK8dguWV7-kQxL/exec',
+  API_BASE_URL: 'https://script.google.com/macros/s/AKfycbzflOsvImuInrajexX_ZQAylbbKtHax1iEvNv8gZQIypmFh1PLQ38j3jXT084UE_Fsq/exec',
   STORE_NAME: 'H.L LeVance',
   ADMIN_PHONE: '111',
   ADMIN_PASSWORD: '111',
   STORAGE_KEY_PRODUCTS: 'hl_products',
+  STORAGE_KEY_CLOTHING: 'hl_clothing',
   STORAGE_KEY_OFFERS: 'hl_offers',
   STORAGE_KEY_CART: 'hl_cart',
   STORAGE_KEY_ORDERS: 'hl_orders'
@@ -325,6 +351,7 @@ const IMGBB_API_KEY = 'b61d706bd2139f3676166a0e6be68f0a';
 let cart = JSON.parse(localStorage.getItem(CONFIG.STORAGE_KEY_CART)||'[]');
 let uploadedImages = [];
 let offerImages = [];
+let clothingImages = [];
 
 const SHIPPING_COSTS = {
   'القليوبية': 68, 'الجيزة': 68, 'القاهرة': 68, 'الإسكندرية': 68,
@@ -360,6 +387,14 @@ function addProductImageField() {
   const div = document.createElement('div');
   div.style.cssText = 'display:flex;gap:10px;margin-bottom:10px;';
   div.innerHTML = `<input type="file" accept="image/*" class="product-image-input" style="flex:1;padding:8px;border:2px solid var(--brown);border-radius:8px;">`;
+  container.appendChild(div);
+}
+
+function addClothingImageField() {
+  const container = document.getElementById('clothingImagesContainer');
+  const div = document.createElement('div');
+  div.style.cssText = 'display:flex;gap:10px;margin-bottom:10px;';
+  div.innerHTML = `<input type="file" accept="image/*" class="clothing-image-input" style="flex:1;padding:8px;border:2px solid var(--brown);border-radius:8px;">`;
   container.appendChild(div);
 }
 
@@ -412,6 +447,32 @@ async function uploadProductImages() {
     }
   }
   status.textContent = `تم رفع ${uploadedImages.length} صورة بنجاح`;
+}
+
+async function uploadClothingImages() {
+  const inputs = document.querySelectorAll('.clothing-image-input');
+  const status = document.getElementById('clothingUploadStatus');
+  const previewContainer = document.getElementById('clothingImagesPreview');
+  if(!inputs.length) return;
+  clothingImages = [];
+  if(previewContainer) previewContainer.innerHTML = '';
+  status.textContent = 'جاري رفع الصور...';
+  for(let i = 0; i < inputs.length; i++) {
+    if(inputs[i].files[0]) {
+      const formData = new FormData();
+      formData.append('image', inputs[i].files[0]);
+      const response = await fetch(`https://api.imgbb.com/1/upload?key=${IMGBB_API_KEY}`, {method:'POST', body:formData});
+      const result = await response.json();
+      if(result.success && result.data) {
+        clothingImages.push(result.data.url);
+        const img = document.createElement('img');
+        img.src = result.data.url;
+        img.style.cssText = 'width:70px;height:70px;object-fit:cover;margin:5px;border-radius:5px;';
+        previewContainer.appendChild(img);
+      }
+    }
+  }
+  status.textContent = `تم رفع ${clothingImages.length} صورة بنجاح`;
 }
 
 function saveCart() { localStorage.setItem(CONFIG.STORAGE_KEY_CART, JSON.stringify(cart)); updateCartCount(); }
@@ -481,7 +542,11 @@ function renderOffers() {
     const div = document.createElement('div');
     div.className = 'offer-card';
     const mainImage = offer.media && offer.media.length > 0 ? offer.media[0] : '';
-    div.innerHTML = `<button class="offer-delete" onclick="deleteOffer(${offer.id})">🗑</button><div class="offer-image" onclick="openOfferZoom(${offer.id})">${mainImage ? `<img src="${mainImage}" style="width:100%;height:100%;object-fit:cover;">` : offer.icon||''}</div><div class="offer-info"><h3>${offer.title}</h3><p>${offer.description||''}</p><div class="offer-price">${offer.oldPrice ? `<span class="offer-old-price">${offer.oldPrice} جنيه</span>` : ''}${offer.price} جنيه</div><button class="offer-add-cart" onclick="addOfferToCart('${offer.title}', ${offer.price}, event)">أضف إلى السلة</button></div>`;
+    const sizes = offer.sizes || [];
+    const hasColorField = sizes.includes('حقل لون');
+    const sizeButtons = sizes.filter(s => s !== 'حقل لون').map(s => `<button class="size-btn" onclick="selectSize(this)">${s}</button>`).join('');
+    const colorInputHtml = hasColorField ? `<input type="text" class="color-input" placeholder="اللون">` : '';
+    div.innerHTML = `<button class="offer-delete" onclick="deleteOffer(${offer.id})">🗑</button><div class="offer-image" onclick="openOfferZoom(${offer.id})">${mainImage ? `<img src="${mainImage}" style="width:100%;height:100%;object-fit:cover;">` : offer.icon||''}</div><div class="offer-info"><h3>${offer.title}</h3><p>${offer.description||''}</p><div class="offer-price">${offer.oldPrice ? `<span class="offer-old-price">${offer.oldPrice} جنيه</span>` : ''}${offer.price} جنيه</div>${sizes.length ? `<div class="sizes">${sizeButtons}${colorInputHtml}</div>` : ''}<button class="offer-add-cart" onclick="addOfferToCart('${offer.title}', ${offer.price}, event)">أضف إلى السلة</button></div>`;
     grid.appendChild(div);
   });
 }
@@ -504,9 +569,10 @@ async function addOffer() {
   const oldPrice = parseFloat(document.getElementById('newOfferOldPrice').value.trim())||0;
   const icon = document.getElementById('newOfferIcon').value.trim()||'';
   if(!title || isNaN(price) || price<=0) return showToast('يرجى إدخال عنوان العرض والسعر.', 'error');
+  const sizes = [...document.querySelectorAll('#offerSizeCheckboxes input[type="checkbox"]:checked')].map(cb=>cb.value);
   await uploadOfferImages();
-  const result = await callAPI('addOffer', {title, description, price, oldPrice, icon, media: offerImages});
-  if(result.success) { showToast('تم إضافة العرض بنجاح!'); document.getElementById('newOfferTitle').value=''; document.getElementById('newOfferDescription').value=''; document.getElementById('newOfferPrice').value=''; document.getElementById('newOfferOldPrice').value=''; document.getElementById('newOfferIcon').value=''; document.getElementById('offerImagesContainer').innerHTML=''; document.getElementById('offerImagesPreview').innerHTML=''; await loadData(); }
+  const result = await callAPI('addOffer', {title, description, price, oldPrice, icon, media: offerImages, sizes});
+  if(result.success) { showToast('تم إضافة العرض بنجاح!'); document.getElementById('newOfferTitle').value=''; document.getElementById('newOfferDescription').value=''; document.getElementById('newOfferPrice').value=''; document.getElementById('newOfferOldPrice').value=''; document.getElementById('newOfferIcon').value=''; document.querySelectorAll('#offerSizeCheckboxes input[type="checkbox"]').forEach(cb=>cb.checked=false); document.getElementById('offerImagesContainer').innerHTML=''; document.getElementById('offerImagesPreview').innerHTML=''; await loadData(); }
   else showToast('فشل إضافة العرض: '+(result.error||'خطأ'), 'error');
 }
 async function deleteOffer(id) {
@@ -533,49 +599,47 @@ async function loadData() {
   try {
     const p = await fetchFromAPI('getProducts');
     if(p?.products) localStorage.setItem(CONFIG.STORAGE_KEY_PRODUCTS, JSON.stringify(p.products));
+    const c = await fetchFromAPI('getClothing');
+    if(c?.clothing) localStorage.setItem(CONFIG.STORAGE_KEY_CLOTHING, JSON.stringify(c.clothing));
     const o = await fetchFromAPI('getOffers');
     if(o?.offers) localStorage.setItem(CONFIG.STORAGE_KEY_OFFERS, JSON.stringify(o.offers));
   } catch(e){ console.error(e); }
-  renderStoreProducts(); renderAdminProducts(); renderOffers(); renderAdminOffers();
+  renderStoreProducts(); renderClothing(); renderAdminProducts(); renderAdminClothing(); renderOffers(); renderAdminOffers();
 }
 
 function searchProducts() {
   const q = document.getElementById('search').value.trim().toLowerCase();
   const products = JSON.parse(localStorage.getItem(CONFIG.STORAGE_KEY_PRODUCTS)||'[]');
+  const clothing = JSON.parse(localStorage.getItem(CONFIG.STORAGE_KEY_CLOTHING)||'[]');
   const skincareGrid = document.getElementById('skincareGrid');
   const clothingGrid = document.getElementById('clothingGrid');
   skincareGrid.innerHTML = '';
   clothingGrid.innerHTML = '';
-  
-  const filtered = products.filter(p => { if(!q) return true; const name = (p.name||'').toLowerCase(); return name.includes(q); });
-  
-  const skincareProducts = filtered.filter(p => p.category === 'عنايه بالبشره' || p.category === 'skincare' || !p.category);
-  const clothingProducts = filtered.filter(p => p.category === 'ملابس' || p.category === 'clothing');
-  
-  if(skincareProducts.length === 0 && clothingProducts.length === 0) {
+  const filteredProducts = products.filter(p => { if(!q) return true; const name = (p.name||'').toLowerCase(); return name.includes(q); });
+  const filteredClothing = clothing.filter(p => { if(!q) return true; const name = (p.name||'').toLowerCase(); return name.includes(q); });
+  if(filteredProducts.length === 0 && filteredClothing.length === 0) {
     skincareGrid.innerHTML = '<p style="text-align:center;color:var(--brown);font-size:18px;padding:40px 0;">لا توجد منتجات مطابقة</p>';
     clothingGrid.innerHTML = '<p style="text-align:center;color:var(--brown);font-size:18px;padding:40px 0;">لا توجد منتجات مطابقة</p>';
     return;
   }
-  
-  skincareProducts.forEach(p => renderProductCard(p, skincareGrid));
-  clothingProducts.forEach(p => renderProductCard(p, clothingGrid));
+  filteredProducts.forEach(p => renderProductCard(p, skincareGrid));
+  filteredClothing.forEach(p => renderProductCard(p, clothingGrid));
 }
 
 function renderStoreProducts() {
   const skincareGrid = document.getElementById('skincareGrid');
-  const clothingGrid = document.getElementById('clothingGrid');
-  if(!skincareGrid || !clothingGrid) return;
+  if(!skincareGrid) return;
   const products = JSON.parse(localStorage.getItem(CONFIG.STORAGE_KEY_PRODUCTS)||'[]');
-  
-  const skincareProducts = products.filter(p => p.category === 'عنايه بالبشره' || p.category === 'skincare' || !p.category);
-  const clothingProducts = products.filter(p => p.category === 'ملابس' || p.category === 'clothing');
-  
-  skincareGrid.innerHTML = skincareProducts.length === 0 ? '<p style="text-align:center;color:var(--brown);font-size:18px;padding:40px 0;">لا توجد منتجات</p>' : '';
-  clothingGrid.innerHTML = clothingProducts.length === 0 ? '<p style="text-align:center;color:var(--brown);font-size:18px;padding:40px 0;">لا توجد منتجات</p>' : '';
-  
-  skincareProducts.forEach(p => renderProductCard(p, skincareGrid));
-  clothingProducts.forEach(p => renderProductCard(p, clothingGrid));
+  skincareGrid.innerHTML = products.length === 0 ? '<p style="text-align:center;color:var(--brown);font-size:18px;padding:40px 0;">لا توجد منتجات</p>' : '';
+  products.forEach(p => renderProductCard(p, skincareGrid));
+}
+
+function renderClothing() {
+  const clothingGrid = document.getElementById('clothingGrid');
+  if(!clothingGrid) return;
+  const clothing = JSON.parse(localStorage.getItem(CONFIG.STORAGE_KEY_CLOTHING)||'[]');
+  clothingGrid.innerHTML = clothing.length === 0 ? '<p style="text-align:center;color:var(--brown);font-size:18px;padding:40px 0;">لا توجد منتجات</p>' : '';
+  clothing.forEach(p => renderProductCard(p, clothingGrid));
 }
 
 function renderProductCard(p, grid) {
@@ -610,7 +674,21 @@ function renderAdminProducts() {
     const sizeTags = p.sizes?.length ? `<div class="size-tags">${p.sizes.map(s=>`<span>${s}</span>`).join('')}</div>` : '';
     const mediaHtml = p.media?.length ? p.media.map(m => `<img src="${m}" alt="صورة">`).join('') : '';
     const div = document.createElement('div'); div.className='admin-list-item';
-    div.innerHTML = `<div class="item-info">${mediaHtml || `<span style="font-size:30px;">${p.icon||''}</span>`}<span>${p.name} - ${final} جنيه ${disc>0?`(خصم ${disc}%)`:''} ${p.category ? '('+p.category+')' : ''}</span>${sizeTags}${p.videoUrl ? '<span>🎬</span>' : ''}</div><button onclick="deleteProduct(${p.id})">حذف</button>`;
+    div.innerHTML = `<div class="item-info">${mediaHtml || `<span style="font-size:30px;">${p.icon||''}</span>`}<span>${p.name} - ${final} جنيه ${disc>0?`(خصم ${disc}%)`:''}</span>${sizeTags}${p.videoUrl ? '<span>🎬</span>' : ''}</div><button onclick="deleteProduct(${p.id})">حذف</button>`;
+    list.appendChild(div);
+  });
+}
+
+function renderAdminClothing() {
+  const list = document.getElementById('adminClothingList'); if(!list) return;
+  const clothing = JSON.parse(localStorage.getItem(CONFIG.STORAGE_KEY_CLOTHING)||'[]');
+  list.innerHTML = clothing.length===0 ? '<p style="text-align:center;color:var(--brown);padding:20px 0;">لا توجد منتجات</p>' : '';
+  clothing.forEach(p => {
+    const price = p.price||0, disc = p.discount||0, final = disc>0 ? Math.round(price-(price*disc/100)) : price;
+    const sizeTags = p.sizes?.length ? `<div class="size-tags">${p.sizes.map(s=>`<span>${s}</span>`).join('')}</div>` : '';
+    const mediaHtml = p.media?.length ? p.media.map(m => `<img src="${m}" alt="صورة">`).join('') : '';
+    const div = document.createElement('div'); div.className='admin-list-item';
+    div.innerHTML = `<div class="item-info">${mediaHtml || `<span style="font-size:30px;">${p.icon||''}</span>`}<span>${p.name} - ${final} جنيه ${disc>0?`(خصم ${disc}%)`:''}</span>${sizeTags}${p.videoUrl ? '<span>🎬</span>' : ''}</div><button onclick="deleteClothing(${p.id})">حذف</button>`;
     list.appendChild(div);
   });
 }
@@ -621,13 +699,26 @@ async function addProduct() {
   const discount = parseFloat(document.getElementById('newProductDiscount').value.trim())||0;
   const icon = document.getElementById('newProductIcon').value.trim()||'';
   const videoUrl = document.getElementById('newProductVideoUrl').value.trim()||'';
-  const category = document.getElementById('newProductCategory').value.trim();
   if(!name || isNaN(price) || price<=0) return showToast('يرجى إدخال اسم المنتج وسعر صحيح.', 'error');
-  const sizes = [...document.querySelectorAll('.size-checkboxes input[type="checkbox"]:checked')].map(cb=>cb.value);
+  const sizes = [...document.querySelectorAll('.admin-section:nth-of-type(3) .size-checkboxes input[type="checkbox"]:checked')].map(cb=>cb.value);
   await uploadProductImages();
-  const result = await callAPI('addProduct', {name, price, discount, icon, sizes, media: uploadedImages, videoUrl, category});
+  const result = await callAPI('addProduct', {name, price, discount, icon, sizes, media: uploadedImages, videoUrl});
   if(result.success) { showToast('تم إضافة المنتج بنجاح!'); await loadData(); clearAddProduct(); }
   else showToast('فشل إضافة المنتج: '+(result.error||'خطأ'), 'error');
+}
+
+async function addClothing() {
+  const name = document.getElementById('newClothingName').value.trim();
+  const price = parseFloat(document.getElementById('newClothingPrice').value.trim());
+  const discount = parseFloat(document.getElementById('newClothingDiscount').value.trim())||0;
+  const icon = document.getElementById('newClothingIcon').value.trim()||'';
+  const videoUrl = document.getElementById('newClothingVideoUrl').value.trim()||'';
+  if(!name || isNaN(price) || price<=0) return showToast('يرجى إدخال اسم المنتج وسعر صحيح.', 'error');
+  const sizes = [...document.querySelectorAll('.admin-section:nth-of-type(5) .size-checkboxes input[type="checkbox"]:checked')].map(cb=>cb.value);
+  await uploadClothingImages();
+  const result = await callAPI('addClothing', {name, price, discount, icon, sizes, media: clothingImages, videoUrl});
+  if(result.success) { showToast('تم إضافة الملابس بنجاح!'); await loadData(); clearAddClothing(); }
+  else showToast('فشل إضافة الملابس: '+(result.error||'خطأ'), 'error');
 }
 
 function clearAddProduct() {
@@ -636,17 +727,36 @@ function clearAddProduct() {
   document.getElementById('newProductDiscount').value='';
   document.getElementById('newProductIcon').value='';
   document.getElementById('newProductVideoUrl').value='';
-  document.getElementById('newProductCategory').value='';
-  document.querySelectorAll('.size-checkboxes input[type="checkbox"]').forEach(cb=>cb.checked=false);
+  document.querySelectorAll('.admin-section:nth-of-type(3) .size-checkboxes input[type="checkbox"]').forEach(cb=>cb.checked=false);
   uploadedImages = [];
   document.getElementById('uploadedImagesPreview').innerHTML='';
   document.getElementById('uploadStatus').textContent='';
   document.getElementById('productImagesContainer').innerHTML='';
 }
 
+function clearAddClothing() {
+  document.getElementById('newClothingName').value='';
+  document.getElementById('newClothingPrice').value='';
+  document.getElementById('newClothingDiscount').value='';
+  document.getElementById('newClothingIcon').value='';
+  document.getElementById('newClothingVideoUrl').value='';
+  document.querySelectorAll('.admin-section:nth-of-type(5) .size-checkboxes input[type="checkbox"]').forEach(cb=>cb.checked=false);
+  clothingImages = [];
+  document.getElementById('clothingImagesPreview').innerHTML='';
+  document.getElementById('clothingUploadStatus').textContent='';
+  document.getElementById('clothingImagesContainer').innerHTML='';
+}
+
 async function deleteProduct(id) {
   if(!confirm('هل أنت متأكد من حذف هذا المنتج؟')) return;
   const result = await callAPI('deleteProduct', {id});
+  if(result.success){ showToast('تم حذف المنتج.'); await loadData(); }
+  else showToast('فشل حذف المنتج: '+(result.error||'خطأ'), 'error');
+}
+
+async function deleteClothing(id) {
+  if(!confirm('هل أنت متأكد من حذف هذا المنتج؟')) return;
+  const result = await callAPI('deleteClothing', {id});
   if(result.success){ showToast('تم حذف المنتج.'); await loadData(); }
   else showToast('فشل حذف المنتج: '+(result.error||'خطأ'), 'error');
 }
@@ -740,7 +850,8 @@ let zoomData = [];
 let zoomIndex = 0;
 function openZoom(id) {
   const products = JSON.parse(localStorage.getItem(CONFIG.STORAGE_KEY_PRODUCTS)||'[]');
-  const p = products.find(x=>x.id===id);
+  const clothing = JSON.parse(localStorage.getItem(CONFIG.STORAGE_KEY_CLOTHING)||'[]');
+  const p = products.find(x=>x.id===id) || clothing.find(x=>x.id===id);
   if(!p?.media?.length) return showToast('لا توجد صور.', 'error');
   zoomData = p.media;
   zoomIndex = 0;
