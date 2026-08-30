@@ -1,4 +1,4 @@
-
+```html
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
@@ -220,6 +220,13 @@
   <section class="products-section" id="skincareSection"><h2>منتجات عنايه بالبشره</h2><div class="products-grid-horizontal" id="skincareGrid"></div></section>
   <section class="products-section" id="clothingSection"><h2>ملابس</h2><div class="products-grid-horizontal" id="clothingGrid"></div></section>
   <div id="adminPanel" style="display:none;"><h2>لوحة التحكم</h2>
+    <div class="admin-section"><h3>إضافة كود خصم</h3><div class="admin-controls">
+      <input type="text" id="newDiscountCode" placeholder="كود الخصم">
+      <input type="number" id="newDiscountPercent" placeholder="نسبة الخصم %">
+      <button onclick="addDiscountCode()">إضافة الكود</button>
+    </div>
+    <div class="admin-list" id="adminDiscountList"></div>
+    </div>
     <div class="admin-section"><h3>إضافة عرض</h3><div class="admin-controls">
       <input type="text" id="newOfferTitle" placeholder="عنوان العرض">
       <input type="text" id="newOfferDescription" placeholder="وصف العرض">
@@ -298,6 +305,7 @@
     <div class="order-form-container">
       <h2>بيانات العنوان</h2>
       <div class="order-summary"><h3>ملخص الطلب</h3><div class="cart-items" id="orderCartItems"></div><div class="total-price">الإجمالي: <span id="orderTotalPrice">0</span> جنيه</div></div>
+      <div class="form-group"><label>كود الخصم</label><input type="text" id="orderDiscountCode" placeholder="أدخل كود الخصم"><button onclick="applyDiscountCode()" style="margin-top:5px;background:var(--brown);color:var(--yellow-light);border:none;padding:8px 15px;border-radius:6px;cursor:pointer;font-weight:bold;">تطبيق</button></div>
       <div class="form-group"><label>الاسم <span class="required">*</span></label><input type="text" id="orderCustomerName" placeholder="اسم العميل"></div>
       <div class="form-row">
         <div class="form-group"><label>الهاتف <span class="required">*</span></label><input type="tel" id="orderCustomerPhone" placeholder="رقم الهاتف"></div>
@@ -344,7 +352,7 @@
 </div>
 <script>
 const CONFIG = {
-  API_BASE_URL: 'https://script.google.com/macros/s/AKfycbzflOsvImuInrajexX_ZQAylbbKtHax1iEvNv8gZQIypmFh1PLQ38j3jXT084UE_Fsq/exec',
+  API_BASE_URL: 'https://script.google.com/macros/s/AKfycbzjqLSqYgFr03Ae5_7lx8vqmj6tkKUy6QA_nVqliylmIUiYM5YHjl9_wipUaZjPgbfc/exec',
   STORE_NAME: 'H.L LeVance',
   ADMIN_PHONE: '111',
   ADMIN_PASSWORD: '111',
@@ -361,6 +369,9 @@ let cart = JSON.parse(localStorage.getItem(CONFIG.STORAGE_KEY_CART)||'[]');
 let uploadedImages = [];
 let offerImages = [];
 let clothingImages = [];
+let discountRowIndex = null;
+let discountPercent = 0;
+let discountCode = '';
 
 const SHIPPING_COSTS = {
   'القليوبية': 68, 'الجيزة': 68, 'القاهرة': 68, 'الإسكندرية': 68,
@@ -618,6 +629,55 @@ async function loadData() {
   renderStoreProducts(); renderClothing(); renderAdminProducts(); renderAdminClothing(); renderOffers(); renderAdminOffers();
 }
 
+async function addDiscountCode() {
+  const code = document.getElementById('newDiscountCode').value.trim();
+  const percent = parseFloat(document.getElementById('newDiscountPercent').value.trim());
+  if(!code || isNaN(percent) || percent<=0) return showToast('يرجى إدخال الكود والنسبة.', 'error');
+  const result = await callAPI('addDiscountCode', {code, percent});
+  if(result.success) { showToast('تم إضافة كود الخصم!'); document.getElementById('newDiscountCode').value=''; document.getElementById('newDiscountPercent').value=''; renderAdminDiscounts(); }
+  else showToast('فشل: '+(result.error||'خطأ'), 'error');
+}
+
+async function renderAdminDiscounts() {
+  const list = document.getElementById('adminDiscountList');
+  if(!list) return;
+  const result = await fetchFromAPI('getDiscountCodes');
+  const codes = result.codes || [];
+  list.innerHTML = codes.length===0 ? '<p style="text-align:center;color:var(--brown);padding:20px 0;">لا توجد أكواد</p>' : '';
+  codes.forEach(c => {
+    const div = document.createElement('div');
+    div.className = 'admin-list-item';
+    div.innerHTML = `<div class="item-info"><span>${c.code} - ${c.percent}% ${c.used==='yes'?'(مستخدم)':'(متاح)'}</span></div><button onclick="deleteDiscountCode(${c.id})">حذف</button>`;
+    list.appendChild(div);
+  });
+}
+
+async function deleteDiscountCode(id) {
+  if(!confirm('حذف الكود؟')) return;
+  const result = await callAPI('deleteDiscountCode', {id});
+  if(result.success) { showToast('تم الحذف'); renderAdminDiscounts(); }
+  else showToast('فشل: '+(result.error||'خطأ'), 'error');
+}
+
+async function applyDiscountCode() {
+  const code = document.getElementById('orderDiscountCode').value.trim();
+  if(!code) return showToast('أدخل الكود', 'error');
+  const result = await callAPI('checkDiscountCode', {code});
+  if(result.success) {
+    discountCode = code;
+    discountPercent = result.percent;
+    discountRowIndex = result.rowIndex;
+    updateOrderTotal();
+    showToast(`تم تطبيق خصم ${result.percent}%`);
+  } else {
+    discountCode = '';
+    discountPercent = 0;
+    discountRowIndex = null;
+    updateOrderTotal();
+    showToast(result.error||'كود غير صالح', 'error');
+  }
+}
+
 function searchProducts() {
   const q = document.getElementById('search').value.trim().toLowerCase();
   const products = JSON.parse(localStorage.getItem(CONFIG.STORAGE_KEY_PRODUCTS)||'[]');
@@ -794,14 +854,16 @@ async function submitOrder() {
   const result = await callAPI('addOrder', {
     customerName: name, customerPhone: phone, customerPhone2: phone2,
     governorate: gov, city: city, address: addr, amount: amount,
-    weight: weight, notes: notes, products: productsList, totalPrice: totalPrice
+    weight: weight, notes: notes, products: productsList, totalPrice: totalPrice,
+    discountCode: discountCode, discountRowIndex: discountRowIndex
   });
   document.getElementById('submitOrderBtn').disabled=false;
   document.getElementById('submitOrderBtn').textContent='تأكيد الطلبية';
   if(result.success) {
     showToast('تم إرسال الطلبية بنجاح!');
     cart = []; saveCart();
-    ['orderCustomerName','orderCustomerPhone','orderCustomerPhone2','orderAddress','orderAmount','orderNotes'].forEach(id=>document.getElementById(id).value='');
+    discountCode=''; discountPercent=0; discountRowIndex=null;
+    ['orderCustomerName','orderCustomerPhone','orderCustomerPhone2','orderAddress','orderAmount','orderNotes','orderDiscountCode'].forEach(id=>document.getElementById(id).value='');
     document.getElementById('orderWeight').value='1';
     document.getElementById('orderGovernorate').value='';
     document.getElementById('orderCity').innerHTML='<option value="">اختر المحافظة أولا</option>';
@@ -830,6 +892,7 @@ async function handleLogin() {
     document.getElementById('adminPanel').classList.add('active');
     closeLoginModal();
     document.querySelectorAll('.delete-prod, .offer-delete').forEach(el=>el.style.display='block');
+    renderAdminDiscounts();
     return;
   }
   const result = await callAPI('loginUser', {phone,password});
@@ -932,9 +995,12 @@ function updateOrderTotal() {
   const gov = document.getElementById('orderGovernorate').value;
   const shipping = SHIPPING_COSTS[gov] || 0;
   const cartTotal = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
-  const total = cartTotal + shipping;
-  document.getElementById('orderTotalPrice').textContent = total;
-  document.getElementById('orderAmount').value = total;
+  let total = cartTotal + shipping;
+  if(discountPercent > 0) {
+    total = total - (total * discountPercent / 100);
+  }
+  document.getElementById('orderTotalPrice').textContent = Math.round(total);
+  document.getElementById('orderAmount').value = Math.round(total);
 }
 
 document.addEventListener('DOMContentLoaded', function() {
@@ -969,6 +1035,7 @@ document.addEventListener('DOMContentLoaded', function() {
       document.getElementById('adminPanel').style.display='block';
       document.getElementById('adminPanel').classList.add('active');
       document.querySelectorAll('.delete-prod, .offer-delete').forEach(el=>el.style.display='block');
+      renderAdminDiscounts();
     }
   } else {
     document.getElementById('loginBtn').classList.remove('hidden');
