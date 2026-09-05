@@ -154,7 +154,7 @@
     .admin-section { background:var(--yellow-light); border:2px solid var(--brown); border-radius:12px; padding:20px; margin-bottom:20px; }
     .admin-section h3 { color:var(--brown); margin-bottom:15px; font-size:20px; }
     .admin-controls { display:flex; flex-wrap:wrap; gap:12px; margin-bottom:15px; }
-    .admin-controls input, .admin-controls select { padding:12px 16px; border:2px solid var(--brown); border-radius:8px; background:var(--yellow-light); color:var(--brown); font-size:15px; flex:1; min-width:150px; }
+    .admin-controls input, .admin-controls select, .admin-controls textarea { padding:12px 16px; border:2px solid var(--brown); border-radius:8px; background:var(--yellow-light); color:var(--brown); font-size:15px; flex:1; min-width:150px; }
     .admin-controls button { background:var(--brown); color:var(--yellow-light); border:none; padding:12px 24px; border-radius:8px; font-weight:bold; cursor:pointer; font-size:15px; white-space:nowrap; }
     .admin-controls .size-checkboxes { display:flex; flex-wrap:wrap; gap:8px; align-items:center; padding:5px 10px; background:var(--yellow-main); border-radius:8px; border:2px solid var(--brown); }
     .admin-controls .size-checkboxes label { display:flex; align-items:center; gap:4px; font-weight:bold; color:var(--brown); font-size:14px; cursor:pointer; }
@@ -251,10 +251,9 @@
       <input type="text" id="newProductName" placeholder="اسم المنتج">
       <input type="number" id="newProductPrice" placeholder="السعر">
       <input type="number" id="newProductDiscount" placeholder="خصم %" value="0">
-      <input type="text" id="newProductIcon" placeholder="أيقونة">
+      <textarea id="newProductIcon" placeholder="وصف المنتج" style="width:100%;min-height:80px;padding:12px;border:2px solid var(--brown);border-radius:8px;background:var(--yellow-light);color:var(--brown);font-size:15px;flex:1;min-width:150px;"></textarea>
       <input type="text" id="newProductVideoUrl" placeholder="رابط الفيديو الشرحي">
       <input type="text" id="newProductAliases" placeholder="أسماء بديلة (مفصولة بفاصلة)">
-      <textarea id="newProductDescription" placeholder="وصف المنتج" style="width:100%;min-height:80px;padding:12px;border:2px solid var(--brown);border-radius:8px;background:var(--yellow-light);color:var(--brown);font-size:15px;flex:1;min-width:150px;"></textarea>
       <div class="size-checkboxes" id="productSizeCheckboxes">
         <label><input type="checkbox" value="S"> S</label>
         <label><input type="checkbox" value="M"> M</label>
@@ -277,10 +276,9 @@
       <input type="text" id="newClothingName" placeholder="اسم المنتج">
       <input type="number" id="newClothingPrice" placeholder="السعر">
       <input type="number" id="newClothingDiscount" placeholder="خصم %" value="0">
-      <input type="text" id="newClothingIcon" placeholder="أيقونة">
+      <textarea id="newClothingIcon" placeholder="وصف المنتج" style="width:100%;min-height:80px;padding:12px;border:2px solid var(--brown);border-radius:8px;background:var(--yellow-light);color:var(--brown);font-size:15px;flex:1;min-width:150px;"></textarea>
       <input type="text" id="newClothingVideoUrl" placeholder="رابط الفيديو الشرحي">
       <input type="text" id="newClothingAliases" placeholder="أسماء بديلة (مفصولة بفاصلة)">
-      <textarea id="newClothingDescription" placeholder="وصف المنتج" style="width:100%;min-height:80px;padding:12px;border:2px solid var(--brown);border-radius:8px;background:var(--yellow-light);color:var(--brown);font-size:15px;flex:1;min-width:150px;"></textarea>
       <div class="size-checkboxes" id="clothingSizeCheckboxes">
         <label><input type="checkbox" value="S"> S</label>
         <label><input type="checkbox" value="M"> M</label>
@@ -705,9 +703,9 @@ function renderProductCard(p, grid) {
   const sizeButtons = sizes.filter(s => s !== 'حقل لون').map(s => `<button class="size-btn" onclick="selectSize(this)">${s}</button>`).join('');
   const colorInputHtml = hasColorField ? `<input type="text" class="color-input" placeholder="اللون">` : '';
   const videoBtnHtml = p.videoUrl ? `<a href="${p.videoUrl}" target="_blank" class="video-btn">🎬 فيديو شرحي</a>` : '';
-  const descBtnHtml = p.description ? `<button class="desc-btn" onclick="showDescModal('${p.name.replace(/'/g, "\\'")}', '${p.description.replace(/'/g, "\\'")}')">📝 وصف المنتج</button>` : '';
+  const descBtnHtml = p.icon ? `<button class="desc-btn" onclick="showDescModal('${p.name.replace(/'/g, "\\'")}', '${p.icon.replace(/'/g, "\\'")}')">📝 وصف المنتج</button>` : '';
   const art = document.createElement('article'); art.className='product'; art.dataset.id=p.id;
-  art.innerHTML = `<div class="product-image" onclick="openZoom(${p.id})"><div class="main-media">${mainImage ? `<img src="${mainImage}" alt="${p.name}">` : `<span class="product-icon">${p.icon||''}</span>`}</div>${galleryHtml}<button class="delete-prod" onclick="deleteProduct(${p.id})">🗑</button></div><div class="product-info"><h3>${p.name}</h3><div class="price">${disc>0?`<span class="original-price">${price} جنيه</span>`:''} ${final} جنيه ${disc>0?`<span style="color:red;font-size:14px;"> (خصم ${disc}%)</span>`:''}</div>${sizes.length ? `<div class="sizes">${sizeButtons}${colorInputHtml}</div>` : ''}${videoBtnHtml}${descBtnHtml}<button class="add-cart" onclick="addToCart('${p.name}',${final},null,event)">أضف إلى السلة</button></div>`;
+  art.innerHTML = `<div class="product-image" onclick="openZoom(${p.id})"><div class="main-media">${mainImage ? `<img src="${mainImage}" alt="${p.name}">` : ''}</div>${galleryHtml}<button class="delete-prod" onclick="deleteProduct(${p.id})">🗑</button></div><div class="product-info"><h3>${p.name}</h3><div class="price">${disc>0?`<span class="original-price">${price} جنيه</span>`:''} ${final} جنيه ${disc>0?`<span style="color:red;font-size:14px;"> (خصم ${disc}%)</span>`:''}</div>${sizes.length ? `<div class="sizes">${sizeButtons}${colorInputHtml}</div>` : ''}${videoBtnHtml}${descBtnHtml}<button class="add-cart" onclick="addToCart('${p.name}',${final},null,event)">أضف إلى السلة</button></div>`;
   grid.appendChild(art);
 }
 
@@ -728,7 +726,7 @@ function renderAdminProducts() {
     const sizeTags = p.sizes?.length ? `<div class="size-tags">${p.sizes.map(s=>`<span>${s}</span>`).join('')}</div>` : '';
     const mediaHtml = p.media?.length ? p.media.map(m => `<img src="${m}" alt="صورة">`).join('') : '';
     const div = document.createElement('div'); div.className='admin-list-item';
-    div.innerHTML = `<div class="item-info">${mediaHtml || `<span style="font-size:30px;">${p.icon||''}</span>`}<span>${p.name} - ${final} جنيه ${disc>0?`(خصم ${disc}%)`:''}</span>${sizeTags}</div><button onclick="deleteProduct(${p.id})">حذف</button>`;
+    div.innerHTML = `<div class="item-info">${mediaHtml}<span>${p.name} - ${final} جنيه ${disc>0?`(خصم ${disc}%)`:''}</span>${sizeTags}</div><button onclick="deleteProduct(${p.id})">حذف</button>`;
     list.appendChild(div);
   });
 }
@@ -742,7 +740,7 @@ function renderAdminClothing() {
     const sizeTags = p.sizes?.length ? `<div class="size-tags">${p.sizes.map(s=>`<span>${s}</span>`).join('')}</div>` : '';
     const mediaHtml = p.media?.length ? p.media.map(m => `<img src="${m}" alt="صورة">`).join('') : '';
     const div = document.createElement('div'); div.className='admin-list-item';
-    div.innerHTML = `<div class="item-info">${mediaHtml || `<span style="font-size:30px;">${p.icon||''}</span>`}<span>${p.name} - ${final} جنيه ${disc>0?`(خصم ${disc}%)`:''}</span>${sizeTags}</div><button onclick="deleteClothing(${p.id})">حذف</button>`;
+    div.innerHTML = `<div class="item-info">${mediaHtml}<span>${p.name} - ${final} جنيه ${disc>0?`(خصم ${disc}%)`:''}</span>${sizeTags}</div><button onclick="deleteClothing(${p.id})">حذف</button>`;
     list.appendChild(div);
   });
 }
@@ -755,11 +753,10 @@ async function addProduct() {
   const videoUrl = document.getElementById('newProductVideoUrl').value.trim()||'';
   const aliasesText = document.getElementById('newProductAliases').value.trim()||'';
   const aliases = aliasesText ? aliasesText.split(',').map(a=>a.trim()).filter(a=>a) : [];
-  const description = document.getElementById('newProductDescription').value.trim()||'';
   if(!name || isNaN(price) || price<=0) return showToast('يرجى إدخال اسم المنتج وسعر صحيح.', 'error');
   const sizes = [...document.querySelectorAll('#productSizeCheckboxes input[type="checkbox"]:checked')].map(cb=>cb.value);
   const images = await uploadImages('.product-image-input', 'uploadStatus', 'uploadedImagesPreview');
-  const result = await callAPI('addProduct', {name, price, discount, icon, sizes, media: images, videoUrl, aliases, description});
+  const result = await callAPI('addProduct', {name, price, discount, icon, sizes, media: images, videoUrl, aliases});
   if(result.success) { showToast('تم إضافة المنتج بنجاح!'); await loadData(); }
   else showToast('فشل: '+(result.error||'خطأ'), 'error');
 }
@@ -772,11 +769,10 @@ async function addClothing() {
   const videoUrl = document.getElementById('newClothingVideoUrl').value.trim()||'';
   const aliasesText = document.getElementById('newClothingAliases').value.trim()||'';
   const aliases = aliasesText ? aliasesText.split(',').map(a=>a.trim()).filter(a=>a) : [];
-  const description = document.getElementById('newClothingDescription').value.trim()||'';
   if(!name || isNaN(price) || price<=0) return showToast('يرجى إدخال اسم المنتج وسعر صحيح.', 'error');
   const sizes = [...document.querySelectorAll('#clothingSizeCheckboxes input[type="checkbox"]:checked')].map(cb=>cb.value);
   const images = await uploadImages('.clothing-image-input', 'clothingUploadStatus', 'clothingImagesPreview');
-  const result = await callAPI('addClothing', {name, price, discount, icon, sizes, media: images, videoUrl, aliases, description});
+  const result = await callAPI('addClothing', {name, price, discount, icon, sizes, media: images, videoUrl, aliases});
   if(result.success) { showToast('تم إضافة الملابس بنجاح!'); await loadData(); }
   else showToast('فشل: '+(result.error||'خطأ'), 'error');
 }
