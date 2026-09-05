@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
@@ -74,8 +73,16 @@
     .color-input { padding:5px 10px; border:2px solid var(--brown); border-radius:6px; background:var(--yellow-light); color:var(--brown); font-weight:bold; font-size:clamp(10px, 1.5vw, 13px); width:90px; direction:rtl; }
     .video-btn { display:inline-block; margin-top:10px; padding:8px 15px; border:2px solid var(--brown); border-radius:6px; background:var(--yellow-main); color:var(--brown); cursor:pointer; font-weight:bold; font-size:clamp(11px, 1.5vw, 13px); text-decoration:none; transition:background .2s; }
     .video-btn:hover { background:var(--brown); color:var(--yellow-light); }
+    .desc-btn { display:inline-block; margin-top:10px; margin-right:5px; padding:8px 15px; border:2px solid var(--brown); border-radius:6px; background:var(--yellow-main); color:var(--brown); cursor:pointer; font-weight:bold; font-size:clamp(11px, 1.5vw, 13px); transition:background .2s; }
+    .desc-btn:hover { background:var(--brown); color:var(--yellow-light); }
     .add-cart { width:100%; padding:clamp(8px, 1.5vw, 12px); border:2px solid var(--brown); border-radius:7px; background:var(--brown); color:var(--yellow-light); cursor:pointer; font-size:clamp(12px, 1.5vw, 15px); font-weight:bold; transition:background .2s; }
     .add-cart:hover { background:var(--brown-light); }
+    .desc-modal { display:none; position:fixed; inset:0; background:rgba(0,0,0,.7); z-index:10002; align-items:center; justify-content:center; }
+    .desc-modal.active { display:flex; }
+    .desc-box { background:var(--yellow-main); border:3px solid var(--brown); border-radius:16px; padding:25px; width:90%; max-width:500px; box-shadow:0 20px 40px rgba(0,0,0,.4); text-align:center; max-height:80vh; overflow-y:auto; }
+    .desc-box h3 { color:var(--brown); font-family:Georgia,serif; font-size:22px; margin-bottom:15px; }
+    .desc-box p { color:var(--brown); font-size:16px; line-height:1.6; }
+    .desc-box .close-desc { margin-top:15px; background:var(--brown); color:var(--yellow-light); border:none; padding:8px 20px; border-radius:6px; cursor:pointer; font-weight:bold; }
     .zoom-modal { display:none; position:fixed; inset:0; background:rgba(0,0,0,.9); z-index:99999; align-items:center; justify-content:center; flex-direction:column; padding:20px; touch-action:pan-y; }
     .zoom-modal.active { display:flex; }
     .zoom-modal .zoom-close { position:absolute; top:20px; left:20px; background:var(--brown); color:var(--yellow-light); border:none; border-radius:50%; width:50px; height:50px; font-size:28px; cursor:pointer; z-index:10; }
@@ -204,7 +211,7 @@
     </div>
   </header>
   <section class="offers-section" id="offers"><h2 class="section-title">العروض</h2><div class="offers-grid" id="offersGrid"></div></section>
-  <section class="products-section" id="skincareSection"><h2>منتجات عنايه بالبشره</h2><div class="products-grid-horizontal" id="skincareGrid"></div></section>
+  <section class="products-section" id="skincareSection"><h2>منتجات عنايه</h2><div class="products-grid-horizontal" id="skincareGrid"></div></section>
   <section class="products-section" id="clothingSection"><h2>ملابس</h2><div class="products-grid-horizontal" id="clothingGrid"></div></section>
   <div id="adminPanel" style="display:none;"><h2>لوحة التحكم</h2>
     <div class="admin-section"><h3>إضافة كود خصم</h3><div class="admin-controls">
@@ -247,6 +254,7 @@
       <input type="text" id="newProductIcon" placeholder="أيقونة">
       <input type="text" id="newProductVideoUrl" placeholder="رابط الفيديو الشرحي">
       <input type="text" id="newProductAliases" placeholder="أسماء بديلة (مفصولة بفاصلة)">
+      <textarea id="newProductDescription" placeholder="وصف المنتج" style="width:100%;min-height:80px;padding:12px;border:2px solid var(--brown);border-radius:8px;background:var(--yellow-light);color:var(--brown);font-size:15px;flex:1;min-width:150px;"></textarea>
       <div class="size-checkboxes" id="productSizeCheckboxes">
         <label><input type="checkbox" value="S"> S</label>
         <label><input type="checkbox" value="M"> M</label>
@@ -272,6 +280,7 @@
       <input type="text" id="newClothingIcon" placeholder="أيقونة">
       <input type="text" id="newClothingVideoUrl" placeholder="رابط الفيديو الشرحي">
       <input type="text" id="newClothingAliases" placeholder="أسماء بديلة (مفصولة بفاصلة)">
+      <textarea id="newClothingDescription" placeholder="وصف المنتج" style="width:100%;min-height:80px;padding:12px;border:2px solid var(--brown);border-radius:8px;background:var(--yellow-light);color:var(--brown);font-size:15px;flex:1;min-width:150px;"></textarea>
       <div class="size-checkboxes" id="clothingSizeCheckboxes">
         <label><input type="checkbox" value="S"> S</label>
         <label><input type="checkbox" value="M"> M</label>
@@ -338,6 +347,13 @@
     <button onclick="prevZoom()">◀</button>
     <span class="zoom-counter" id="zoomCounter">1 / 1</span>
     <button onclick="nextZoom()">▶</button>
+  </div>
+</div>
+<div class="desc-modal" id="descModal">
+  <div class="desc-box">
+    <h3 id="descTitle"></h3>
+    <p id="descContent"></p>
+    <button class="close-desc" onclick="closeDescModal()">إغلاق</button>
   </div>
 </div>
 <script>
@@ -689,8 +705,9 @@ function renderProductCard(p, grid) {
   const sizeButtons = sizes.filter(s => s !== 'حقل لون').map(s => `<button class="size-btn" onclick="selectSize(this)">${s}</button>`).join('');
   const colorInputHtml = hasColorField ? `<input type="text" class="color-input" placeholder="اللون">` : '';
   const videoBtnHtml = p.videoUrl ? `<a href="${p.videoUrl}" target="_blank" class="video-btn">🎬 فيديو شرحي</a>` : '';
+  const descBtnHtml = p.description ? `<button class="desc-btn" onclick="showDescModal('${p.name.replace(/'/g, "\\'")}', '${p.description.replace(/'/g, "\\'")}')">📝 وصف المنتج</button>` : '';
   const art = document.createElement('article'); art.className='product'; art.dataset.id=p.id;
-  art.innerHTML = `<div class="product-image" onclick="openZoom(${p.id})"><div class="main-media">${mainImage ? `<img src="${mainImage}" alt="${p.name}">` : `<span class="product-icon">${p.icon||''}</span>`}</div>${galleryHtml}<button class="delete-prod" onclick="deleteProduct(${p.id})">🗑</button></div><div class="product-info"><h3>${p.name}</h3><div class="price">${disc>0?`<span class="original-price">${price} جنيه</span>`:''} ${final} جنيه ${disc>0?`<span style="color:red;font-size:14px;"> (خصم ${disc}%)</span>`:''}</div>${sizes.length ? `<div class="sizes">${sizeButtons}${colorInputHtml}</div>` : ''}${videoBtnHtml}<button class="add-cart" onclick="addToCart('${p.name}',${final},null,event)">أضف إلى السلة</button></div>`;
+  art.innerHTML = `<div class="product-image" onclick="openZoom(${p.id})"><div class="main-media">${mainImage ? `<img src="${mainImage}" alt="${p.name}">` : `<span class="product-icon">${p.icon||''}</span>`}</div>${galleryHtml}<button class="delete-prod" onclick="deleteProduct(${p.id})">🗑</button></div><div class="product-info"><h3>${p.name}</h3><div class="price">${disc>0?`<span class="original-price">${price} جنيه</span>`:''} ${final} جنيه ${disc>0?`<span style="color:red;font-size:14px;"> (خصم ${disc}%)</span>`:''}</div>${sizes.length ? `<div class="sizes">${sizeButtons}${colorInputHtml}</div>` : ''}${videoBtnHtml}${descBtnHtml}<button class="add-cart" onclick="addToCart('${p.name}',${final},null,event)">أضف إلى السلة</button></div>`;
   grid.appendChild(art);
 }
 
@@ -738,10 +755,11 @@ async function addProduct() {
   const videoUrl = document.getElementById('newProductVideoUrl').value.trim()||'';
   const aliasesText = document.getElementById('newProductAliases').value.trim()||'';
   const aliases = aliasesText ? aliasesText.split(',').map(a=>a.trim()).filter(a=>a) : [];
+  const description = document.getElementById('newProductDescription').value.trim()||'';
   if(!name || isNaN(price) || price<=0) return showToast('يرجى إدخال اسم المنتج وسعر صحيح.', 'error');
   const sizes = [...document.querySelectorAll('#productSizeCheckboxes input[type="checkbox"]:checked')].map(cb=>cb.value);
   const images = await uploadImages('.product-image-input', 'uploadStatus', 'uploadedImagesPreview');
-  const result = await callAPI('addProduct', {name, price, discount, icon, sizes, media: images, videoUrl, aliases});
+  const result = await callAPI('addProduct', {name, price, discount, icon, sizes, media: images, videoUrl, aliases, description});
   if(result.success) { showToast('تم إضافة المنتج بنجاح!'); await loadData(); }
   else showToast('فشل: '+(result.error||'خطأ'), 'error');
 }
@@ -754,10 +772,11 @@ async function addClothing() {
   const videoUrl = document.getElementById('newClothingVideoUrl').value.trim()||'';
   const aliasesText = document.getElementById('newClothingAliases').value.trim()||'';
   const aliases = aliasesText ? aliasesText.split(',').map(a=>a.trim()).filter(a=>a) : [];
+  const description = document.getElementById('newClothingDescription').value.trim()||'';
   if(!name || isNaN(price) || price<=0) return showToast('يرجى إدخال اسم المنتج وسعر صحيح.', 'error');
   const sizes = [...document.querySelectorAll('#clothingSizeCheckboxes input[type="checkbox"]:checked')].map(cb=>cb.value);
   const images = await uploadImages('.clothing-image-input', 'clothingUploadStatus', 'clothingImagesPreview');
-  const result = await callAPI('addClothing', {name, price, discount, icon, sizes, media: images, videoUrl, aliases});
+  const result = await callAPI('addClothing', {name, price, discount, icon, sizes, media: images, videoUrl, aliases, description});
   if(result.success) { showToast('تم إضافة الملابس بنجاح!'); await loadData(); }
   else showToast('فشل: '+(result.error||'خطأ'), 'error');
 }
@@ -859,6 +878,15 @@ function handleLogout() {
   document.getElementById('adminPanel').classList.remove('active');
   document.querySelectorAll('.delete-prod, .offer-delete').forEach(el=>el.style.display='none');
   showToast('تم تسجيل الخروج بنجاح');
+}
+
+function showDescModal(title, description) {
+  document.getElementById('descTitle').textContent = title;
+  document.getElementById('descContent').textContent = description;
+  document.getElementById('descModal').classList.add('active');
+}
+function closeDescModal() {
+  document.getElementById('descModal').classList.remove('active');
 }
 
 let zoomData = [];
@@ -985,4 +1013,3 @@ console.log('H.L LeVance Store loaded');
 </script>
 </body>
 </html>
-```
