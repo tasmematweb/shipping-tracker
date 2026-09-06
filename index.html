@@ -304,8 +304,8 @@
       <div class="form-group"><label>كود الخصم</label><input type="text" id="orderDiscountCode" placeholder="أدخل كود الخصم"><button onclick="applyDiscountCode()" style="margin-top:5px;background:var(--brown);color:var(--yellow-light);border:none;padding:8px 15px;border-radius:6px;cursor:pointer;font-weight:bold;">تطبيق</button></div>
       <div class="form-group"><label>الاسم <span class="required">*</span></label><input type="text" id="orderCustomerName" placeholder="اسم العميل"></div>
       <div class="form-row">
-        <div class="form-group"><label>الهاتف <span class="required">*</span></label><input type="tel" id="orderCustomerPhone" placeholder="رقم الهاتف"></div>
-        <div class="form-group"><label>هاتف إضافي</label><input type="tel" id="orderCustomerPhone2" placeholder="رقم آخر"></div>
+        <div class="form-group"><label>الهاتف <span class="required">*</span></label><input type="tel" id="orderCustomerPhone" placeholder="01xxxxxxxxx" pattern="01[0-9]{9}" maxlength="11" oninput="this.value=this.value.replace(/[^0-9]/g,'')"></div>
+        <div class="form-group"><label>هاتف إضافي</label><input type="tel" id="orderCustomerPhone2" placeholder="01xxxxxxxxx" pattern="01[0-9]{9}" maxlength="11" oninput="this.value=this.value.replace(/[^0-9]/g,'')"></div>
       </div>
       <div class="form-row">
         <div class="form-group"><label>المحافظة <span class="required">*</span></label><select id="orderGovernorate" onchange="updateOrderCities()"><option value="">اختر المحافظة</option></select></div>
@@ -802,6 +802,14 @@ async function submitOrder() {
   const notes = document.getElementById('orderNotes').value.trim();
   if(!name||!phone||!gov||!city||!addr||isNaN(amount)||amount<=0) {
     document.getElementById('orderError').textContent='يرجى ملء جميع الحقول المطلوبة.';
+    return;
+  }
+  if(!/^01[0-9]{9}$/.test(phone)) {
+    document.getElementById('orderError').textContent='رقم الهاتف يجب أن يبدأ بـ 01 ويتكون من 11 رقم';
+    return;
+  }
+  if(phone2 && !/^01[0-9]{9}$/.test(phone2)) {
+    document.getElementById('orderError').textContent='رقم الهاتف الإضافي يجب أن يبدأ بـ 01 ويتكون من 11 رقم';
     return;
   }
   const productsList = cart.map(item => `${item.name} ${item.size ? '('+item.size+')' : ''} x${item.quantity}`).join(' | ');
