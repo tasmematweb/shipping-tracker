@@ -223,10 +223,9 @@
     </div>
     <div class="admin-section"><h3>إضافة عرض</h3><div class="admin-controls">
       <input type="text" id="newOfferTitle" placeholder="عنوان العرض">
-      <input type="text" id="newOfferDescription" placeholder="وصف العرض">
+      <textarea id="newOfferDescription" placeholder="وصف العرض" style="width:100%;min-height:80px;padding:12px;border:2px solid var(--brown);border-radius:8px;background:var(--yellow-light);color:var(--brown);font-size:15px;flex:1;min-width:150px;"></textarea>
       <input type="number" id="newOfferPrice" placeholder="السعر الجديد">
       <input type="number" id="newOfferOldPrice" placeholder="السعر القديم">
-      <input type="text" id="newOfferIcon" placeholder="أيقونة العرض">
       <input type="text" id="newOfferVideoUrl" placeholder="رابط الفيديو الشرحي">
       <input type="text" id="newOfferAliases" placeholder="أسماء بديلة (مفصولة بفاصلة)">
       <div class="size-checkboxes" id="offerSizeCheckboxes">
@@ -511,7 +510,8 @@ function renderOffers() {
     const sizeButtons = sizes.filter(s => s !== 'حقل لون').map(s => `<button class="size-btn" onclick="selectSize(this)">${s}</button>`).join('');
     const colorInputHtml = hasColorField ? `<input type="text" class="color-input" placeholder="اللون">` : '';
     const videoBtnHtml = offer.videoUrl ? `<a href="${offer.videoUrl}" target="_blank" class="video-btn">🎬 فيديو شرحي</a>` : '';
-    div.innerHTML = `<button class="offer-delete" onclick="deleteOffer(${offer.id})">🗑</button><div class="offer-image" onclick="openOfferZoom(${offer.id})">${mainImage ? `<img src="${mainImage}" style="width:100%;height:100%;object-fit:cover;">` : offer.icon||''}</div><div class="offer-info"><h3>${offer.title}</h3><p>${offer.description||''}</p><div class="offer-price">${offer.oldPrice ? `<span class="offer-old-price">${offer.oldPrice} جنيه</span>` : ''}${offer.price} جنيه</div>${sizes.length ? `<div class="sizes">${sizeButtons}${colorInputHtml}</div>` : ''}${videoBtnHtml}<button class="offer-add-cart" onclick="addOfferToCart('${offer.title}', ${offer.price}, event)">أضف إلى السلة</button></div>`;
+    const descBtnHtml = offer.description ? `<button class="desc-btn" onclick="showDescModal('${offer.title.replace(/'/g, "\\'")}', '${offer.description.replace(/'/g, "\\'")}')">📝 وصف المنتج</button>` : '';
+    div.innerHTML = `<button class="offer-delete" onclick="deleteOffer(${offer.id})">🗑</button><div class="offer-image" onclick="openOfferZoom(${offer.id})">${mainImage ? `<img src="${mainImage}" style="width:100%;height:100%;object-fit:cover;">` : ''}</div><div class="offer-info"><h3>${offer.title}</h3><div class="offer-price">${offer.oldPrice ? `<span class="offer-old-price">${offer.oldPrice} جنيه</span>` : ''}${offer.price} جنيه</div>${sizes.length ? `<div class="sizes">${sizeButtons}${colorInputHtml}</div>` : ''}${videoBtnHtml}${descBtnHtml}<button class="offer-add-cart" onclick="addOfferToCart('${offer.title}', ${offer.price}, event)">أضف إلى السلة</button></div>`;
     grid.appendChild(div);
   });
 }
@@ -532,14 +532,13 @@ async function addOffer() {
   const description = document.getElementById('newOfferDescription').value.trim();
   const price = parseFloat(document.getElementById('newOfferPrice').value.trim());
   const oldPrice = parseFloat(document.getElementById('newOfferOldPrice').value.trim())||0;
-  const icon = document.getElementById('newOfferIcon').value.trim()||'';
   const videoUrl = document.getElementById('newOfferVideoUrl').value.trim()||'';
   const aliasesText = document.getElementById('newOfferAliases').value.trim()||'';
   const aliases = aliasesText ? aliasesText.split(',').map(a=>a.trim()).filter(a=>a) : [];
   if(!title || isNaN(price) || price<=0) return showToast('يرجى إدخال عنوان العرض والسعر.', 'error');
   const sizes = [...document.querySelectorAll('#offerSizeCheckboxes input[type="checkbox"]:checked')].map(cb=>cb.value);
   const images = await uploadImages('.offer-image-input', 'offerUploadStatus', 'offerImagesPreview');
-  const result = await callAPI('addOffer', {title, description, price, oldPrice, icon, media: images, sizes, videoUrl, aliases});
+  const result = await callAPI('addOffer', {title, description, price, oldPrice, media: images, sizes, videoUrl, aliases});
   if(result.success) { showToast('تم إضافة العرض بنجاح!'); await loadData(); }
   else showToast('فشل: '+(result.error||'خطأ'), 'error');
 }
@@ -673,7 +672,8 @@ function renderOfferCard(offer, grid) {
   const sizeButtons = sizes.filter(s => s !== 'حقل لون').map(s => `<button class="size-btn" onclick="selectSize(this)">${s}</button>`).join('');
   const colorInputHtml = hasColorField ? `<input type="text" class="color-input" placeholder="اللون">` : '';
   const videoBtnHtml = offer.videoUrl ? `<a href="${offer.videoUrl}" target="_blank" class="video-btn">🎬 فيديو شرحي</a>` : '';
-  div.innerHTML = `<button class="offer-delete" onclick="deleteOffer(${offer.id})">🗑</button><div class="offer-image" onclick="openOfferZoom(${offer.id})">${mainImage ? `<img src="${mainImage}" style="width:100%;height:100%;object-fit:cover;">` : offer.icon||''}</div><div class="offer-info"><h3>${offer.title}</h3><p>${offer.description||''}</p><div class="offer-price">${offer.oldPrice ? `<span class="offer-old-price">${offer.oldPrice} جنيه</span>` : ''}${offer.price} جنيه</div>${sizes.length ? `<div class="sizes">${sizeButtons}${colorInputHtml}</div>` : ''}${videoBtnHtml}<button class="offer-add-cart" onclick="addOfferToCart('${offer.title}', ${offer.price}, event)">أضف إلى السلة</button></div>`;
+  const descBtnHtml = offer.description ? `<button class="desc-btn" onclick="showDescModal('${offer.title.replace(/'/g, "\\'")}', '${offer.description.replace(/'/g, "\\'")}')">📝 وصف المنتج</button>` : '';
+  div.innerHTML = `<button class="offer-delete" onclick="deleteOffer(${offer.id})">🗑</button><div class="offer-image" onclick="openOfferZoom(${offer.id})">${mainImage ? `<img src="${mainImage}" style="width:100%;height:100%;object-fit:cover;">` : ''}</div><div class="offer-info"><h3>${offer.title}</h3><div class="offer-price">${offer.oldPrice ? `<span class="offer-old-price">${offer.oldPrice} جنيه</span>` : ''}${offer.price} جنيه</div>${sizes.length ? `<div class="sizes">${sizeButtons}${colorInputHtml}</div>` : ''}${videoBtnHtml}${descBtnHtml}<button class="offer-add-cart" onclick="addOfferToCart('${offer.title}', ${offer.price}, event)">أضف إلى السلة</button></div>`;
   grid.appendChild(div);
 }
 
