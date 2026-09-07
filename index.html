@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
@@ -494,6 +493,23 @@
     .header-title {
       font-weight: 700;
       font-size: 16px;
+    }
+
+    .header-home-btn {
+      background: #111215;
+      border: 1px solid #E50914;
+      color: #FFFFFF;
+      padding: 6px 14px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: 700;
+      font-size: 12px;
+      transition: var(--transition);
+    }
+
+    .header-home-btn:hover {
+      background: #E50914;
+      box-shadow: 0 0 15px rgba(229, 9, 20, 0.5);
     }
 
     .details-content {
@@ -1518,6 +1534,7 @@
     <div class="details-header">
       <button class="back-btn" onclick="closeProductDetails()">✕</button>
       <span class="header-title">تفاصيل المنتج</span>
+      <button class="header-home-btn" onclick="goToHome()">الرجوع للرئيسية</button>
     </div>
 
     <div class="details-content">
@@ -2169,6 +2186,11 @@
     function closeOrderForm() { 
       document.getElementById('orderFormPage').style.display = 'none'; 
       document.getElementById('orderFormPage').classList.remove('active'); 
+    }
+
+    function goToHome() {
+      closeProductDetails();
+      window.location.href = window.location.pathname;
     }
 
     async function callAPI(action, data = {}) {
@@ -2825,29 +2847,36 @@
       const productId = urlParams.get('product');
       
       if (productId) {
-        const allProducts = [];
         const sections = [
-          {key: 'hl_products_sweatpants', category: 'Sweatpants'},
-          {key: 'hl_products_shirt', category: 'Shirt'},
-          {key: 'hl_products_tshirt', category: 'T-shirt'},
-          {key: 'hl_products_shoes', category: 'Shoes'},
-          {key: 'hl_products_jeans', category: 'Jeans'},
-          {key: 'hl_products_jacket', category: 'Jacket'},
-          {key: 'hl_offers', category: 'Offer'}
+          {action: 'getSweatpants', dataKey: 'sweatpants', category: 'Sweatpants'},
+          {action: 'getShirt', dataKey: 'shirt', category: 'Shirt'},
+          {action: 'getTshirt', dataKey: 'tshirt', category: 'T-shirt'},
+          {action: 'getShoes', dataKey: 'shoes', category: 'Shoes'},
+          {action: 'getJeans', dataKey: 'jeans', category: 'Jeans'},
+          {action: 'getJacket', dataKey: 'jacket', category: 'Jacket'},
+          {action: 'getOffers', dataKey: 'offers', category: 'Offer'}
         ];
         
-        sections.forEach(s => {
-          const items = JSON.parse(localStorage.getItem(s.key) || '[]');
-          items.forEach(item => {
-            if (String(item.id) === String(productId)) {
-              allProducts.push({...item, category: s.category});
-            }
-          });
-        });
+        let foundProduct = null;
         
-        if (allProducts.length > 0) {
+        for (const s of sections) {
+          try {
+            const result = await fetchFromAPI(s.action);
+            if (result && result[s.dataKey] && Array.isArray(result[s.dataKey])) {
+              const product = result[s.dataKey].find(item => String(item.id) === String(productId));
+              if (product) {
+                foundProduct = {...product, category: s.category};
+                break;
+              }
+            }
+          } catch(e) {
+            console.error('Error fetching product:', e);
+          }
+        }
+        
+        if (foundProduct) {
           setTimeout(() => {
-            openProductDetails(allProducts[0]);
+            openProductDetails(foundProduct);
           }, 500);
         }
       }
