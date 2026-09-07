@@ -2335,10 +2335,11 @@
       
       const price = item.price || 0;
       const discount = item.discount || 0;
-      const oldPrice = item.oldPrice || (discount > 0 ? Math.round(price / (1 - discount / 100)) : 0);
+      const originalPrice = item.originalPrice || (discount > 0 ? Math.round(price / (1 - discount / 100)) : 0);
+      const oldPrice = item.oldPrice || originalPrice;
       
       document.getElementById('detailPrice').textContent = `LE ${price}.00`;
-      document.getElementById('detailOldPrice').textContent = oldPrice > 0 ? `LE ${oldPrice}.00` : '';
+      document.getElementById('detailOldPrice').textContent = oldPrice > 0 && oldPrice !== price ? `LE ${oldPrice}.00` : '';
       
       const gallery = document.getElementById('productDetailsGallery');
       const thumbs = document.getElementById('galleryThumbnails');
@@ -2865,7 +2866,17 @@
             if (result && result[s.dataKey] && Array.isArray(result[s.dataKey])) {
               const product = result[s.dataKey].find(item => String(item.id) === String(productId));
               if (product) {
-                foundProduct = {...product, category: s.category};
+                const discount = product.discount || 0;
+                const originalPrice = product.price || 0;
+                const finalPrice = discount > 0 ? Math.round(originalPrice - (originalPrice * discount / 100)) : originalPrice;
+                
+                foundProduct = {
+                  ...product,
+                  discount: discount,
+                  originalPrice: originalPrice,
+                  price: finalPrice,
+                  category: s.category
+                };
                 break;
               }
             }
