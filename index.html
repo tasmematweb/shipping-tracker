@@ -1,13 +1,38 @@
+<?php
+// 1. معالجة طلب API من الخلفية (PHP Backend) لتخطي حجب CORS
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_GET['action']) && $_GET['action'] === 'create_order') {
+    header("Content-Type: application/json; charset=UTF-8");
+    
+    $inputData = file_get_contents('php://input');
+
+    $ch = curl_init('https://openapi.jtjms-eg.com/webopenplatformapi/api/order/addOrder');
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    curl_setopt($ch, CURLOPT_POST, true);
+    curl_setopt($ch, CURLOPT_POSTFIELDS, $inputData);
+    curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: application/x-www-form-urlencoded'));
+    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+    curl_setopt($ch, CURLOPT_TIMEOUT, 10);
+
+    $response = curl_exec($ch);
+    $curlError = curl_error($ch);
+    curl_close($ch);
+
+    if ($curlError) {
+        echo json_encode(["code" => "0", "msg" => "خطأ في الاتصال بالخادم: " . $curlError]);
+    } else {
+        echo $response;
+    }
+    exit; // إيقاف التنفيذ لكي لا يتم تحميل باقي كود HTML مع الـ API
+}
+?>
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>EUX Express - نظام إرسال الشحنات عبر GT</title>
+    <title>EUX Express - نظام شحنات GT المتكامل</title>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap" rel="stylesheet">
-    <!-- مكتبة التشفير لحساب Digest -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
-    <!-- مكتبة رسم الباركود -->
     <script src="https://cdn.jsdelivr.net/npm/jsbarcode@3.11.5/dist/JsBarcode.all.min.js"></script>
 
     <style>
@@ -91,7 +116,6 @@
         .badge-success { background: #d1fae5; color: #065f46; }
         .badge-warning { background: #fef3c7; color: #92400e; }
 
-        /* بليسية A6 الحرارية */
         .waybill {
             border: 2px dashed #94a3b8;
             border-radius: 12px;
@@ -136,11 +160,10 @@
 <body>
 
 <div class="container">
-    <!-- نموذج تسجيل الشحنة -->
     <div class="card">
         <div class="title">
             <h2><span>EUX</span> Express - إرسال شحنة</h2>
-            <p style="font-size: 12px; color: #666;">ربط مباشر مع نظام J&T Express (GT)</p>
+            <p style="font-size: 12px; color: #666;">تسجيل مباشر ومعالجة موحدة داخل ملف واحد</p>
         </div>
 
         <form id="orderForm" onsubmit="handleSendOrder(event)">
@@ -184,7 +207,7 @@
                     <input type="text" id="address" value="شارع الجيش بجوار مدرسة النصر" required>
                 </div>
                 <div class="form-group">
-                    <label>المبلغ المطلوبة (ج.م) *</label>
+                    <label>المبلغ المطلوب (ج.م) *</label>
                     <input type="number" id="amount" value="150" required dir="ltr">
                 </div>
                 <div class="form-group">
@@ -197,7 +220,6 @@
         </form>
     </div>
 
-    <!-- النتيجة والبليسية -->
     <div class="card">
         <div class="title">
             <h2>بليسية الشحنة</h2>
@@ -206,7 +228,7 @@
 
         <div class="loading" id="loading">
             <div class="spinner"></div>
-            <p>جاري التواصل مع خوادم GT...</p>
+            <p>جاري التواصل مع خوادم GT عبر الخادم الداخلي...</p>
         </div>
 
         <div id="resultBox" style="display: none;">
@@ -252,19 +274,14 @@
 </div>
 
 <script>
-    // البيانات الخاصة بحسابكم من واقع الصورة المرفقة
     const GT_CONFIG = {
         apiAccount: '866958120939696147',
         privateKey: '29535fad70ca4688aaa5b462320eb096',
         customerCode: 'J0086003287',
         senderCode: 'D236',
-        plainPassword: 'Uv8NYAp2',
-        // التصحيح الأساسي للنطاق الصحيح (jtjms بدلاً من jtims)
-        primaryUrl: 'https://openapi.jtjms-eg.com/webopenplatformapi/api/order/addOrder',
-        demoUrl: 'https://demoopenapi.jtjms-eg.com/webopenplatformapi/api/order/addOrder?uuid=c7f405da081d436d8ee146b59f885dce'
+        plainPassword: 'Uv8NYAp2'
     };
 
-    // حساب التوقيع (Digest) وفقاً لمعيار J&T
     function generateDigest(customerCode, plainPassword, privateKey) {
         const cipherText = CryptoJS.MD5(plainPassword + 'jadada236t2').toString().toUpperCase();
         const signature = CryptoJS.MD5(customerCode + cipherText + privateKey).toString().toUpperCase();
@@ -345,9 +362,8 @@
         let isSimulated = false;
 
         try {
-            // استخدام CORS Proxy لتجاوز تقييدات المتصفح أثناء الإرسال المباشر
-            const proxyUrl = 'https://corsproxy.io/?';
-            const response = await fetch(proxyUrl + encodeURIComponent(GT_CONFIG.demoUrl), {
+            // إرسال الطلب لنفس الملف (index.php?action=create_order) لتشغيل كود PHP العلوى
+            const response = await fetch('?action=create_order', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
                 body: params.toString()
@@ -359,10 +375,9 @@
                 billCode = data.data.billCode;
                 sortingCode = data.data.sortingCode || sortingCode;
             } else {
-                throw new Error(data.msg || 'فشل الاتصال المباشر');
+                throw new Error(data.msg || 'خطأ من السيرفر');
             }
         } catch (err) {
-            // التبديل التلقائي لوضع المحاكاة الذكي عند تعذر الاتصال بالشبكة أو الـ DNS
             isSimulated = true;
             billCode = 'JT' + Math.floor(100000000000 + Math.random() * 900000000000);
         }
@@ -370,15 +385,13 @@
         loading.style.display = 'none';
         resultBox.style.display = 'block';
 
-        // عرض الشارة
         const badge = document.getElementById('statusBadge');
         if (isSimulated) {
-            badge.innerHTML = `<div class="badge badge-warning">🟡 وضع المحاكاة الداخلي (تم تعذر وصول الشبكة لـ GT)</div>`;
+            badge.innerHTML = `<div class="badge badge-warning">🟡 وضع المحاكاة الداخلي (تعذر الوصول لشبكة GT)</div>`;
         } else {
             badge.innerHTML = `<div class="badge badge-success">🟢 تم التسجيل المباشر بنجاح في نظام GT</div>`;
         }
 
-        // تعبئة البيانات في البليسية
         document.getElementById('wbReceiver').innerText = receiverName;
         document.getElementById('wbPhone').innerText = receiverPhone;
         document.getElementById('wbAddress').innerText = `${address}، ${area}، ${city} (${governorate})`;
@@ -387,7 +400,6 @@
         document.getElementById('wbSorting').innerText = sortingCode;
         document.getElementById('wbDate').innerText = new Date().toLocaleDateString('ar-EG');
 
-        // توليد الباركود
         JsBarcode("#barcode", billCode, {
             format: "CODE128",
             lineColor: "#000",
