@@ -100,17 +100,17 @@
         testUrl: 'https://demoopenapi.jtims-eg.com/webopenplatformapi/api/order/addOrder?uuid=c7f405da081d436d8ee146b59f885dce'
     };
 
+    // الـ Proxy عبر Google Apps Script
+    const PROXY_URL = 'https://script.google.com/macros/s/AKfycbwiI6c4Kxh3EQxmCWwipr0MsAHgfPUadPqP9LqnUH9WGeGu0QuCXbl-sLTcS7l9NbJu/exec';
+
     // توليد التوقيع (digest)
     function generateDigest(customerCode, plainPassword, privateKey) {
-        // cipherText = MD5(plainPassword + "jadada236t2")
         const cipherText = CryptoJS.MD5(plainPassword + 'jadada236t2').toString().toUpperCase();
-        // signature = MD5(customerCode + cipherText + privateKey)
         const signature = CryptoJS.MD5(customerCode + cipherText + privateKey).toString().toUpperCase();
-        // Base64(MD5(...))
         return btoa(signature);
     }
 
-    // تحويل المحافظة إلى ما يتوافق مع GT
+    // تحويل المحافظة
     function mapGovernorate(gov) {
         const map = {
             'القاهرة': 'القاهرة',
@@ -123,7 +123,6 @@
     }
 
     async function sendToGT() {
-        // قراءة البيانات
         const receiverName = document.getElementById('receiverName').value.trim();
         const receiverPhone = document.getElementById('receiverPhone').value.trim();
         const governorate = document.getElementById('governorate').value;
@@ -134,7 +133,6 @@
         const weight = document.getElementById('weight').value.trim();
         const goodsType = document.getElementById('goodsType').value;
 
-        // التحقق
         if (!receiverName || !receiverPhone || !city || !area || !address || !amount || !weight) {
             alert('يرجى ملء جميع الحقول المطلوبة');
             return;
@@ -144,22 +142,17 @@
             return;
         }
 
-        // إظهار التحميل
         document.getElementById('loading').classList.add('show');
         document.getElementById('result').classList.remove('show');
 
         try {
-            // توليد رقم طلب فريد
             const txlogisticId = 'EUX' + Date.now() + Math.floor(Math.random() * 1000);
-
-            // توليد التوقيع
             const digest = generateDigest(
                 GT_CONFIG.customerCode,
                 GT_CONFIG.plainPassword,
                 GT_CONFIG.privateKey
             );
 
-            // بيانات المرسل (ثابتة للتجربة)
             const sender = {
                 name: 'شركة EUX للشحن',
                 company: 'EUX Express',
@@ -173,7 +166,6 @@
                 postCode: '11828'
             };
 
-            // بيانات المستلم
             const receiver = {
                 name: receiverName,
                 mobile: receiverPhone,
@@ -185,7 +177,6 @@
                 street: address
             };
 
-            // بناء طلب GT
             const bizContent = {
                 customerCode: GT_CONFIG.customerCode,
                 digest: digest,
@@ -204,40 +195,38 @@
                 remark: 'شحنة تجريبية عبر EUX Express'
             };
 
-            // إرسال الطلب
-            const response = await fetch(GT_CONFIG.testUrl, {
+            // إرسال عبر Proxy
+            const response = await fetch(PROXY_URL, {
                 method: 'POST',
-                headers: {
-                    'Content-Type': 'application/x-www-form-urlencoded'
-                },
+                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
                 body: new URLSearchParams({
+                    action: 'gtProxy',
                     apiAccount: GT_CONFIG.apiAccount,
                     digest: digest,
                     timestamp: Date.now(),
-                    bizContent: JSON.stringify(bizContent)
+                    bizContent: JSON.stringify(bizContent),
+                    targetUrl: GT_CONFIG.testUrl
                 })
             });
 
             const data = await response.json();
 
-            // إخفاء التحميل
             document.getElementById('loading').classList.remove('show');
 
-            // عرض النتيجة
             const resultDiv = document.getElementById('result');
             const contentDiv = document.getElementById('resultContent');
             resultDiv.classList.add('show');
 
-            if (data.code === '1') {
-                // نجاح
+            if (data.success) {
+                const resultData = data.data;
                 contentDiv.innerHTML = `
                     <div class="success" style="font-size:18px;font-weight:700;text-align:center;">✅ تم إرسال الشحنة بنجاح!</div>
                     <hr>
-                    <p><strong>رقم التتبع (Bill Code):</strong> <span style="direction:ltr;display:inline-block;">${data.data.billCode || 'غير متوفر'}</span></p>
-                    <p><strong>رقم الطلب:</strong> ${data.data.txlogisticId || txlogisticId}</p>
-                    <p><strong>رمز الفرز:</strong> ${data.data.sortingCode || 'غير متوفر'}</p>
-                    <p><strong>وقت الإنشاء:</strong> ${data.data.createOrderTime || ''}</p>
-                    <p><strong>مركز التجميع:</strong> ${data.data.lastCenterName || ''}</p>
+                    <p><strong>رقم التتبع (Bill Code):</strong> <span style="direction:ltr;display:inline-block;">${resultData.billCode || 'غير متوفر'}</span></p>
+                    <p><strong>رقم الطلب:</strong> ${resultData.txlogisticId || txlogisticId}</p>
+                    <p><strong>رمز الفرز:</strong> ${resultData.sortingCode || 'غير متوفر'}</p>
+                    <p><strong>وقت الإنشاء:</strong> ${resultData.createOrderTime || ''}</p>
+                    <p><strong>مركز التجميع:</strong> ${resultData.lastCenterName || ''}</p>
 
                     <div style="background:#f0f6fe;padding:14px;border-radius:10px;margin:12px 0;text-align:center;border:1px solid #0076ff;">
                         <strong style="color:#0076ff;">📦 بليسية الشحنة - GT</strong>
@@ -247,7 +236,7 @@
                             <p><strong>العنوان:</strong> ${address}، ${city}، ${governorate}</p>
                             <p><strong>المبلغ:</strong> ${amount} ج.م</p>
                             <p><strong>الوزن:</strong> ${weight} كجم</p>
-                            <div class="barcode">${data.data.billCode || txlogisticId}</div>
+                            <div class="barcode">${resultData.billCode || txlogisticId}</div>
                             <p style="font-size:11px;color:#888;margin-top:4px;">رقم التتبع - GT</p>
                         </div>
                     </div>
@@ -256,11 +245,9 @@
                     <p style="font-size:12px;color:#888;text-align:center;margin-top:8px;">تم إرسال الشحنة إلى نظام GT بنجاح</p>
                 `;
             } else {
-                // فشل
                 contentDiv.innerHTML = `
                     <div class="error" style="font-size:18px;font-weight:700;text-align:center;">❌ فشل الإرسال</div>
                     <hr>
-                    <p><strong>رمز الخطأ:</strong> ${data.code || 'غير معروف'}</p>
                     <p><strong>الرسالة:</strong> ${data.msg || 'لا توجد رسالة خطأ'}</p>
                     <p style="font-size:13px;color:#888;margin-top:8px;">يرجى التحقق من البيانات والمحاولة مرة أخرى</p>
                 `;
@@ -275,7 +262,7 @@
                 <div class="error" style="font-size:18px;font-weight:700;text-align:center;">❌ خطأ في الاتصال</div>
                 <hr>
                 <p><strong>الخطأ:</strong> ${error.message}</p>
-                <p style="font-size:13px;color:#888;margin-top:8px;">يرجى التحقق من الاتصال بالإنترنت والمحاولة مرة أخرى</p>
+                <p style="font-size:13px;color:#888;margin-top:8px;">يرجى المحاولة مرة أخرى</p>
             `;
         }
     }
