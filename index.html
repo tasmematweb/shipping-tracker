@@ -136,7 +136,7 @@
     <div class="card">
         <div class="title">
             <h2><span>EUX</span> Express - إرسال شحنة</h2>
-            <p style="font-size: 12px; color: #666;">متوافق مع GitHub Pages (JavaScript Only)</p>
+            <p style="font-size: 12px; color: #666;">ربط مباشر بخوادم GT عبر Apps Script Proxy</p>
         </div>
 
         <form id="orderForm" onsubmit="handleSendOrder(event)">
@@ -201,7 +201,7 @@
 
         <div class="loading" id="loading">
             <div class="spinner"></div>
-            <p>جاري الإرسال المباشر لخوادم GT...</p>
+            <p>جاري التواصل مع خوادم GT عبر جوجل سكريبت...</p>
         </div>
 
         <div id="resultBox" style="display: none;">
@@ -252,9 +252,10 @@
         privateKey: '29535fad70ca4688aaa5b462320eb096',
         customerCode: 'J0086003287',
         senderCode: 'D236',
-        plainPassword: 'Uv8NYAp2',
-        apiUrl: 'https://openapi.jtjms-eg.com/webopenplatformapi/api/order/addOrder'
+        plainPassword: 'Uv8NYAp2'
     };
+
+    const PROXY_URL = 'https://script.google.com/macros/s/AKfycby-WznWxziZXZB6rMHGYuefq4sNWXO81o74uV5-TSjDw2oHW1NcrsQds8PyG5QEO7I/exec';
 
     function generateDigest(customerCode, plainPassword, privateKey) {
         const cipherText = CryptoJS.MD5(plainPassword + 'jadada236t2').toString().toUpperCase();
@@ -336,9 +337,7 @@
         let isSimulated = false;
 
         try {
-            // استخدام CORS Proxy لتجاوز قيود GitHub Pages عند إرسال الطلبات لـ GT
-            const proxyUrl = 'https://corsproxy.io/?';
-            const response = await fetch(proxyUrl + encodeURIComponent(GT_CONFIG.apiUrl), {
+            const response = await fetch(PROXY_URL, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
                 body: params.toString()
@@ -353,6 +352,7 @@
                 throw new Error(data.msg || 'خطأ من GT');
             }
         } catch (err) {
+            console.error(err);
             isSimulated = true;
             billCode = 'JT' + Math.floor(100000000000 + Math.random() * 900000000000);
         }
