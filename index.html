@@ -1,33 +1,281 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>اختبار إرسال شحنة إلى GT</title>
+    <style>
+        body { font-family: 'Cairo', sans-serif; padding: 20px; background: #f0f4fa; }
+        .container { max-width: 600px; margin: 0 auto; background: white; padding: 30px; border-radius: 16px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); }
+        .form-group { margin-bottom: 16px; }
+        label { display: block; font-weight: 700; margin-bottom: 5px; }
+        input, select { width: 100%; padding: 10px; border: 2px solid #e8ecf0; border-radius: 10px; font-size: 14px; font-family: 'Cairo', sans-serif; }
+        button { width: 100%; padding: 14px; background: #0076ff; color: white; border: none; border-radius: 12px; font-size: 18px; font-weight: 700; cursor: pointer; font-family: 'Cairo', sans-serif; }
+        button:hover { background: #005dc7; }
+        .result { margin-top: 20px; padding: 16px; background: #f8fafc; border-radius: 12px; border: 1px solid #e8ecf0; display: none; }
+        .result.show { display: block; }
+        .success { color: #28a745; }
+        .error { color: #dc3545; }
+        .loading { text-align: center; padding: 20px; display: none; }
+        .loading.show { display: block; }
+        .spinner { border: 4px solid #e8ecf0; border-top: 4px solid #0076ff; border-radius: 50%; width: 40px; height: 40px; animation: spin 1s linear infinite; margin: 0 auto; }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        .print-btn { margin-top: 10px; background: #28a745; }
+        .print-btn:hover { background: #218838; }
+        .barcode { font-family: monospace; font-size: 20px; letter-spacing: 2px; background: #fff; padding: 10px; border: 1px dashed #ccc; text-align: center; }
+        .bill-box { background: #f0f6fe; padding: 14px; border-radius: 10px; margin: 12px 0; text-align: center; border: 1px solid #0076ff; }
+        .bill-box strong { color: #0076ff; }
+        .debug { background: #f8f9fa; padding: 10px; border-radius: 8px; font-size: 12px; border: 1px solid #ddd; margin-top: 10px; display: none; }
+        .debug.show { display: block; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2 style="text-align:center;color:#0d2137;"><span style="color:#0076ff;">EUX</span> Express - اختبار إرسال شحنة إلى GT</h2>
+    <p style="text-align:center;color:#666;font-size:14px;">سيتم إرسال الشحنة إلى نظام GT وستظهر نتيجة البليسية</p>
+
+    <div class="form-group">
+        <label>اسم المستلم *</label>
+        <input type="text" id="receiverName" value="أحمد محمد" placeholder="اسم المستلم">
+    </div>
+    <div class="form-group">
+        <label>هاتف المستلم *</label>
+        <input type="tel" id="receiverPhone" value="01012345678" placeholder="مثال: 010xxxxxxxx" dir="ltr">
+    </div>
+    <div class="form-group">
+        <label>المحافظة *</label>
+        <select id="governorate">
+            <option value="القاهرة">القاهرة</option>
+            <option value="الجيزة">الجيزة</option>
+            <option value="الشرقية">الشرقية</option>
+            <option value="أسيوط" selected>أسيوط</option>
+            <option value="الإسكندرية">الإسكندرية</option>
+        </select>
+    </div>
+    <div class="form-group">
+        <label>المدينة *</label>
+        <input type="text" id="city" value="القوصية" placeholder="المدينة">
+    </div>
+    <div class="form-group">
+        <label>المنطقة *</label>
+        <input type="text" id="area" value="الطالبية" placeholder="المنطقة">
+    </div>
+    <div class="form-group">
+        <label>العنوان التفصيلي *</label>
+        <input type="text" id="address" value="شارع الجيش بجوار مدرسة النصر" placeholder="العنوان بالتفصيل">
+    </div>
+    <div class="form-group">
+        <label>المبلغ المطلوب تحصيله *</label>
+        <input type="number" id="amount" value="150" placeholder="المبلغ بالجنيه" dir="ltr">
+    </div>
+    <div class="form-group">
+        <label>الوزن (كجم) *</label>
+        <input type="number" id="weight" value="1.5" placeholder="الوزن بالكيلو" dir="ltr" step="0.01">
+    </div>
+    <div class="form-group">
+        <label>نوع البضاعة</label>
+        <select id="goodsType">
+            <option value="ITN1">ملابس</option>
+            <option value="ITN2">مستندات</option>
+            <option value="ITN3">أكل</option>
+            <option value="ITN5">إلكترونيات</option>
+            <option value="ITN16" selected>أخرى</option>
+        </select>
+    </div>
+
+    <button onclick="sendToGT()">إرسال الشحنة إلى GT</button>
+
+    <div class="loading" id="loading"><div class="spinner"></div><p>جاري الإرسال إلى GT...</p></div>
+
+    <div class="result" id="result">
+        <h3 style="text-align:center;margin-bottom:12px;">نتيجة الإرسال</h3>
+        <div id="resultContent"></div>
+    </div>
+</div>
+
+<script>
+    // بيانات GT
+    const GT_CONFIG = {
+        apiAccount: '292508153084379141',
+        privateKey: 'a0a1047cce70493c9d5d29704f05d0d9',
+        customerCode: 'J0086024138',
+        plainPassword: 'Uv8NYAp2',
+        testUrl: 'https://demoopenapi.jtims-eg.com/webopenplatformapi/api/order/addOrder?uuid=c7f405da081d436d8ee146b59f885dce'
+    };
+
+    // Proxy مجاني لتجاوز CORS
+    const CORS_PROXY = 'https://cors-anywhere.herokuapp.com/';
+
+    // توليد التوقيع (digest)
+    function generateDigest(customerCode, plainPassword, privateKey) {
+        const cipherText = CryptoJS.MD5(plainPassword + 'jadada236t2').toString().toUpperCase();
+        const signature = CryptoJS.MD5(customerCode + cipherText + privateKey).toString().toUpperCase();
+        return btoa(signature);
+    }
+
+    // تحويل المحافظة
+    function mapGovernorate(gov) {
+        const map = {
+            'القاهرة': 'القاهرة',
+            'الجيزة': 'الجيزة',
+            'الشرقية': 'الشرقية',
+            'أسيوط': 'أسيوط',
+            'الإسكندرية': 'الإسكندرية'
+        };
+        return map[gov] || gov;
+    }
+
+    async function sendToGT() {
+        const receiverName = document.getElementById('receiverName').value.trim();
+        const receiverPhone = document.getElementById('receiverPhone').value.trim();
+        const governorate = document.getElementById('governorate').value;
+        const city = document.getElementById('city').value.trim();
+        const area = document.getElementById('area').value.trim();
+        const address = document.getElementById('address').value.trim();
+        const amount = document.getElementById('amount').value.trim();
+        const weight = document.getElementById('weight').value.trim();
+        const goodsType = document.getElementById('goodsType').value;
+
+        if (!receiverName || !receiverPhone || !city || !area || !address || !amount || !weight) {
+            alert('يرجى ملء جميع الحقول المطلوبة');
+            return;
+        }
+        if (receiverPhone.length !== 11) {
+            alert('رقم الهاتف يجب أن يكون 11 رقم');
+            return;
+        }
+
+        document.getElementById('loading').classList.add('show');
+        document.getElementById('result').classList.remove('show');
+
+        try {
+            const txlogisticId = 'EUX' + Date.now() + Math.floor(Math.random() * 1000);
+            const digest = generateDigest(
+                GT_CONFIG.customerCode,
+                GT_CONFIG.plainPassword,
+                GT_CONFIG.privateKey
+            );
+
+            const sender = {
+                name: 'شركة EUX للشحن',
+                company: 'EUX Express',
+                mobile: '01080232016',
+                phone: '01080232016',
+                countryCode: 'EGY',
+                prov: 'الشرقية',
+                city: 'مدينة العبور',
+                area: 'الشباب',
+                street: 'بجوار كشري الوالي',
+                postCode: '11828'
+            };
+
+            const receiver = {
+                name: receiverName,
+                mobile: receiverPhone,
+                phone: receiverPhone,
+                countryCode: 'EGY',
+                prov: mapGovernorate(governorate),
+                city: city,
+                area: area,
+                street: address
+            };
+
+            const bizContent = {
+                customerCode: GT_CONFIG.customerCode,
+                digest: digest,
+                expressType: 'EZ',
+                deliveryType: '04',
+                payType: 'PP_CASH',
+                goodsType: goodsType,
+                weight: weight,
+                totalQuantity: 1,
+                fodMoney: amount,
+                itemsValue: amount,
+                operateType: 1,
+                txlogisticId: txlogisticId,
+                sender: sender,
+                receiver: receiver,
+                remark: 'شحنة تجريبية عبر EUX Express'
+            };
+
+            // بناء البيانات المرسلة
+            const params = new URLSearchParams({
+                apiAccount: GT_CONFIG.apiAccount,
+                digest: digest,
+                timestamp: Date.now(),
+                bizContent: JSON.stringify(bizContent)
+            });
+
+            // إرسال عبر Proxy
+            const response = await fetch(CORS_PROXY + GT_CONFIG.testUrl, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded'
+                },
+                body: params.toString()
+            });
+
+            const data = await response.json();
+
+            document.getElementById('loading').classList.remove('show');
+
+            const resultDiv = document.getElementById('result');
+            const contentDiv = document.getElementById('resultContent');
+            resultDiv.classList.add('show');
+
+            // عرض الرد كامل للتصحيح
+            console.log('رد GT:', data);
+
+            if (data.code === '1') {
+                const resultData = data.data || {};
+                const billCode = resultData.billCode || 'غير متوفر';
+                const txId = resultData.txlogisticId || txlogisticId;
+                const sortingCode = resultData.sortingCode || 'غير متوفر';
+                const createTime = resultData.createOrderTime || '';
+                const lastCenter = resultData.lastCenterName || '';
+
+                contentDiv.innerHTML = `
                     <div class="success" style="font-size:18px;font-weight:700;text-align:center;">✅ تم إرسال الشحنة بنجاح!</div>
                     <hr>
-                    <p><strong>رقم التتبع (Bill Code):</strong> <span style="direction:ltr;display:inline-block;">${resultData.billCode || 'غير متوفر'}</span></p>
-                    <p><strong>رقم الطلب:</strong> ${resultData.txlogisticId || txlogisticId}</p>
-                    <p><strong>رمز الفرز:</strong> ${resultData.sortingCode || 'غير متوفر'}</p>
-                    <p><strong>وقت الإنشاء:</strong> ${resultData.createOrderTime || ''}</p>
-                    <p><strong>مركز التجميع:</strong> ${resultData.lastCenterName || ''}</p>
+                    <p><strong>رقم التتبع (Bill Code):</strong> <span style="direction:ltr;display:inline-block;font-weight:700;color:#0076ff;">${billCode}</span></p>
+                    <p><strong>رقم الطلب:</strong> ${txId}</p>
+                    <p><strong>رمز الفرز:</strong> ${sortingCode}</p>
+                    ${createTime ? `<p><strong>وقت الإنشاء:</strong> ${createTime}</p>` : ''}
+                    ${lastCenter ? `<p><strong>مركز التجميع:</strong> ${lastCenter}</p>` : ''}
 
-                    <div style="background:#f0f6fe;padding:14px;border-radius:10px;margin:12px 0;text-align:center;border:1px solid #0076ff;">
-                        <strong style="color:#0076ff;">📦 بليسية الشحنة - GT</strong>
+                    <div class="bill-box">
+                        <strong>📦 بليسية الشحنة - GT</strong>
                         <div style="margin-top:8px;font-size:13px;color:#333;">
                             <p><strong>المستلم:</strong> ${receiverName}</p>
                             <p><strong>الهاتف:</strong> ${receiverPhone}</p>
                             <p><strong>العنوان:</strong> ${address}، ${city}، ${governorate}</p>
                             <p><strong>المبلغ:</strong> ${amount} ج.م</p>
                             <p><strong>الوزن:</strong> ${weight} كجم</p>
-                            <div class="barcode">${resultData.billCode || txlogisticId}</div>
+                            <div class="barcode">${billCode}</div>
                             <p style="font-size:11px;color:#888;margin-top:4px;">رقم التتبع - GT</p>
                         </div>
                     </div>
 
                     <button class="print-btn" onclick="window.print()">🖨️ طباعة البليسية</button>
                     <p style="font-size:12px;color:#888;text-align:center;margin-top:8px;">تم إرسال الشحنة إلى نظام GT بنجاح</p>
+
+                    <div class="debug show">
+                        <strong>بيانات التصحيح:</strong>
+                        <pre style="white-space:pre-wrap;word-break:break-all;">${JSON.stringify(data, null, 2)}</pre>
+                    </div>
                 `;
             } else {
                 contentDiv.innerHTML = `
                     <div class="error" style="font-size:18px;font-weight:700;text-align:center;">❌ فشل الإرسال</div>
                     <hr>
+                    <p><strong>رمز الخطأ:</strong> ${data.code || 'غير معروف'}</p>
                     <p><strong>الرسالة:</strong> ${data.msg || 'لا توجد رسالة خطأ'}</p>
                     <p style="font-size:13px;color:#888;margin-top:8px;">يرجى التحقق من البيانات والمحاولة مرة أخرى</p>
+                    <div class="debug show">
+                        <strong>بيانات التصحيح:</strong>
+                        <pre style="white-space:pre-wrap;word-break:break-all;">${JSON.stringify(data, null, 2)}</pre>
+                    </div>
                 `;
             }
 
