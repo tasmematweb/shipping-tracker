@@ -1,36 +1,9 @@
-<?php
-// 1. معالجة طلب API من الخلفية (PHP Backend) لتخطي حجب CORS
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_GET['action']) && $_GET['action'] === 'create_order') {
-    header("Content-Type: application/json; charset=UTF-8");
-    
-    $inputData = file_get_contents('php://input');
-
-    $ch = curl_init('https://openapi.jtjms-eg.com/webopenplatformapi/api/order/addOrder');
-    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-    curl_setopt($ch, CURLOPT_POST, true);
-    curl_setopt($ch, CURLOPT_POSTFIELDS, $inputData);
-    curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: application/x-www-form-urlencoded'));
-    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-    curl_setopt($ch, CURLOPT_TIMEOUT, 10);
-
-    $response = curl_exec($ch);
-    $curlError = curl_error($ch);
-    curl_close($ch);
-
-    if ($curlError) {
-        echo json_encode(["code" => "0", "msg" => "خطأ في الاتصال بالخادم: " . $curlError]);
-    } else {
-        echo $response;
-    }
-    exit; // إيقاف التنفيذ لكي لا يتم تحميل باقي كود HTML مع الـ API
-}
-?>
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>EUX Express - نظام شحنات GT المتكامل</title>
+    <title>EUX Express - نظام شحنات GT</title>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/jsbarcode@3.11.5/dist/JsBarcode.all.min.js"></script>
@@ -163,7 +136,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_GET['action']) && $_GET['ac
     <div class="card">
         <div class="title">
             <h2><span>EUX</span> Express - إرسال شحنة</h2>
-            <p style="font-size: 12px; color: #666;">تسجيل مباشر ومعالجة موحدة داخل ملف واحد</p>
+            <p style="font-size: 12px; color: #666;">متوافق مع GitHub Pages (JavaScript Only)</p>
         </div>
 
         <form id="orderForm" onsubmit="handleSendOrder(event)">
@@ -228,7 +201,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_GET['action']) && $_GET['ac
 
         <div class="loading" id="loading">
             <div class="spinner"></div>
-            <p>جاري التواصل مع خوادم GT عبر الخادم الداخلي...</p>
+            <p>جاري الإرسال المباشر لخوادم GT...</p>
         </div>
 
         <div id="resultBox" style="display: none;">
@@ -279,7 +252,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_GET['action']) && $_GET['ac
         privateKey: '29535fad70ca4688aaa5b462320eb096',
         customerCode: 'J0086003287',
         senderCode: 'D236',
-        plainPassword: 'Uv8NYAp2'
+        plainPassword: 'Uv8NYAp2',
+        apiUrl: 'https://openapi.jtjms-eg.com/webopenplatformapi/api/order/addOrder'
     };
 
     function generateDigest(customerCode, plainPassword, privateKey) {
@@ -362,8 +336,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_GET['action']) && $_GET['ac
         let isSimulated = false;
 
         try {
-            // إرسال الطلب لنفس الملف (index.php?action=create_order) لتشغيل كود PHP العلوى
-            const response = await fetch('?action=create_order', {
+            // استخدام CORS Proxy لتجاوز قيود GitHub Pages عند إرسال الطلبات لـ GT
+            const proxyUrl = 'https://corsproxy.io/?';
+            const response = await fetch(proxyUrl + encodeURIComponent(GT_CONFIG.apiUrl), {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
                 body: params.toString()
@@ -375,7 +350,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_GET['action']) && $_GET['ac
                 billCode = data.data.billCode;
                 sortingCode = data.data.sortingCode || sortingCode;
             } else {
-                throw new Error(data.msg || 'خطأ من السيرفر');
+                throw new Error(data.msg || 'خطأ من GT');
             }
         } catch (err) {
             isSimulated = true;
