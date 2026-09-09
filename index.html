@@ -1,389 +1,174 @@
-<!DOCTYPE html>
-<html lang="ar" dir="rtl">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>EUX Express - نظام شحنات GT</title>
-    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap" rel="stylesheet">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/jsbarcode@3.11.5/dist/JsBarcode.all.min.js"></script>
+const crypto = require('crypto');
 
-    <style>
-        :root {
-            --primary: #0076ff;
-            --primary-hover: #005dc7;
-            --bg: #f0f4fa;
-            --card-bg: #ffffff;
-            --text: #1e293b;
-        }
+// 1. البيانات والإعدادات الخاصة بالحساب
+const CONFIG = {
+  apiAccount: '866958120939696147',
+  privateKey: '29535fad70ca4688aaa5b462320eb096',
+  customerCode: 'J0086003287',
+  plainPassword: 'YOUR_PLAIN_PASSWORD', // أدخل كلمة المرور الخاصة بـ J&T هنا
+  network: 'D236',
+  baseUrl: 'https://openapi.jtjms-eg.com/webopenplatformapi/api/order' // رابط البيئة الفعلية
+};
 
-        * { box-sizing: border-box; font-family: 'Cairo', sans-serif; }
-        body { background: var(--bg); color: var(--text); padding: 20px; margin: 0; }
+/**
+ * حساب التوقيع الرقمي للـ bizContent
+ */
+function generateBizDigest(customerCode, plainPassword, privateKey) {
+  const cipherText = crypto
+    .createHash('md5')
+    .update(plainPassword + 'jadada236t2')
+    .digest('hex')
+    .toUpperCase();
 
-        .container {
-            max-width: 1000px;
-            margin: 0 auto;
-            display: grid;
-            grid-template-columns: 1.1fr 0.9fr;
-            gap: 20px;
-        }
+  return crypto
+    .createHash('md5')
+    .update(customerCode + cipherText + privateKey)
+    .digest('base64');
+}
 
-        @media (max-width: 850px) {
-            .container { grid-template-columns: 1fr; }
-        }
+/**
+ * حساب التوقيع الرقمي للرأس (Header Digest)
+ */
+function generateHeaderDigest(apiAccount, timestamp, privateKey) {
+  return crypto
+    .createHash('md5')
+    .update(apiAccount + timestamp + privateKey)
+    .digest('base64');
+}
 
-        .card {
-            background: var(--card-bg);
-            border-radius: 16px;
-            padding: 24px;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.05);
-            border: 1px solid #e2e8f0;
-        }
+/**
+ * إنشاء طلب شحن جديد (addOrder)
+ */
+async function createOrder(orderData) {
+  const timestamp = Date.now().toString();
+  const headerDigest = generateHeaderDigest(CONFIG.apiAccount, timestamp, CONFIG.privateKey);
+  const bizDigest = generateBizDigest(CONFIG.customerCode, CONFIG.plainPassword, CONFIG.privateKey);
 
-        .title { text-align: center; margin-bottom: 20px; }
-        .title h2 { margin: 0; color: #0d2137; }
-        .title h2 span { color: var(--primary); }
+  const bizContentObj = {
+    customerCode: CONFIG.customerCode,
+    digest: bizDigest,
+    network: CONFIG.network,
+    expressType: 'EZ',
+    deliveryType: '04',
+    payType: orderData.payType || 'PP_CASH',
+    operateType: 1, // 1: إنشاء طلب جديد، 2: تعديل
+    txlogisticId: orderData.orderId,
+    goodsType: orderData.goodsType || 'ITN16',
+    weight: orderData.weight || '1.00',
+    totalQuantity: 1,
+    fodMoney: orderData.codAmount ? String(orderData.codAmount) : '0',
+    sender: {
+      name: 'Ibrahim mohamed',
+      mobile: '201029857678',
+      phone: '201029857678',
+      countryCode: 'EGY',
+      prov: orderData.senderProv || 'القاهرة',
+      city: orderData.senderCity || 'القاهرة',
+      area: orderData.senderArea || 'مدينة نصر',
+      street: orderData.senderStreet || 'عنوان المكتب / المخزن'
+    },
+    receiver: {
+      name: orderData.receiverName,
+      mobile: orderData.receiverPhone,
+      phone: orderData.receiverPhone,
+      countryCode: 'EGY',
+      prov: orderData.receiverProv,
+      city: orderData.receiverCity,
+      area: orderData.receiverArea,
+      street: orderData.receiverStreet
+    },
+    items: orderData.items || [
+      {
+        itemName: orderData.itemName || 'شحنة تجارية',
+        number: 1,
+        itemValue: orderData.codAmount ? String(orderData.codAmount) : '0'
+      }
+    ]
+  };
 
-        .form-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 12px;
-        }
-        .full-width { grid-column: span 2; }
+  const bodyParams = new URLSearchParams();
+  bodyParams.append('apiAccount', CONFIG.apiAccount);
+  bodyParams.append('digest', headerDigest);
+  bodyParams.append('timestamp', timestamp);
+  bodyParams.append('bizContent', JSON.stringify(bizContentObj));
 
-        .form-group { margin-bottom: 8px; }
-        label { display: block; font-weight: 700; font-size: 13px; margin-bottom: 4px; }
-        input, select {
-            width: 100%;
-            padding: 10px;
-            border: 2px solid #e8ecf0;
-            border-radius: 10px;
-            font-size: 14px;
-        }
-        input:focus, select:focus { outline: none; border-color: var(--primary); }
+  try {
+    const response = await fetch(`${CONFIG.baseUrl}/addOrder`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded'
+      },
+      body: bodyParams.toString()
+    });
 
-        button {
-            width: 100%;
-            padding: 14px;
-            background: var(--primary);
-            color: white;
-            border: none;
-            border-radius: 12px;
-            font-size: 16px;
-            font-weight: 700;
-            cursor: pointer;
-            margin-top: 10px;
-        }
-        button:hover { background: var(--primary-hover); }
+    const result = await response.json();
+    return result;
+  } catch (error) {
+    console.error('خطأ أثناء إنشاء الطلب:', error);
+    throw error;
+  }
+}
 
-        .badge {
-            display: inline-block;
-            padding: 6px 12px;
-            border-radius: 20px;
-            font-size: 12px;
-            font-weight: 700;
-            margin-bottom: 12px;
-            width: 100%;
-            text-align: center;
-        }
-        .badge-success { background: #d1fae5; color: #065f46; }
-        .badge-warning { background: #fef3c7; color: #92400e; }
+/**
+ * طلب طباعة بوليصة الشحن واسترجاع ملف Base64 (printOrder)
+ */
+async function printOrder(billCode) {
+  const timestamp = Date.now().toString();
+  const headerDigest = generateHeaderDigest(CONFIG.apiAccount, timestamp, CONFIG.privateKey);
+  const bizDigest = generateBizDigest(CONFIG.customerCode, CONFIG.plainPassword, CONFIG.privateKey);
 
-        .waybill {
-            border: 2px dashed #94a3b8;
-            border-radius: 12px;
-            padding: 16px;
-            background: #fff;
-        }
-        .waybill-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            border-bottom: 2px solid #000;
-            padding-bottom: 8px;
-        }
-        .waybill-body { margin-top: 10px; font-size: 13px; }
-        .waybill-row { border-bottom: 1px solid #eee; padding: 6px 0; }
+  const bizContentObj = {
+    customerCode: CONFIG.customerCode,
+    digest: bizDigest,
+    billCode: billCode,
+    printSize: 0, // 0: ورقة ملصق حراري
+    printCod: 1   // 1: إظهار مبلغ الدفع عند الاستلام
+  };
 
-        .barcode-box { text-align: center; padding: 10px 0; }
-        .barcode-box svg { max-width: 100%; height: auto; }
+  const bodyParams = new URLSearchParams();
+  bodyParams.append('apiAccount', CONFIG.apiAccount);
+  bodyParams.append('digest', headerDigest);
+  bodyParams.append('timestamp', timestamp);
+  bodyParams.append('bizContent', JSON.stringify(bizContentObj));
 
-        .print-btn { background: #10b981; }
-        .print-btn:hover { background: #059669; }
+  try {
+    const response = await fetch(`${CONFIG.baseUrl}/printOrder`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded'
+      },
+      body: bodyParams.toString()
+    });
 
-        .loading { display: none; text-align: center; padding: 20px; }
-        .spinner {
-            border: 4px solid #f3f3f3;
-            border-top: 4px solid var(--primary);
-            border-radius: 50%;
-            width: 36px;
-            height: 36px;
-            animation: spin 1s linear infinite;
-            margin: 0 auto 10px;
-        }
-        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+    const result = await response.json();
+    return result;
+  } catch (error) {
+    console.error('خطأ أثناء طلب بوليصة الشحن:', error);
+    throw error;
+  }
+}
 
-        @media print {
-            body * { visibility: hidden; }
-            #printableWaybill, #printableWaybill * { visibility: visible; }
-            #printableWaybill { position: absolute; left: 0; top: 0; width: 100%; }
-        }
-    </style>
-</head>
-<body>
+// مثال للاستخدام والتنفيذ
+(async () => {
+  // 1. إنشاء طلب شحن
+  const newOrder = {
+    orderId: 'EUX_' + Date.now(),
+    codAmount: 350,
+    receiverName: 'أحمد محمود',
+    receiverPhone: '01012345678',
+    receiverProv: 'الجيزة',
+    receiverCity: 'الدقي',
+    receiverArea: 'الدقي',
+    receiverStreet: 'شارع التحرير، مبنى 15',
+    itemName: 'ملابس'
+  };
 
-<div class="container">
-    <div class="card">
-        <div class="title">
-            <h2><span>EUX</span> Express - إرسال شحنة</h2>
-            <p style="font-size: 12px; color: #666;">ربط مباشر بخوادم GT عبر Apps Script Proxy</p>
-        </div>
+  const orderResult = await createOrder(newOrder);
+  console.log('نتيجة إنشاء الطلب:', orderResult);
 
-        <form id="orderForm" onsubmit="handleSendOrder(event)">
-            <div class="form-grid">
-                <div class="form-group full-width">
-                    <label>اسم المستلم *</label>
-                    <input type="text" id="receiverName" value="أحمد محمد" required>
-                </div>
-                <div class="form-group full-width">
-                    <label>هاتف المستلم *</label>
-                    <input type="tel" id="receiverPhone" value="01012345678" maxlength="11" required dir="ltr">
-                </div>
-                <div class="form-group">
-                    <label>المحافظة *</label>
-                    <select id="governorate" required>
-                        <option value="أسيوط" selected>أسيوط</option>
-                        <option value="القاهرة">القاهرة</option>
-                        <option value="الجيزة">الجيزة</option>
-                        <option value="الشرقية">الشرقية</option>
-                        <option value="الإسكندرية">الإسكندرية</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label>المدينة *</label>
-                    <input type="text" id="city" value="القوصية" required>
-                </div>
-                <div class="form-group">
-                    <label>المنطقة *</label>
-                    <input type="text" id="area" value="الطالبية" required>
-                </div>
-                <div class="form-group">
-                    <label>نوع البضاعة</label>
-                    <select id="goodsType">
-                        <option value="ITN1">ملابس</option>
-                        <option value="ITN5">إلكترونيات</option>
-                        <option value="ITN16" selected>أخرى</option>
-                    </select>
-                </div>
-                <div class="form-group full-width">
-                    <label>العنوان التفصيلي *</label>
-                    <input type="text" id="address" value="شارع الجيش بجوار مدرسة النصر" required>
-                </div>
-                <div class="form-group">
-                    <label>المبلغ المطلوب (ج.م) *</label>
-                    <input type="number" id="amount" value="150" required dir="ltr">
-                </div>
-                <div class="form-group">
-                    <label>الوزن (كجم) *</label>
-                    <input type="number" id="weight" value="1.5" step="0.1" required dir="ltr">
-                </div>
-            </div>
-
-            <button type="submit">إرسال الشحنة لـ GT وتوليد البليسية</button>
-        </form>
-    </div>
-
-    <div class="card">
-        <div class="title">
-            <h2>بليسية الشحنة</h2>
-            <p style="font-size: 12px; color: #666;">المعاينة المباشرة والطباعة</p>
-        </div>
-
-        <div class="loading" id="loading">
-            <div class="spinner"></div>
-            <p>جاري التواصل مع خوادم GT عبر جوجل سكريبت...</p>
-        </div>
-
-        <div id="resultBox" style="display: none;">
-            <div id="statusBadge"></div>
-
-            <div class="waybill" id="printableWaybill">
-                <div class="waybill-header">
-                    <div><strong>EUX Express</strong> / J&T</div>
-                    <div style="font-size: 11px; text-align: left;">
-                        <span id="wbDate"></span><br>
-                        <strong id="wbSorting" style="color:var(--primary)"></strong>
-                    </div>
-                </div>
-
-                <div class="barcode-box">
-                    <svg id="barcode"></svg>
-                </div>
-
-                <div class="waybill-body">
-                    <div class="waybill-row">
-                        <strong>المرسل:</strong> شركة EUX للشحن - العبور (01080232016)
-                    </div>
-                    <div class="waybill-row">
-                        <strong>المستلم:</strong> <span id="wbReceiver"></span> (<span id="wbPhone"></span>)
-                    </div>
-                    <div class="waybill-row">
-                        <strong>العنوان:</strong> <span id="wbAddress"></span>
-                    </div>
-                    <div class="waybill-row" style="display: flex; justify-content: space-between; font-weight: 700;">
-                        <span>المبلغ COD: <span id="wbAmount"></span> ج.م</span>
-                        <span>الوزن: <span id="wbWeight"></span> كجم</span>
-                    </div>
-                </div>
-            </div>
-
-            <button class="print-btn" onclick="window.print()">🖨️ طباعة البليسية (A6)</button>
-        </div>
-
-        <div id="placeholder" style="text-align: center; color: #94a3b8; padding: 40px 0;">
-            قم بإدخال البيانات واضغط على زر الإرسال لتوليد البليسية ورقم التتبع.
-        </div>
-    </div>
-</div>
-
-<script>
-    const GT_CONFIG = {
-        apiAccount: '866958120939696147',
-        privateKey: '29535fad70ca4688aaa5b462320eb096',
-        customerCode: 'J0086003287',
-        senderCode: 'D236',
-        plainPassword: 'Uv8NYAp2'
-    };
-
-    const PROXY_URL = 'https://script.google.com/macros/s/AKfycby-WznWxziZXZB6rMHGYuefq4sNWXO81o74uV5-TSjDw2oHW1NcrsQds8PyG5QEO7I/exec';
-
-    function generateDigest(customerCode, plainPassword, privateKey) {
-        const cipherText = CryptoJS.MD5(plainPassword + 'jadada236t2').toString().toUpperCase();
-        const signature = CryptoJS.MD5(customerCode + cipherText + privateKey).toString().toUpperCase();
-        return CryptoJS.enc.Base64.stringify(CryptoJS.enc.Utf8.parse(signature));
-    }
-
-    async function handleSendOrder(e) {
-        e.preventDefault();
-
-        const loading = document.getElementById('loading');
-        const resultBox = document.getElementById('resultBox');
-        const placeholder = document.getElementById('placeholder');
-
-        loading.style.display = 'block';
-        resultBox.style.display = 'none';
-        placeholder.style.display = 'none';
-
-        const receiverName = document.getElementById('receiverName').value;
-        const receiverPhone = document.getElementById('receiverPhone').value;
-        const governorate = document.getElementById('governorate').value;
-        const city = document.getElementById('city').value;
-        const area = document.getElementById('area').value;
-        const address = document.getElementById('address').value;
-        const amount = document.getElementById('amount').value;
-        const weight = document.getElementById('weight').value;
-        const goodsType = document.getElementById('goodsType').value;
-
-        const txlogisticId = 'EUX' + Date.now();
-        const digest = generateDigest(GT_CONFIG.customerCode, GT_CONFIG.plainPassword, GT_CONFIG.privateKey);
-
-        const bizContent = {
-            customerCode: GT_CONFIG.customerCode,
-            digest: digest,
-            expressType: 'EZ',
-            deliveryType: '04',
-            payType: 'PP_CASH',
-            goodsType: goodsType,
-            weight: String(weight),
-            totalQuantity: 1,
-            fodMoney: String(amount),
-            itemsValue: String(amount),
-            operateType: 1,
-            txlogisticId: txlogisticId,
-            sender: {
-                name: 'شركة EUX للشحن',
-                company: 'EUX Express',
-                mobile: '01080232016',
-                phone: '01080232016',
-                countryCode: 'EGY',
-                prov: 'الشرقية',
-                city: 'مدينة العبور',
-                area: 'الشباب',
-                street: 'بجوار كشري الوالي',
-                postCode: '11828'
-            },
-            receiver: {
-                name: receiverName,
-                mobile: receiverPhone,
-                phone: receiverPhone,
-                countryCode: 'EGY',
-                prov: governorate,
-                city: city,
-                area: area,
-                street: address
-            },
-            remark: 'شحنة صادرة عبر منصة EUX Express'
-        };
-
-        const params = new URLSearchParams({
-            apiAccount: GT_CONFIG.apiAccount,
-            digest: digest,
-            timestamp: Date.now(),
-            bizContent: JSON.stringify(bizContent)
-        });
-
-        let billCode = '';
-        let sortingCode = 'EGY-CAI-CENTER';
-        let isSimulated = false;
-
-        try {
-            const response = await fetch(PROXY_URL, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-                body: params.toString()
-            });
-
-            const data = await response.json();
-
-            if (data && data.code === '1' && data.data) {
-                billCode = data.data.billCode;
-                sortingCode = data.data.sortingCode || sortingCode;
-            } else {
-                throw new Error(data.msg || 'خطأ من GT');
-            }
-        } catch (err) {
-            console.error(err);
-            isSimulated = true;
-            billCode = 'JT' + Math.floor(100000000000 + Math.random() * 900000000000);
-        }
-
-        loading.style.display = 'none';
-        resultBox.style.display = 'block';
-
-        const badge = document.getElementById('statusBadge');
-        if (isSimulated) {
-            badge.innerHTML = `<div class="badge badge-warning">🟡 وضع المحاكاة الداخلي (تعذر الوصول لشبكة GT)</div>`;
-        } else {
-            badge.innerHTML = `<div class="badge badge-success">🟢 تم التسجيل المباشر بنجاح في نظام GT</div>`;
-        }
-
-        document.getElementById('wbReceiver').innerText = receiverName;
-        document.getElementById('wbPhone').innerText = receiverPhone;
-        document.getElementById('wbAddress').innerText = `${address}، ${area}، ${city} (${governorate})`;
-        document.getElementById('wbAmount').innerText = amount;
-        document.getElementById('wbWeight').innerText = weight;
-        document.getElementById('wbSorting').innerText = sortingCode;
-        document.getElementById('wbDate').innerText = new Date().toLocaleDateString('ar-EG');
-
-        JsBarcode("#barcode", billCode, {
-            format: "CODE128",
-            lineColor: "#000",
-            width: 2,
-            height: 50,
-            displayValue: true
-        });
-    }
-</script>
-
-</body>
-</html>
+  // 2. عند نجاح الطلب، يتم طلب طباعة البوليصة برقم billCode الناتج
+  if (orderResult.code === '1' && orderResult.data?.billCode) {
+    const printResult = await printOrder(orderResult.data.billCode);
+    console.log('نتيجة طلب البوليصة:', printResult);
+  }
+})();
