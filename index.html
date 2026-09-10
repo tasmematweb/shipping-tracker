@@ -276,16 +276,21 @@
 
     const PROXY_URL = 'https://script.google.com/macros/s/AKfycbzogeH2yBYleigMH7MG2OT-uf1ep5JsC94FCDFDnw-Rj2CKEkFR_tTCzHZ0eVyJIgU/exec';
 
-    // --- تصحيح توليد التوقيع ---
+    // --- توقيع الـ digest داخل bizContent (تم التأكد من صحته: طابق مثال GT الرسمي بالظبط) ---
     // الخطوة 1: cipherText = MD5(plainPassword + 'jadada236t2') → HEX uppercase (نص)
     // الخطوة 2: signature = MD5(customerCode + cipherText + privateKey) → البايتات الخام (وليس الـ hex)
     // الخطوة 3: digest = Base64(signature الخام)
-    // الخطأ في النسخة القديمة كان تحويل ناتج الخطوة 2 لنص hex ثم عمل base64 لحروف هذا النص
-    // بدلاً من عمل base64 للبايتات الخام مباشرة، مما ينتج توقيعاً أطول وغير صحيح يرفضه GT.
-    function generateDigest(customerCode, plainPassword, privateKey) {
+    function generateBodyDigest(customerCode, plainPassword, privateKey) {
         const cipherText = CryptoJS.MD5(plainPassword + 'jadada236t2').toString().toUpperCase();
         const signatureWords = CryptoJS.MD5(customerCode + cipherText + privateKey); // WordArray خام
         return CryptoJS.enc.Base64.stringify(signatureWords); // base64 مباشرة على البايتات
+    }
+
+    // --- توقيع الـ digest الخاص بالـ Header (صيغة مختلفة تمامًا، مصدرها مكتبة shipbridge-jtexpress مفتوحة المصدر) ---
+    // digest = base64(md5(bizContentJsonString + privateKey))
+    function generateHeaderDigest(bizContentJsonString, privateKey) {
+        const signatureWords = CryptoJS.MD5(bizContentJsonString + privateKey);
+        return CryptoJS.enc.Base64.stringify(signatureWords);
     }
 
     function logDebug(msg) {
@@ -320,14 +325,14 @@
         const goodsType = document.getElementById('goodsType').value;
 
         const txlogisticId = 'EUX' + Date.now();
-        const digest = generateDigest(GT_CONFIG.customerCode, GT_CONFIG.plainPassword, GT_CONFIG.privateKey);
+        const bodyDigest = generateBodyDigest(GT_CONFIG.customerCode, GT_CONFIG.plainPassword, GT_CONFIG.privateKey);
 
-        logDebug('digest: ' + digest);
+        logDebug('bodyDigest: ' + bodyDigest);
         logDebug('txlogisticId: ' + txlogisticId);
 
         const bizContent = {
             customerCode: GT_CONFIG.customerCode,
-            digest: digest,
+            digest: bodyDigest,
             expressType: 'EZ',
             deliveryType: '04',
             payType: 'PP_CASH',
@@ -363,11 +368,17 @@
             remark: 'شحنة صادرة عبر منصة EUX Express'
         };
 
+        const bizContentStr = JSON.stringify(bizContent);
+        const headerDigest = generateHeaderDigest(bizContentStr, GT_CONFIG.privateKey);
+        const timestamp = String(Date.now());
+
+        logDebug('headerDigest: ' + headerDigest);
+
         const params = new URLSearchParams({
             apiAccount: GT_CONFIG.apiAccount,
-            digest: digest,
-            timestamp: Date.now(),
-            bizContent: JSON.stringify(bizContent)
+            digest: headerDigest,
+            timestamp: timestamp,
+            bizContent: bizContentStr
         });
 
         let billCode = '';
