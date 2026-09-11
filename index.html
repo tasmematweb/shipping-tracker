@@ -2844,17 +2844,31 @@
       if(result.success) {
         showToast('تم إرسال الطلبية بنجاح!');
         
-        cart.forEach(item => {
+        await Promise.all(cart.map(async item => {
           const category = item.category || 'General';
           const storageKey = category === 'Offer' ? 'hl_offers' : `hl_products_${category.toLowerCase()}`;
           const items = JSON.parse(localStorage.getItem(storageKey) || '[]');
           const targetItem = items.find(i => String(i.id) === String(item.id));
-          
+
           if(targetItem) {
-            targetItem.stock = Math.max(0, (parseInt(targetItem.stock) || 0) - item.quantity);
+            const newStock = Math.max(0, (parseInt(targetItem.stock) || 0) - item.quantity);
+            targetItem.stock = newStock;
             localStorage.setItem(storageKey, JSON.stringify(items));
+
+            try {
+              await fetch(SUPABASE_URL + '/rest/v1/products?id=eq.' + encodeURIComponent(item.id), {
+                method: 'PATCH',
+                headers: {
+                  'apikey': SUPABASE_KEY,
+                  'Authorization': 'Bearer ' + SUPABASE_KEY,
+                  'Content-Type': 'application/json',
+                  'Prefer': 'return=minimal'
+                },
+                body: JSON.stringify({ stock: newStock })
+              });
+            } catch(e) { console.error('Stock update failed', e); }
           }
-        });
+        }));
         
         cart = [];
         saveCart();
