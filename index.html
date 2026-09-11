@@ -1416,6 +1416,11 @@
     </div>
 
     <div class="admin-section">
+      <h3>جميع المنتجات المنشورة</h3>
+      <div id="allProductsList" class="admin-list"></div>
+    </div>
+
+    <div class="admin-section">
       <h3>أدوات الصيانة</h3>
       <button type="button" class="add-image-btn" onclick="clearOldData()">مسح البيانات القديمة</button>
     </div>
@@ -2548,6 +2553,69 @@
         });
       });
       container.innerHTML = html || '<p style="text-align:center;color:rgba(255,255,255,0.5);">لا توجد منتجات</p>';
+      renderAllProductsList();
+    }
+
+    async function renderAllProductsList() {
+      const container = document.getElementById('allProductsList');
+      if (!container) return;
+      container.innerHTML = '<p style="text-align:center;color:rgba(255,255,255,0.5);">جاري التحميل...</p>';
+      try {
+        const res = await fetch(SUPABASE_URL + '/rest/v1/products?category=neq.Showcase&select=id,name,category,price,stock', {
+          headers: { 'apikey': SUPABASE_KEY, 'Authorization': 'Bearer ' + SUPABASE_KEY }
+        });
+        const rows = await res.json();
+        if (!rows || rows.length === 0) {
+          container.innerHTML = '<p style="text-align:center;color:rgba(255,255,255,0.5);">لا توجد منتجات</p>';
+          return;
+        }
+        let html = '';
+        rows.forEach(item => {
+          html += `<div class="admin-list-item" style="flex-wrap:wrap;gap:10px;">
+            <span>${item.name} — <strong style="color:#E50914;">${item.category}</strong> — السعر: ${item.price} — المخزون: ${item.stock}</span>
+            <button onclick="deleteProductCompletely('${item.id}')" style="background:#E50914;color:#FFF;border:none;padding:6px 14px;border-radius:6px;cursor:pointer;font-weight:700;">حذف</button>
+          </div>`;
+        });
+        container.innerHTML = html;
+      } catch(e) {
+        container.innerHTML = '<p style="text-align:center;color:#E50914;">فشل التحميل: ' + e.message + '</p>';
+      }
+    }
+
+    async function deleteProductCompletely(id) {
+      if (!confirm('هل أنت متأكد من حذف هذا المنتج من جميع قواعد البيانات؟')) return;
+      const catMap = {
+        'Sweatpants': 'deleteSweatpants',
+        'Shirt': 'deleteShirt',
+        'T-shirt': 'deleteTshirt',
+        'Shoes': 'deleteShoes',
+        'Jeans': 'deleteJeans',
+        'Jacket': 'deleteJacket',
+        'Products': 'deleteProduct',
+        'Sherwal': 'deleteSherwal',
+        'Offer': 'deleteOffer'
+      };
+      try {
+        const res = await fetch(SUPABASE_URL + '/rest/v1/products?id=eq.' + encodeURIComponent(id), {
+          headers: { 'apikey': SUPABASE_KEY, 'Authorization': 'Bearer ' + SUPABASE_KEY }
+        });
+        const rows = await res.json();
+        if (rows && rows[0]) {
+          const action = catMap[rows[0].category];
+          if (action) {
+            await callAPI(action, { id: id });
+          }
+        }
+        await fetch(SUPABASE_URL + '/rest/v1/products?id=eq.' + encodeURIComponent(id), {
+          method: 'DELETE',
+          headers: { 'apikey': SUPABASE_KEY, 'Authorization': 'Bearer ' + SUPABASE_KEY }
+        });
+        showToast('تم حذف المنتج من جميع قواعد البيانات');
+        await renderAllProductsList();
+        await loadAllData();
+      } catch(e) {
+        showToast('فشل الحذف: ' + e.message, 'error');
+      }
     }
 
     async function updateStockManually(id, category) {
