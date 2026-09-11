@@ -2668,6 +2668,7 @@
         ['newOfferTitle','newOfferDescription','newOfferPrice','newOfferOldPrice','newOfferIcon','newOfferStock'].forEach(id => document.getElementById(id).value='');
         document.getElementById('offerImagesContainer').innerHTML=''; 
         document.getElementById('offerImagesPreview').innerHTML=''; 
+        await new Promise(r => setTimeout(r, 3000));
         await loadAllData(); 
       } else { 
         showToast('فشل إضافة العرض: '+(result.error||'خطأ'), 'error'); 
@@ -2717,6 +2718,7 @@
         document.getElementById('productImagesContainer').innerHTML='';
         document.getElementById('uploadedImagesPreview').innerHTML='';
         document.getElementById('uploadStatus').textContent='';
+        await new Promise(r => setTimeout(r, 3000));
         await loadAllData(); 
       } else { 
         showToast('فشل إضافة المنتج: '+(result.error||'خطأ'), 'error'); 
