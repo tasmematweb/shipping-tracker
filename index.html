@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Neon Clock, Archer & Growth Chart</title>
+    <title>Neon Clock, Archer & Growth Chart - Fully Responsive</title>
     <style>
         * {
             margin: 0;
@@ -14,13 +14,13 @@
         body {
             /* خلفية بيضاء بالكامل */
             background-color: #ffffff;
-            height: 600vh;
+            height: 550vh;
             overflow-x: hidden;
-            font-family: sans-serif;
+            font-family: system-ui, -apple-system, sans-serif;
             position: relative;
         }
 
-        /* ---------------- 1. الساعة المعلقة في منتصف شاشة البداية ---------------- */
+        /* ---------------- 1. الساعة المعلقة (متجاوبة تماماً) ---------------- */
         .hanging-wrapper {
             position: absolute;
             top: 50vh;
@@ -30,11 +30,13 @@
             flex-direction: column;
             align-items: center;
             z-index: 10;
+            width: 90%;
+            max-width: 500px;
         }
 
         .wall-nail {
-            width: 18px;
-            height: 18px;
+            width: clamp(14px, 2.5vw, 18px);
+            height: clamp(14px, 2.5vw, 18px);
             background-color: #00d2ff;
             border-radius: 50%;
             box-shadow: 0 0 12px #00d2ff, 0 0 24px #00d2ff;
@@ -44,16 +46,17 @@
 
         .hanging-string {
             width: 3px;
-            height: 65px;
+            height: clamp(40px, 8vh, 65px);
             background: linear-gradient(to bottom, #00d2ff, rgba(0, 210, 255, 0.4));
             box-shadow: 0 0 10px #00d2ff;
         }
 
         .clock-frame-box {
+            width: 100%;
             background-color: rgba(255, 255, 255, 0.95);
-            border: 4px solid #00d2ff;
-            border-radius: 30px;
-            padding: 30px;
+            border: clamp(2px, 0.6vw, 4px) solid #00d2ff;
+            border-radius: clamp(18px, 4vw, 30px);
+            padding: clamp(15px, 4vw, 30px);
             box-shadow: 
                 0 0 20px rgba(0, 210, 255, 0.4),
                 inset 0 0 20px rgba(0, 210, 255, 0.2),
@@ -64,29 +67,27 @@
             justify-content: center;
         }
 
-        /* الحجم الكبير للساعة (460px) */
         .clock-container {
-            width: 460px;
-            height: 460px;
-            max-width: 85vw;
-            max-height: 85vh;
+            width: 100%;
+            max-width: 440px;
+            aspect-ratio: 1 / 1;
             display: flex;
             align-items: center;
             justify-content: center;
         }
 
-        /* ---------------- 2. قسم الرامي متناسق باللون الأزرق النيون ---------------- */
+        /* ---------------- 2. قسم الرامي (متجاوب تماماً) ---------------- */
         .archer-section {
             position: absolute;
-            top: 220vh;
+            top: 200vh;
             left: 50%;
             transform: translateX(-50%);
-            width: 90%;
-            max-width: 900px;
+            width: 92%;
+            max-width: 950px;
             background-color: rgba(255, 255, 255, 0.95);
-            border: 4px solid #00d2ff;
-            border-radius: 30px;
-            padding: 25px;
+            border: clamp(2px, 0.6vw, 4px) solid #00d2ff;
+            border-radius: clamp(18px, 4vw, 30px);
+            padding: clamp(12px, 3vw, 25px);
             box-shadow: 
                 0 0 20px rgba(0, 210, 255, 0.4),
                 inset 0 0 20px rgba(0, 210, 255, 0.2),
@@ -97,24 +98,25 @@
 
         .archer-container {
             width: 100%;
-            height: 440px;
+            aspect-ratio: 800 / 400;
+            height: auto;
             display: flex;
             align-items: center;
             justify-content: center;
         }
 
-        /* ---------------- 3. قسم مؤشر الرسم البياني الصاعد ---------------- */
+        /* ---------------- 3. قسم مؤشر الرسم البياني (متجاوب تماماً) ---------------- */
         .chart-section {
             position: absolute;
-            top: 390vh;
+            top: 360vh;
             left: 50%;
             transform: translateX(-50%);
             width: 92%;
             max-width: 1000px;
             background-color: rgba(255, 255, 255, 0.95);
-            border: 4px solid #00d2ff;
-            border-radius: 30px;
-            padding: 25px;
+            border: clamp(2px, 0.6vw, 4px) solid #00d2ff;
+            border-radius: clamp(18px, 4vw, 30px);
+            padding: clamp(12px, 3vw, 25px);
             box-shadow: 
                 0 0 20px rgba(0, 210, 255, 0.4),
                 inset 0 0 20px rgba(0, 210, 255, 0.2),
@@ -125,7 +127,8 @@
 
         .chart-container {
             width: 100%;
-            height: 500px;
+            aspect-ratio: 800 / 420;
+            height: auto;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -145,11 +148,24 @@
         .outer-aura {
             filter: drop-shadow(0 0 12px #00d2ff) drop-shadow(0 0 25px #00d2ff);
         }
+
+        /* تكيّف مع الشاشات الصغيرة والتلفونات */
+        @media (max-width: 600px) {
+            body {
+                height: 480vh;
+            }
+            .archer-section {
+                top: 170vh;
+            }
+            .chart-section {
+                top: 310vh;
+            }
+        }
     </style>
 </head>
 <body>
 
-    <!-- 1. البرواز المعلق والساعة الحجم الكبير (460px) -->
+    <!-- 1. البرواز المعلق والساعة -->
     <div class="hanging-wrapper">
         <div class="wall-nail"></div>
         <div class="hanging-string"></div>
@@ -171,7 +187,7 @@
         </div>
     </div>
 
-    <!-- 2. قسم الرامي والهدف (3 أسهم متتالية) -->
+    <!-- 2. قسم الرامي والهدف -->
     <div class="archer-section">
         <div class="archer-container">
             <svg viewBox="0 0 800 400">
@@ -323,16 +339,13 @@
             minuteHand.setAttribute('transform', `rotate(${minuteAngle} 150 150)`);
             hourHand.setAttribute('transform', `rotate(${hourAngle} 150 150)`);
 
-            // -----------------------------------------------------------------
-            // ب) حساب ظهور قسم الرامي داخل شاشة المستعمل (Viewport Tracking)
-            // -----------------------------------------------------------------
+            // ب) تتبع قسم الرامي داخل Viewport
             const archerRect = archerSection.getBoundingClientRect();
-            const archerStart = window.innerHeight * 0.80; // تبدأ الحركة عندما تظهر البطاقة من الأسفل
-            const archerEnd = window.innerHeight * 0.15;   // تنتهي عندما تصل لأعلى الشاشة
+            const archerStart = window.innerHeight * 0.85; 
+            const archerEnd = window.innerHeight * 0.15;   
             let rawArcherP = (archerStart - archerRect.top) / (archerStart - archerEnd);
             rawArcherP = Math.min(Math.max(rawArcherP, 0), 1);
 
-            // تنعيم الحركة لسلاسة فائقة
             currentArcherP += (rawArcherP - currentArcherP) * 0.12;
 
             const s1 = getShotState(currentArcherP, 0.00, 0.33);
@@ -382,12 +395,10 @@
                 targetBoard.setAttribute('transform', `translate(0, 0)`);
             }
 
-            // -----------------------------------------------------------------
-            // ج) حساب ظهور قسم الرسم البياني داخل شاشة المستعمل
-            // -----------------------------------------------------------------
+            // ج) تتبع قسم الرسم البياني داخل Viewport
             const chartRect = chartSection.getBoundingClientRect();
-            const chartStart = window.innerHeight * 0.80; // يبدأ رسم السهم عند ظهور البطاقة من الأسفل
-            const chartEnd = window.innerHeight * 0.20;   // يكتمل الرسم عندما تتوسط البطاقة الشاشة
+            const chartStart = window.innerHeight * 0.85; 
+            const chartEnd = window.innerHeight * 0.20;   
             let rawChartP = (chartStart - chartRect.top) / (chartStart - chartEnd);
             rawChartP = Math.min(Math.max(rawChartP, 0), 1);
 
