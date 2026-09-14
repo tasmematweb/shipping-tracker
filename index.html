@@ -3,9 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-    <title>Rain</title>
-
+    <title>Neon Scroll Clock</title>
     <style>
         * {
             margin: 0;
@@ -13,359 +11,109 @@
             box-sizing: border-box;
         }
 
-        html,
         body {
-            width: 100%;
-            height: 100%;
-            overflow: hidden;
+            /* خلفية بيضاء بالكامل */
+            background-color: #ffffff;
+            /* ارتفاع كبير للصفحة للسماح بالنزول والطلوع */
+            height: 500vh;
+            overflow-x: hidden;
         }
 
-        body {
-            background: #ffffff;
-        }
-
-        #rainCanvas {
+        /* تثبيت الساعة في منتصف الشاشة دائماً */
+        .clock-container {
             position: fixed;
-            inset: 0;
-            width: 100%;
-            height: 100%;
-            display: block;
-            pointer-events: none;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 380px;
+            height: 380px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
-        .content {
-            position: relative;
-            z-index: 2;
+        svg {
             width: 100%;
             height: 100%;
+            /* تأثير التوهج النيون للساعة بأكملها */
+            filter: drop-shadow(0 0 12px rgba(0, 210, 255, 0.6));
+        }
+
+        /* توهج النيون الأزرق */
+        .neon-glow {
+            filter: drop-shadow(0 0 6px #00d2ff) drop-shadow(0 0 15px #00d2ff);
+        }
+
+        .white-glow {
+            filter: drop-shadow(0 0 4px #ffffff) drop-shadow(0 0 8px rgba(255, 255, 255, 0.8));
         }
     </style>
 </head>
-
 <body>
 
-<canvas id="rainCanvas"></canvas>
+    <!-- الساعة في منتصف الشاشة -->
+    <div class="clock-container">
+        <svg viewBox="0 0 300 300">
+            <!-- خلفية قرص الساعة الأسود -->
+            <circle cx="150" cy="150" r="135" fill="#03070d" stroke="#00d2ff" stroke-width="3" class="neon-glow" />
 
-<main class="content"></main>
+            <!-- علامات الدقائق والساعات -->
+            <g id="ticks" stroke="#00d2ff" stroke-linecap="round" class="neon-glow"></g>
 
-<script>
+            <!-- عقرب الساعات (الأبيض) -->
+            <g id="hour-hand" transform="rotate(295 150 150)">
+                <polygon points="146,150 154,150 151,85 149,85" fill="#ffffff" class="white-glow" />
+            </g>
 
-const canvas = document.getElementById("rainCanvas");
-const ctx = canvas.getContext("2d");
+            <!-- عقرب الدقائق (الأزرق النيون الممتد) -->
+            <g id="minute-hand" transform="rotate(355 150 150)">
+                <line x1="150" y1="185" x2="150" y2="40" stroke="#00d2ff" stroke-width="4.5" stroke-linecap="round" class="neon-glow" />
+            </g>
 
-let width;
-let height;
+            <!-- المركز (دائرة الوصل النيون) -->
+            <circle cx="150" cy="150" r="8" fill="#03070d" stroke="#00d2ff" stroke-width="3.5" class="neon-glow" />
+        </svg>
+    </div>
 
-let drops = [];
+    <script>
+        // رسم شُرط/علامات الساعة (60 شرطة)
+        const ticksGroup = document.getElementById('ticks');
+        for (let i = 0; i < 60; i++) {
+            const angle = i * 6;
+            const isMajor = i % 5 === 0;
+            const length = isMajor ? 12 : 6;
+            const strokeWidth = isMajor ? 2.8 : 1.2;
+            const opacity = isMajor ? 1 : 0.75;
 
-/* اتجاه الهاتف */
-let tiltX = 0;
-let tiltY = 1;
+            const line = document.createElementNS("http://www.w3.org/2000/svg", "line");
+            line.setAttribute("x1", "150");
+            line.setAttribute("y1", "20");
+            line.setAttribute("x2", "150");
+            line.setAttribute("y2", 20 + length);
+            line.setAttribute("stroke-width", strokeWidth);
+            line.setAttribute("opacity", opacity);
+            line.setAttribute("transform", `rotate(${angle} 150 150)`);
 
-/* إعدادات المطر */
-const settings = {
-    density: 130,
-    minLength: 12,
-    maxLength: 42,
-    minSpeed: 5,
-    maxSpeed: 13,
-    minWidth: 0.7,
-    maxWidth: 1.8
-};
+            ticksGroup.appendChild(line);
+        }
 
-function random(min, max) {
-    return Math.random() * (max - min) + min;
-}
+        const hourHand = document.getElementById('hour-hand');
+        const minuteHand = document.getElementById('minute-hand');
 
-function resizeCanvas() {
+        // ربط دوران العقارب بحركة التمرير (النزول والطلوع)
+        window.addEventListener('scroll', () => {
+            const scrollTop = window.scrollY;
+            const maxScroll = document.documentElement.scrollHeight - window.innerHeight;
+            const scrollFraction = scrollTop / maxScroll;
 
-    const dpr =
-        Math.min(window.devicePixelRatio || 1, 2);
+            // عقرب الدقائق يدور 12 دورة كاملة عند التمرير من الأعلى للأسفل
+            const minuteAngle = 355 + (scrollFraction * 360 * 12);
+            // عقرب الساعات يدور دورة واحدة كاملة
+            const hourAngle = 295 + (scrollFraction * 360);
 
-    width = window.innerWidth;
-    height = window.innerHeight;
-
-    canvas.width = width * dpr;
-    canvas.height = height * dpr;
-
-    canvas.style.width = width + "px";
-    canvas.style.height = height + "px";
-
-    ctx.setTransform(
-        dpr,
-        0,
-        0,
-        dpr,
-        0,
-        0
-    );
-
-    createRain();
-}
-
-function createRain() {
-
-    drops = [];
-
-    const amount = Math.max(
-        settings.density,
-        Math.floor(width / 5)
-    );
-
-    for (let i = 0; i < amount; i++) {
-
-        drops.push({
-            x: random(0, width),
-            y: random(-height, height),
-
-            length: random(
-                settings.minLength,
-                settings.maxLength
-            ),
-
-            speed: random(
-                settings.minSpeed,
-                settings.maxSpeed
-            ),
-
-            width: random(
-                settings.minWidth,
-                settings.maxWidth
-            ),
-
-            opacity: random(0.15, 0.75)
+            minuteHand.setAttribute('transform', `rotate(${minuteAngle} 150 150)`);
+            hourHand.setAttribute('transform', `rotate(${hourAngle} 150 150)`);
         });
-    }
-}
-
-/*
-    قراءة ميلان الهاتف
-*/
-function handleOrientation(event) {
-
-    if (event.gamma !== null) {
-
-        /*
-         * gamma:
-         * -90 = يسار
-         *  0   = مستوٍ
-         * +90 = يمين
-         */
-
-        const targetX =
-            Math.max(
-                -1.5,
-                Math.min(
-                    1.5,
-                    event.gamma / 25
-                )
-            );
-
-        /*
-         * تنعيم الحركة
-         */
-        tiltX +=
-            (targetX - tiltX) * 0.08;
-    }
-
-    if (event.beta !== null) {
-
-        /*
-         * beta:
-         * 0   = الهاتف مستوٍ
-         * 90  = عمودي
-         * 180 = مقلوب
-         */
-
-        const targetY =
-            Math.cos(
-                event.beta *
-                Math.PI / 180
-            );
-
-        tiltY +=
-            (targetY - tiltY) * 0.05;
-    }
-}
-
-/*
-    بعض أجهزة iPhone تحتاج إذنًا
-*/
-async function enableMotion() {
-
-    if (
-        typeof DeviceOrientationEvent !==
-        "undefined" &&
-        typeof DeviceOrientationEvent.requestPermission ===
-        "function"
-    ) {
-
-        try {
-
-            const permission =
-                await DeviceOrientationEvent
-                    .requestPermission();
-
-            if (permission === "granted") {
-
-                window.addEventListener(
-                    "deviceorientation",
-                    handleOrientation,
-                    true
-                );
-            }
-
-        } catch (error) {
-            console.log(error);
-        }
-
-    } else {
-
-        window.addEventListener(
-            "deviceorientation",
-            handleOrientation,
-            true
-        );
-    }
-}
-
-/*
-    تشغيل مستشعر الهاتف
-*/
-enableMotion();
-
-/*
-    دعم بعض الأجهزة التي تمنع المستشعر
-    إلا بعد أول تفاعل
-*/
-document.addEventListener(
-    "touchstart",
-    enableMotion,
-    {
-        once: true
-    }
-);
-
-function drawRain() {
-
-    ctx.clearRect(
-        0,
-        0,
-        width,
-        height
-    );
-
-    for (const drop of drops) {
-
-        /*
-         * اتجاه المطر الأساسي للأسفل
-         */
-        const moveX =
-            tiltX * drop.speed;
-
-        const moveY =
-            drop.speed * tiltY;
-
-        /*
-         * رسم القطرة بنفس اتجاه حركتها
-         */
-        const endX =
-            drop.x + moveX * 0.45;
-
-        const endY =
-            drop.y + drop.length * tiltY;
-
-        const gradient =
-            ctx.createLinearGradient(
-                drop.x,
-                drop.y,
-                endX,
-                endY
-            );
-
-        gradient.addColorStop(
-            0,
-            "rgba(30,144,255,0)"
-        );
-
-        gradient.addColorStop(
-            0.35,
-            `rgba(30,144,255,${drop.opacity * 0.45})`
-        );
-
-        gradient.addColorStop(
-            1,
-            `rgba(0,132,255,${drop.opacity})`
-        );
-
-        ctx.beginPath();
-
-        ctx.strokeStyle =
-            gradient;
-
-        ctx.lineWidth =
-            drop.width;
-
-        ctx.lineCap =
-            "round";
-
-        ctx.moveTo(
-            drop.x,
-            drop.y
-        );
-
-        ctx.lineTo(
-            endX,
-            endY
-        );
-
-        ctx.stroke();
-
-        /*
-         * تحريك القطرة
-         */
-        drop.x += moveX * 0.12;
-        drop.y += moveY;
-
-        /*
-         * إذا خرجت القطرة من الشاشة
-         */
-        if (
-            drop.y >
-            height + drop.length ||
-            drop.x < -100 ||
-            drop.x > width + 100
-        ) {
-
-            drop.x =
-                random(0, width);
-
-            drop.y =
-                -drop.length -
-                random(0, 200);
-
-            drop.speed =
-                random(
-                    settings.minSpeed,
-                    settings.maxSpeed
-                );
-        }
-    }
-
-    requestAnimationFrame(
-        drawRain
-    );
-}
-
-window.addEventListener(
-    "resize",
-    resizeCanvas
-);
-
-resizeCanvas();
-drawRain();
-
-</script>
-
+    </script>
 </body>
 </html>
