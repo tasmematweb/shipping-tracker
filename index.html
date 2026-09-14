@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Neon Clock & Triple Arrow Archer</title>
+    <title>Neon Clock & Sequential 3-Arrow Archer</title>
     <style>
         * {
             margin: 0;
@@ -143,15 +143,24 @@
         </div>
     </div>
 
-    <!-- 2. قسم الرامي والهدف (3 أسهم وبدون علم) -->
+    <!-- 2. قسم الرامي والهدف (حقيبة ظهر + إطلاق 3 أسهم بالتتابع) -->
     <div class="archer-section">
         <div class="archer-container">
             <svg viewBox="0 0 800 400">
                 <!-- خط الأرضية المضيء -->
                 <line x1="30" y1="340" x2="770" y2="340" stroke="#00d2ff" stroke-width="3.5" stroke-linecap="round" class="neon-blue" />
 
-                <!-- 1. رامي السهام -->
+                <!-- 1. رامي السهام مع جعبة الأسهم على الظهر -->
                 <g id="stickman" class="neon-blue">
+                    <!-- جعبة الأسهم على الظهر -->
+                    <g id="quiver-group">
+                        <path d="M 98,170 L 112,230 L 102,232 L 88,172 Z" fill="rgba(0, 210, 255, 0.25)" stroke="#00d2ff" stroke-width="2" />
+                        <!-- رؤوس الأسهم الثلاثة داخل الجعبة -->
+                        <line id="q-arrow-3" x1="91" y1="171" x2="82" y2="150" stroke="#00d2ff" stroke-width="3" stroke-linecap="round" />
+                        <line id="q-arrow-2" x1="95" y1="171" x2="89" y2="145" stroke="#00d2ff" stroke-width="3" stroke-linecap="round" />
+                        <line id="q-arrow-1" x1="99" y1="171" x2="96" y2="140" stroke="#00d2ff" stroke-width="3" stroke-linecap="round" />
+                    </g>
+
                     <!-- الرأس وعصابة الرأس -->
                     <circle cx="120" cy="140" r="22" fill="#00d2ff" stroke="#00d2ff" stroke-width="2" />
                     <line x1="95" y1="135" x2="145" y2="135" stroke="#ffffff" stroke-width="3.5" stroke-linecap="round" />
@@ -170,28 +179,28 @@
                     <path id="bow-string" d="M 175,120 L 175,185 L 175,250" fill="none" stroke="#00d2ff" stroke-width="2" />
                 </g>
 
-                <!-- 2. ثلاثة أسهم متتالية ينطلقون بسرعة نحو الهدف -->
-                <g id="arrows-group" class="neon-blue">
-                    <!-- السهم الأوسط (الرئيسي) -->
-                    <g id="arrow-1">
+                <!-- 2. الأسهم الثلاثة المنطلقة بالتتابع -->
+                <g id="arrows-container" class="neon-blue">
+                    <!-- السهم الأول (العلوي) -->
+                    <g id="arrow-1" style="opacity: 0;">
+                        <line x1="130" y1="176" x2="195" y2="176" stroke="#00d2ff" stroke-width="3.5" stroke-linecap="round" />
+                        <polygon points="195,170 210,176 195,182" fill="#00d2ff" />
+                        <line x1="130" y1="176" x2="120" y2="168" stroke="#00d2ff" stroke-width="2.5" />
+                        <line x1="130" y1="176" x2="120" y2="184" stroke="#00d2ff" stroke-width="2.5" />
+                    </g>
+                    <!-- السهم الثاني (الأوسط) -->
+                    <g id="arrow-2" style="opacity: 0;">
                         <line x1="130" y1="185" x2="195" y2="185" stroke="#00d2ff" stroke-width="4" stroke-linecap="round" />
                         <polygon points="195,179 210,185 195,191" fill="#00d2ff" />
                         <line x1="130" y1="185" x2="120" y2="177" stroke="#00d2ff" stroke-width="3" />
                         <line x1="130" y1="185" x2="120" y2="193" stroke="#00d2ff" stroke-width="3" />
                     </g>
-                    <!-- السهم العلوي -->
-                    <g id="arrow-2">
-                        <line x1="130" y1="172" x2="195" y2="172" stroke="#00d2ff" stroke-width="3.5" stroke-linecap="round" />
-                        <polygon points="195,166 210,172 195,178" fill="#00d2ff" />
-                        <line x1="130" y1="172" x2="120" y2="164" stroke="#00d2ff" stroke-width="2.5" />
-                        <line x1="130" y1="172" x2="120" y2="180" stroke="#00d2ff" stroke-width="2.5" />
-                    </g>
-                    <!-- السهم السفلي -->
-                    <g id="arrow-3">
-                        <line x1="130" y1="198" x2="195" y2="198" stroke="#00d2ff" stroke-width="3.5" stroke-linecap="round" />
-                        <polygon points="195,192 210,198 195,204" fill="#00d2ff" />
-                        <line x1="130" y1="198" x2="120" y2="190" stroke="#00d2ff" stroke-width="2.5" />
-                        <line x1="130" y1="198" x2="120" y2="206" stroke="#00d2ff" stroke-width="2.5" />
+                    <!-- السهم الثالث (السفلي) -->
+                    <g id="arrow-3" style="opacity: 0;">
+                        <line x1="130" y1="194" x2="195" y2="194" stroke="#00d2ff" stroke-width="3.5" stroke-linecap="round" />
+                        <polygon points="195,188 210,194 195,200" fill="#00d2ff" />
+                        <line x1="130" y1="194" x2="120" y2="186" stroke="#00d2ff" stroke-width="2.5" />
+                        <line x1="130" y1="194" x2="120" y2="202" stroke="#00d2ff" stroke-width="2.5" />
                     </g>
                 </g>
 
@@ -237,12 +246,17 @@
         const hourHand = document.getElementById('hour-hand');
         const minuteHand = document.getElementById('minute-hand');
 
-        // عناصر الحركة للأسهم الثلاثة والهدف
+        // عناصر التحكم بالرامي والجعبة والأسهم الثلاثة
         const bowString = document.getElementById('bow-string');
+        const targetBoard = document.getElementById('target-board');
+
+        const qArrow1 = document.getElementById('q-arrow-1');
+        const qArrow2 = document.getElementById('q-arrow-2');
+        const qArrow3 = document.getElementById('q-arrow-3');
+
         const arrow1 = document.getElementById('arrow-1');
         const arrow2 = document.getElementById('arrow-2');
         const arrow3 = document.getElementById('arrow-3');
-        const targetBoard = document.getElementById('target-board');
 
         let targetFraction = 0;
         let currentFraction = 0;
@@ -254,7 +268,14 @@
             targetFraction = Math.min(Math.max(scrollTop / maxScroll, 0), 1);
         });
 
-        // حلقة تحريك فائقة السلاسة والسرعة
+        // دوال حساب مرحلة كل سهم من الأسهم الثلاثة بالتتابع
+        function getShotState(progress, start, end) {
+            if (progress < start) return { phase: 'waiting', p: 0 };
+            if (progress >= end) return { phase: 'done', p: 1 };
+            return { phase: 'active', p: (progress - start) / (end - start) };
+        }
+
+        // حلقة تحريك انسيابية وسريعة
         function animate() {
             currentFraction += (targetFraction - currentFraction) * 0.12;
 
@@ -264,50 +285,64 @@
             minuteHand.setAttribute('transform', `rotate(${minuteAngle} 150 150)`);
             hourHand.setAttribute('transform', `rotate(${hourAngle} 150 150)`);
 
-            // ب) حركة إطلاق الأسهم الثلاثة السريعة أثناء وجود البطاقة في منتصف الشاشة
-            let archerProgress = (currentFraction - 0.12) / 0.10;
+            // ب) إطلاق 3 أسهم بالتتابع السريع أثناء ظهور قسم الرامي
+            let archerProgress = (currentFraction - 0.15) / 0.18;
             archerProgress = Math.min(Math.max(archerProgress, 0), 1);
 
-            if (archerProgress < 0.15) {
-                // 1. سحب الوتر والأسهم الثلاثة معاً للخلف
-                const pull = (archerProgress / 0.15) * 30;
-                bowString.setAttribute('d', `M 175,120 L ${175 - pull},185 L 175,250`);
-                
-                arrow1.setAttribute('transform', `translate(${-pull}, 0)`);
-                arrow2.setAttribute('transform', `translate(${-pull}, 0)`);
-                arrow3.setAttribute('transform', `translate(${-pull}, 0)`);
-                targetBoard.setAttribute('transform', `translate(0, 0)`);
-            } else {
-                // 2. انطلاق الأسهم الثلاثة متتالية وسريعة نحو لوحة الهدف
-                bowString.setAttribute('d', `M 175,120 L 175,185 L 175,250`);
-                
-                const releaseProgress = (archerProgress - 0.15) / 0.85;
-                const startX = -30;
-                const targetHitX = 485; // المسافة الدقيقة ليستقر رأس كل سهم بقلب الهدف
+            // تقسيم وقت الحركة إلى 3 مراحل متتالية (لكل سهم مرحلة)
+            const s1 = getShotState(archerProgress, 0.00, 0.33);
+            const s2 = getShotState(archerProgress, 0.33, 0.66);
+            const s3 = getShotState(archerProgress, 0.66, 1.00);
 
-                // السهم الأول (الأوسط - الأسرع)
-                let p1 = Math.min(releaseProgress * 1.15, 1);
-                let x1 = startX + (p1 * (targetHitX - startX));
-                arrow1.setAttribute('transform', `translate(${x1}, 0)`);
+            const shots = [s1, s2, s3];
+            const arrows = [arrow1, arrow2, arrow3];
 
-                // السهم الثاني (العلوي - ينطلق خلفه فوراً)
-                let p2 = Math.min(Math.max((releaseProgress - 0.04) * 1.2, 0), 1);
-                let x2 = startX + (p2 * (targetHitX - startX));
-                arrow2.setAttribute('transform', `translate(${x2}, 0)`);
+            // تحديث الأسهم المتبقية داخل جعبة الظهر
+            qArrow1.style.opacity = s1.phase === 'waiting' ? '1' : '0';
+            qArrow2.style.opacity = s2.phase === 'waiting' ? '1' : '0';
+            qArrow3.style.opacity = s3.phase === 'waiting' ? '1' : '0';
 
-                // السهم الثالث (السفلي - يلحق بهما مباشرة)
-                let p3 = Math.min(Math.max((releaseProgress - 0.08) * 1.25, 0), 1);
-                let x3 = startX + (p3 * (targetHitX - startX));
-                arrow3.setAttribute('transform', `translate(${x3}, 0)`);
+            let currentBowPull = 0;
+            let targetHitImpact = false;
+            const startX = -30;
+            const targetHitX = 485; // المسافة الدقيقة ليغرس السهم في الهدف
 
-                // 3. اهتزازة الصدمة عند إصابة الأسهم للهدف
-                if (p3 >= 0.95 || p1 >= 0.95) {
-                    targetBoard.setAttribute('transform', `translate(8, 0)`);
-                } else if (p1 >= 0.70) {
-                    targetBoard.setAttribute('transform', `translate(4, 0)`);
-                } else {
-                    targetBoard.setAttribute('transform', `translate(0, 0)`);
+            shots.forEach((s, idx) => {
+                const arrow = arrows[idx];
+                if (s.phase === 'waiting') {
+                    arrow.style.opacity = '0';
+                } else if (s.phase === 'active') {
+                    arrow.style.opacity = '1';
+                    if (s.p < 0.25) {
+                        // سحب السهم والقوس للخلف
+                        let pull = (s.p / 0.25) * 28;
+                        currentBowPull = pull;
+                        arrow.setAttribute('transform', `translate(${-pull}, 0)`);
+                    } else {
+                        // انطلاق السهم بسرعة للهدف
+                        let flightP = (s.p - 0.25) / 0.75;
+                        let currentX = startX + (flightP * (targetHitX - startX));
+                        arrow.setAttribute('transform', `translate(${currentX}, 0)`);
+                        if (flightP >= 0.88) {
+                            targetHitImpact = true;
+                        }
+                    }
+                } else if (s.phase === 'done') {
+                    // استقرار السهم مغروساً في لوحة الهدف
+                    arrow.style.opacity = '1';
+                    arrow.setAttribute('transform', `translate(${targetHitX}, 0)`);
                 }
+            });
+
+            // تحديث انحناء وتر القوس
+            const stringX = 175 - currentBowPull;
+            bowString.setAttribute('d', `M 175,120 L ${stringX},185 L 175,250`);
+
+            // اهتزاز لوحة الهدف فور وصول أي سهم إليها
+            if (targetHitImpact) {
+                targetBoard.setAttribute('transform', `translate(6, 0)`);
+            } else {
+                targetBoard.setAttribute('transform', `translate(0, 0)`);
             }
 
             requestAnimationFrame(animate);
