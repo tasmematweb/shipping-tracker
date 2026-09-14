@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Neon Clock & Archer Scroll</title>
+    <title>Neon Clock & Triple Arrow Archer</title>
     <style>
         * {
             margin: 0;
@@ -109,7 +109,7 @@
             overflow: visible !important;
         }
 
-        /* توهج النيون الأزرق الموحد للموقع */
+        /* توهج النيون الأزرق الموحد */
         .neon-blue {
             filter: drop-shadow(0 0 6px #00d2ff) drop-shadow(0 0 15px #00d2ff);
         }
@@ -117,21 +117,11 @@
         .outer-aura {
             filter: drop-shadow(0 0 12px #00d2ff) drop-shadow(0 0 25px #00d2ff);
         }
-
-        /* تنسيق النص المضيء على العلم */
-        .flag-text {
-            font-family: 'Courier New', Courier, monospace;
-            font-weight: bold;
-            font-size: 13px;
-            fill: #00d2ff;
-            letter-spacing: 1px;
-            filter: drop-shadow(0 0 5px #00d2ff);
-        }
     </style>
 </head>
 <body>
 
-    <!-- 1. البرواز المعلق والساعة الحجم الكبير -->
+    <!-- 1. البرواز المعلق والساعة الحجم الكبير (460px) -->
     <div class="hanging-wrapper">
         <div class="wall-nail"></div>
         <div class="hanging-string"></div>
@@ -153,25 +143,15 @@
         </div>
     </div>
 
-    <!-- 2. قسم الرامي والهدف (مع العلم المضيء) -->
+    <!-- 2. قسم الرامي والهدف (3 أسهم وبدون علم) -->
     <div class="archer-section">
         <div class="archer-container">
             <svg viewBox="0 0 800 400">
                 <!-- خط الأرضية المضيء -->
                 <line x1="30" y1="340" x2="770" y2="340" stroke="#00d2ff" stroke-width="3.5" stroke-linecap="round" class="neon-blue" />
 
-                <!-- 1. رامي السهام مع العلم (tasmematweb) -->
+                <!-- 1. رامي السهام -->
                 <g id="stickman" class="neon-blue">
-                    <!-- سارية العلم والراية على الظهر -->
-                    <g id="flag-group">
-                        <!-- سارية العلم -->
-                        <line x1="105" y1="95" x2="105" y2="230" stroke="#00d2ff" stroke-width="3" stroke-linecap="round" />
-                        <!-- شكل راية العلم -->
-                        <path d="M 105,100 L 15,100 L 28,125 L 15,150 L 105,150 Z" fill="rgba(0, 210, 255, 0.12)" stroke="#00d2ff" stroke-width="2.5" />
-                        <!-- النص داخل العلم -->
-                        <text x="58" y="129" text-anchor="middle" class="flag-text">(tasmematweb)</text>
-                    </g>
-
                     <!-- الرأس وعصابة الرأس -->
                     <circle cx="120" cy="140" r="22" fill="#00d2ff" stroke="#00d2ff" stroke-width="2" />
                     <line x1="95" y1="135" x2="145" y2="135" stroke="#ffffff" stroke-width="3.5" stroke-linecap="round" />
@@ -190,14 +170,29 @@
                     <path id="bow-string" d="M 175,120 L 175,185 L 175,250" fill="none" stroke="#00d2ff" stroke-width="2" />
                 </g>
 
-                <!-- 2. السهم المنطلق متحرك بحسب السكرول -->
-                <g id="arrow-group" class="neon-blue">
-                    <line id="arrow-body" x1="130" y1="185" x2="195" y2="185" stroke="#00d2ff" stroke-width="4" stroke-linecap="round" />
-                    <!-- رأس السهم -->
-                    <polygon id="arrow-head" points="195,179 210,185 195,191" fill="#00d2ff" />
-                    <!-- ريش السهم الخلفي -->
-                    <line x1="130" y1="185" x2="120" y2="177" stroke="#00d2ff" stroke-width="3" />
-                    <line x1="130" y1="185" x2="120" y2="193" stroke="#00d2ff" stroke-width="3" />
+                <!-- 2. ثلاثة أسهم متتالية ينطلقون بسرعة نحو الهدف -->
+                <g id="arrows-group" class="neon-blue">
+                    <!-- السهم الأوسط (الرئيسي) -->
+                    <g id="arrow-1">
+                        <line x1="130" y1="185" x2="195" y2="185" stroke="#00d2ff" stroke-width="4" stroke-linecap="round" />
+                        <polygon points="195,179 210,185 195,191" fill="#00d2ff" />
+                        <line x1="130" y1="185" x2="120" y2="177" stroke="#00d2ff" stroke-width="3" />
+                        <line x1="130" y1="185" x2="120" y2="193" stroke="#00d2ff" stroke-width="3" />
+                    </g>
+                    <!-- السهم العلوي -->
+                    <g id="arrow-2">
+                        <line x1="130" y1="172" x2="195" y2="172" stroke="#00d2ff" stroke-width="3.5" stroke-linecap="round" />
+                        <polygon points="195,166 210,172 195,178" fill="#00d2ff" />
+                        <line x1="130" y1="172" x2="120" y2="164" stroke="#00d2ff" stroke-width="2.5" />
+                        <line x1="130" y1="172" x2="120" y2="180" stroke="#00d2ff" stroke-width="2.5" />
+                    </g>
+                    <!-- السهم السفلي -->
+                    <g id="arrow-3">
+                        <line x1="130" y1="198" x2="195" y2="198" stroke="#00d2ff" stroke-width="3.5" stroke-linecap="round" />
+                        <polygon points="195,192 210,198 195,204" fill="#00d2ff" />
+                        <line x1="130" y1="198" x2="120" y2="190" stroke="#00d2ff" stroke-width="2.5" />
+                        <line x1="130" y1="198" x2="120" y2="206" stroke="#00d2ff" stroke-width="2.5" />
+                    </g>
                 </g>
 
                 <!-- 3. لوحة الهدف (أزرق نيون) -->
@@ -242,9 +237,11 @@
         const hourHand = document.getElementById('hour-hand');
         const minuteHand = document.getElementById('minute-hand');
 
-        // عناصر تحريك السهم والهدف
+        // عناصر الحركة للأسهم الثلاثة والهدف
         const bowString = document.getElementById('bow-string');
-        const arrowGroup = document.getElementById('arrow-group');
+        const arrow1 = document.getElementById('arrow-1');
+        const arrow2 = document.getElementById('arrow-2');
+        const arrow3 = document.getElementById('arrow-3');
         const targetBoard = document.getElementById('target-board');
 
         let targetFraction = 0;
@@ -257,7 +254,7 @@
             targetFraction = Math.min(Math.max(scrollTop / maxScroll, 0), 1);
         });
 
-        // حلقة تحريك انسيابية ومسرعة
+        // حلقة تحريك فائقة السلاسة والسرعة
         function animate() {
             currentFraction += (targetFraction - currentFraction) * 0.12;
 
@@ -267,33 +264,47 @@
             minuteHand.setAttribute('transform', `rotate(${minuteAngle} 150 150)`);
             hourHand.setAttribute('transform', `rotate(${hourAngle} 150 150)`);
 
-            // ب) حركة رمي السهم السريعة (تكتمل بالكامل في مدى سكرول قصير جداً)
-            let archerProgress = (currentFraction - 0.15) / 0.14;
+            // ب) حركة إطلاق الأسهم الثلاثة السريعة أثناء وجود البطاقة في منتصف الشاشة
+            let archerProgress = (currentFraction - 0.12) / 0.10;
             archerProgress = Math.min(Math.max(archerProgress, 0), 1);
 
             if (archerProgress < 0.15) {
-                // 1. سحب وتر القوس والسهم للخلف سريعاً
-                const pull = (archerProgress / 0.15) * 32;
-                const stringX = 175 - pull;
-                bowString.setAttribute('d', `M 175,120 L ${stringX},185 L 175,250`);
-                arrowGroup.setAttribute('transform', `translate(${-pull}, 0)`);
+                // 1. سحب الوتر والأسهم الثلاثة معاً للخلف
+                const pull = (archerProgress / 0.15) * 30;
+                bowString.setAttribute('d', `M 175,120 L ${175 - pull},185 L 175,250`);
+                
+                arrow1.setAttribute('transform', `translate(${-pull}, 0)`);
+                arrow2.setAttribute('transform', `translate(${-pull}, 0)`);
+                arrow3.setAttribute('transform', `translate(${-pull}, 0)`);
                 targetBoard.setAttribute('transform', `translate(0, 0)`);
             } else {
-                // 2. انطلاق السهم عبر الشاشة بسلاسة وسرعة فائقة
-                const releaseProgress = (archerProgress - 0.15) / 0.85;
+                // 2. انطلاق الأسهم الثلاثة متتالية وسريعة نحو لوحة الهدف
                 bowString.setAttribute('d', `M 175,120 L 175,185 L 175,250`);
                 
-                const startX = -32;
-                const targetHitX = 485; // نقطة استقرار رأس السهم في منتصف الهدف
-                const currentX = startX + (releaseProgress * (targetHitX - startX));
-                
-                arrowGroup.setAttribute('transform', `translate(${currentX}, 0)`);
+                const releaseProgress = (archerProgress - 0.15) / 0.85;
+                const startX = -30;
+                const targetHitX = 485; // المسافة الدقيقة ليستقر رأس كل سهم بقلب الهدف
 
-                // 3. اهتزازة إصابة الهدف فور وصول السهم
-                if (releaseProgress >= 0.95) {
-                    targetBoard.setAttribute('transform', `translate(7, 0)`);
-                } else if (releaseProgress >= 0.85) {
-                    targetBoard.setAttribute('transform', `translate(3, 0)`);
+                // السهم الأول (الأوسط - الأسرع)
+                let p1 = Math.min(releaseProgress * 1.15, 1);
+                let x1 = startX + (p1 * (targetHitX - startX));
+                arrow1.setAttribute('transform', `translate(${x1}, 0)`);
+
+                // السهم الثاني (العلوي - ينطلق خلفه فوراً)
+                let p2 = Math.min(Math.max((releaseProgress - 0.04) * 1.2, 0), 1);
+                let x2 = startX + (p2 * (targetHitX - startX));
+                arrow2.setAttribute('transform', `translate(${x2}, 0)`);
+
+                // السهم الثالث (السفلي - يلحق بهما مباشرة)
+                let p3 = Math.min(Math.max((releaseProgress - 0.08) * 1.25, 0), 1);
+                let x3 = startX + (p3 * (targetHitX - startX));
+                arrow3.setAttribute('transform', `translate(${x3}, 0)`);
+
+                // 3. اهتزازة الصدمة عند إصابة الأسهم للهدف
+                if (p3 >= 0.95 || p1 >= 0.95) {
+                    targetBoard.setAttribute('transform', `translate(8, 0)`);
+                } else if (p1 >= 0.70) {
+                    targetBoard.setAttribute('transform', `translate(4, 0)`);
                 } else {
                     targetBoard.setAttribute('transform', `translate(0, 0)`);
                 }
