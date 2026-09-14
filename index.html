@@ -1,2544 +1,371 @@
-
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <meta name="description" content="شركة EUX للشحن تقدم خدمات الشحن السريع من مدينة العبور إلى جميع محافظات مصر بأسعار تنافسية وخدمة احترافية.">
-    <meta name="keywords" content="EUX, EUX Express, شركة شحن, شحن مصر, شحن سريع, شحن العبور">
-    <meta name="robots" content="index, follow">
-    <link rel="canonical" href="https://euxexpress.com/">
-    <title>شركة EUX للشحن | الريادة في سرعة وحلول الشحن</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;900&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/jsbarcode@3.11.5/dist/JsBarcode.all.min.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Rain</title>
+
     <style>
-        :root {
-            --primary-color: #0076ff;
-            --secondary-color: #1a1a1a;
-            --light-bg: #f9f9f9;
-            --text-color: #333;
-            --white: #ffffff;
-        }
         * {
+            margin: 0;
+            padding: 0;
             box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-            font-family: 'Cairo', sans-serif;
-            scroll-behavior: smooth;
         }
+
+        html,
         body {
-            color: var(--text-color);
-            line-height: 1.8;
-            background-color: var(--white);
-            overflow-x: hidden;
-            -webkit-user-select: none;
-            -moz-user-select: none;
-            -ms-user-select: none;
-            user-select: none;
-        }
-        .hidden {
-            display: none !important;
-        }
-        #landingPage {
-            display: block;
-        }
-
-        /* ============================================
-           الشريط العلوي الجديد - المتدرج العصري (النموذج 4)
-           ============================================ */
-        .header-new {
-            background: linear-gradient(135deg, #0a1628, #003d7a);
-            padding: 18px 30px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            border-bottom: 2px solid rgba(0, 118, 255, 0.3);
-            position: sticky;
-            top: 0;
-            z-index: 1000;
-            width: 100%;
-            margin: 0;
-            border-radius: 0;
-        }
-        .header-new .logo-container {
-            display: flex;
-            align-items: center;
-            gap: 14px;
-        }
-        .header-new .divider {
-            width: 2px;
-            height: 35px;
-            background: linear-gradient(180deg, transparent, var(--primary-color), transparent);
-        }
-        .header-new .logo-text {
-            font-size: 28px;
-            font-weight: 900;
-            color: #fff;
-            letter-spacing: 3px;
-        }
-        .header-new .logo-text span {
-            color: var(--primary-color);
-            position: relative;
-        }
-        .header-new .logo-text span::before {
-            content: '';
-            position: absolute;
-            bottom: -4px;
-            left: 0;
-            width: 100%;
-            height: 2px;
-            background: var(--primary-color);
-            animation: underlineSlide 2s ease-in-out infinite;
-        }
-        .header-new .dot {
-            width: 8px;
-            height: 8px;
-            background: var(--primary-color);
-            border-radius: 50%;
-            animation: dotPulse 2s ease-in-out infinite;
-            box-shadow: 0 0 20px rgba(0, 118, 255, 0.3);
-        }
-        @keyframes underlineSlide {
-            0% { transform: scaleX(0); transform-origin: right; }
-            50% { transform: scaleX(1); transform-origin: center; }
-            100% { transform: scaleX(0); transform-origin: left; }
-        }
-        @keyframes dotPulse {
-            0%, 100% { transform: scale(1); opacity: 0.4; }
-            50% { transform: scale(1.6); opacity: 1; }
-        }
-
-        /* ============================================
-           الشريط القديم - نبقيه للتوافق
-           ============================================ */
-        header {
-            background-color: var(--secondary-color);
-            padding: 35px 8%;
-            position: sticky;
-            top: 0;
-            z-index: 1000;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            border-bottom-left-radius: 40px;
-            border-bottom-right-radius: 40px;
-            border-bottom: 2px solid rgba(0, 118, 255, 0.3);
-        }
-        .logo {
-            color: var(--primary-color);
-            font-size: 38px;
-            font-weight: 900;
-            text-decoration: none;
-            letter-spacing: 2px;
-        }
-        .hero {
-            background: linear-gradient(rgba(26, 26, 26, 0.88), rgba(26, 26, 26, 0.88)), url('https://images.unsplash.com/photo-1524661135-423995f22d0b?ixlib=rb-4.0.3') no-repeat center center/cover;
-            min-height: 85vh;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            text-align: center;
-            color: var(--white);
-            padding: 60px 20px 180px 20px;
-            position: relative;
-        }
-        .sea-wave-divider {
-            position: absolute;
-            bottom: -1px;
-            left: 0;
-            width: 100%;
-            overflow: hidden;
-            line-height: 0;
-            z-index: 5;
-        }
-        .sea-wave-divider svg {
-            position: relative;
-            display: block;
-            width: calc(100% + 1.3px);
-            height: 110px;
-        }
-        .sea-wave-divider .wave-fill-white {
-            fill: var(--white);
-        }
-        .sea-wave-divider .wave-fill-light {
-            fill: var(--light-bg);
-        }
-        .showcase-wrapper {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            margin-bottom: 40px;
-            position: relative;
-            z-index: 10;
-        }
-        .cyber-node {
-            width: 160px;
-            height: 160px;
-            background: linear-gradient(135deg, #131c2e, #080d16);
-            border: 3px solid rgba(0, 210, 255, 0.6);
-            border-radius: 16px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            font-size: 36px;
-            font-weight: 900;
-            color: var(--white);
-            position: relative;
-            animation: nodeFloat 2.6s ease-in-out infinite;
-        }
-        .cyber-node::after {
-            content: '';
-            position: absolute;
-            inset: -12px;
-            border: 3px dashed var(--primary-color);
-            border-radius: 24px;
-            opacity: 0.7;
-            animation: rotateDashed 15s linear infinite;
-        }
-        @keyframes nodeFloat {
-            0%,
-            100% {
-                transform: translateY(0);
-                box-shadow: 0 0 25px rgba(0, 210, 255, 0.25);
-            }
-            50% {
-                transform: translateY(-20px);
-                box-shadow: 0 0 50px rgba(0, 210, 255, 0.6);
-            }
-        }
-        @keyframes rotateDashed {
-            100% {
-                transform: rotate(360deg);
-            }
-        }
-        .cube-container {
-            width: 180px;
-            height: 170px;
-            perspective: 1000px;
-            animation: isometricFloat 3s ease-in-out infinite;
-        }
-        .iso-cube {
-            width: 130px;
-            height: 130px;
-            position: relative;
-            transform-style: preserve-3d;
-            transform: rotateX(-30deg) rotateY(45deg);
-            margin: auto;
-        }
-        .iso-face {
-            position: absolute;
-            width: 130px;
-            height: 130px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            font-size: 32px;
-            font-weight: 900;
-            color: var(--white);
-            border: 1.5px solid rgba(255, 255, 255, 0.15);
-        }
-        .iso-front {
-            transform: rotateY(0deg) translateZ(65px);
-            background: linear-gradient(135deg, #0052cc, #002d80);
-        }
-        .iso-right {
-            transform: rotateY(90deg) translateZ(65px);
-            background: linear-gradient(135deg, #003399, #0a1329);
-        }
-        .iso-top {
-            transform: rotateX(90deg) translateZ(65px);
-            background: linear-gradient(135deg, #2575fc, #0052cc);
-        }
-        .iso-top::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 10px;
-            background: #ffb700;
-            box-shadow: 0 0 15px #ffb700;
-            animation: laserMove 2.5s linear infinite;
-        }
-        @keyframes isometricFloat {
-            0%,
-            100% {
-                transform: translateY(0);
-            }
-            50% {
-                transform: translateY(-20px);
-            }
-        }
-        @keyframes laserMove {
-            0% {
-                top: 0;
-                opacity: 0;
-            }
-            50% {
-                opacity: 1;
-            }
-            100% {
-                top: 100%;
-                opacity: 0;
-            }
-        }
-        .quantum-box {
-            width: 150px;
-            height: 150px;
-            background: rgba(10, 15, 24, 0.85);
-            border: 2px solid rgba(0, 118, 255, 0.4);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-            border-radius: 28px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            position: relative;
-            animation: quantumFloat 2.8s ease-in-out infinite;
-            border-bottom: 4px solid var(--primary-color);
-        }
-        .quantum-box::before {
-            content: '';
-            position: absolute;
-            width: 220px;
-            height: 70px;
-            border: 3px solid #ffb700;
-            border-radius: 50%;
-            transform: rotateX(70deg) rotateY(15deg);
-            box-shadow: 0 0 20px #ffb700;
-            animation: orbitPulse 2.8s linear infinite;
-        }
-        @keyframes quantumFloat {
-            0%,
-            100% {
-                transform: translateY(0);
-            }
-            50% {
-                transform: translateY(-20px);
-            }
-        }
-        .glow-floor {
-            width: 110px;
-            height: 10px;
-            background: radial-gradient(var(--primary-color), transparent 70%);
-            border-radius: 50%;
-            margin-top: 20px;
-            opacity: 0.6;
-        }
-        .hero h1 {
-            font-size: 3rem;
-            margin-bottom: 15px;
-            font-weight: 700;
-        }
-        .hero h1 span {
-            color: var(--primary-color);
-        }
-        .hero p {
-            font-size: 1.3rem;
-            max-width: 700px;
-            margin-bottom: 30px;
-            color: #ddd;
-        }
-        .btn {
-            display: inline-block;
-            background-color: var(--primary-color);
-            color: var(--white);
-            padding: 12px 35px;
-            border: none;
-            border-radius: 30px;
-            font-size: 1.1rem;
-            font-weight: 700;
-            cursor: pointer;
-            text-decoration: none;
-            transition: 0.3s ease;
-            box-shadow: 0 4px 15px rgba(0, 118, 255, 0.4);
-        }
-        .btn:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 6px 20px rgba(0, 118, 255, 0.6);
-        }
-        .login-btn-hero {
-            display: inline-block;
-            background-color: transparent;
-            color: var(--white);
-            padding: 10px 28px;
-            border: 2px solid rgba(255, 255, 255, 0.3);
-            border-radius: 30px;
-            font-size: 1rem;
-            font-weight: 600;
-            cursor: pointer;
-            text-decoration: none;
-            transition: 0.3s ease;
-            font-family: 'Cairo', sans-serif;
-            margin-top: 12px;
-        }
-        .login-btn-hero:hover {
-            background-color: rgba(255, 255, 255, 0.1);
-            border-color: var(--primary-color);
-            transform: translateY(-2px);
-        }
-        .login-btn-hero i {
-            margin-left: 8px;
-        }
-        .popup-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0, 0, 0, 0.75);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            z-index: 2000;
-            opacity: 0;
-            pointer-events: none;
-            transition: 0.4s ease;
-            backdrop-filter: blur(8px);
-            -webkit-backdrop-filter: blur(8px);
-        }
-        .popup-overlay.active {
-            opacity: 1;
-            pointer-events: auto;
-        }
-        .popup-box {
-            background: var(--white);
-            padding: 40px 30px;
-            border-radius: 24px;
-            max-width: 450px;
-            width: 90%;
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
-            position: relative;
-            transform: scale(0.8);
-            transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            text-align: center;
-            border-top: 6px solid var(--primary-color);
-        }
-        .popup-overlay.active .popup-box {
-            transform: scale(1);
-        }
-        .popup-close {
-            position: absolute;
-            top: 15px;
-            left: 20px;
-            font-size: 1.5rem;
-            color: #aaa;
-            cursor: pointer;
-            transition: 0.3s;
-        }
-        .popup-close:hover {
-            color: var(--secondary-color);
-        }
-        .popup-title {
-            font-size: 1.25rem;
-            font-weight: 700;
-            color: var(--primary-color);
-            margin-bottom: 25px;
-            background: rgba(0, 118, 255, 0.08);
-            padding: 10px;
-            border-radius: 12px;
-        }
-        .popup-form-group {
-            text-align: right;
-            margin-bottom: 20px;
-        }
-        .popup-form-group label {
-            display: block;
-            font-weight: 600;
-            margin-bottom: 8px;
-            font-size: 0.95rem;
-            color: var(--secondary-color);
-        }
-        .popup-form-group input {
-            width: 100%;
-            padding: 12px 15px;
-            border: 2px solid #e1e1e1;
-            border-radius: 12px;
-            font-size: 1rem;
-            font-family: 'Cairo', sans-serif;
-            transition: 0.3s;
-            text-align: right;
-        }
-        .popup-form-group input:focus {
-            border-color: var(--primary-color);
-            outline: none;
-            box-shadow: 0 0 10px rgba(0, 118, 255, 0.15);
-        }
-        .popup-submit-btn {
-            width: 100%;
-            background: var(--primary-color);
-            color: var(--white);
-            border: none;
-            padding: 12px;
-            border-radius: 12px;
-            font-size: 1.1rem;
-            font-weight: 700;
-            cursor: pointer;
-            transition: 0.3s;
-            font-family: 'Cairo', sans-serif;
-            box-shadow: 0 4px 12px rgba(0, 118, 255, 0.3);
-        }
-        .popup-submit-btn:hover {
-            background: #005dc7;
-            transform: translateY(-2px);
-        }
-        .about {
-            padding: 40px 10% 180px 10%;
-            text-align: center;
-            background-color: var(--white);
-            position: relative;
-        }
-        .section-title {
-            font-size: 2.2rem;
-            margin-bottom: 40px;
-            position: relative;
-            display: inline-block;
-            font-weight: 700;
-        }
-        .section-title::after {
-            content: '';
-            width: 60%;
-            height: 4px;
-            background-color: var(--primary-color);
-            position: absolute;
-            bottom: -10px;
-            left: 20%;
-            border-radius: 2px;
-        }
-        .about-container {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: space-around;
-            margin-top: 40px;
-        }
-        .about-card {
-            flex: 1;
-            min-width: 250px;
-            margin: 15px;
-            padding: 30px;
-            background: var(--light-bg);
-            border-radius: 10px;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
-            transition: 0.3s;
-        }
-        .about-card:hover {
-            transform: translateY(-5px);
-        }
-        .about-card i {
-            font-size: 3rem;
-            color: var(--primary-color);
-            margin-bottom: 20px;
-        }
-        .about-card h3 {
-            margin-bottom: 10px;
-            font-size: 1.4rem;
-        }
-        .services {
-            background-color: var(--secondary-color);
-            color: var(--white);
-            padding: 80px 10% 180px 10%;
-            text-align: center;
-            position: relative;
-        }
-        .services .section-title {
-            color: var(--white);
-        }
-        .services-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 25px;
-            margin-top: 50px;
-        }
-        .service-box {
-            background-color: rgba(255, 255, 255, 0.05);
-            padding: 30px 20px;
-            border-radius: 8px;
-            border-top: 4px solid var(--primary-color);
-            transition: 0.3s;
-        }
-        .service-box:hover {
-            background-color: rgba(255, 255, 255, 0.1);
-            transform: scale(1.03);
-        }
-        .service-box i {
-            font-size: 2.5rem;
-            color: var(--primary-color);
-            margin-bottom: 15px;
-        }
-        .service-box h4 {
-            font-size: 1.25rem;
-            margin-bottom: 10px;
-        }
-        .contact {
-            padding: 80px 10%;
-            text-align: center;
-            background-color: var(--light-bg);
-        }
-        .contact-info {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
-            gap: 40px;
-            margin-top: 40px;
-        }
-        .info-item {
-            font-size: 1.2rem;
-            font-weight: 600;
-        }
-        .info-item i {
-            color: var(--primary-color);
-            margin-left: 10px;
-            font-size: 1.4rem;
-        }
-        footer {
-            background-color: #111;
-            color: #aaa;
-            text-align: center;
-            padding: 30px 20px;
-            border-top: 1px solid #222;
-        }
-        .footer-social {
-            margin-top: 15px;
-        }
-        .footer-social a {
-            color: var(--white);
-            font-size: 1.8rem;
-            transition: 0.3s;
-        }
-        .footer-social a:hover {
-            color: #1877f2;
-        }
-        #trackingApp {
-            background: linear-gradient(135deg, #e8f0fe, #d4e4f7);
-            min-height: 100vh;
-            padding: 20px;
-        }
-        .tracking-container {
-            max-width: 900px;
-            margin: 0 auto;
-            background: white;
-            border-radius: 24px;
-            padding: 30px;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.1);
-            position: relative;
             overflow: hidden;
         }
-        .tracking-container::before {
-            content: '';
-            position: absolute;
-            top: -50%;
-            right: -50%;
-            width: 200%;
-            height: 200%;
-            background: radial-gradient(circle at 30% 20%, rgba(0, 118, 255, 0.04), transparent 70%);
-            pointer-events: none;
-        }
-        .login-page {
-            text-align: center;
-            position: relative;
-            z-index: 1;
-            padding: 20px 0;
-        }
-        .login-page .logo-wrapper {
-            display: flex;
-            justify-content: center;
-            margin-bottom: 25px;
-            position: relative;
-            height: 220px;
-        }
-        .civil-helo {
-            position: relative;
-            width: 180px;
-            height: 135px;
-            animation: hoverCivil 3s ease-in-out infinite;
-            margin-top: 40px;
-            transform: scale(0.85);
-            transform-origin: center center;
-        }
-        @keyframes hoverCivil {
-            0%,
-            100% {
-                transform: scale(0.85) translateY(0px);
-            }
-            50% {
-                transform: scale(0.85) translateY(-8px);
-            }
-        }
-        .civil-helo .body {
-            position: absolute;
-            width: 120px;
-            height: 28px;
-            background: linear-gradient(135deg, #ffffff, #e8ecf0);
-            border-radius: 60px 30px 15px 20px;
-            top: 55%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            border: 1px solid #c0c8d0;
-            box-shadow: 0 0 30px rgba(255, 255, 255, 0.05);
-        }
-        .civil-helo .body::before {
-            content: '';
-            position: absolute;
-            top: -8px;
-            left: 12px;
-            width: 48px;
-            height: 15px;
-            background: rgba(200, 210, 220, 0.3);
-            border-radius: 12px 12px 0 0;
-            border: 1px solid #c0c8d0;
-            border-bottom: none;
-        }
-        .civil-helo .body-stripe {
-            position: absolute;
-            bottom: 3px;
-            left: 10%;
-            width: 80%;
-            height: 2px;
-            background: linear-gradient(90deg, #0076ff, #4fc3f7, #0076ff);
-            border-radius: 4px;
-        }
-        .civil-helo .cockpit {
-            position: absolute;
-            top: 6px;
-            left: 8px;
-            width: 35px;
-            height: 15px;
-            background: linear-gradient(180deg, #81d4fa, #0288d1);
-            border-radius: 12px 8px 0 0;
-            border: 1px solid #4fc3f7;
-            box-shadow: inset 0 0 20px rgba(79, 195, 247, 0.15);
-        }
-        .civil-helo .cockpit::after {
-            content: '';
-            position: absolute;
-            top: 2px;
-            left: 4px;
-            width: 10px;
-            height: 6px;
-            background: rgba(255, 255, 255, 0.2);
-            border-radius: 50%;
-        }
-        .civil-helo .cockpit-wiper {
-            position: absolute;
-            top: 8px;
-            left: 16px;
-            width: 12px;
-            height: 2px;
-            background: rgba(255, 255, 255, 0.2);
-            border-radius: 2px;
-            transform: rotate(-15deg);
-        }
-        .civil-helo .tail {
-            position: absolute;
-            right: -44px;
-            top: 50%;
-            transform: translateY(-50%);
-            width: 52px;
-            height: 7px;
-            background: linear-gradient(135deg, #ffffff, #d0d8e0);
-            border-radius: 0 20px 20px 0;
-            border: 1px solid #c0c8d0;
-        }
-        .civil-helo .tail::after {
-            content: '';
-            position: absolute;
-            right: -4px;
-            top: -4px;
-            width: 8px;
-            height: 15px;
+
+        body {
             background: #ffffff;
-            border-radius: 4px;
-            border: 1px solid #c0c8d0;
-        }
-        .civil-helo .main-rotor {
-            position: absolute;
-            top: -20px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 110px;
-            height: 5px;
-            background: rgba(200, 200, 200, 0.25);
-            border-radius: 10px;
-            animation: spinRotor 0.45s linear infinite;
-            box-shadow: 0 0 40px rgba(200, 200, 200, 0.05);
-        }
-        .civil-helo .main-rotor::after {
-            content: '';
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            width: 8px;
-            height: 8px;
-            background: #888;
-            border-radius: 50%;
-            border: 1px solid #aaa;
-        }
-        .civil-helo .main-rotor::before {
-            content: '';
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%) rotate(72deg);
-            width: 110px;
-            height: 5px;
-            background: rgba(200, 200, 200, 0.15);
-            border-radius: 10px;
-        }
-        .civil-helo .tail-rotor {
-            position: absolute;
-            right: -56px;
-            top: 50%;
-            transform: translateY(-50%);
-            width: 24px;
-            height: 3px;
-            background: rgba(200, 200, 200, 0.2);
-            border-radius: 4px;
-            animation: spinRotor 0.3s linear infinite;
-        }
-        .civil-helo .tail-rotor::after {
-            content: '';
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            width: 4px;
-            height: 4px;
-            background: #888;
-            border-radius: 50%;
-        }
-        .civil-helo .eux-logo {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            color: #0076ff;
-            font-weight: 900;
-            font-size: 13px;
-            letter-spacing: 2px;
-            text-shadow: 0 0 30px rgba(0, 118, 255, 0.2);
-            z-index: 5;
-        }
-        .civil-helo .nav-light {
-            position: absolute;
-            width: 5px;
-            height: 5px;
-            border-radius: 50%;
-            animation: blinkLight 1.5s ease-in-out infinite;
-        }
-        .civil-helo .nav-light.red {
-            background: #ff1744;
-            box-shadow: 0 0 15px rgba(255, 23, 68, 0.5);
-            right: 8px;
-            top: 30%;
-        }
-        .civil-helo .nav-light.green {
-            background: #00e676;
-            box-shadow: 0 0 15px rgba(0, 230, 118, 0.5);
-            left: 8px;
-            top: 30%;
-            animation-delay: 0.75s;
-        }
-        @keyframes blinkLight {
-            0%,
-            100% {
-                opacity: 0.2;
-            }
-            50% {
-                opacity: 1;
-            }
-        }
-        @keyframes spinRotor {
-            0% {
-                transform: translateX(-50%) rotate(0deg);
-            }
-            100% {
-                transform: translateX(-50%) rotate(360deg);
-            }
-        }
-        .login-page .brand {
-            color: #0d2137;
-            font-size: 28px;
-            font-weight: 900;
-            margin-bottom: 4px;
-        }
-        .login-page .brand span {
-            color: #0076ff;
-        }
-        .login-page .input-group {
-            position: relative;
-            margin-bottom: 16px;
-        }
-        .login-page .input-group input {
-            width: 100%;
-            padding: 16px 20px 16px 50px;
-            border: 2px solid #e8ecf0;
-            border-radius: 14px;
-            font-size: 16px;
-            font-family: 'Cairo', sans-serif;
-            background: #f8fafc;
-            transition: 0.3s;
-        }
-        .login-page .input-group input:focus {
-            border-color: #0076ff;
-            outline: none;
-            background: white;
-            box-shadow: 0 0 0 4px rgba(0, 118, 255, 0.08);
-        }
-        .login-page .input-group .input-icon {
-            position: absolute;
-            right: 18px;
-            top: 50%;
-            transform: translateY(-50%);
-            color: #999;
-            font-size: 18px;
-        }
-        .login-page .error-msg {
-            color: #dc3545;
-            font-size: 14px;
-            margin-top: 14px;
-            padding: 10px;
-            background: #ffeaea;
-            border-radius: 8px;
-        }
-        .tracking-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 20px;
-            padding-bottom: 15px;
-            border-bottom: 2px solid #eef3f8;
-            flex-wrap: wrap;
-            gap: 10px;
-            position: relative;
-            z-index: 1;
-        }
-        .tracking-header h2 {
-            color: #0d2137;
-            font-weight: 700;
-            font-size: 18px;
-        }
-        .tracking-header h2 i {
-            color: #0076ff;
-            margin-left: 8px;
-        }
-        .header-actions {
-            display: flex;
-            gap: 6px;
-            flex-wrap: wrap;
-            align-items: center;
-        }
-        .total-small {
-            font-size: 13px;
-            color: #888;
-            margin-right: 12px;
-            font-weight: 600;
-            white-space: nowrap;
-        }
-        .total-small .count {
-            color: #0076ff;
-            font-weight: 900;
-            font-size: 16px;
         }
 
-        /* ============================================
-           تصميم كارت الطلب الجديد - EUX (أفقي - بطاقتين بجانب بعض)
-           ============================================ */
-        .cards-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 20px;
-        }
-
-        .shipment-card {
-            width: 100%;
-            background: linear-gradient(135deg, #0b111e 0%, #05070d 100%);
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            border-right: 3px solid #0066ff;
-            border-radius: 20px;
-            padding: 20px 22px;
-            display: flex;
-            flex-direction: column;
-            gap: 14px;
-            color: #ffffff;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5),
-                        0 0 20px rgba(0, 102, 255, 0.08);
-            position: relative;
-            overflow: hidden;
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-            margin-bottom: 0;
-        }
-        .shipment-card:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 16px 48px rgba(0, 0, 0, 0.6),
-                        0 0 30px rgba(0, 102, 255, 0.12);
-        }
-        .shipment-card::before {
-            content: '';
-            position: absolute;
-            top: -50%;
-            right: -30%;
-            width: 200px;
-            height: 200px;
-            background: radial-gradient(circle, rgba(0, 102, 255, 0.04) 0%, transparent 70%);
-            border-radius: 50%;
-            pointer-events: none;
-        }
-        .shipment-card .card-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-start;
-            gap: 10px;
-            position: relative;
-            z-index: 1;
-        }
-        .shipment-card .customer-info {
-            display: flex;
-            flex-direction: column;
-            gap: 2px;
-        }
-        .shipment-card .customer-name {
-            font-size: 1.15rem;
-            font-weight: 700;
-            color: #ffffff;
-            letter-spacing: 0.3px;
-        }
-        .shipment-card .customer-phone {
-            font-size: 0.85rem;
-            color: #8a99ad;
-            direction: ltr;
-            letter-spacing: 0.3px;
-        }
-        .shipment-card .customer-phone i {
-            margin-left: 6px;
-            color: #3b82f6;
-            font-size: 0.8rem;
-        }
-        .shipment-card .details-grid {
-            background: rgba(255, 255, 255, 0.02);
-            border: 1px solid rgba(255, 255, 255, 0.05);
-            border-radius: 12px;
-            padding: 10px 14px;
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 6px 16px;
-            align-items: center;
-            position: relative;
-            z-index: 1;
-        }
-        .shipment-card .detail-item {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            padding: 3px 0;
-        }
-        .shipment-card .detail-icon {
-            font-size: 0.9rem;
-            opacity: 0.6;
-            width: 20px;
-            text-align: center;
-            color: #3b82f6;
-            flex-shrink: 0;
-        }
-        .shipment-card .detail-text {
-            display: flex;
-            flex-direction: column;
-            line-height: 1.2;
-        }
-        .shipment-card .detail-title {
-            font-size: 0.85rem;
-            color: #e2e8f0;
-            font-weight: 600;
-        }
-        .shipment-card .detail-title.price {
-            color: #38bdf8;
-            font-size: 0.95rem;
-            font-weight: 700;
-        }
-        .shipment-card .detail-label {
-            font-size: 0.6rem;
-            color: #64748b;
-            letter-spacing: 0.2px;
-        }
-        .shipment-card .status-badge {
-            display: inline-flex;
-            align-items: center;
-            gap: 4px;
-            background: rgba(46, 125, 50, 0.12);
-            border: 1px solid rgba(46, 125, 50, 0.2);
-            padding: 2px 10px;
-            border-radius: 16px;
-            font-size: 0.7rem;
-            font-weight: 600;
-            color: #4caf50;
-        }
-        .shipment-card .status-badge i {
-            font-size: 0.6rem;
-        }
-        .shipment-card .status-badge.pending {
-            background: rgba(255, 152, 0, 0.1);
-            border-color: rgba(255, 152, 0, 0.15);
-            color: #ffa726;
-        }
-        .shipment-card .track-btn {
-            width: 100%;
-            background: rgba(255, 255, 255, 0.03);
-            border: 1px solid rgba(255, 255, 255, 0.06);
-            color: #3b82f6;
-            padding: 8px 12px;
-            border-radius: 10px;
-            font-family: 'Cairo', sans-serif;
-            font-weight: 600;
-            font-size: 0.85rem;
-            cursor: pointer;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            gap: 8px;
-            transition: all 0.3s ease;
-            position: relative;
-            z-index: 1;
-        }
-        .shipment-card .track-btn i {
-            font-size: 0.8rem;
-        }
-        .shipment-card .track-btn:hover {
-            background: #0066ff;
-            color: #fff;
-            box-shadow: 0 4px 15px rgba(0, 102, 255, 0.3);
-            border-color: #0066ff;
-            transform: scale(1.02);
-        }
-
-        /* ===== التعديلات على العناصر القديمة في البطاقة ===== */
-        .shipment-card .delivery-status {
-            display: none;
-        }
-        .shipment-card .summary-row {
-            display: none;
-        }
-        .shipment-card .details {
-            margin-top: 0;
-            padding-top: 0;
-            border-top: none;
-            background: transparent;
-            border-radius: 0;
-            padding: 0;
-        }
-        .shipment-card .details.open {
-            display: block;
-        }
-        .shipment-card .details .info {
-            font-size: 13px;
-            color: #a0aec0;
-            margin: 4px 0;
-        }
-        .shipment-card .details .info strong {
-            color: #e2e8f0;
-        }
-        .shipment-card .actions {
-            margin-top: 12px;
-            display: flex;
-            gap: 8px;
-            flex-wrap: wrap;
-        }
-        .shipment-card .actions button {
-            padding: 6px 16px;
-            border-radius: 8px;
-            font-size: 13px;
-            border: none;
-            cursor: pointer;
-            font-family: 'Cairo', sans-serif;
-            font-weight: 600;
-            transition: 0.2s;
-        }
-        .shipment-card .actions .btn-edit {
-            background: #ff9800;
-            color: #fff;
-        }
-        .shipment-card .actions .btn-edit:hover {
-            background: #e68900;
-        }
-        .shipment-card .actions .btn-delete {
-            background: #dc3545;
-            color: #fff;
-        }
-        .shipment-card .actions .btn-delete:hover {
-            background: #c82333;
-        }
-        .shipment-card .actions .btn-track-add {
-            background: #28a745;
-            color: #fff;
-        }
-        .shipment-card .actions .btn-track-add:hover {
-            background: #218838;
-        }
-
-        /* ===== استجابة ===== */
-        @media (max-width: 768px) {
-            .cards-grid {
-                grid-template-columns: 1fr;
-            }
-        }
-        @media (max-width: 480px) {
-            .shipment-card .details-grid {
-                grid-template-columns: 1fr;
-                gap: 4px;
-            }
-            .shipment-card {
-                padding: 14px 16px;
-                border-radius: 16px;
-            }
-        }
-
-        /* ===== باقي الأنماط ===== */
-        .shipment-card .last-update {
-            font-size: 12px;
-            color: #888;
-            direction: ltr;
-            background: #eef3f8;
-            padding: 4px 14px;
-            border-radius: 20px;
-        }
-        .modal {
+        #rainCanvas {
             position: fixed;
-            top: 0;
-            left: 0;
+            inset: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0, 0, 0, 0.5);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            z-index: 2000;
-            padding: 16px;
-            backdrop-filter: blur(6px);
-            -webkit-backdrop-filter: blur(6px);
-        }
-        .modal-content {
-            background: white;
-            border-radius: 20px;
-            padding: 28px 25px 25px;
-            max-width: 600px;
-            width: 100%;
-            max-height: 85vh;
-            overflow-y: auto;
-            position: relative;
-            animation: modalIn 0.3s ease;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.2);
-        }
-        @keyframes modalIn {
-            from {
-                opacity: 0;
-                transform: translateY(30px) scale(0.96);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0) scale(1);
-            }
-        }
-        .modal-content h3 {
-            margin-bottom: 20px;
-            text-align: center;
-            font-size: 22px;
-            font-weight: 700;
-            color: #0d2137;
-        }
-        .modal-content h3 i {
-            color: #0076ff;
-            margin-left: 8px;
-        }
-        .close-btn {
-            position: absolute;
-            top: 16px;
-            left: 20px;
-            font-size: 28px;
-            cursor: pointer;
-            color: #aaa;
-            line-height: 1;
-            transition: 0.2s;
-        }
-        .close-btn:hover {
-            color: #333;
-            transform: rotate(90deg);
-        }
-        .form-group {
-            margin-bottom: 16px;
-            text-align: right;
-        }
-        .form-group label {
             display: block;
-            margin-bottom: 5px;
-            font-weight: 700;
-            color: #0d2137;
-            font-size: 14px;
-        }
-        .form-group input,
-        .form-group textarea,
-        .form-group select {
-            width: 100%;
-            padding: 12px 15px;
-            border: 2px solid #e8ecf0;
-            border-radius: 10px;
-            font-size: 14px;
-            font-family: 'Cairo', sans-serif;
-            background: #f8fafc;
-            transition: 0.3s;
-        }
-        .form-group input:focus,
-        .form-group textarea:focus,
-        .form-group select:focus {
-            border-color: #0076ff;
-            outline: none;
-            background: white;
-            box-shadow: 0 0 0 4px rgba(0, 118, 255, 0.08);
-        }
-        .form-group textarea {
-            height: 80px;
-            resize: vertical;
-        }
-        .timeline-item {
-            border-right: 3px solid #0076ff;
-            padding: 12px 16px 12px 0;
-            margin-right: 10px;
-            margin-bottom: 14px;
-            background: #f8fafc;
-            border-radius: 0 10px 10px 0;
-            transition: 0.2s;
-        }
-        .timeline-item:hover {
-            background: #f0f6fe;
-        }
-        .timeline-item .time {
-            color: #999;
-            font-size: 13px;
-        }
-        .timeline-item .event {
-            font-weight: 700;
-            color: #0d2137;
-            margin: 5px 0;
-        }
-        .timeline-item .location {
-            color: #666;
-            font-size: 14px;
-        }
-        .timeline-item .problem {
-            color: #dc3545;
-            font-size: 13px;
-            margin-top: 4px;
-        }
-        .client-card {
-            background: #f8fafc;
-            padding: 14px 18px;
-            border-radius: 10px;
-            margin-bottom: 10px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            border: 1px solid #e8ecf0;
-            transition: 0.2s;
-        }
-        .client-card:hover {
-            background: #f0f4fa;
-        }
-        .client-card .client-info {
-            flex: 1;
-        }
-        .client-card .client-info strong {
-            font-size: 16px;
-            color: #0d2137;
-        }
-        .client-card .client-info .phone {
-            color: #666;
-            font-size: 14px;
-            direction: ltr;
-        }
-        .client-card .client-info .created {
-            font-size: 12px;
-            color: #aaa;
-        }
-        .loading {
-            text-align: center;
-            padding: 30px 0;
-        }
-        .spinner {
-            border: 4px solid #e8ecf0;
-            border-top: 4px solid #0076ff;
-            border-radius: 50%;
-            width: 40px;
-            height: 40px;
-            animation: spin 1s linear infinite;
-            margin: 0 auto 10px;
-        }
-        @keyframes spin {
-            0% {
-                transform: rotate(0deg);
-            }
-            100% {
-                transform: rotate(360deg);
-            }
-        }
-        .empty-state {
-            text-align: center;
-            padding: 40px 20px;
-            color: #aaa;
-        }
-        .empty-state .icon {
-            font-size: 56px;
-            margin-bottom: 12px;
-        }
-        .two-columns {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 12px;
-        }
-        .text-center {
-            text-align: center;
-        }
-        .btn-eux,
-        .btn-eux-green,
-        .btn-eux-orange,
-        .btn-eux-red,
-        .btn-eux-outline {
-            --round: 0.75rem;
-            cursor: pointer;
-            position: relative;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            overflow: hidden;
-            transition: all 0.25s ease;
-            border-radius: var(--round);
-            border: none;
-            outline: none;
-            padding: 12px 18px;
-            font-family: 'Cairo', sans-serif;
-            font-weight: 600;
-            font-size: 14px;
-            color: white;
-        }
-        .btn-eux {
-            background: radial-gradient(65.28% 65.28% at 50% 100%, rgba(0, 118, 255, 0.6) 0%, rgba(0, 118, 255, 0) 100%), linear-gradient(0deg, #0076ff, #0076ff);
-            box-shadow: 0 4px 15px rgba(0, 118, 255, 0.25);
-        }
-        .btn-eux-green {
-            background: radial-gradient(65.28% 65.28% at 50% 100%, rgba(40, 167, 69, 0.6) 0%, rgba(40, 167, 69, 0) 100%), linear-gradient(0deg, #28a745, #28a745);
-            box-shadow: 0 4px 15px rgba(40, 167, 69, 0.25);
-        }
-        .btn-eux-orange {
-            background: radial-gradient(65.28% 65.28% at 50% 100%, rgba(255, 152, 0, 0.6) 0%, rgba(255, 152, 0, 0) 100%), linear-gradient(0deg, #ff9800, #ff9800);
-            box-shadow: 0 4px 15px rgba(255, 152, 0, 0.25);
-        }
-        .btn-eux-red {
-            background: radial-gradient(65.28% 65.28% at 50% 100%, rgba(220, 53, 69, 0.6) 0%, rgba(220, 53, 69, 0) 100%), linear-gradient(0deg, #dc3545, #dc3545);
-            box-shadow: 0 4px 15px rgba(220, 53, 69, 0.25);
-        }
-        .btn-eux-outline {
-            background: transparent;
-            border: 1.5px solid #ddd;
-            color: #0d2137;
-            box-shadow: none;
-        }
-        .btn-eux-outline:hover {
-            background: #f5f5f5;
-        }
-        .btn-eux:active,
-        .btn-eux-green:active,
-        .btn-eux-orange:active,
-        .btn-eux-red:active,
-        .btn-eux-outline:active {
-            transform: scale(0.95);
-        }
-        .btn-eux .inner,
-        .btn-eux-green .inner,
-        .btn-eux-orange .inner,
-        .btn-eux-red .inner,
-        .btn-eux-outline .inner {
-            z-index: 2;
-            gap: 6px;
-            position: relative;
-            width: 100%;
-            color: inherit;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 16px;
-            font-weight: 500;
-            line-height: 1.5;
-        }
-        .btn-eux .fold,
-        .btn-eux-green .fold,
-        .btn-eux-orange .fold,
-        .btn-eux-red .fold,
-        .btn-eux-outline .fold {
-            z-index: 1;
-            position: absolute;
-            top: 0;
-            right: 0;
-            height: 1rem;
-            width: 1rem;
-            display: inline-block;
-            transition: all 0.5s ease-in-out;
-            border-bottom-left-radius: 0.5rem;
-            border-top-right-radius: var(--round);
-        }
-        .btn-eux .fold {
-            background: radial-gradient(100% 75% at 55%, rgba(0, 118, 255, 0.6) 0%, rgba(0, 118, 255, 0) 100%);
-            box-shadow: 0 0 3px rgba(0, 0, 0, 0.2);
-        }
-        .btn-eux-green .fold {
-            background: radial-gradient(100% 75% at 55%, rgba(40, 167, 69, 0.6) 0%, rgba(40, 167, 69, 0) 100%);
-            box-shadow: 0 0 3px rgba(0, 0, 0, 0.2);
-        }
-        .btn-eux-orange .fold {
-            background: radial-gradient(100% 75% at 55%, rgba(255, 152, 0, 0.6) 0%, rgba(255, 152, 0, 0) 100%);
-            box-shadow: 0 0 3px rgba(0, 0, 0, 0.2);
-        }
-        .btn-eux-red .fold {
-            background: radial-gradient(100% 75% at 55%, rgba(220, 53, 69, 0.6) 0%, rgba(220, 53, 69, 0) 100%);
-            box-shadow: 0 0 3px rgba(0, 0, 0, 0.2);
-        }
-        .btn-eux-outline .fold {
-            background: radial-gradient(100% 75% at 55%, rgba(13, 33, 55, 0.1) 0%, rgba(13, 33, 55, 0) 100%);
-            box-shadow: 0 0 3px rgba(0, 0, 0, 0.1);
-        }
-        .btn-eux:hover .fold,
-        .btn-eux-green:hover .fold,
-        .btn-eux-orange:hover .fold,
-        .btn-eux-red:hover .fold,
-        .btn-eux-outline:hover .fold {
-            margin-top: -1rem;
-            margin-right: -1rem;
-        }
-        .points_wrapper {
-            overflow: hidden;
-            width: 100%;
-            height: 100%;
             pointer-events: none;
-            position: absolute;
-            z-index: 1;
-        }
-        .points_wrapper .point {
-            bottom: -10px;
-            position: absolute;
-            animation: floating-points infinite ease-in-out;
-            pointer-events: none;
-            width: 2px;
-            height: 2px;
-            background-color: #fff;
-            border-radius: 9999px;
-        }
-        @keyframes floating-points {
-            0% {
-                transform: translateY(0);
-            }
-            85% {
-                opacity: 0;
-            }
-            100% {
-                transform: translateY(-55px);
-                opacity: 0;
-            }
-        }
-        .points_wrapper .point:nth-child(1) {
-            left: 10%;
-            opacity: 1;
-            animation-duration: 2.35s;
-            animation-delay: 0.2s;
-        }
-        .points_wrapper .point:nth-child(2) {
-            left: 30%;
-            opacity: 0.7;
-            animation-duration: 2.5s;
-            animation-delay: 0.5s;
-        }
-        .points_wrapper .point:nth-child(3) {
-            left: 25%;
-            opacity: 0.8;
-            animation-duration: 2.2s;
-            animation-delay: 0.1s;
-        }
-        .points_wrapper .point:nth-child(4) {
-            left: 44%;
-            opacity: 0.6;
-            animation-duration: 2.05s;
-        }
-        .points_wrapper .point:nth-child(5) {
-            left: 50%;
-            opacity: 1;
-            animation-duration: 1.9s;
-        }
-        .points_wrapper .point:nth-child(6) {
-            left: 75%;
-            opacity: 0.5;
-            animation-duration: 1.5s;
-            animation-delay: 1.5s;
-        }
-        .points_wrapper .point:nth-child(7) {
-            left: 88%;
-            opacity: 0.9;
-            animation-duration: 2.2s;
-            animation-delay: 0.2s;
-        }
-        .points_wrapper .point:nth-child(8) {
-            left: 58%;
-            opacity: 0.8;
-            animation-duration: 2.25s;
-            animation-delay: 0.2s;
-        }
-        .points_wrapper .point:nth-child(9) {
-            left: 98%;
-            opacity: 0.6;
-            animation-duration: 2.6s;
-            animation-delay: 0.1s;
-        }
-        .points_wrapper .point:nth-child(10) {
-            left: 65%;
-            opacity: 1;
-            animation-duration: 2.5s;
-            animation-delay: 0.2s;
-        }
-        .btn-eux-outline .points_wrapper .point {
-            background-color: #0d2137;
-        }
-        .toast {
-            position: fixed;
-            bottom: 24px;
-            left: 50%;
-            transform: translateX(-50%);
-            background: #0d2137;
-            color: white;
-            padding: 12px 28px;
-            border-radius: 14px;
-            font-size: 14px;
-            z-index: 9999;
-            animation: toastIn 0.3s ease;
-            max-width: 90%;
-            text-align: center;
-            font-family: 'Cairo', sans-serif;
-            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.2);
-        }
-        .toast.success {
-            background: #28a745;
-        }
-        .toast.error {
-            background: #dc3545;
-        }
-        @keyframes toastIn {
-            from {
-                opacity: 0;
-                transform: translateX(-50%) translateY(20px);
-            }
-            to {
-                opacity: 1;
-                transform: translateX(-50%) translateY(0);
-            }
-        }
-        .public-page-header {
-            text-align: center;
-            padding: 10px 0 5px 0;
-        }
-        .public-page-header .helo-wrapper {
-            display: flex;
-            justify-content: center;
-            margin-bottom: 5px;
-        }
-        .public-page-header .helo-wrapper .civil-helo {
-            margin-top: 0;
-            transform: scale(0.75);
-            animation: hoverCivilSmall 3s ease-in-out infinite;
-        }
-        @keyframes hoverCivilSmall {
-            0%,
-            100% {
-                transform: scale(0.75) translateY(0px);
-            }
-            50% {
-                transform: scale(0.75) translateY(-6px);
-            }
-        }
-        .site-link-wrapper {
-            display: flex;
-            justify-content: center;
-            margin: 2px 0 16px 0;
-        }
-        .site-link-btn {
-            --black-700: hsla(210, 97%, 50%, 0.15);
-            --border_radius: 9999px;
-            --transtion: 0.3s ease-in-out;
-            --offset: 2px;
-            cursor: pointer;
-            position: relative;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            transform-origin: center;
-            padding: 0.6rem 1.8rem;
-            background-color: transparent;
-            border: none;
-            border-radius: var(--border_radius);
-            transform: scale(calc(1 + (var(--active, 0) * 0.05)));
-            transition: transform var(--transtion);
-            text-decoration: none;
-            font-family: 'Cairo', sans-serif;
-        }
-        .site-link-btn::before {
-            content: "";
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            width: 100%;
-            height: 100%;
-            background-color: var(--black-700);
-            border-radius: var(--border_radius);
-            box-shadow: inset 0 0.5px hsla(0, 0%, 100%, 0.3), inset 0 -1px 2px 0 hsla(0, 0%, 0%, 0.1), 0px 4px 10px -4px hsla(0, 0%, 0%, 0.1);
-            transition: all var(--transtion);
-            z-index: 0;
-        }
-        .site-link-btn::after {
-            content: "";
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            width: 100%;
-            height: 100%;
-            background-color: hsla(210, 97%, 61%, 0.15);
-            background-image: radial-gradient(at 51% 89%, hsla(210, 45%, 74%, 0.3) 0px, transparent 50%), radial-gradient(at 0% 0%, hsla(210, 45%, 74%, 0.3) 0px, transparent 50%);
-            background-position: top;
-            opacity: var(--active, 0);
-            border-radius: var(--border_radius);
-            transition: opacity var(--transtion);
-            z-index: 2;
-        }
-        .site-link-btn:is(:hover,
-        :focus-visible) {
-            --active: 1;
-        }
-        .site-link-btn:active {
-            transform: scale(1);
-        }
-        .site-link-btn .dots_border {
-            --size_border: calc(100% + 2px);
-            overflow: hidden;
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            width: var(--size_border);
-            height: var(--size_border);
-            background-color: transparent;
-            border-radius: var(--border_radius);
-            z-index: -10;
-        }
-        .site-link-btn .dots_border::before {
-            content: "";
-            position: absolute;
-            top: 30%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            transform-origin: left;
-            transform: rotate(0deg);
-            width: 100%;
-            height: 2rem;
-            background: linear-gradient(90deg, transparent, #0076ff, transparent);
-            mask: linear-gradient(transparent 0%, white 120%);
-            animation: rotate 3s linear infinite;
-        }
-        @keyframes rotate {
-            to {
-                transform: rotate(360deg);
-            }
-        }
-        .site-link-btn .text_button {
-            position: relative;
-            z-index: 10;
-            font-size: 1rem;
-            color: #0076ff;
-            font-weight: 700;
-            font-family: 'Cairo', sans-serif;
-            transition: color var(--transtion);
-        }
-        .site-link-btn:is(:hover,
-        :focus-visible) .text_button {
-            color: #0055b3;
-        }
-        @media (max-width: 768px) {
-            .header-new {
-                padding: 12px 16px;
-            }
-            .header-new .logo-text {
-                font-size: 20px;
-                letter-spacing: 1px;
-            }
-            .header-new .divider {
-                height: 25px;
-            }
-            .header-new .dot {
-                width: 6px;
-                height: 6px;
-            }
-            header {
-                padding: 20px 5%;
-            }
-            .logo {
-                font-size: 24px;
-            }
-            .hero h1 {
-                font-size: 2rem;
-            }
-            .hero p {
-                font-size: 1rem;
-            }
-            .cyber-node {
-                width: 120px;
-                height: 120px;
-                font-size: 28px;
-            }
-            .cube-container {
-                width: 130px;
-                height: 120px;
-            }
-            .iso-cube {
-                width: 90px;
-                height: 90px;
-            }
-            .iso-face {
-                width: 90px;
-                height: 90px;
-                font-size: 24px;
-            }
-            .iso-front {
-                transform: rotateY(0deg) translateZ(45px);
-            }
-            .iso-right {
-                transform: rotateY(90deg) translateZ(45px);
-            }
-            .iso-top {
-                transform: rotateX(90deg) translateZ(45px);
-            }
-            .quantum-box {
-                width: 120px;
-                height: 120px;
-            }
-            .two-columns {
-                grid-template-columns: 1fr;
-            }
-            .header-actions .share-btn-text {
-                font-size: 11px;
-                max-width: 180px;
-                padding: 6px 10px;
-            }
-            .cards-grid {
-                grid-template-columns: 1fr;
-            }
         }
 
-        /* ===================== طباعة البوليصة ===================== */
-        .waybill {
-            border: 2px dashed #94a3b8;
-            border-radius: 12px;
-            padding: 16px;
-            background: #fff;
-            margin-bottom: 18px;
-            page-break-after: always;
-        }
-        .waybill:last-child { page-break-after: avoid; }
-        .waybill-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            border-bottom: 2px solid #000;
-            padding-bottom: 8px;
-        }
-        .waybill-body { margin-top: 10px; font-size: 13px; }
-        .waybill-row { border-bottom: 1px solid #eee; padding: 6px 0; }
-        .barcode-box { text-align: center; padding: 10px 0; }
-        .barcode-box svg { max-width: 100%; height: auto; }
-
-        @media print {
-            body * { visibility: hidden; }
-            #waybillsOverlay, #waybillsOverlay * { visibility: visible; }
-            #waybillsOverlay { position: absolute; left: 0; top: 0; width: 100%; background: #fff; }
-            #waybillsOverlay .no-print { display: none !important; }
+        .content {
+            position: relative;
+            z-index: 2;
+            width: 100%;
+            height: 100%;
         }
     </style>
 </head>
-<body oncontextmenu="return false;">
 
-    <!-- ============================================
-    صفحة الهبوط (Landing Page) مع الشريط الجديد
-    ============================================ -->
-    <div id="landingPage">
-        <!-- الشريط العلوي الجديد -->
-        <header class="header-new">
-            <div class="logo-container">
-                <div class="divider"></div>
-                <div class="logo-text"><span>EUX</span> EXPRESS</div>
-                <div class="dot"></div>
-            </div>
-        </header>
+<body>
 
-        <section class="hero">
-            <div class="showcase-wrapper">
-                <div class="cyber-node">EUX</div>
-                <div class="glow-floor"></div>
-            </div>
-            <h1>شركة <span>EUX</span> للشحن</h1>
-            <p>الريادة في سرعة وحلول الشحن نقدم خدماتنا الاحترافية من مدينة العبور (11828) وإلى جميع محافظات جمهورية مصر العربية بأفضل الأسعار وأعلى كفاءة.</p>
-            <button onclick="togglePopup(true)" class="btn"><i class="fas fa-user-plus"></i> افتح حساب الآن</button>
-            <a href="#" class="login-btn-hero" onclick="openTrackingSystem(); return false;">
-                <i class="fas fa-sign-in-alt"></i> تسجيل الدخول
-            </a>
-            <div class="sea-wave-divider">
-                <svg viewBox="0 0 1200 120" preserveAspectRatio="none">
-                    <path d="M321.39,56.44c58-10.79,114.16-30.13,172-41.86,82.39-16.72,168.19-17.73,250.45-.39C823.78,31,906.67,72,985.66,92.83c70.05,18.48,146.53,26.09,214.34,3V120H0V0C26.9,4.75,55.05,16.33,81.11,25.09,151,48.56,224.4,74.48,321.39,56.44Z" class="wave-fill-white"></path>
-                </svg>
-            </div>
-        </section>
+<canvas id="rainCanvas"></canvas>
 
-        <div class="popup-overlay" id="accountPopup" onclick="closePopupOutside(event)">
-            <div class="popup-box">
-                <span class="popup-close" onclick="togglePopup(false)">&times;</span>
-                <div class="popup-title"><i class="far fa-clock"></i> سيتم التواصل خلال 5 ساعات لتفعيل الحساب</div>
-                <form id="excelForm" onsubmit="submitToExcel(event)">
-                    <div class="popup-form-group">
-                        <label for="userName">الاسم</label>
-                        <input type="text" id="userName" name="name" placeholder="أدخل ألإسم " required>
-                    </div>
-                    <div class="popup-form-group">
-                        <label for="userPhone">رقم الهاتف</label>
-                        <input type="tel" id="userPhone" name="phone" placeholder="أدخل رقم الهاتف" required>
-                    </div>
-                    <button type="submit" class="popup-submit-btn">إرسال</button>
-                </form>
-            </div>
-        </div>
+<main class="content"></main>
 
-        <section id="about" class="about">
-            <div class="showcase-wrapper" style="margin-bottom: 50px; margin-top: 20px;">
-                <div class="cube-container">
-                    <div class="iso-cube">
-                        <div class="iso-face iso-front">EUX</div>
-                        <div class="iso-face iso-right"></div>
-                        <div class="iso-face iso-top"></div>
-                    </div>
-                </div>
-                <div class="glow-floor" style="margin-top: 25px;"></div>
-            </div>
-            <h2 class="section-title">لماذا شركة EUX؟</h2>
-            <p style="max-width: 800px; margin: 0 auto 30px; color: #666;">نعمل في مجال الشحن منذ 3 أعوام متتالية حققنا فيها نجاحا باهرا، وقدمنا حلولا مبتكرة لجميع مشاكل الشحن التي تواجه التجار لأننا ندرك تماما ما يهمك:</p>
-            <div class="about-container">
-                <div class="about-card">
-                    <i class="fas fa-shipping-fast"></i>
-                    <h3>سرعة التسليم والاستلام</h3>
-                    <p>الأفضل والأسرع في استلام الشحنات من مدينة العبور وتسليم الشحنات لجميع المحافظات</p>
-                </div>
-                <div class="about-card">
-                    <i class="fas fa-shield-alt"></i>
-                    <h3>الحفاظ على الشحنات</h3>
-                    <p>أمان كامل لمنتجاتك وضمان وصولها بحالتها الأصلية للعميل</p>
-                </div>
-                <div class="about-card">
-                    <i class="fas fa-hand-holding-usd"></i>
-                    <h3>سعر اقتصادي مميز</h3>
-                    <p>نقدم أفضل معادلة بين السعر الاقتصادي والجودة العالية لدعم تجارتك</p>
-                </div>
-            </div>
-            <div class="sea-wave-divider">
-                <svg viewBox="0 0 1200 120" preserveAspectRatio="none">
-                    <path d="M321.39,56.44c58-10.79,114.16-30.13,172-41.86,82.39-16.72,168.19-17.73,250.45-.39C823.78,31,906.67,72,985.66,92.83c70.05,18.48,146.53,26.09,214.34,3V120H0V0C26.9,4.75,55.05,16.33,81.11,25.09,151,48.56,224.4,74.48,321.39,56.44Z" class="wave-fill-white"></path>
-                </svg>
-            </div>
-        </section>
+<script>
 
-        <section id="services" class="services">
-            <h2 class="section-title">خدماتنا المميزة</h2>
-            <div class="services-grid">
-                <div class="service-box"><i class="fas fa-mobile-alt"></i><h4>تطبيق متابعة خاص</h4><p>تابع شحناتك خطوة بخطوة أولا بأول من خلال تطبيقنا الذكي</p></div>
-                <div class="service-box"><i class="fas fa-users"></i><h4>جروب للمتابعة والدعم</h4><p>فريق دعم فني متكامل متواجد لخدمتك ومتابعة طلباتك بمرونة</p></div>
-                <div class="service-box"><i class="fas fa-truck-loading"></i><h4>خدمة بيكب مجاني</h4><p>نقوم باستلام الشحنات من باب مخزنك أو مقر عملك مجانا</p></div>
-                <div class="service-box"><i class="fas fa-money-bill-wave"></i><h4>تحصيل 3 أيام أسبوعيا</h4><p>دورة رأس مال سريعة مع نظام تحصيل مرن وموثوق 3 مرات في الأسبوع</p></div>
-                <div class="service-box"><i class="fas fa-search-plus"></i><h4>خدمة معاينة واستبدال</h4><p>نمنح عملائك ميزة المعاينة والاستبدال في مكان التسليم لزيادة الثقة</p></div>
-                <div class="service-box"><i class="fas fa-redo-alt"></i><h4>3 محاولات تسليم</h4><p>نحاول تسليم الشحنة حتى 3 مرات قبل تصنيفها كمرتجع لضمان أعلى نسبة نجاح</p></div>
-                <div class="service-box"><i class="fas fa-chart-line"></i><h4>نسبة تسليم عالية جدا</h4><p>بفضل خبرتنا الممتدة لـ 3 سنوات، نحقق أعلى معدلات نجاح تسليم بمصر</p></div>
-            </div>
-            <div class="sea-wave-divider">
-                <svg viewBox="0 0 1200 120" preserveAspectRatio="none">
-                    <path d="M321.39,56.44c58-10.79,114.16-30.13,172-41.86,82.39-16.72,168.19-17.73,250.45-.39C823.78,31,906.67,72,985.66,92.83c70.05,18.48,146.53,26.09,214.34,3V120H0V0C26.9,4.75,55.05,16.33,81.11,25.09,151,48.56,224.4,74.48,321.39,56.44Z" class="wave-fill-light"></path>
-                </svg>
-            </div>
-        </section>
+const canvas = document.getElementById("rainCanvas");
+const ctx = canvas.getContext("2d");
 
-        <section id="contact" class="contact">
-            <div class="showcase-wrapper" style="margin-bottom: 50px; margin-top: 10px;">
-                <div class="quantum-box">
-                    <span style="color: #0076ff; font-weight: 900; font-size: 32px; z-index: 5; letter-spacing: 1px;">EUX</span>
-                </div>
-                <div class="glow-floor" style="background: radial-gradient(#ffb700, transparent 70%); margin-top: 25px;"></div>
-            </div>
-            <h2 class="section-title">كن أحد عملائنا المميزين اليوم!</h2>
-            <p style="margin-bottom: 30px; font-size: 1.1rem;">لا تتردد في التواصل معنا لمعرفة المزيد من التفاصيل والبدء في شحن منتجاتك</p>
-            <div class="contact-info">
-                <div class="info-item">
-                    <i class="fas fa-map-marker-alt"></i>
-                    <span>مدينة العبور 11828، الشباب، بجوار كشري الوالي</span>
-                </div>
-            </div>
-        </section>
+let width;
+let height;
 
-        <footer>
-            <p>&copy; 2026 جميع الحقوق محفوظة لشركة EUX للشحن</p>
-            <div class="footer-social">
-                <a href="https://www.facebook.com/share/1JBqQgjooM/" target="_blank"><i class="fab fa-facebook"></i></a>
-            </div>
-        </footer>
-    </div>
+let drops = [];
 
-    <!-- ============================================
-    نظام التتبع (Tracking App)
-    ============================================ -->
-    <div id="trackingApp" class="hidden">
-        <div class="tracking-container" id="app">
+/* اتجاه الهاتف */
+let tiltX = 0;
+let tiltY = 1;
 
-            <!-- ==========================================
-            صفحة تسجيل الدخول (Login) مع الشريط الجديد
-            ========================================== -->
-            <div id="loginPage" class="login-page">
-                <!-- الشريط العلوي الجديد -->
-                <header class="header-new" style="border-radius: 16px 16px 0 0; margin-bottom: 20px;">
-                    <div class="logo-container">
-                        <div class="divider"></div>
-                        <div class="logo-text"><span>EUX</span> EXPRESS</div>
-                        <div class="dot"></div>
-                    </div>
-                </header>
+/* إعدادات المطر */
+const settings = {
+    density: 130,
+    minLength: 12,
+    maxLength: 42,
+    minSpeed: 5,
+    maxSpeed: 13,
+    minWidth: 0.7,
+    maxWidth: 1.8
+};
 
-                <div class="logo-wrapper">
-                    <div class="civil-helo">
-                        <div class="body">
-                            <div class="body-stripe"></div>
-                            <div class="cockpit">
-                                <div class="cockpit-wiper"></div>
-                            </div>
-                            <span class="eux-logo">EUX</span>
-                        </div>
-                        <div class="tail"></div>
-                        <div class="main-rotor"></div>
-                        <div class="tail-rotor"></div>
-                        <div class="nav-light red"></div>
-                        <div class="nav-light green"></div>
-                    </div>
-                </div>
-                <div class="brand">مرحبا بك في <span>EUX Express</span></div>
+function random(min, max) {
+    return Math.random() * (max - min) + min;
+}
 
-                <div class="input-group">
-                    <span class="input-icon"><i class="fas fa-phone"></i></span>
-                    <input type="text" id="phoneInput" placeholder="رقم الهاتف" dir="ltr" maxlength="11" oninput="this.value=this.value.replace(/[^0-9]/g,'')">
-                </div>
-                <div class="input-group">
-                    <span class="input-icon"><i class="fas fa-lock"></i></span>
-                    <input type="password" id="passwordInput" placeholder="كلمة المرور" dir="ltr">
-                </div>
+function resizeCanvas() {
 
-                <button class="btn-eux" onclick="doLogin()" style="width:100%;padding:16px;font-size:18px;border-radius:14px;">
-                    <span class="inner"><i class="fas fa-sign-in-alt"></i> دخول</span>
-                    <span class="fold"></span>
-                    <div class="points_wrapper">
-                        <span class="point"></span><span class="point"></span><span class="point"></span>
-                        <span class="point"></span><span class="point"></span><span class="point"></span>
-                        <span class="point"></span><span class="point"></span><span class="point"></span>
-                        <span class="point"></span>
-                    </div>
-                </button>
-                <button class="btn-eux-outline" onclick="backToLanding()" style="width:100%;margin-top:10px;padding:14px;border-radius:12px;font-size:15px;">
-                    <span class="inner">العودة للصفحة الرئيسية</span>
-                </button>
-                <p class="error-msg" id="loginError"></p>
-            </div>
+    const dpr =
+        Math.min(window.devicePixelRatio || 1, 2);
 
-            <!-- ==========================================
-            لوحة التحكم (Dashboard) مع الشريط الجديد
-            ========================================== -->
-            <div id="dashboard" class="hidden">
-                <!-- الشريط العلوي الجديد -->
-                <header class="header-new" style="border-radius: 16px 16px 0 0; margin-bottom: 20px;">
-                    <div class="logo-container">
-                        <div class="divider"></div>
-                        <div class="logo-text"><span>EUX</span> EXPRESS</div>
-                        <div class="dot"></div>
-                    </div>
-                </header>
+    width = window.innerWidth;
+    height = window.innerHeight;
 
-                <div class="tracking-header">
-                    <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
-                        <h2><i class="fas fa-tachometer-alt"></i> لوحة التحكم</h2>
-                        <span class="total-small">اجمالي الشحنات: <span class="count" id="totalCountSmall">0</span></span>
-                    </div>
-                    <div class="header-actions">
-                        <div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap;background:#f0f4fa;padding:4px 8px;border-radius:30px;border:1px solid #dce5ed;">
-                            <i class="fas fa-search" style="color:#888;font-size:14px;"></i>
-                            <input type="text" id="searchShipmentInput" placeholder="بحث باسم أو رقم هاتف..." style="border:none;background:transparent;padding:6px 10px;font-family:'Cairo',sans-serif;font-size:14px;min-width:150px;outline:none;" dir="rtl">
-                            <button onclick="searchShipments()" style="background:#0076ff;color:white;border:none;border-radius:20px;padding:4px 16px;font-weight:600;cursor:pointer;font-family:'Cairo',sans-serif;font-size:13px;transition:0.2s;">بحث</button>
-                            <button onclick="clearSearch()" style="background:transparent;color:#888;border:none;border-radius:20px;padding:4px 10px;cursor:pointer;font-family:'Cairo',sans-serif;font-size:12px;">الغاء</button>
-                        </div>
-                        <button id="shareLinkBtn" class="btn-eux-orange hidden share-btn-text" onclick="copyShareLink()" style="font-size:12px;padding:8px 12px;border-radius:10px;">
-                            <span class="inner">يمكن إرسال هذا الرابط للمستلم ليقوم بتسجيل الشحنه بنفسه</span>
-                            <span class="fold"></span>
-                            <div class="points_wrapper">
-                                <span class="point"></span><span class="point"></span><span class="point"></span>
-                                <span class="point"></span><span class="point"></span><span class="point"></span>
-                                <span class="point"></span><span class="point"></span><span class="point"></span>
-                                <span class="point"></span>
-                            </div>
-                        </button>
-                        <button id="addShipmentBtn" class="btn-eux-green hidden" onclick="showAddShipmentForm()" style="padding:10px 16px;border-radius:10px;font-size:13px;">
-                            <span class="inner">اضافة شحنة</span>
-                            <span class="fold"></span>
-                            <div class="points_wrapper">
-                                <span class="point"></span><span class="point"></span><span class="point"></span>
-                                <span class="point"></span><span class="point"></span><span class="point"></span>
-                                <span class="point"></span><span class="point"></span><span class="point"></span>
-                                <span class="point"></span>
-                            </div>
-                        </button>
-                        <button id="printWaybillsBtn" class="btn-eux hidden" onclick="showPrintWaybillsList()" style="padding:10px 16px;border-radius:10px;font-size:13px;">
-                            <span class="inner">طباعة البوليصة</span>
-                            <span class="fold"></span>
-                            <div class="points_wrapper">
-                                <span class="point"></span><span class="point"></span><span class="point"></span>
-                                <span class="point"></span><span class="point"></span><span class="point"></span>
-                                <span class="point"></span><span class="point"></span><span class="point"></span>
-                                <span class="point"></span>
-                            </div>
-                        </button>
-                        <button id="clientsBtn" class="btn-eux hidden" onclick="showClients()" style="padding:10px 16px;border-radius:10px;font-size:13px;">
-                            <span class="inner">عملاء</span>
-                            <span class="fold"></span>
-                            <div class="points_wrapper">
-                                <span class="point"></span><span class="point"></span><span class="point"></span>
-                                <span class="point"></span><span class="point"></span><span class="point"></span>
-                                <span class="point"></span><span class="point"></span><span class="point"></span>
-                                <span class="point"></span>
-                            </div>
-                        </button>
-                        <button id="allShipmentsBtn" class="btn-eux-orange hidden" onclick="loadAllShipments()" style="padding:10px 16px;border-radius:10px;font-size:13px;">
-                            <span class="inner">الكل</span>
-                            <span class="fold"></span>
-                            <div class="points_wrapper">
-                                <span class="point"></span><span class="point"></span><span class="point"></span>
-                                <span class="point"></span><span class="point"></span><span class="point"></span>
-                                <span class="point"></span><span class="point"></span><span class="point"></span>
-                                <span class="point"></span>
-                            </div>
-                        </button>
-                        <button class="btn-eux-outline" onclick="logout()" style="padding:10px 16px;border-radius:10px;font-size:13px;">
-                            <span class="inner">خروج</span>
-                        </button>
-                    </div>
-                </div>
-                <div id="content" class="cards-grid"></div>
-            </div>
+    canvas.width = width * dpr;
+    canvas.height = height * dpr;
 
-            <!-- ==========================================
-            صفحة تسجيل الشحنة العامة (Public Order Page)
-            مع الشريط الجديد وعداد منع التكرار
-            ========================================== -->
-            <div id="publicOrderPage" class="hidden">
-                <!-- الشريط العلوي الجديد -->
-                <header class="header-new" style="border-radius: 16px 16px 0 0; margin-bottom: 20px;">
-                    <div class="logo-container">
-                        <div class="divider"></div>
-                        <div class="logo-text"><span>EUX</span> EXPRESS</div>
-                        <div class="dot"></div>
-                    </div>
-                </header>
+    canvas.style.width = width + "px";
+    canvas.style.height = height + "px";
 
-                <div class="public-page-header">
-                    <div class="helo-wrapper">
-                        <div class="civil-helo">
-                            <div class="body"><div class="body-stripe"></div><div class="cockpit"><div class="cockpit-wiper"></div></div><span class="eux-logo">EUX</span></div>
-                            <div class="tail"></div><div class="main-rotor"></div><div class="tail-rotor"></div>
-                            <div class="nav-light red"></div><div class="nav-light green"></div>
-                        </div>
-                    </div>
-                    <div class="site-link-wrapper">
-                        <a href="#" onclick="backToLanding(); return false;" class="site-link-btn">
-                            <span class="dots_border"></span>
-                            <span class="text_button">euxexpress.com</span>
-                        </a>
-                    </div>
-                </div>
+    ctx.setTransform(
+        dpr,
+        0,
+        0,
+        dpr,
+        0,
+        0
+    );
 
-                <div class="form-group"><label>اسم المستلم *</label><input id="pf_receiverName" placeholder="اسم المستلم"></div>
-                <div class="form-group"><label>هاتف المستلم *</label><input id="pf_receiverPhone" placeholder="مثال: 010xxxxxxxx" dir="ltr" maxlength="11" oninput="this.value=this.value.replace(/[^0-9]/g,'')"></div>
-                <div class="form-group"><label>هاتف آخر للمستلم</label><input id="pf_receiverPhone2" placeholder="هاتف آخر (اختياري)" dir="ltr" maxlength="11" oninput="this.value=this.value.replace(/[^0-9]/g,'')"></div>
-                <div class="two-columns">
-                    <div class="form-group"><label>المحافظة *</label><select id="pf_governorate" onchange="updatePublicCities()"><option value="">اختر المحافظة</option></select></div>
-                    <div class="form-group"><label>المدينة *</label><select id="pf_city"><option value="">اختر المحافظة أولا</option></select></div>
-                </div>
-                <div class="form-group"><label>العنوان التفصيلي *</label><input id="pf_address" placeholder="العنوان بالتفصيل"></div>
-                <div class="form-group"><label>المبلغ المطلوب تحصيله شامل الشحن *</label><input id="pf_amount" type="number" placeholder="المبلغ بالجنيه" dir="ltr"></div>
-                <div class="form-group"><label>وزن الشحنة *</label><input id="pf_weight" type="number" placeholder="الوزن بالكيلو" dir="ltr" value="1"></div>
-                <div class="form-group"><label>ملاحظات</label><textarea id="pf_notes" placeholder="ملاحظات اضافية"></textarea></div>
-                
-                <!-- زر تسجيل الشحنة مع عداد منع التكرار -->
-                <button class="btn-eux" id="publicSubmitBtn" onclick="submitPublicOrder()" style="width:100%;padding:14px;border-radius:12px;font-size:16px;">
-                    <span class="inner">تسجيل الشحنة</span>
-                    <span class="fold"></span>
-                    <div class="points_wrapper">
-                        <span class="point"></span><span class="point"></span><span class="point"></span>
-                        <span class="point"></span><span class="point"></span><span class="point"></span>
-                        <span class="point"></span><span class="point"></span><span class="point"></span>
-                        <span class="point"></span>
-                    </div>
-                </button>
-                <button class="btn-eux-outline" onclick="backToLanding()" style="width:100%;margin-top:8px;padding:12px;border-radius:10px;font-size:14px;">
-                    <span class="inner">العودة للصفحة الرئيسية</span>
-                </button>
-                <p id="publicError" style="color:red;margin-top:10px;text-align:center;"></p>
-            </div>
-        </div>
+    createRain();
+}
 
-        <div id="modal" class="modal hidden">
-            <div class="modal-content" id="modalContent">
-                <span class="close-btn" onclick="closeModal()">×</span>
-                <div id="modalBody"></div>
-            </div>
-        </div>
+function createRain() {
 
-        <div id="waybillsOverlay" class="hidden" style="position:fixed;inset:0;background:#f0f4fa;z-index:9999;overflow-y:auto;">
-            <div class="no-print" style="display:flex;justify-content:space-between;align-items:center;gap:10px;padding:14px 20px;background:#fff;border-bottom:1px solid #e2e8f0;position:sticky;top:0;z-index:2;">
-                <strong style="font-size:15px;">البوالص الجاهزة للطباعة</strong>
-                <div style="display:flex;gap:8px;">
-                    <button class="btn-eux-green" style="padding:8px 16px;border-radius:10px;font-size:13px;" onclick="printWaybillsNow()">
-                        <span class="inner"><i class="fas fa-print"></i> طباعة</span><span class="fold"></span>
-                    </button>
-                    <button class="btn-eux-outline" style="padding:8px 16px;border-radius:10px;font-size:13px;" onclick="closeWaybillsOverlay()">
-                        <span class="inner">إغلاق</span>
-                    </button>
-                </div>
-            </div>
-            <div id="waybillsPrintArea" style="max-width:500px;margin:20px auto;padding:0 12px;"></div>
-        </div>
-    </div>
+    drops = [];
 
-    <script>
-        const API_URL = "https://script.google.com/macros/s/AKfycbxCLRXUJALH9IwfDoh4sG2SugkQt-3y7qaW0xQ2fdHjgOZpJX1c411FcHZERTOswzs/exec";
-        const BASE_URL = "https://euxexpress.com";
+    const amount = Math.max(
+        settings.density,
+        Math.floor(width / 5)
+    );
 
-        // ============================================================
-        //  إعدادات الاتصال الفعلي بـ GT لإنشاء الشحنات وتوليد أرقام التتبع
-        // ============================================================
-        const GT_CONFIG = {
-            apiAccount: '866958120939696147',
-            privateKey: '29535fad70ca4688aaa5b462320eb096',
-            customerCode: 'J0086003287',
-            senderCode: 'D236',
-            plainPassword: 'Uv8NYAp2'
-        };
-        const GT_PROXY_URL = 'https://script.google.com/macros/s/AKfycbzogeH2yBYleigMH7MG2OT-uf1ep5JsC94FCDFDnw-Rj2CKEkFR_tTCzHZ0eVyJIgU/exec';
+    for (let i = 0; i < amount; i++) {
 
-        // digest داخل bizContent (تم التأكد من صحته مسبقًا)
-        function generateBodyDigest(customerCode, plainPassword, privateKey) {
-            const cipherText = CryptoJS.MD5(plainPassword + 'jadada236t2').toString().toUpperCase();
-            const signatureWords = CryptoJS.MD5(customerCode + cipherText + privateKey);
-            return CryptoJS.enc.Base64.stringify(signatureWords);
-        }
+        drops.push({
+            x: random(0, width),
+            y: random(-height, height),
 
-        // digest الخاص بالـ Header (صيغة مختلفة: base64(md5(bizContentJson + privateKey)))
-        function generateHeaderDigest(bizContentJsonString, privateKey) {
-            const signatureWords = CryptoJS.MD5(bizContentJsonString + privateKey);
-            return CryptoJS.enc.Base64.stringify(signatureWords);
-        }
+            length: random(
+                settings.minLength,
+                settings.maxLength
+            ),
 
-        function buildBizContentForShipment(s) {
-            const bodyDigest = generateBodyDigest(GT_CONFIG.customerCode, GT_CONFIG.plainPassword, GT_CONFIG.privateKey);
-            const txlogisticId = 'EUX' + s.id + '-' + Date.now();
-            return {
-                customerCode: GT_CONFIG.customerCode,
-                digest: bodyDigest,
-                expressType: 'EZ',
-                deliveryType: '04',
-                payType: 'PP_CASH',
-                goodsType: 'ITN16',
-                weight: String(s.weight || 1),
-                totalQuantity: 1,
-                itemsValue: String(s.amount || 0),
-                operateType: 1,
-                txlogisticId: txlogisticId,
-                sender: {
-                    name: 'شركة EUX للشحن',
-                    company: 'EUX Express',
-                    mobile: '01080232016',
-                    phone: '01080232016',
-                    countryCode: 'EGY',
-                    prov: 'الشرقية',
-                    city: 'مدينة العبور',
-                    area: 'الشباب',
-                    street: 'بجوار كشري الوالي',
-                    postCode: '11828'
-                },
-                receiver: {
-                    name: s.receiverName || '',
-                    mobile: s.receiverPhone || '',
-                    phone: s.receiverPhone || '',
-                    countryCode: 'EGY',
-                    prov: s.governorate || '',
-                    city: s.city || '',
-                    area: '.',
-                    street: s.address || ''
-                },
-                remark: 'شحنة عبر منصة EUX Express - عميل: ' + (s.clientPhone || '')
-            };
-        }
+            speed: random(
+                settings.minSpeed,
+                settings.maxSpeed
+            ),
 
-        async function createGTOrderForShipment(s) {
-            const bizContent = buildBizContentForShipment(s);
-            const bizContentStr = JSON.stringify(bizContent);
-            const headerDigest = generateHeaderDigest(bizContentStr, GT_CONFIG.privateKey);
-            const timestamp = String(Date.now());
-            const params = new URLSearchParams({
-                apiAccount: GT_CONFIG.apiAccount,
-                digest: headerDigest,
-                timestamp: timestamp,
-                bizContent: bizContentStr
-            });
+            width: random(
+                settings.minWidth,
+                settings.maxWidth
+            ),
 
-            const res = await fetch(GT_PROXY_URL, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-                body: params.toString()
-            });
-            const rawText = await res.text();
-            let data;
-            try {
-                data = JSON.parse(rawText);
-            } catch (e) {
-                throw new Error('رد غير صالح من GT');
-            }
-            if (data && data.code === '1' && data.data && data.data.billCode) {
-                return { billCode: data.data.billCode, sortingCode: data.data.sortingCode || '' };
-            }
-            throw new Error((data && data.msg) ? data.msg : 'فشل إنشاء الشحنة على GT');
-        }
+            opacity: random(0.15, 0.75)
+        });
+    }
+}
 
-        async function saveTrackingNumberToSheet(shipmentId, trackingNumber) {
-            const params = new URLSearchParams({
-                action: 'addTrackingNumberSecure',
-                phone: currentUser.phone,
-                password: currentUser.password,
-                shipmentId: shipmentId,
-                trackingNumber: trackingNumber
-            });
-            const res = await fetch(API_URL, { method: 'POST', headers: { 'Content-Type': 'application/x-www-form-urlencoded' }, body: params.toString() });
-            const data = await res.json();
-            if (!data.success) throw new Error(data.msg || 'فشل حفظ رقم التتبع في الشيت');
-        }
+/*
+    قراءة ميلان الهاتف
+*/
+function handleOrientation(event) {
 
-        // ============================================================
-        //  واجهة "طباعة البوليصة"
-        // ============================================================
-        function getPendingWaybillShipments() {
-            return allShipmentsData.filter(s => !s.trackingNumber || String(s.trackingNumber).trim().length <= 3);
-        }
+    if (event.gamma !== null) {
 
-        function showPrintWaybillsList() {
-            if (!currentUser) { showToast('يرجى تسجيل الدخول أولا', 'error'); return; }
-            const pending = getPendingWaybillShipments();
-            document.getElementById('modal').classList.remove('hidden');
+        /*
+         * gamma:
+         * -90 = يسار
+         *  0   = مستوٍ
+         * +90 = يمين
+         */
 
-            if (pending.length === 0) {
-                document.getElementById('modalBody').innerHTML = `
-                    <h3><i class="fas fa-print"></i> طباعة البوليصة</h3>
-                    <p style="color:#888;margin-top:10px;">لا توجد شحنات بحاجة إلى رقم تتبع حاليًا.</p>
-                `;
-                return;
+        const targetX =
+            Math.max(
+                -1.5,
+                Math.min(
+                    1.5,
+                    event.gamma / 25
+                )
+            );
+
+        /*
+         * تنعيم الحركة
+         */
+        tiltX +=
+            (targetX - tiltX) * 0.08;
+    }
+
+    if (event.beta !== null) {
+
+        /*
+         * beta:
+         * 0   = الهاتف مستوٍ
+         * 90  = عمودي
+         * 180 = مقلوب
+         */
+
+        const targetY =
+            Math.cos(
+                event.beta *
+                Math.PI / 180
+            );
+
+        tiltY +=
+            (targetY - tiltY) * 0.05;
+    }
+}
+
+/*
+    بعض أجهزة iPhone تحتاج إذنًا
+*/
+async function enableMotion() {
+
+    if (
+        typeof DeviceOrientationEvent !==
+        "undefined" &&
+        typeof DeviceOrientationEvent.requestPermission ===
+        "function"
+    ) {
+
+        try {
+
+            const permission =
+                await DeviceOrientationEvent
+                    .requestPermission();
+
+            if (permission === "granted") {
+
+                window.addEventListener(
+                    "deviceorientation",
+                    handleOrientation,
+                    true
+                );
             }
 
-            const rows = pending.map(s => `
-                <div class="pending-waybill-item" id="pendingItem-${s.id}" style="border:1px solid #e2e8f0;border-radius:10px;padding:10px 12px;margin-bottom:8px;">
-                    <div style="display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap;">
-                        <div>
-                            <strong>${s.receiverName || 'غير معروف'}</strong>
-                            <span style="color:#888;font-size:12px;"> - ${s.receiverPhone || ''}</span><br>
-                            <span style="font-size:12px;color:#888;">${s.governorate || ''} - ${s.city || ''} - ${s.amount || 0} ج.م</span>
-                        </div>
-                        <button class="btn-eux" style="padding:6px 14px;border-radius:8px;font-size:12px;" onclick="printSingleWaybill('${s.id}')">
-                            <span class="inner">طباعة</span><span class="fold"></span>
-                        </button>
-                    </div>
-                    <div class="pendingItemStatus" id="pendingStatus-${s.id}" style="font-size:12px;margin-top:6px;"></div>
-                </div>
-            `).join('');
-
-            document.getElementById('modalBody').innerHTML = `
-                <h3><i class="fas fa-print"></i> طباعة البوليصة</h3>
-                <p style="color:#888;font-size:13px;margin:8px 0;">يوجد ${pending.length} شحنة بدون رقم تتبع. اضغط "طباعة الكل" لإنشاء أرقام التتبع وطباعة كل البوالص دفعة واحدة، أو اطبع كل شحنة على حدة.</p>
-                <button class="btn-eux-green" style="width:100%;margin-bottom:14px;" onclick="printAllPendingWaybills()">
-                    <span class="inner"><i class="fas fa-print"></i> طباعة الكل (${pending.length})</span><span class="fold"></span>
-                </button>
-                <div id="pendingWaybillsList">${rows}</div>
-            `;
+        } catch (error) {
+            console.log(error);
         }
 
-        async function printSingleWaybill(shipmentId) {
-            const s = allShipmentsData.find(x => String(x.id) === String(shipmentId));
-            if (!s) { showToast('لم يتم العثور على الشحنة', 'error'); return; }
-            const statusEl = document.getElementById(`pendingStatus-${shipmentId}`);
-            if (statusEl) statusEl.innerHTML = '<span style="color:#0076ff;">جاري إنشاء الشحنة على GT...</span>';
-            try {
-                const gtResult = await createGTOrderForShipment(s);
-                if (statusEl) statusEl.innerHTML = '<span style="color:#0076ff;">جاري حفظ رقم التتبع...</span>';
-                await saveTrackingNumberToSheet(s.id, gtResult.billCode);
-                s.trackingNumber = gtResult.billCode;
-                renderWaybillsPrintArea([{ shipment: s, billCode: gtResult.billCode, sortingCode: gtResult.sortingCode }]);
-                openWaybillsPrintOverlay();
-                const item = document.getElementById(`pendingItem-${shipmentId}`);
-                if (item) item.remove();
-                if (currentUser.role === 'admin') { loadAllShipments(); } else { loadMyShipments(); }
-                showToast('تم إنشاء البوليصة بنجاح', 'success');
-            } catch (e) {
-                if (statusEl) statusEl.innerHTML = `<span style="color:#e11d48;">فشل: ${e.message}</span>`;
-            }
+    } else {
+
+        window.addEventListener(
+            "deviceorientation",
+            handleOrientation,
+            true
+        );
+    }
+}
+
+/*
+    تشغيل مستشعر الهاتف
+*/
+enableMotion();
+
+/*
+    دعم بعض الأجهزة التي تمنع المستشعر
+    إلا بعد أول تفاعل
+*/
+document.addEventListener(
+    "touchstart",
+    enableMotion,
+    {
+        once: true
+    }
+);
+
+function drawRain() {
+
+    ctx.clearRect(
+        0,
+        0,
+        width,
+        height
+    );
+
+    for (const drop of drops) {
+
+        /*
+         * اتجاه المطر الأساسي للأسفل
+         */
+        const moveX =
+            tiltX * drop.speed;
+
+        const moveY =
+            drop.speed * tiltY;
+
+        /*
+         * رسم القطرة بنفس اتجاه حركتها
+         */
+        const endX =
+            drop.x + moveX * 0.45;
+
+        const endY =
+            drop.y + drop.length * tiltY;
+
+        const gradient =
+            ctx.createLinearGradient(
+                drop.x,
+                drop.y,
+                endX,
+                endY
+            );
+
+        gradient.addColorStop(
+            0,
+            "rgba(30,144,255,0)"
+        );
+
+        gradient.addColorStop(
+            0.35,
+            `rgba(30,144,255,${drop.opacity * 0.45})`
+        );
+
+        gradient.addColorStop(
+            1,
+            `rgba(0,132,255,${drop.opacity})`
+        );
+
+        ctx.beginPath();
+
+        ctx.strokeStyle =
+            gradient;
+
+        ctx.lineWidth =
+            drop.width;
+
+        ctx.lineCap =
+            "round";
+
+        ctx.moveTo(
+            drop.x,
+            drop.y
+        );
+
+        ctx.lineTo(
+            endX,
+            endY
+        );
+
+        ctx.stroke();
+
+        /*
+         * تحريك القطرة
+         */
+        drop.x += moveX * 0.12;
+        drop.y += moveY;
+
+        /*
+         * إذا خرجت القطرة من الشاشة
+         */
+        if (
+            drop.y >
+            height + drop.length ||
+            drop.x < -100 ||
+            drop.x > width + 100
+        ) {
+
+            drop.x =
+                random(0, width);
+
+            drop.y =
+                -drop.length -
+                random(0, 200);
+
+            drop.speed =
+                random(
+                    settings.minSpeed,
+                    settings.maxSpeed
+                );
         }
+    }
 
-        async function printAllPendingWaybills() {
-            const pending = getPendingWaybillShipments();
-            if (pending.length === 0) return;
-            const results = [];
-            for (const s of pending) {
-                const statusEl = document.getElementById(`pendingStatus-${s.id}`);
-                if (statusEl) statusEl.innerHTML = '<span style="color:#0076ff;">جاري إنشاء الشحنة على GT...</span>';
-                try {
-                    const gtResult = await createGTOrderForShipment(s);
-                    if (statusEl) statusEl.innerHTML = '<span style="color:#0076ff;">جاري حفظ رقم التتبع...</span>';
-                    await saveTrackingNumberToSheet(s.id, gtResult.billCode);
-                    s.trackingNumber = gtResult.billCode;
-                    results.push({ shipment: s, billCode: gtResult.billCode, sortingCode: gtResult.sortingCode });
-                    if (statusEl) statusEl.innerHTML = '<span style="color:#16a34a;">تم ✓</span>';
-                } catch (e) {
-                    if (statusEl) statusEl.innerHTML = `<span style="color:#e11d48;">فشل: ${e.message}</span>`;
-                }
-            }
-            if (results.length > 0) {
-                renderWaybillsPrintArea(results);
-                openWaybillsPrintOverlay();
-                if (currentUser.role === 'admin') { loadAllShipments(); } else { loadMyShipments(); }
-            }
-            if (results.length < pending.length) {
-                showToast(`تم إنشاء ${results.length} من ${pending.length}، وفشل الباقي`, 'error');
-            } else {
-                showToast('تم إنشاء وطباعة جميع البوالص بنجاح', 'success');
-            }
-        }
+    requestAnimationFrame(
+        drawRain
+    );
+}
 
-        function renderWaybillsPrintArea(results) {
-            const area = document.getElementById('waybillsPrintArea');
-            const dateStr = new Date().toLocaleDateString('ar-EG');
-            area.innerHTML = results.map((r, idx) => {
-                const s = r.shipment;
-                return `
-                <div class="waybill" id="waybillCard-${idx}">
-                    <div class="waybill-header">
-                        <div><strong>EUX Express</strong> / J&T</div>
-                        <div style="font-size: 11px; text-align: left;">
-                            <span>${dateStr}</span><br>
-                            <strong style="color:#0076ff">${r.sortingCode || ''}</strong>
-                        </div>
-                    </div>
-                    <div class="barcode-box"><svg id="barcodeSvg-${idx}"></svg></div>
-                    <div class="waybill-body">
-                        <div class="waybill-row"><strong>المرسل:</strong> شركة EUX للشحن - العبور (01080232016)</div>
-                        <div class="waybill-row"><strong>المستلم:</strong> ${s.receiverName || ''} (${s.receiverPhone || ''})</div>
-                        <div class="waybill-row"><strong>العنوان:</strong> ${s.address || ''}، ${s.city || ''} (${s.governorate || ''})</div>
-                        <div class="waybill-row" style="display:flex;justify-content:space-between;font-weight:700;">
-                            <span>المبلغ COD: ${s.amount || 0} ج.م</span>
-                            <span>الوزن: ${s.weight || 1} كجم</span>
-                        </div>
-                    </div>
-                </div>`;
-            }).join('');
-            results.forEach((r, idx) => {
-                try {
-                    JsBarcode(`#barcodeSvg-${idx}`, r.billCode, { format: 'CODE128', lineColor: '#000', width: 2, height: 50, displayValue: true });
-                } catch (e) {}
-            });
-        }
+window.addEventListener(
+    "resize",
+    resizeCanvas
+);
 
-        function openWaybillsPrintOverlay() {
-            document.getElementById('waybillsOverlay').classList.remove('hidden');
-        }
-        function closeWaybillsOverlay() {
-            document.getElementById('waybillsOverlay').classList.add('hidden');
-        }
-        function printWaybillsNow() {
-            window.print();
-        }
+resizeCanvas();
+drawRain();
 
-        let currentUser = null;
-        let publicClientPhone = null;
-        let allShipmentsData = [];
-        let editingShipmentId = null;
-        let isSubmitting = false;
-        let isPublicSubmitting = false;
-        let autoUpdateInterval = null;
+</script>
 
-        // ============================================
-        // إضافة مركز "أبو حماد" في محافظة الشرقية
-        // ============================================
-        const governorates = {
-            'الشرقية': ['بلبيس', 'انشاص الرمل', 'أولاد صقر', 'الحسينية', 'ديرب نجم', 'فاقوس', 'كفر صقر', 'مشتول السوق', 'منيا القمح', 'الصالحية القديمة', 'الصالحية الجديدة', 'صان الحجر', 'مدينة العاشر من رمضان', 'أبو حماد'],
-            'الجيزة': ['مدينة السادس من أكتوبر', 'مدينة الشيخ زايد', 'العياط', 'الحوامدية', 'البدرشين', 'الصف', 'العمرانية', 'أطفيح', 'الواحات البحرية', 'الجيزة', 'حدائق الاهرام', 'فيصل', 'الهرم', 'أبو النمرس', 'العجوزة', 'الوراق', 'أوسيم', 'بولاق الدكرور', 'الدقي', 'أرض اللواء', 'المهندسين', 'كرداسة', 'إمبابة', 'منشأة القناطر'],
-            'الغربية': ['كفر الزيات', 'المحلة الكبرى', 'سمنود', 'بسيون', 'السنطة', 'زفتى', 'قطور', 'طنطا'],
-            'الدقهلية': ['المنصورة', 'أجا', 'المنزلة', 'بلقاس', 'دكرنس', 'السنبلاوين', 'منية النصر', 'ميت غمر', 'شربين', 'طلخا'],
-            'الإسكندرية': ['الدخيلة', 'العامرية', 'برج العرب', 'محرم بيك', 'باب شرقي', 'الساحل الشمالي', 'سيدي جابر', 'العطارين', 'المنشية', 'اللبان', 'الجمرك', 'مينا البصل', 'كرموز', 'الرمل', 'المنتزه'],
-            'أسيوط': ['أبنوب', 'أبوتيج', 'البداري', 'الغنايم', 'الفتح', 'القوصية', 'ديروط', 'ساحل سليم', 'صدفا', 'مدينة أسيوط', 'منفلوط', 'منقباد'],
-            'أسوان': ['أسوان', 'كوم امبو', 'دراو', 'إدفو'],
-            'بني سويف': ['الواسطى', 'ناصر', 'مدينة بني سويف', 'مركز بني سويف', 'أهناسيا', 'ببا', 'سمسطا', 'الفشن'],
-            'القليوبية': ['بنها', 'الخانكة', 'العبور', 'القناطر الخيرية', 'شبين القناطر', 'طوخ', 'كفر شكر', 'قليوب', 'شبرا الخيمة'],
-            'القاهرة': ['عابدين', 'العباسية', 'الأزبكية', 'القطامية', 'المنيل', 'المقطم', 'دار السلام', 'البساتين', 'الجمالية', 'السيدة زينب', 'حلوان', 'المعادي', 'مصر القديمة', 'قصر النيل', 'الخليفة', 'طرة', 'الزمالك', 'الشروق', 'مدينة بدر', 'عين شمس', 'مدينتي', 'الزيتون', 'مدينة نصر', 'القاهرة الجديدة', 'هليوبوليس', 'الأميرية', 'السلام', 'الوايلي', 'الشرابية', 'المرج', 'المطرية', 'النزهة', 'حدائق القبة', 'شبرا مصر', 'كورنيش النيل'],
-            'البحيرة': ['دمنهور', 'كفر الدوار', 'أبو حمص', 'المحمودية', 'وادي النطرون', 'النوبارية', 'أبوالمطامير', 'حوش عيسي', 'إيتاي البارود', 'شبراخيت', 'رشيد', 'إدكوا', 'مركز بدر', 'الدلنجات', 'الرحمانية', 'كوم حمادة'],
-            'دمياط': ['فارسكور', 'دمياط القديمة', 'كفر سعد', 'الزرقا', 'كفر البطيخ', 'دمياط الجديدة', 'رأس البر', 'عزبة البرج'],
-            'الفيوم': ['طامية', 'سنورس', 'مركز الفيوم', 'مدينة الفيوم', 'أطسا', 'أبشواي', 'يوسف الصديق'],
-            'البحر الأحمر': ['الغردقة', 'رأس غارب', 'سفاجا', 'القصير', 'مرسى علم'],
-            'الإسماعيلية': ['الإسماعيلية'],
-            'كفر الشيخ': ['كفر الشيخ', 'دسوق', 'فوه', 'مطوبس', 'بلطيم', 'الحامول', 'الرياض', 'بيلا', 'قلين', 'سيدى سالم'],
-            'الأقصر': ['مدينة الأقصر', 'أرمنت', 'أسنا', 'القرنة'],
-            'مرسى مطروح': ['مرسى مطروح'],
-            'المنيا': ['العدوة', 'مغاغة', 'بني مزار', 'مطاي', 'سمالوط', 'مركز المنيا', 'مدينة المنيا', 'أبو قرقاص', 'ملوي', 'دير مواس'],
-            'بور سعيد': ['بورسعيد'],
-            'قنا': ['قنا', 'قوص', 'مدينة قفط', 'دشنا', 'نقادة', 'نجع حمادي', 'فرشوط', 'أبوتشت'],
-            'المنوفية': ['قويسنا', 'بركة السبع', 'السادات', 'الشهداء', 'تلا', 'شبين الكوم', 'الباجور', 'منوف', 'أشمون'],
-            'سوهاج': ['طما', 'طهطا', 'جهينة', 'مدينة سوهاج', 'المراغة', 'أخميم', 'ساقلته', 'المنشأة', 'جرجا', 'البلينا', 'دار السلام', 'العسيرات'],
-            'السويس': ['السويس'],
-            'الوادي الجديد': ['الخارجة', 'الداخلة', 'الفرافرة'],
-            'جنوب سيناء': ['جنوب سيناء', 'شرم الشيخ', 'دهب']
-        };
-
-        function openTrackingSystem() {
-            document.getElementById('landingPage').classList.add('hidden');
-            document.getElementById('trackingApp').classList.remove('hidden');
-            document.body.style.background = 'linear-gradient(135deg, #e8f0fe, #d4e4f7)';
-
-            if (!checkSession()) {
-                document.getElementById('loginPage').classList.remove('hidden');
-                document.getElementById('dashboard').classList.add('hidden');
-                document.getElementById('publicOrderPage').classList.add('hidden');
-            }
-        }
-
-        function backToLanding() {
-            stopAutoUpdate();
-            document.getElementById('trackingApp').classList.add('hidden');
-            document.getElementById('landingPage').classList.remove('hidden');
-            document.body.style.background = '#ffffff';
-            if (window.hi
+</body>
+</html>
