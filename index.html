@@ -18,60 +18,62 @@
             overflow-x: hidden;
         }
 
-        /* تثبيت الساعة في المنتصف */
+        /* تثبيت الساعة وتكبير حجمها */
         .clock-container {
             position: fixed;
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            width: 340px;
-            height: 340px;
+            width: 500px; /* تكبير الحجم إلى 500px */
+            height: 500px;
+            max-width: 90vw;
+            max-height: 90vh;
             display: flex;
             align-items: center;
             justify-content: center;
         }
 
-        /* السماح للتوهج بالخروج عن حدود العنصر لمنع أي قص من الأطراف */
+        /* إغلاق قص الحدود للتوهج الهالي */
         svg {
             width: 100%;
             height: 100%;
-            overflow: visible;
+            overflow: visible !important;
         }
 
-        /* توهج النيون الأزرق */
+        /* توهج النيون الأزرق للعقارب والخطوط */
         .neon-glow {
-            filter: drop-shadow(0 0 6px #00d2ff) drop-shadow(0 0 14px #00d2ff);
+            filter: drop-shadow(0 0 6px #00d2ff) drop-shadow(0 0 15px #00d2ff);
         }
 
-        /* توهج العقرب الأبيض */
-        .white-glow {
-            filter: drop-shadow(0 0 4px #ffffff) drop-shadow(0 0 8px rgba(255, 255, 255, 0.9));
+        /* الهالة الزرقاء الخارجية المضيئة */
+        .outer-aura {
+            filter: drop-shadow(0 0 12px #00d2ff) drop-shadow(0 0 25px #00d2ff) drop-shadow(0 0 45px rgba(0, 210, 255, 0.7));
         }
     </style>
 </head>
 <body>
 
     <div class="clock-container">
-        <!-- توسيع viewBox إلى -40 -40 ليعطي مساحة حرة للتوهج من الأربع جهات -->
-        <svg viewBox="-40 -40 380 380">
-            <!-- الإطار الخارجي بدون خلفية سوداء (fill="none") -->
-            <circle cx="150" cy="150" r="135" fill="none" stroke="#00d2ff" stroke-width="3" class="neon-glow" />
+        <!-- توسيع viewBox بشكل واسع جداً (-70 -70 440 440) لعدم قص الهالة من الأطراف -->
+        <svg viewBox="-70 -70 440 440">
+            <!-- الإطار الخارجي المضيء بالهالة الزرقاء بدون خلفية سوداء -->
+            <circle cx="150" cy="150" r="135" fill="none" stroke="#00d2ff" stroke-width="3.5" class="outer-aura" />
 
             <!-- علامات الدقائق والساعات -->
             <g id="ticks" stroke="#00d2ff" stroke-linecap="round" class="neon-glow"></g>
 
-            <!-- عقرب الساعات (الأبيض) -->
+            <!-- عقرب الساعات (أزرق نيون مضيء) -->
             <g id="hour-hand" transform="rotate(295 150 150)">
-                <polygon points="146,150 154,150 151,85 149,85" fill="#ffffff" class="white-glow" />
+                <polygon points="146,150 154,150 151,85 149,85" fill="#00d2ff" stroke="#00d2ff" stroke-width="1" class="neon-glow" />
             </g>
 
-            <!-- عقرب الدقائق (الأزرق النيون) -->
+            <!-- عقرب الدقائق (أزرق نيون مضيء) -->
             <g id="minute-hand" transform="rotate(355 150 150)">
                 <line x1="150" y1="185" x2="150" y2="40" stroke="#00d2ff" stroke-width="4.5" stroke-linecap="round" class="neon-glow" />
             </g>
 
-            <!-- المركز المضيء شفّاف من الداخل -->
-            <circle cx="150" cy="150" r="8" fill="#ffffff" stroke="#00d2ff" stroke-width="3.5" class="neon-glow" />
+            <!-- المركز المضيء باللون الأزرق النيون -->
+            <circle cx="150" cy="150" r="8" fill="#00d2ff" stroke="#00d2ff" stroke-width="2" class="neon-glow" />
         </svg>
     </div>
 
@@ -82,7 +84,7 @@
             const angle = i * 6;
             const isMajor = i % 5 === 0;
             const length = isMajor ? 12 : 6;
-            const strokeWidth = isMajor ? 2.8 : 1.2;
+            const strokeWidth = isMajor ? 3 : 1.5;
             const opacity = isMajor ? 1 : 0.75;
 
             const line = document.createElementNS("http://www.w3.org/2000/svg", "line");
@@ -103,16 +105,14 @@
         let targetFraction = 0;
         let currentFraction = 0;
 
-        // تحديث قيمة التمرير عند النزول والطلوع
         window.addEventListener('scroll', () => {
             const scrollTop = window.scrollY;
             const maxScroll = document.documentElement.scrollHeight - window.innerHeight;
             targetFraction = scrollTop / maxScroll;
         });
 
-        // دوّال تنعيم الحركة (Interpolation) لضمان دوران سلس جداً بدون تقطيع
+        // تنعيم حركة العقارب عند التمرير
         function animate() {
-            // تقريب الحركة بنسبة 10% في كل إطار للحصول على انسيابية فائقة
             currentFraction += (targetFraction - currentFraction) * 0.1;
 
             const minuteAngle = 355 + (currentFraction * 360 * 12);
@@ -124,7 +124,6 @@
             requestAnimationFrame(animate);
         }
 
-        // تشغيل حلقة التحريك
         animate();
     </script>
 </body>
