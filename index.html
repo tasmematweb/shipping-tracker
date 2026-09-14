@@ -14,48 +14,48 @@
         body {
             /* خلفية بيضاء بالكامل */
             background-color: #ffffff;
-            /* ارتفاع كبير للصفحة للسماح بالنزول والطلوع */
             height: 500vh;
             overflow-x: hidden;
         }
 
-        /* تثبيت الساعة في منتصف الشاشة دائماً */
+        /* تثبيت الساعة في المنتصف */
         .clock-container {
             position: fixed;
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            width: 380px;
-            height: 380px;
+            width: 340px;
+            height: 340px;
             display: flex;
             align-items: center;
             justify-content: center;
         }
 
+        /* السماح للتوهج بالخروج عن حدود العنصر لمنع أي قص من الأطراف */
         svg {
             width: 100%;
             height: 100%;
-            /* تأثير التوهج النيون للساعة بأكملها */
-            filter: drop-shadow(0 0 12px rgba(0, 210, 255, 0.6));
+            overflow: visible;
         }
 
         /* توهج النيون الأزرق */
         .neon-glow {
-            filter: drop-shadow(0 0 6px #00d2ff) drop-shadow(0 0 15px #00d2ff);
+            filter: drop-shadow(0 0 6px #00d2ff) drop-shadow(0 0 14px #00d2ff);
         }
 
+        /* توهج العقرب الأبيض */
         .white-glow {
-            filter: drop-shadow(0 0 4px #ffffff) drop-shadow(0 0 8px rgba(255, 255, 255, 0.8));
+            filter: drop-shadow(0 0 4px #ffffff) drop-shadow(0 0 8px rgba(255, 255, 255, 0.9));
         }
     </style>
 </head>
 <body>
 
-    <!-- الساعة في منتصف الشاشة -->
     <div class="clock-container">
-        <svg viewBox="0 0 300 300">
-            <!-- خلفية قرص الساعة الأسود -->
-            <circle cx="150" cy="150" r="135" fill="#03070d" stroke="#00d2ff" stroke-width="3" class="neon-glow" />
+        <!-- توسيع viewBox إلى -40 -40 ليعطي مساحة حرة للتوهج من الأربع جهات -->
+        <svg viewBox="-40 -40 380 380">
+            <!-- الإطار الخارجي بدون خلفية سوداء (fill="none") -->
+            <circle cx="150" cy="150" r="135" fill="none" stroke="#00d2ff" stroke-width="3" class="neon-glow" />
 
             <!-- علامات الدقائق والساعات -->
             <g id="ticks" stroke="#00d2ff" stroke-linecap="round" class="neon-glow"></g>
@@ -65,18 +65,18 @@
                 <polygon points="146,150 154,150 151,85 149,85" fill="#ffffff" class="white-glow" />
             </g>
 
-            <!-- عقرب الدقائق (الأزرق النيون الممتد) -->
+            <!-- عقرب الدقائق (الأزرق النيون) -->
             <g id="minute-hand" transform="rotate(355 150 150)">
                 <line x1="150" y1="185" x2="150" y2="40" stroke="#00d2ff" stroke-width="4.5" stroke-linecap="round" class="neon-glow" />
             </g>
 
-            <!-- المركز (دائرة الوصل النيون) -->
-            <circle cx="150" cy="150" r="8" fill="#03070d" stroke="#00d2ff" stroke-width="3.5" class="neon-glow" />
+            <!-- المركز المضيء شفّاف من الداخل -->
+            <circle cx="150" cy="150" r="8" fill="#ffffff" stroke="#00d2ff" stroke-width="3.5" class="neon-glow" />
         </svg>
     </div>
 
     <script>
-        // رسم شُرط/علامات الساعة (60 شرطة)
+        // رسم علامات الساعة (60 شرطة)
         const ticksGroup = document.getElementById('ticks');
         for (let i = 0; i < 60; i++) {
             const angle = i * 6;
@@ -100,20 +100,32 @@
         const hourHand = document.getElementById('hour-hand');
         const minuteHand = document.getElementById('minute-hand');
 
-        // ربط دوران العقارب بحركة التمرير (النزول والطلوع)
+        let targetFraction = 0;
+        let currentFraction = 0;
+
+        // تحديث قيمة التمرير عند النزول والطلوع
         window.addEventListener('scroll', () => {
             const scrollTop = window.scrollY;
             const maxScroll = document.documentElement.scrollHeight - window.innerHeight;
-            const scrollFraction = scrollTop / maxScroll;
+            targetFraction = scrollTop / maxScroll;
+        });
 
-            // عقرب الدقائق يدور 12 دورة كاملة عند التمرير من الأعلى للأسفل
-            const minuteAngle = 355 + (scrollFraction * 360 * 12);
-            // عقرب الساعات يدور دورة واحدة كاملة
-            const hourAngle = 295 + (scrollFraction * 360);
+        // دوّال تنعيم الحركة (Interpolation) لضمان دوران سلس جداً بدون تقطيع
+        function animate() {
+            // تقريب الحركة بنسبة 10% في كل إطار للحصول على انسيابية فائقة
+            currentFraction += (targetFraction - currentFraction) * 0.1;
+
+            const minuteAngle = 355 + (currentFraction * 360 * 12);
+            const hourAngle = 295 + (currentFraction * 360);
 
             minuteHand.setAttribute('transform', `rotate(${minuteAngle} 150 150)`);
             hourHand.setAttribute('transform', `rotate(${hourAngle} 150 150)`);
-        });
+
+            requestAnimationFrame(animate);
+        }
+
+        // تشغيل حلقة التحريك
+        animate();
     </script>
 </body>
 </html>
