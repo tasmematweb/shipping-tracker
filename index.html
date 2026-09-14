@@ -103,14 +103,14 @@
             justify-content: center;
         }
 
-        /* ---------------- 3. قسم مؤشر الرسم البياني (Growth Chart) ---------------- */
+        /* ---------------- 3. قسم مؤشر الرسم البياني (تم تكبيره وإخفاء الخلفية السوداء) ---------------- */
         .chart-section {
             position: absolute;
             top: 410vh;
             left: 50%;
             transform: translateX(-50%);
-            width: 90%;
-            max-width: 900px;
+            width: 92%;
+            max-width: 1000px; /* تم تكبير العرض */
             background-color: rgba(255, 255, 255, 0.95);
             border: 4px solid #00d2ff;
             border-radius: 30px;
@@ -125,7 +125,7 @@
 
         .chart-container {
             width: 100%;
-            height: 440px;
+            height: 500px; /* تم تكبير الارتفاع */
             display: flex;
             align-items: center;
             justify-content: center;
@@ -229,23 +229,21 @@
         </div>
     </div>
 
-    <!-- 3. قسم مؤشر الرسم البياني الصاعد (الجديد باللون الأزرق النيون) -->
+    <!-- 3. قسم الرسم البياني الصاعد (بدون خلفية سوداء وبشكل أكبر وأسرع) -->
     <div class="chart-section">
         <div class="chart-container">
             <svg viewBox="0 0 800 420">
                 <defs>
-                    <!-- نمط شبكة الخلفية المضيئة -->
+                    <!-- نمط شبكة أزرق نيون خفيف بدون خلفية سوداء -->
                     <pattern id="blue-grid" width="40" height="40" patternUnits="userSpaceOnUse">
-                        <path d="M 40 0 L 0 0 0 40" fill="none" stroke="rgba(0, 210, 255, 0.18)" stroke-width="1.2" />
+                        <path d="M 40 0 L 0 0 0 40" fill="none" stroke="rgba(0, 210, 255, 0.22)" stroke-width="1.2" />
                     </pattern>
                 </defs>
 
-                <!-- إطار الخلفية الداكن الشبيه بالصورة -->
-                <rect x="15" y="15" width="770" height="390" rx="20" fill="#03111c" stroke="#00d2ff" stroke-width="2" />
-                <!-- تطبيق نمط الشبكة -->
-                <rect x="15" y="15" width="770" height="390" rx="20" fill="url(#blue-grid)" />
+                <!-- إطار الشبكة الخفيفة والمضيئة فقط (تم إلغاء اللون الأسود) -->
+                <rect x="15" y="15" width="770" height="390" rx="20" fill="url(#blue-grid)" stroke="#00d2ff" stroke-width="2" stroke-dasharray="8,6" opacity="0.8" />
 
-                <!-- خط الرسم البياني المتعرج والصاعد بالكامل باللون الأزرق النيون -->
+                <!-- خط الرسم البياني المتعرج والصاعد -->
                 <path id="chart-path" 
                       d="M 50 370 L 110 325 L 135 340 L 200 270 L 235 295 L 310 195 L 345 220 L 440 115 L 475 140 L 560 55 L 595 80 L 710 25" 
                       fill="none" 
@@ -255,7 +253,7 @@
                       stroke-linejoin="round" 
                       class="neon-blue" />
 
-                <!-- رأس السهم المضيء المتجه للأعلى والذي يقود حركة الرسم عند التمرير -->
+                <!-- رأس السهم المضيء الصاعد -->
                 <g id="chart-arrow-head" class="neon-blue">
                     <path d="M 0 0 L -28 -14 L -20 0 L -28 14 Z" fill="#00d2ff" />
                 </g>
@@ -303,7 +301,6 @@
         const chartArrowHead = document.getElementById('chart-arrow-head');
         const totalChartLength = chartPath.getTotalLength();
 
-        // إعداد البداية للرسم البياني
         chartPath.style.strokeDasharray = totalChartLength;
         chartPath.style.strokeDashoffset = totalChartLength;
 
@@ -322,7 +319,7 @@
             return { phase: 'active', p: (progress - start) / (end - start) };
         }
 
-        // حلقة التحريك التفاعلية مع التمرير (Scroll)
+        // حلقة التحريك التفاعلية
         function animate() {
             currentFraction += (targetFraction - currentFraction) * 0.12;
 
@@ -383,8 +380,8 @@
                 targetBoard.setAttribute('transform', `translate(0, 0)`);
             }
 
-            // ج) تحريك رسم خط مؤشر النمو الصاعد ورأس السهم بالتزامن مع التمرير
-            let chartProgress = (currentFraction - 0.40) / 0.25;
+            // ج) تحريك خط السهم الصاعد بشكل أسرع (تم تقليل المدى الزمني لتسريع الحركة)
+            let chartProgress = (currentFraction - 0.36) / 0.14;
             chartProgress = Math.min(Math.max(chartProgress, 0), 1);
 
             const drawLength = chartProgress * totalChartLength;
