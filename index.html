@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Neon Hanging Clock</title>
+    <title>Neon Clock & Archer Scroll</title>
     <style>
         * {
             margin: 0;
@@ -14,24 +14,24 @@
         body {
             /* خلفية الصفحة بيضاء بالكامل */
             background-color: #ffffff;
-            height: 500vh;
+            /* ارتفاع كافٍ للتمرير والتحكم في المشهدين */
+            height: 700vh;
             overflow-x: hidden;
-            position: relative;
+            font-family: sans-serif;
         }
 
-        /* وضع البرواز المعلق في منتصف شاشة البداية تماماً */
+        /* ------------------ 1. قسم الساعة المعلقة ------------------ */
         .hanging-wrapper {
             position: absolute;
-            top: 50vh; /* 50% من ارتفاع الشاشة الأولى */
+            top: 45vh;
             left: 50%;
             transform: translate(-50%, -50%);
             display: flex;
             flex-direction: column;
             align-items: center;
-            z-index: 1000;
+            z-index: 10;
         }
 
-        /* مسمار التعليق المضيء */
         .wall-nail {
             width: 18px;
             height: 18px;
@@ -42,7 +42,6 @@
             z-index: 2;
         }
 
-        /* حبل التعليق المضيء */
         .hanging-string {
             width: 3px;
             height: 65px;
@@ -50,12 +49,11 @@
             box-shadow: 0 0 10px #00d2ff;
         }
 
-        /* البرواز */
-        .frame-box {
+        .clock-frame-box {
             background-color: rgba(255, 255, 255, 0.95);
             border: 4px solid #00d2ff;
             border-radius: 30px;
-            padding: 30px;
+            padding: 25px;
             box-shadow: 
                 0 0 20px rgba(0, 210, 255, 0.4),
                 inset 0 0 20px rgba(0, 210, 255, 0.2),
@@ -66,12 +64,34 @@
             justify-content: center;
         }
 
-        /* حجم الساعة */
         .clock-container {
-            width: 440px;
-            height: 440px;
-            max-width: 85vw;
-            max-height: 85vh;
+            width: 380px;
+            height: 380px;
+            max-width: 80vw;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* ------------------ 2. قسم الرامي والهدف (تحت الساعة) ------------------ */
+        .archer-section {
+            position: absolute;
+            top: 230vh;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 90%;
+            max-width: 850px;
+            background: #08090d;
+            border: 3px solid #ffd700;
+            border-radius: 25px;
+            padding: 20px;
+            box-shadow: 0 0 25px rgba(255, 215, 0, 0.3), inset 0 0 15px rgba(0, 0, 0, 0.8);
+            z-index: 10;
+        }
+
+        .archer-container {
+            width: 100%;
+            height: 420px;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -83,52 +103,100 @@
             overflow: visible !important;
         }
 
-        /* توهج النيون الأزرق */
-        .neon-glow {
+        /* توهجات النيون */
+        .neon-blue {
             filter: drop-shadow(0 0 6px #00d2ff) drop-shadow(0 0 15px #00d2ff);
         }
 
-        /* الهالة الخارجية */
-        .outer-aura {
-            filter: drop-shadow(0 0 12px #00d2ff) drop-shadow(0 0 25px #00d2ff);
+        .neon-gold {
+            filter: drop-shadow(0 0 6px #ffd700) drop-shadow(0 0 14px #ffd700);
+        }
+
+        .neon-white {
+            filter: drop-shadow(0 0 5px #ffffff) drop-shadow(0 0 12px rgba(255,255,255,0.8));
         }
     </style>
 </head>
 <body>
 
-    <!-- البرواز المعلق في منتصف شاشة البداية -->
+    <!-- 1. البرواز المعلق والساعة -->
     <div class="hanging-wrapper">
         <div class="wall-nail"></div>
         <div class="hanging-string"></div>
 
-        <div class="frame-box">
+        <div class="clock-frame-box">
             <div class="clock-container">
                 <svg viewBox="-70 -70 440 440">
-                    <!-- إطار الساعة المضيء -->
-                    <circle cx="150" cy="150" r="135" fill="none" stroke="#00d2ff" stroke-width="3.5" class="outer-aura" />
-
-                    <!-- علامات الساعة -->
-                    <g id="ticks" stroke="#00d2ff" stroke-linecap="round" class="neon-glow"></g>
-
-                    <!-- عقرب الساعات (أزرق نيون) -->
+                    <circle cx="150" cy="150" r="135" fill="none" stroke="#00d2ff" stroke-width="3.5" class="neon-blue" />
+                    <g id="ticks" stroke="#00d2ff" stroke-linecap="round" class="neon-blue"></g>
                     <g id="hour-hand" transform="rotate(295 150 150)">
-                        <polygon points="146,150 154,150 151,85 149,85" fill="#00d2ff" stroke="#00d2ff" stroke-width="1" class="neon-glow" />
+                        <polygon points="146,150 154,150 151,85 149,85" fill="#00d2ff" stroke="#00d2ff" stroke-width="1" class="neon-blue" />
                     </g>
-
-                    <!-- عقرب الدقائق (أزرق نيون) -->
                     <g id="minute-hand" transform="rotate(355 150 150)">
-                        <line x1="150" y1="185" x2="150" y2="40" stroke="#00d2ff" stroke-width="4.5" stroke-linecap="round" class="neon-glow" />
+                        <line x1="150" y1="185" x2="150" y2="40" stroke="#00d2ff" stroke-width="4.5" stroke-linecap="round" class="neon-blue" />
                     </g>
-
-                    <!-- المركز المضيء -->
-                    <circle cx="150" cy="150" r="8" fill="#00d2ff" stroke="#00d2ff" stroke-width="2" class="neon-glow" />
+                    <circle cx="150" cy="150" r="8" fill="#00d2ff" stroke="#00d2ff" stroke-width="2" class="neon-blue" />
                 </svg>
             </div>
         </div>
     </div>
 
+    <!-- 2. قسم الرامي والهدف تحت الساعة -->
+    <div class="archer-section">
+        <div class="archer-container">
+            <svg viewBox="0 0 800 400">
+                <!-- خط الأرضية المضيء -->
+                <line x1="30" y1="340" x2="770" y2="340" stroke="#ffffff" stroke-width="3" stroke-linecap="round" class="neon-white" />
+
+                <!-- 1. رامي السهام (Stickman) -->
+                <g id="stickman" class="neon-gold">
+                    <!-- الرأس وعصابة الرأس -->
+                    <circle cx="120" cy="140" r="22" fill="#ffd700" stroke="#ffffff" stroke-width="2" />
+                    <line x1="95" y1="135" x2="145" y2="135" stroke="#ffffff" stroke-width="4" stroke-linecap="round" />
+                    
+                    <!-- الجسد والأرجل -->
+                    <line x1="120" y1="162" x2="120" y2="250" stroke="#ffd700" stroke-width="5" stroke-linecap="round" />
+                    <line x1="120" y1="250" x2="90" y2="340" stroke="#ffd700" stroke-width="5" stroke-linecap="round" />
+                    <line x1="120" y1="250" x2="150" y2="340" stroke="#ffd700" stroke-width="5" stroke-linecap="round" />
+
+                    <!-- الذراع الممسكة بالقوس -->
+                    <line x1="120" y1="180" x2="175" y2="185" stroke="#ffd700" stroke-width="4.5" stroke-linecap="round" />
+
+                    <!-- القوس المضيء -->
+                    <path d="M 175,120 Q 205,185 175,250" fill="none" stroke="#ffd700" stroke-width="4" stroke-linecap="round" />
+                    <!-- وتر القوس -->
+                    <path id="bow-string" d="M 175,120 L 175,185 L 175,250" fill="none" stroke="#ffffff" stroke-width="1.5" />
+                </g>
+
+                <!-- 2. السهم المنطلق متحرك بحسب السكرول -->
+                <g id="arrow-group" class="neon-white">
+                    <line id="arrow-body" x1="130" y1="185" x2="195" y2="185" stroke="#ffffff" stroke-width="3.5" stroke-linecap="round" />
+                    <!-- رأس السهم -->
+                    <polygon id="arrow-head" points="195,180 207,185 195,190" fill="#ffffff" />
+                    <!-- ريش السهم الخلفي -->
+                    <line id="feather1" x1="130" y1="185" x2="122" y2="178" stroke="#ffd700" stroke-width="2.5" />
+                    <line id="feather2" x1="130" y1="185" x2="122" y2="192" stroke="#ffd700" stroke-width="2.5" />
+                </g>
+
+                <!-- 3. لوحة الهدف (Target Board) -->
+                <g id="target-board" class="neon-white">
+                    <!-- أرجل اللوحة -->
+                    <line x1="680" y1="220" x2="630" y2="340" stroke="#ffffff" stroke-width="4" stroke-linecap="round" />
+                    <line x1="680" y1="220" x2="730" y2="340" stroke="#ffffff" stroke-width="4" stroke-linecap="round" />
+                    <line x1="680" y1="220" x2="680" y2="340" stroke="#ffffff" stroke-width="3" stroke-linecap="round" />
+
+                    <!-- دوائر الهدف المضيئة -->
+                    <circle cx="680" cy="185" r="55" fill="none" stroke="#ffffff" stroke-width="4" stroke-dasharray="6,4" />
+                    <circle cx="680" cy="185" r="38" fill="none" stroke="#ffd700" stroke-width="3" class="neon-gold" />
+                    <circle cx="680" cy="185" r="22" fill="none" stroke="#ffffff" stroke-width="3" />
+                    <circle cx="680" cy="185" r="8" fill="#ffd700" class="neon-gold" />
+                </g>
+            </svg>
+        </div>
+    </div>
+
     <script>
-        // رسم علامات الساعة (60 شرطة)
+        // ---- 1. رسم شُرط الساعة ----
         const ticksGroup = document.getElementById('ticks');
         for (let i = 0; i < 60; i++) {
             const angle = i * 6;
@@ -152,25 +220,53 @@
         const hourHand = document.getElementById('hour-hand');
         const minuteHand = document.getElementById('minute-hand');
 
+        // عناصر أنيميشن السهم والرامي
+        const bowString = document.getElementById('bow-string');
+        const arrowGroup = document.getElementById('arrow-group');
+
         let targetFraction = 0;
         let currentFraction = 0;
 
-        // تحديث نسبة التمرير
+        // تحديث نسبة التمرير العامة للصفحة
         window.addEventListener('scroll', () => {
             const scrollTop = window.scrollY;
             const maxScroll = document.documentElement.scrollHeight - window.innerHeight;
-            targetFraction = scrollTop / maxScroll;
+            targetFraction = Math.min(Math.max(scrollTop / maxScroll, 0), 1);
         });
 
-        // حركة انسيابية للعقارب عند التمرير
+        // حلقة تحريك انسيابية
         function animate() {
-            currentFraction += (targetFraction - currentFraction) * 0.1;
+            currentFraction += (targetFraction - currentFraction) * 0.08;
 
+            // أ) حركة عقارب الساعة
             const minuteAngle = 355 + (currentFraction * 360 * 12);
             const hourAngle = 295 + (currentFraction * 360);
-
             minuteHand.setAttribute('transform', `rotate(${minuteAngle} 150 150)`);
             hourHand.setAttribute('transform', `rotate(${hourAngle} 150 150)`);
+
+            // ب) حركة السهم والرامي بالتمرير
+            // يبدأ انطلاق السهم بعد منتصف التمرير للوصول لقسم الرامي
+            let archerProgress = (currentFraction - 0.25) / 0.65;
+            archerProgress = Math.min(Math.max(archerProgress, 0), 1);
+
+            if (archerProgress < 0.2) {
+                // سحب وتر القوس للخلف قبل الإطلاق
+                const pull = (archerProgress / 0.2) * 25;
+                const stringX = 175 - pull;
+                bowString.setAttribute('d', `M 175,120 L ${stringX},185 L 175,250`);
+                arrowGroup.setAttribute('transform', `translate(${-pull}, 0)`);
+            } else {
+                // إطلاق السهم طائراً حتى يستقر داخل الهدف
+                const releaseProgress = (archerProgress - 0.2) / 0.8;
+                bowString.setAttribute('d', `M 175,120 L 175,185 L 175,250`);
+                
+                // المسافة من يد الرامي إلى منتصف الهدف
+                const startX = -25;
+                const targetX = 490; // يصل لقلب الهدف بالضبط
+                const currentX = startX + (releaseProgress * (targetX - startX));
+                
+                arrowGroup.setAttribute('transform', `translate(${currentX}, 0)`);
+            }
 
             requestAnimationFrame(animate);
         }
