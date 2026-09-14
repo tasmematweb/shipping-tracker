@@ -12,7 +12,7 @@
         }
 
         body {
-            /* خلفية بيضاء بالكامل للموقع */
+            /* خلفية بيضاء بالكامل */
             background-color: #ffffff;
             height: 700vh;
             overflow-x: hidden;
@@ -239,7 +239,7 @@
 
         // حلقة تحريك انسيابية
         function animate() {
-            currentFraction += (targetFraction - currentFraction) * 0.08;
+            currentFraction += (targetFraction - currentFraction) * 0.1;
 
             // أ) حركة عقارب الساعة
             const minuteAngle = 355 + (currentFraction * 360 * 12);
@@ -247,32 +247,32 @@
             minuteHand.setAttribute('transform', `rotate(${minuteAngle} 150 150)`);
             hourHand.setAttribute('transform', `rotate(${hourAngle} 150 150)`);
 
-            // ب) حركة رمي السهم وإصابة الهدف
-            let archerProgress = (currentFraction - 0.22) / 0.65;
+            // ب) حركة رمي السهم وإصابة الهدف (تضييق النطاق لتتم الحركة بالكامل أثناء رؤية البطاقة)
+            let archerProgress = (currentFraction - 0.18) / 0.22;
             archerProgress = Math.min(Math.max(archerProgress, 0), 1);
 
-            if (archerProgress < 0.15) {
-                // سحب وتر القوس والسهم للخلف استعداداً للإطلاق
-                const pull = (archerProgress / 0.15) * 30;
+            if (archerProgress < 0.20) {
+                // 1. سحب وتر القوس والسهم للخلف سريعاً
+                const pull = (archerProgress / 0.20) * 32;
                 const stringX = 175 - pull;
                 bowString.setAttribute('d', `M 175,120 L ${stringX},185 L 175,250`);
                 arrowGroup.setAttribute('transform', `translate(${-pull}, 0)`);
                 targetBoard.setAttribute('transform', `translate(0, 0)`);
             } else {
-                // انطلاق السهم عبر الشاشة باتجاه مركز الهدف
-                const releaseProgress = (archerProgress - 0.15) / 0.85;
+                // 2. انطلاق السهم عبر الشاشة واختراق الهدف بسرعة
+                const releaseProgress = (archerProgress - 0.20) / 0.80;
                 bowString.setAttribute('d', `M 175,120 L 175,185 L 175,250`);
                 
-                const startX = -30;
-                const targetHitX = 485; // المسافة الدقيقة ليغرس رأس السهم بمنتصف الهدف
+                const startX = -32;
+                const targetHitX = 485; // نقطة استقرار رأس السهم بقلب الهدف
                 const currentX = startX + (releaseProgress * (targetHitX - startX));
                 
                 arrowGroup.setAttribute('transform', `translate(${currentX}, 0)`);
 
-                // عند ضرب الهدف: تأثير اهتزاز الصدمة (Recoil Impact Effect)
-                if (releaseProgress >= 0.98) {
-                    targetBoard.setAttribute('transform', `translate(6, 0)`);
-                } else if (releaseProgress >= 0.92) {
+                // 3. تأثير صدمة واهتزاز الهدف فور وصول السهم للمركز
+                if (releaseProgress >= 0.96) {
+                    targetBoard.setAttribute('transform', `translate(7, 0)`);
+                } else if (releaseProgress >= 0.88) {
                     targetBoard.setAttribute('transform', `translate(3, 0)`);
                 } else {
                     targetBoard.setAttribute('transform', `translate(0, 0)`);
