@@ -117,6 +117,16 @@
         .outer-aura {
             filter: drop-shadow(0 0 12px #00d2ff) drop-shadow(0 0 25px #00d2ff);
         }
+
+        /* تنسيق النص المضيء على العلم */
+        .flag-text {
+            font-family: 'Courier New', Courier, monospace;
+            font-weight: bold;
+            font-size: 13px;
+            fill: #00d2ff;
+            letter-spacing: 1px;
+            filter: drop-shadow(0 0 5px #00d2ff);
+        }
     </style>
 </head>
 <body>
@@ -143,15 +153,25 @@
         </div>
     </div>
 
-    <!-- 2. قسم الرامي والهدف (أزرق نيون بالكامل) -->
+    <!-- 2. قسم الرامي والهدف (مع العلم المضيء) -->
     <div class="archer-section">
         <div class="archer-container">
             <svg viewBox="0 0 800 400">
                 <!-- خط الأرضية المضيء -->
                 <line x1="30" y1="340" x2="770" y2="340" stroke="#00d2ff" stroke-width="3.5" stroke-linecap="round" class="neon-blue" />
 
-                <!-- 1. رامي السهام (أزرق نيون) -->
+                <!-- 1. رامي السهام مع العلم (tasmematweb) -->
                 <g id="stickman" class="neon-blue">
+                    <!-- سارية العلم والراية على الظهر -->
+                    <g id="flag-group">
+                        <!-- سارية العلم -->
+                        <line x1="105" y1="95" x2="105" y2="230" stroke="#00d2ff" stroke-width="3" stroke-linecap="round" />
+                        <!-- شكل راية العلم -->
+                        <path d="M 105,100 L 15,100 L 28,125 L 15,150 L 105,150 Z" fill="rgba(0, 210, 255, 0.12)" stroke="#00d2ff" stroke-width="2.5" />
+                        <!-- النص داخل العلم -->
+                        <text x="58" y="129" text-anchor="middle" class="flag-text">(tasmematweb)</text>
+                    </g>
+
                     <!-- الرأس وعصابة الرأس -->
                     <circle cx="120" cy="140" r="22" fill="#00d2ff" stroke="#00d2ff" stroke-width="2" />
                     <line x1="95" y1="135" x2="145" y2="135" stroke="#ffffff" stroke-width="3.5" stroke-linecap="round" />
@@ -237,9 +257,9 @@
             targetFraction = Math.min(Math.max(scrollTop / maxScroll, 0), 1);
         });
 
-        // حلقة تحريك انسيابية
+        // حلقة تحريك انسيابية ومسرعة
         function animate() {
-            currentFraction += (targetFraction - currentFraction) * 0.1;
+            currentFraction += (targetFraction - currentFraction) * 0.12;
 
             // أ) حركة عقارب الساعة
             const minuteAngle = 355 + (currentFraction * 360 * 12);
@@ -247,32 +267,32 @@
             minuteHand.setAttribute('transform', `rotate(${minuteAngle} 150 150)`);
             hourHand.setAttribute('transform', `rotate(${hourAngle} 150 150)`);
 
-            // ب) حركة رمي السهم وإصابة الهدف (تضييق النطاق لتتم الحركة بالكامل أثناء رؤية البطاقة)
-            let archerProgress = (currentFraction - 0.18) / 0.22;
+            // ب) حركة رمي السهم السريعة (تكتمل بالكامل في مدى سكرول قصير جداً)
+            let archerProgress = (currentFraction - 0.15) / 0.14;
             archerProgress = Math.min(Math.max(archerProgress, 0), 1);
 
-            if (archerProgress < 0.20) {
+            if (archerProgress < 0.15) {
                 // 1. سحب وتر القوس والسهم للخلف سريعاً
-                const pull = (archerProgress / 0.20) * 32;
+                const pull = (archerProgress / 0.15) * 32;
                 const stringX = 175 - pull;
                 bowString.setAttribute('d', `M 175,120 L ${stringX},185 L 175,250`);
                 arrowGroup.setAttribute('transform', `translate(${-pull}, 0)`);
                 targetBoard.setAttribute('transform', `translate(0, 0)`);
             } else {
-                // 2. انطلاق السهم عبر الشاشة واختراق الهدف بسرعة
-                const releaseProgress = (archerProgress - 0.20) / 0.80;
+                // 2. انطلاق السهم عبر الشاشة بسلاسة وسرعة فائقة
+                const releaseProgress = (archerProgress - 0.15) / 0.85;
                 bowString.setAttribute('d', `M 175,120 L 175,185 L 175,250`);
                 
                 const startX = -32;
-                const targetHitX = 485; // نقطة استقرار رأس السهم بقلب الهدف
+                const targetHitX = 485; // نقطة استقرار رأس السهم في منتصف الهدف
                 const currentX = startX + (releaseProgress * (targetHitX - startX));
                 
                 arrowGroup.setAttribute('transform', `translate(${currentX}, 0)`);
 
-                // 3. تأثير صدمة واهتزاز الهدف فور وصول السهم للمركز
-                if (releaseProgress >= 0.96) {
+                // 3. اهتزازة إصابة الهدف فور وصول السهم
+                if (releaseProgress >= 0.95) {
                     targetBoard.setAttribute('transform', `translate(7, 0)`);
-                } else if (releaseProgress >= 0.88) {
+                } else if (releaseProgress >= 0.85) {
                     targetBoard.setAttribute('transform', `translate(3, 0)`);
                 } else {
                     targetBoard.setAttribute('transform', `translate(0, 0)`);
